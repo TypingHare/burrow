@@ -17,7 +17,7 @@ public class BurrowClient {
 
       final var uri = "http://localhost:1128";
       final HttpPost postRequest = new HttpPost(uri);
-      final var command = ". help config";
+      final var command = ". new";
       final var json = String.format("{\"command\": \"%s\"}", command);
       final var entity = new StringEntity(json);
       postRequest.setEntity(entity);

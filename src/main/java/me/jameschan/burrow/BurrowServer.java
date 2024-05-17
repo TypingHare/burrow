@@ -1,5 +1,6 @@
 package me.jameschan.burrow;
 
+import jakarta.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import me.jameschan.burrow.chamber.ChamberManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @RestController
 public class BurrowServer {
+  private static final Logger logger = LoggerFactory.getLogger(BurrowServer.class);
+
   private final ChamberManager chamberManager;
 
   @Autowired
@@ -54,5 +59,11 @@ public class BurrowServer {
     responseObject.put("output", context.getBuffer().toString());
 
     return ResponseEntity.ok().body(responseObject);
+  }
+
+  @PreDestroy
+  public void onShutdown() {
+    logger.info("Shutting down Burrow ...");
+    chamberManager.destructAllChambers();
   }
 }

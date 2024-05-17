@@ -58,6 +58,10 @@ public class Chamber {
     loadHoard();
   }
 
+  public void destruct() {
+    saveHoard();
+  }
+
   /**
    * Executes a command. This method first extracts the command name (if presents) and create a
    * request context, then execute the command using the command manager. The request context will
@@ -91,6 +95,20 @@ public class Chamber {
     }
   }
 
+  public void saveHoard() {
+    final var hoardFile = context.getHoardFile();
+    final var hoard = context.getHoard();
+    final var objects = hoard.getEntries().stream().map(hoard::getEntryObject).toList();
+    final var json =
+        new Gson().toJson(objects, new TypeToken<List<Map<String, String>>>() {}.getType());
+
+    try {
+      Files.write(hoardFile.toPath(), json.getBytes());
+    } catch (final IOException ex) {
+      throw new RuntimeException("Fail to save hoard for chamber: " + context.getChamberName(), ex);
+    }
+  }
+
   /**
    * Checks if the chamber directory exists, and if it does, set ROOT_DIR for context.
    *
@@ -103,6 +121,7 @@ public class Chamber {
       throw new RuntimeException("Chamber root directory does not exist: " + dirPath);
     }
 
+    context.set(Context.Key.CHAMBER_NAME, name);
     context.set(Context.Key.ROOT_DIR, dirPath);
   }
 
@@ -159,6 +178,8 @@ public class Chamber {
         throw new RuntimeException("Fail to create database: " + filePath, ex);
       }
     }
+
+    context.set(Context.Key.HOARD_FILE, filePath.toFile());
 
     try {
       final var content = Files.readString(filePath);

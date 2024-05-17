@@ -17,7 +17,11 @@ public class EntryCommand extends Command {
   public Integer call() {
     final var hoard = context.getHoard();
     final var entry = hoard.getById(id);
-    buffer.append("[").append(entry.getId()).append("] { }");
+    if (entry == null) {
+      buffer.append("Could not find entry with ID ").append(id);
+    } else {
+      buffer.append(hoard.getFormattedEntryString(entry));
+    }
 
     return 0;
   }

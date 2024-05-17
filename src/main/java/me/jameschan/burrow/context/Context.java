@@ -1,5 +1,9 @@
 package me.jameschan.burrow.context;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import me.jameschan.burrow.chamber.Chamber;
 import me.jameschan.burrow.command.CommandManager;
 import me.jameschan.burrow.config.Config;
@@ -8,11 +12,6 @@ import me.jameschan.burrow.hoard.Hoard;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This class represents a context for storing key-value pairs of data. It provides methods to set
@@ -84,6 +83,14 @@ public class Context {
     return get(Key.CONFIG_FILE, File.class);
   }
 
+  public File getHoardFile() {
+    return get(Key.HOARD_FILE, File.class);
+  }
+
+  public String getChamberName() {
+    return get(Key.CHAMBER_NAME, String.class);
+  }
+
   /**
    * The available keys to context. Refer to the context table in documentation for more
    * information.
@@ -99,5 +106,9 @@ public class Context {
     // Root directory and crucial file paths
     public static final String ROOT_DIR = "ROOT_DIR";
     public static final String CONFIG_FILE = "CONFIG_FILE";
+    public static final String HOARD_FILE = "HOARD_FILE";
+
+    // Others
+    public static final String CHAMBER_NAME = "CHAMBER_NAME";
   }
 }

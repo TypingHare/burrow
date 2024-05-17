@@ -2,6 +2,7 @@ package me.jameschan.burrow.hoard;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -60,6 +61,10 @@ public class Hoard extends ChamberBased {
     return entry;
   }
 
+  public Collection<Entry> getEntries() {
+    return byId.values();
+  }
+
   public Map<String, String> getEntryObject(final Entry entry) {
     final var object = new HashMap<String, String>();
     object.put(KEY_ID, String.valueOf(entry.getId()));
@@ -68,12 +73,10 @@ public class Hoard extends ChamberBased {
     return object;
   }
 
-  public String getFormattedEntryString(final Entry entry, final boolean removeId) {
+  public String getFormattedEntryString(final Entry entry) {
     final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     final var object = getEntryObject(entry);
-    if (removeId) {
-      object.remove("id");
-    }
+    object.remove("id");
 
     final var prettierString = gson.toJson(object).replaceAll("\"(\\w+)\":", "$1:");
     return "[" + entry.getId() + "] " + prettierString + "\n";
