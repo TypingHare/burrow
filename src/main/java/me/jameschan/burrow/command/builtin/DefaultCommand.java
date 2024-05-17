@@ -1,10 +1,15 @@
-package me.jameschan.burrow.command;
+package me.jameschan.burrow.command.builtin;
 
+import me.jameschan.burrow.command.Command;
 import me.jameschan.burrow.config.Config;
 import me.jameschan.burrow.context.RequestContext;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "", description = "Prints the help information of the application.")
+@CommandLine.Command(
+    name = "",
+    mixinStandardHelpOptions = true,
+    description = "Prints the help information of the application."
+)
 public class DefaultCommand extends Command {
     public DefaultCommand(final RequestContext context) {
         super(context);

@@ -1,4 +1,4 @@
-package me.jameschan.burrow.furnitures.config.command;
+package me.jameschan.burrow.furniture.builtin.config.command;
 
 import me.jameschan.burrow.command.Command;
 import me.jameschan.burrow.context.RequestContext;
@@ -7,7 +7,7 @@ import picocli.CommandLine;
 /**
  * Retrieve or update configuration.
  */
-@CommandLine.Command(name = "config", mixinStandardHelpOptions = true)
+@CommandLine.Command(name = "config")
 public class ConfigCommand extends Command {
     @CommandLine.Parameters(
         index = "0",

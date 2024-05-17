@@ -27,6 +27,10 @@ public class Hoard extends ChamberBased {
         return Optional.ofNullable(byId.get(id)).orElseThrow(() -> new EntryNotFoundException(id));
     }
 
+    public boolean exist(final int id) {
+        return byId.containsKey(id);
+    }
+
     public Entry create(final Map<String, String> properties) {
         final var id = ++maxId;
         final var entry = new Entry(id);

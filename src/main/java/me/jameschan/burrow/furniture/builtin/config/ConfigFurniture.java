@@ -1,8 +1,8 @@
-package me.jameschan.burrow.furnitures.config;
+package me.jameschan.burrow.furniture.builtin.config;
 
 import me.jameschan.burrow.chamber.Chamber;
 import me.jameschan.burrow.furniture.Furniture;
-import me.jameschan.burrow.furnitures.config.command.ConfigCommand;
+import me.jameschan.burrow.furniture.builtin.config.command.ConfigCommand;
 
 public class ConfigFurniture extends Furniture {
     public ConfigFurniture(final Chamber chamber) {

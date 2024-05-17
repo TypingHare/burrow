@@ -2,6 +2,7 @@ package me.jameschan.burrow.command;
 
 import me.jameschan.burrow.chamber.Chamber;
 import me.jameschan.burrow.chamber.ChamberBased;
+import me.jameschan.burrow.command.builtin.*;
 import me.jameschan.burrow.context.RequestContext;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -22,6 +23,13 @@ public class CommandManager extends ChamberBased {
 
         byName.put(null, UnknownCommand.class);
         register(DefaultCommand.class);
+        register(RootCommand.class);
+
+        // Entry commands
+        register(NewCommand.class);
+        register(EntryCommand.class);
+        register(ExistCommand.class);
+        register(DeleteCommand.class);
     }
 
     public int execute(
@@ -34,6 +42,7 @@ public class CommandManager extends ChamberBased {
         try {
             final var constructor = commandClass.getConstructor(RequestContext.class);
             final var command = constructor.newInstance(context);
+            System.out.println(new CommandLine(command).getUsageMessage());
             return new CommandLine(command).execute(args.toArray(new String[0]));
         } catch (final Exception ex) {
             throw new RuntimeException("Fail to running command: " + commandName, ex);
