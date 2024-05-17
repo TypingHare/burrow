@@ -4,10 +4,7 @@ import me.jameschan.burrow.command.Command;
 import me.jameschan.burrow.context.RequestContext;
 import picocli.CommandLine;
 
-@CommandLine.Command(
-    name = "delete",
-    mixinStandardHelpOptions = true,
-    description = "Delete a command.")
+@CommandLine.Command(name = "delete", description = "Delete a command.")
 public class DeleteCommand extends Command {
   @CommandLine.Parameters(index = "0")
   private Integer id;

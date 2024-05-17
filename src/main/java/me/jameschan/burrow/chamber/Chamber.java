@@ -80,7 +80,7 @@ public class Chamber {
     return requestContext;
   }
 
-  /** Saves config. */
+  /** Saves the config of this chamber in JSON format. */
   public void saveConfig() {
     final var configFile = context.getConfigFile();
     final var content = new Gson().toJson(context.getConfig().getData());

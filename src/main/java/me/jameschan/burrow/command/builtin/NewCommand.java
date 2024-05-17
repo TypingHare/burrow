@@ -18,7 +18,7 @@ public class NewCommand extends Command {
   public Integer call() {
     final var hoard = context.getHoard();
     final var entry = hoard.create(Map.of());
-    buffer.append("Created entry").append(entry.getId());
+    buffer.append(hoard.getFormattedEntryString(entry, true));
 
     return 0;
   }

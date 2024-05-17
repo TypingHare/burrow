@@ -24,7 +24,7 @@ public class RequestContext extends Context {
     return get(Key.WORKING_DIR, Path.class);
   }
 
-  public String COMMAND_NAME() {
+  public String getCommandName() {
     return get(Key.COMMAND_NAME);
   }
 

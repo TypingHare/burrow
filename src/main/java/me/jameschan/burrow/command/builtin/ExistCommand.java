@@ -4,12 +4,9 @@ import me.jameschan.burrow.command.Command;
 import me.jameschan.burrow.context.RequestContext;
 import picocli.CommandLine;
 
-@CommandLine.Command(
-    name = "exist",
-    mixinStandardHelpOptions = true,
-    description = "Check if an entry exists.")
+@CommandLine.Command(name = "exist", description = "Check if an entry exists.")
 public class ExistCommand extends Command {
-  @CommandLine.Parameters(index = "0")
+  @CommandLine.Parameters(index = "0", description = "The id of the entry.")
   private Integer id;
 
   public ExistCommand(RequestContext context) {

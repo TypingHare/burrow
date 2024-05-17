@@ -5,15 +5,13 @@ import me.jameschan.burrow.config.Config;
 import me.jameschan.burrow.context.RequestContext;
 import picocli.CommandLine;
 
-@CommandLine.Command(
-    name = "",
-    mixinStandardHelpOptions = true,
-    description = "Prints the help information of the application.")
+@CommandLine.Command(name = "", description = "Prints the help information of the application.")
 public class DefaultCommand extends Command {
   @CommandLine.Option(
       names = {"-v", "--version"},
       description = "Print the name and version of the app being used.")
   private boolean version = false;
+
   @CommandLine.Option(
       names = {"-h", "--help"},
       description = "Print help information.")

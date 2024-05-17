@@ -1,5 +1,7 @@
 package me.jameschan.burrow.hoard;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -56,5 +58,24 @@ public class Hoard extends ChamberBased {
     byId.remove(id);
 
     return entry;
+  }
+
+  public Map<String, String> getEntryObject(final Entry entry) {
+    final var object = new HashMap<String, String>();
+    object.put(KEY_ID, String.valueOf(entry.getId()));
+    object.putAll(entry.getProperties());
+
+    return object;
+  }
+
+  public String getFormattedEntryString(final Entry entry, final boolean removeId) {
+    final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    final var object = getEntryObject(entry);
+    if (removeId) {
+      object.remove("id");
+    }
+
+    final var prettierString = gson.toJson(object).replaceAll("\"(\\w+)\":", "$1:");
+    return "[" + entry.getId() + "] " + prettierString + "\n";
   }
 }

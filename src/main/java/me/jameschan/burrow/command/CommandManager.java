@@ -29,6 +29,7 @@ public class CommandManager extends ChamberBased {
     // Chamber commands
     register(RootCommand.class);
     register(CommandsCommand.class);
+    register(HelpCommand.class);
 
     // Entry commands
     register(NewCommand.class);
@@ -44,7 +45,6 @@ public class CommandManager extends ChamberBased {
     try {
       final var constructor = commandClass.getConstructor(RequestContext.class);
       final var command = constructor.newInstance(context);
-      System.out.println(new CommandLine(command).getUsageMessage());
       return new CommandLine(command).execute(args.toArray(new String[0]));
     } catch (final Exception ex) {
       throw new RuntimeException("Fail to running command: " + commandName, ex);
@@ -81,5 +81,9 @@ public class CommandManager extends ChamberBased {
     final var specialCommand = List.of(UnknownCommand.class, DefaultCommand.class);
 
     return byName.values().stream().filter(Predicate.not(specialCommand::contains)).toList();
+  }
+
+  public Class<? extends Command> getCommand(final String commandName) {
+    return byName.get(commandName);
   }
 }

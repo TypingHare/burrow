@@ -4,10 +4,7 @@ import me.jameschan.burrow.command.Command;
 import me.jameschan.burrow.context.RequestContext;
 import picocli.CommandLine;
 
-@CommandLine.Command(
-    name = "entry",
-    mixinStandardHelpOptions = true,
-    description = "Find an entry by associated ID.")
+@CommandLine.Command(name = "entry", description = "Find an entry by associated ID.")
 public class EntryCommand extends Command {
   @CommandLine.Parameters(index = "0")
   private Integer id;
