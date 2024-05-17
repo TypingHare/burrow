@@ -25,6 +25,7 @@ public class Renovator extends ChamberBased {
     public void loadByName(final String name) {
         try {
             @SuppressWarnings("unchecked") final var clazz = (Class<? extends Furniture>) Class.forName(name);
+            loadByClass(clazz);
         } catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         }

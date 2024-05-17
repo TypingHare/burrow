@@ -17,28 +17,29 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Chamber {
     private final ApplicationContext applicationContext;
     private final Context context;
-    private final Config config;
-    private final Hoard hoard;
-    private final Renovator renovator;
-    private final CommandManager commandManager;
 
-    public Chamber(
-        final ApplicationContext applicationContext
-    ) {
+    public Chamber(final ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         context = (Context) applicationContext.getBean("context");
-        config = applicationContext.getBean(Config.class);
-        hoard = applicationContext.getBean(Hoard.class, this);
-        renovator = applicationContext.getBean(Renovator.class, this);
-        commandManager = applicationContext.getBean(CommandManager.class, this);
+        context.set(Context.Key.CHAMBER, this);
+        context.set(Context.Key.CONFIG, applicationContext.getBean(Config.class));
+        context.set(Context.Key.HOARD, applicationContext.getBean(Hoard.class, this));
+        context.set(Context.Key.RENOVATOR, applicationContext.getBean(Renovator.class, this));
+        context.set(Context.Key.COMMAND_MANAGER, applicationContext.getBean(CommandManager.class, this));
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     /**
@@ -48,9 +49,17 @@ public class Chamber {
     public void construct(final String name) {
         checkChamberDir(name);
         loadConfig();
+        loadFurniture();
         loadHoard();
     }
 
+    /**
+     * Executes a command. This method first extracts the command name (if presents) and create a
+     * request context, then execute the command using the command manager. The request context will
+     * be updated after executing the command.
+     * @param rawArgs The raw arguments to process.
+     * @return a request context.
+     */
     public RequestContext execute(final List<String> rawArgs) {
         final var hasCommand = !rawArgs.isEmpty() && !rawArgs.getFirst().startsWith("-");
         final var commandName = hasCommand ? rawArgs.getFirst() : "";
@@ -59,18 +68,23 @@ public class Chamber {
         requestContext.set(RequestContext.Key.COMMAND_NAME, commandName);
         requestContext.set(RequestContext.Key.BUFFER, new StringBuffer());
 
-        final var statusCode = commandManager.execute(commandName, args, requestContext);
+        final var statusCode = context.getCommandManager().execute(commandName, args, requestContext);
         requestContext.set(RequestContext.Key.STATUS_CODE, statusCode);
 
         return requestContext;
     }
 
-    public Config getConfig() {
-        return config;
-    }
-
-    public Hoard getHoard() {
-        return hoard;
+    /**
+     * Saves config.
+     */
+    public void saveConfig() {
+        final var configFile = context.getConfigFile();
+        final var content = new Gson().toJson(context.getConfig().getData());
+        try {
+            Files.write(configFile.toPath(), content.getBytes());
+        } catch (final IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
@@ -87,15 +101,20 @@ public class Chamber {
         context.set(Context.Key.ROOT_DIR, dirPath);
     }
 
+    /**
+     * Loads the config file from the chamber root directory and sets the CONFIG in context.
+     * @throws RuntimeException if the chamber config file does not exist.
+     */
     private void loadConfig() {
         final var filePath = context.getRootDir().resolve(Constants.CONFIG_FILE_NAME).normalize();
-        context.set(Context.Key.CONFIG_FILE_PATH, filePath);
+        context.set(Context.Key.CONFIG_FILE, filePath.toFile());
 
         if (!filePath.toFile().exists()) {
             throw new RuntimeException("Chamber config file does not exist: " + filePath);
         }
 
         try {
+            final var config = context.getConfig();
             final var content = Files.readString(filePath);
             final Type mapType = new TypeToken<Map<String, String>>() {
             }.getType();
@@ -108,6 +127,23 @@ public class Chamber {
         }
     }
 
+    /**
+     * Loads furniture.
+     */
+    private void loadFurniture() {
+        final var config = context.getConfig();
+        final var furnitureListString = config.get(Config.Key.FURNITURE_LIST);
+        final var furnitureList = Arrays.stream(furnitureListString.split(":"))
+            .map(String::trim)
+            .filter(Predicate.not(String::isEmpty))
+            .toList();
+        furnitureList.forEach(context.getRenovator()::loadByName);
+    }
+
+    /**
+     * Loads the entries from the hoard file in the chamber root directory. If the hoard file does
+     * not exist, create one.
+     */
     private void loadHoard() {
         final var filePath = context.getRootDir().resolve(Constants.HOARD_FILE_NAME);
         if (!filePath.toFile().exists()) {
@@ -125,7 +161,7 @@ public class Chamber {
             final Type mapType = new TypeToken<List<Map<String, String>>>() {
             }.getType();
             final List<Map<String, String>> entries = new Gson().fromJson(content, mapType);
-            entries.forEach(hoard::register);
+            entries.forEach(context.getHoard()::register);
         } catch (final IOException ex) {
             throw new RuntimeException(ex);
         }

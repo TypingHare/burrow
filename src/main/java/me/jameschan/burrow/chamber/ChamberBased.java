@@ -1,5 +1,7 @@
 package me.jameschan.burrow.chamber;
 
+import me.jameschan.burrow.context.Context;
+
 public class ChamberBased {
     private final Chamber chamber;
 
@@ -9,5 +11,9 @@ public class ChamberBased {
 
     public Chamber getChamber() {
         return chamber;
+    }
+
+    public Context getContext() {
+        return chamber.getContext();
     }
 }

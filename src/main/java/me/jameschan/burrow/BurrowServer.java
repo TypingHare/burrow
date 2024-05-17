@@ -18,15 +18,15 @@ import java.util.regex.Pattern;
 
 @SpringBootApplication
 @RestController
-public class BurrowApp {
+public class BurrowServer {
     private final ChamberManager chamberManager;
 
     public static void main(final String[] args) {
-        SpringApplication.run(BurrowApp.class, args);
+        SpringApplication.run(BurrowServer.class, args);
     }
 
     @Autowired
-    public BurrowApp(final ChamberManager chamberManager) {
+    public BurrowServer(final ChamberManager chamberManager) {
         this.chamberManager = chamberManager;
         chamberManager.getChamber(Constants.DEFAULT_APP);
     }

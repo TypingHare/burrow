@@ -23,16 +23,16 @@ public class Config {
         public static final String APP_NAME = "app.name";
         public static final String APP_VERSION = "app.version";
         public static final String APP_DEBUG = "app.debug";
-        public static final String PLUGIN_PATH = "plugin.path";
-        public static final String PLUGIN_LIST = "plugin.list";
+        public static final String FURNITURE_PATH = "furniture.path";
+        public static final String FURNITURE_LIST = "furniture.list";
     }
 
     public Config() {
         addKey(Key.APP_NAME);
         addKey(Key.APP_VERSION);
         addKey(Key.APP_DEBUG);
-        addKey(Key.PLUGIN_PATH);
-        addKey(Key.PLUGIN_LIST);
+        addKey(Key.FURNITURE_PATH);
+        addKey(Key.FURNITURE_LIST);
     }
 
     /**

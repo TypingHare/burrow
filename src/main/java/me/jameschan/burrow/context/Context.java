@@ -1,11 +1,15 @@
 package me.jameschan.burrow.context;
 
 import me.jameschan.burrow.chamber.Chamber;
+import me.jameschan.burrow.command.CommandManager;
 import me.jameschan.burrow.config.Config;
+import me.jameschan.burrow.furniture.Renovator;
+import me.jameschan.burrow.hoard.Hoard;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,10 +26,16 @@ public class Context {
      * information.
      */
     public final static class Key {
-        public static final String ROOT_DIR = "ROOT_DIR";
+        // Module objects
         public static final String CHAMBER = "CHAMBER";
-        public static final String CONFIG_FILE_PATH = "CONFIG_FILE_PATH";
         public static final String CONFIG = "CONFIG";
+        public static final String HOARD = "HOARD";
+        public static final String RENOVATOR = "RENOVATOR";
+        public static final String COMMAND_MANAGER = "COMMAND_MANAGER";
+
+        // Root directory and crucial file paths
+        public static final String ROOT_DIR = "ROOT_DIR";
+        public static final String CONFIG_FILE = "CONFIG_FILE";
     }
 
     // Internal map to store data
@@ -60,21 +70,31 @@ public class Context {
         return get(key, String.class);
     }
 
-    public Path getRootDir() {
-        return get(Key.ROOT_DIR, Path.class);
-    }
-
     public Chamber getChamber() {
         return get(Key.CHAMBER, Chamber.class);
-    }
-
-    public Path getConfigFilePath() {
-        return get(Key.CONFIG_FILE_PATH, Path.class);
     }
 
     public Config getConfig() {
         return get(Key.CONFIG, Config.class);
     }
 
+    public Hoard getHoard() {
+        return get(Key.HOARD, Hoard.class);
+    }
 
+    public Renovator getRenovator() {
+        return get(Key.RENOVATOR, Renovator.class);
+    }
+
+    public CommandManager getCommandManager() {
+        return get(Key.COMMAND_MANAGER, CommandManager.class);
+    }
+
+    public Path getRootDir() {
+        return get(Key.ROOT_DIR, Path.class);
+    }
+
+    public File getConfigFile() {
+        return get(Key.CONFIG_FILE, File.class);
+    }
 }

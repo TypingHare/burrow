@@ -11,8 +11,11 @@ import java.nio.file.Path;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RequestContext extends Context {
     public static final class Key {
+        // Command-based context
         public static final String WORKING_DIR = "WORKING_DIR";
         public static final String COMMAND_NAME = "COMMAND_NAME";
+
+        // Resulting context
         public static final String STATUS_CODE = "STATUS_CODE";
         public static final String BUFFER = "BUFFER";
     }
@@ -20,9 +23,12 @@ public class RequestContext extends Context {
     @Autowired
     public RequestContext(final Context context) {
         set(Context.Key.ROOT_DIR, context.getRootDir());
+        set(Context.Key.CONFIG_FILE, context.getConfigFile());
         set(Context.Key.CHAMBER, context.getChamber());
-        set(Context.Key.CONFIG_FILE_PATH, context.getConfigFilePath());
         set(Context.Key.CONFIG, context.getConfig());
+        set(Context.Key.HOARD, context.getHoard());
+        set(Context.Key.RENOVATOR, context.getRenovator());
+        set(Context.Key.COMMAND_MANAGER, context.getCommandManager());
     }
 
     public Path getWorkingDir() {
