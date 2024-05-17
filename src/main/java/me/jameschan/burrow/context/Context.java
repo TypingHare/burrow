@@ -21,80 +21,83 @@ import java.util.Map;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Context {
-    /**
-     * The available keys to context. Refer to the context table in documentation for more
-     * information.
-     */
-    public final static class Key {
-        // Module objects
-        public static final String CHAMBER = "CHAMBER";
-        public static final String CONFIG = "CONFIG";
-        public static final String HOARD = "HOARD";
-        public static final String RENOVATOR = "RENOVATOR";
-        public static final String COMMAND_MANAGER = "COMMAND_MANAGER";
+  // Internal map to store data
+  private final Map<String, Object> data = new HashMap<>();
 
-        // Root directory and crucial file paths
-        public static final String ROOT_DIR = "ROOT_DIR";
-        public static final String CONFIG_FILE = "CONFIG_FILE";
-    }
+  /**
+   * Set a value for the given key in the context.
+   *
+   * @param key The key to set the value for.
+   * @param value The value to set.
+   */
+  public void set(final String key, final Object value) {
+    data.put(key, value);
+  }
 
-    // Internal map to store data
-    private final Map<String, Object> data = new HashMap<>();
+  /**
+   * Get the value associated with the given key from the context.
+   *
+   * @param key The key to get the value for.
+   * @param clazz The class of the value to be retrieved.
+   * @param <T> The type of the value to be retrieved.
+   * @return The value associated with the key, or null if the key is not present.
+   */
+  public <T> T get(final String key, final Class<? extends T> clazz) {
+    return clazz.cast(data.get(key));
+  }
 
-    /**
-     * Set a value for the given key in the context.
-     * @param key   The key to set the value for.
-     * @param value The value to set.
-     */
-    public void set(final String key, final Object value) {
-        data.put(key, value);
-    }
+  /**
+   * Get the value associated with the given key from the context as a String.
+   *
+   * @param key The key to get the value for.
+   * @return The value associated with the key as a String, or null if the key is not present.
+   */
+  public String get(final String key) {
+    return get(key, String.class);
+  }
 
-    /**
-     * Get the value associated with the given key from the context.
-     * @param key   The key to get the value for.
-     * @param clazz The class of the value to be retrieved.
-     * @param <T>   The type of the value to be retrieved.
-     * @return The value associated with the key, or null if the key is not present.
-     */
-    public <T> T get(final String key, final Class<? extends T> clazz) {
-        return clazz.cast(data.get(key));
-    }
+  public Chamber getChamber() {
+    return get(Key.CHAMBER, Chamber.class);
+  }
 
-    /**
-     * Get the value associated with the given key from the context as a String.
-     * @param key The key to get the value for.
-     * @return The value associated with the key as a String, or null if the key is not present.
-     */
-    public String get(final String key) {
-        return get(key, String.class);
-    }
+  public Config getConfig() {
+    return get(Key.CONFIG, Config.class);
+  }
 
-    public Chamber getChamber() {
-        return get(Key.CHAMBER, Chamber.class);
-    }
+  public Hoard getHoard() {
+    return get(Key.HOARD, Hoard.class);
+  }
 
-    public Config getConfig() {
-        return get(Key.CONFIG, Config.class);
-    }
+  public Renovator getRenovator() {
+    return get(Key.RENOVATOR, Renovator.class);
+  }
 
-    public Hoard getHoard() {
-        return get(Key.HOARD, Hoard.class);
-    }
+  public CommandManager getCommandManager() {
+    return get(Key.COMMAND_MANAGER, CommandManager.class);
+  }
 
-    public Renovator getRenovator() {
-        return get(Key.RENOVATOR, Renovator.class);
-    }
+  public Path getRootDir() {
+    return get(Key.ROOT_DIR, Path.class);
+  }
 
-    public CommandManager getCommandManager() {
-        return get(Key.COMMAND_MANAGER, CommandManager.class);
-    }
+  public File getConfigFile() {
+    return get(Key.CONFIG_FILE, File.class);
+  }
 
-    public Path getRootDir() {
-        return get(Key.ROOT_DIR, Path.class);
-    }
+  /**
+   * The available keys to context. Refer to the context table in documentation for more
+   * information.
+   */
+  public static final class Key {
+    // Module objects
+    public static final String CHAMBER = "CHAMBER";
+    public static final String CONFIG = "CONFIG";
+    public static final String HOARD = "HOARD";
+    public static final String RENOVATOR = "RENOVATOR";
+    public static final String COMMAND_MANAGER = "COMMAND_MANAGER";
 
-    public File getConfigFile() {
-        return get(Key.CONFIG_FILE, File.class);
-    }
+    // Root directory and crucial file paths
+    public static final String ROOT_DIR = "ROOT_DIR";
+    public static final String CONFIG_FILE = "CONFIG_FILE";
+  }
 }

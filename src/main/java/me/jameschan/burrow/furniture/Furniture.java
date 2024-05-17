@@ -8,24 +8,23 @@ import me.jameschan.burrow.config.Config;
 import java.util.Collection;
 
 public abstract class Furniture extends ChamberBased implements ConfigSupport {
-    public Furniture(final Chamber chamber) {
-        super(chamber);
-    }
+  public Furniture(final Chamber chamber) {
+    super(chamber);
+  }
 
-    public void registerCommand(final Class<? extends Command> command) {
-        getContext().getCommandManager().register(command);
-    }
+  public void registerCommand(final Class<? extends Command> command) {
+    getContext().getCommandManager().register(command);
+  }
 
-    public void disableCommand(final Class<? extends Command> command) {
-        getContext().getCommandManager().disable(command);
-    }
+  public void disableCommand(final Class<? extends Command> command) {
+    getContext().getCommandManager().disable(command);
+  }
 
-    @Override
-    public Collection<String> configKeys() {
-        return null;
-    }
+  @Override
+  public Collection<String> configKeys() {
+    return null;
+  }
 
-    @Override
-    public void initConfig(final Config config) {
-    }
+  @Override
+  public void initConfig(final Config config) {}
 }

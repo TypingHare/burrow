@@ -7,21 +7,20 @@ import picocli.CommandLine;
 @CommandLine.Command(
     name = "exist",
     mixinStandardHelpOptions = true,
-    description = "Check if an entry exist."
-)
+    description = "Check if an entry exists.")
 public class ExistCommand extends Command {
-    @CommandLine.Parameters(index = "0")
-    private Integer id;
+  @CommandLine.Parameters(index = "0")
+  private Integer id;
 
-    public ExistCommand(RequestContext context) {
-        super(context);
-    }
+  public ExistCommand(RequestContext context) {
+    super(context);
+  }
 
-    @Override
-    public Integer call() {
-        final var hoard = context.getHoard();
-        buffer.append(hoard.exist(id) ? "true" : "false");
+  @Override
+  public Integer call() {
+    final var hoard = context.getHoard();
+    buffer.append(hoard.exist(id) ? "true" : "false");
 
-        return 0;
-    }
+    return 0;
+  }
 }

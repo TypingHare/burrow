@@ -10,11 +10,11 @@ import java.util.concurrent.Callable;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class Command implements Callable<Integer> {
-    protected final RequestContext context;
-    protected final StringBuffer buffer;
+  protected final RequestContext context;
+  protected final StringBuffer buffer;
 
-    public Command(final RequestContext context) {
-        this.context = context;
-        this.buffer = context.getBuffer();
-    }
+  public Command(final RequestContext context) {
+    this.context = context;
+    this.buffer = context.getBuffer();
+  }
 }

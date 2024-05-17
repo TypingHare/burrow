@@ -5,12 +5,13 @@ package me.jameschan.burrow.config;
  * predefined key set.
  */
 public class IllegalKeyException extends RuntimeException {
-    /**
-     * Constructs an {@code IllegalKeyException} with the detail message constructed from the
-     * illegal key.
-     * @param key The key that triggered this exception.
-     */
-    public IllegalKeyException(final String key) {
-        super(String.format("Key does not exist in the key set: %s", key));
-    }
+  /**
+   * Constructs an {@code IllegalKeyException} with the detail message constructed from the illegal
+   * key.
+   *
+   * @param key The key that triggered this exception.
+   */
+  public IllegalKeyException(final String key) {
+    super(String.format("Key does not exist in the key set: %s", key));
+  }
 }
