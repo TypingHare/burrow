@@ -7,7 +7,9 @@ import me.jameschan.burrow.context.RequestContext;
 import me.jameschan.burrow.furniture.Furniture;
 import picocli.CommandLine;
 
-@CommandLine.Command
+@CommandLine.Command(
+    name = "furniture",
+    description = "List all furniture; add or delete a furniture.")
 public class FurnitureCommand extends Command {
   @CommandLine.Parameters(index = "0", description = "instruction")
   private String instruction;

@@ -9,6 +9,8 @@ import me.jameschan.burrow.chamber.Chamber;
 import me.jameschan.burrow.chamber.ChamberBased;
 import me.jameschan.burrow.command.builtin.*;
 import me.jameschan.burrow.context.RequestContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,7 @@ import picocli.CommandLine;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CommandManager extends ChamberBased {
+  private static final Logger log = LoggerFactory.getLogger(CommandManager.class);
   private final Map<String, Class<? extends Command>> byName = new HashMap<>();
 
   public CommandManager(final Chamber chamber) {
