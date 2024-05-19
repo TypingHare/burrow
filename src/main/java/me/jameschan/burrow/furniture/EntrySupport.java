@@ -11,5 +11,5 @@ public interface EntrySupport {
 
   void onCreateEntry(final Entry entry);
 
-  void toPrintedObject(final Map<String, String> printedObject, final Entry entry);
+  void toFormattedObject(final Map<String, String> printedObject, final Entry entry);
 }

@@ -58,4 +58,10 @@ public class Renovator extends ChamberBased {
   public Collection<Furniture> getAllFurniture() {
     return byName.values();
   }
+
+  public <T extends Furniture> T getFurniture(final Class<T> clazz) {
+    @SuppressWarnings("unchecked")
+    final var furniture = (T) byName.get(clazz.getName());
+    return furniture;
+  }
 }

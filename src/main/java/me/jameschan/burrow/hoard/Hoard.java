@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import me.jameschan.burrow.chamber.Chamber;
 import me.jameschan.burrow.chamber.ChamberBased;
+import me.jameschan.burrow.context.Context;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,11 +19,13 @@ public class Hoard extends ChamberBased {
   public static final String KEY_ID = "id";
 
   private final Map<Integer, Entry> byId = new HashMap<>();
+  private final Context context;
 
   private Integer maxId = 0;
 
   public Hoard(final Chamber chamber) {
     super(chamber);
+    this.context = chamber.getContext();
   }
 
   public Entry getById(final int id) {
@@ -66,19 +69,29 @@ public class Hoard extends ChamberBased {
   }
 
   public Map<String, String> getEntryObject(final Entry entry) {
-    final var object = new HashMap<String, String>();
-    object.put(KEY_ID, String.valueOf(entry.getId()));
-    object.putAll(entry.getProperties());
+    final var renovator = context.getRenovator();
+    final var entryObject = new HashMap<String, String>();
+    entryObject.put(KEY_ID, String.valueOf(entry.getId()));
+    renovator.getAllFurniture().forEach(furniture -> furniture.toEntryObject(entryObject, entry));
 
-    return object;
+    return entryObject;
+  }
+
+  public Map<String, String> getFormattedObject(final Entry entry) {
+    final var renovator = context.getRenovator();
+    final var entryObject = new HashMap<String, String>();
+    renovator
+        .getAllFurniture()
+        .forEach(furniture -> furniture.toFormattedObject(entryObject, entry));
+
+    return entryObject;
   }
 
   public String getFormattedEntryString(final Entry entry) {
     final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    final var object = getEntryObject(entry);
-    object.remove("id");
-
+    final var object = getFormattedObject(entry);
     final var prettierString = gson.toJson(object).replaceAll("\"(\\w+)\":", "$1:");
+
     return "[" + entry.getId() + "] " + prettierString + "\n";
   }
 }

@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,11 +30,15 @@ public class BurrowServer {
   @Autowired
   public BurrowServer(final ChamberManager chamberManager) {
     this.chamberManager = chamberManager;
-    chamberManager.getChamber(Constants.DEFAULT_APP);
   }
 
   public static void main(final String[] args) {
     SpringApplication.run(BurrowServer.class, args);
+  }
+
+  @EventListener(ContextRefreshedEvent.class)
+  public void onStart() {
+    chamberManager.getChamber(Constants.DEFAULT_APP);
   }
 
   public static List<String> splitArguments(String input) {
@@ -64,6 +70,7 @@ public class BurrowServer {
   @PreDestroy
   public void onShutdown() {
     logger.info("Shutting down Burrow ...");
+
     chamberManager.destructAllChambers();
   }
 }

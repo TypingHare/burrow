@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class Config {
   /** Set containing allowed keys for configuration. */
   private final Set<String> keySet = new HashSet<>();
+
   /** Internal storage for configuration data. */
   private final Map<String, String> data = new HashMap<>();
 

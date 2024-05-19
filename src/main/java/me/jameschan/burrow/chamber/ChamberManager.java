@@ -1,47 +1,45 @@
 package me.jameschan.burrow.chamber;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ChamberManager {
-  private final Map<String, Chamber> byName = new HashMap<>();
-
+  private final Map<String, Chamber> byName = new ConcurrentHashMap<>();
   private final ApplicationContext applicationContext;
+  private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
   @Autowired
-  public ChamberManager(ApplicationContext applicationContext) {
+  public ChamberManager(final ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
   }
 
-  public Chamber getChamber(final String name) {
-    if (!byName.containsKey(name)) {
-      final var chamber = applicationContext.getBean(Chamber.class);
-      chamber.construct(name);
-      byName.put(name, chamber);
-
-      final ExecutorService executor = Executors.newSingleThreadExecutor();
-      final Callable<Void> callback =
-          () -> {
-            Thread.sleep(60000);
-            chamber.destruct();
-            executor.close();
-            return null;
-          };
-
-      executor.submit(callback);
+  public void removeChamber(final String name) {
+    final var chamber = byName.get(name);
+    if (chamber == null) {
+      return;
     }
 
-    return byName.get(name);
+    byName.remove(name);
+    chamber.destruct();
+  }
+
+  public Chamber getChamber(final String name) {
+    return byName.computeIfAbsent(
+        name,
+        key -> {
+          final Chamber chamber = applicationContext.getBean(Chamber.class);
+          chamber.construct(name);
+          scheduler.schedule(() -> removeChamber(name), 300, TimeUnit.SECONDS);
+          return chamber;
+        });
   }
 
   public void destructAllChambers() {
+    scheduler.shutdownNow();
     byName.values().forEach(Chamber::destruct);
   }
 }

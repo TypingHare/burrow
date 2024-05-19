@@ -14,6 +14,7 @@ import me.jameschan.burrow.command.CommandManager;
 import me.jameschan.burrow.config.Config;
 import me.jameschan.burrow.context.Context;
 import me.jameschan.burrow.context.RequestContext;
+import me.jameschan.burrow.furniture.Furniture;
 import me.jameschan.burrow.furniture.Renovator;
 import me.jameschan.burrow.hoard.Hoard;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -58,6 +60,7 @@ public class Chamber {
     loadHoard();
   }
 
+  /** Destructs this chamber. */
   public void destruct() {
     saveHoard();
   }
@@ -107,6 +110,16 @@ public class Chamber {
     } catch (final IOException ex) {
       throw new RuntimeException("Fail to save hoard for chamber: " + context.getChamberName(), ex);
     }
+  }
+
+  @NonNull
+  public <T extends Furniture> T getFurniture(final Class<T> clazz) {
+    final var furniture = context.getRenovator().getFurniture(clazz);
+    if (furniture == null) {
+      throw new RuntimeException("Failed to find furniture: " + clazz.getName());
+    }
+
+    return furniture;
   }
 
   /**
