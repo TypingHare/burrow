@@ -1,0 +1,11 @@
+#! /bin/zsh
+
+#SCRIPT_DIR=$(dirname "$0")
+#JAR_NAME="burrow-1.0.0-all.jar"
+#BURROW_SERVER_CLASS="me.jameschan.burrow.BurrowServer"
+#cd "$SCRIPT_DIR/../../../build/libs" || exit
+#java -cp "$JAR_NAME" "$BURROW_SERVER_CLASS" "$@"
+
+SCRIPT_DIR=$(dirname "$0")
+cd "$SCRIPT_DIR/../../.." || exit
+gradle bootRun

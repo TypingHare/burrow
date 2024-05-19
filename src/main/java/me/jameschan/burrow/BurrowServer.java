@@ -38,7 +38,11 @@ public class BurrowServer {
 
   @EventListener(ContextRefreshedEvent.class)
   public void onStart() {
-    chamberManager.getChamber(Constants.DEFAULT_APP);
+    final var chamber = chamberManager.getChamber(Constants.DEFAULT_CHAMBER, false);
+    if (chamber == null) {
+      System.out.println("Fail to initialize the default chamber.");
+      System.exit(1);
+    }
   }
 
   public static List<String> splitArguments(String input) {
@@ -56,13 +60,18 @@ public class BurrowServer {
       @RequestBody final Map<String, String> requestObject) {
     final var args = splitArguments(requestObject.get("command"));
     final var hasChamber = !args.isEmpty() && !args.getFirst().startsWith("-");
-    final var chamberName = hasChamber ? args.getFirst() : Constants.DEFAULT_APP;
-    final var chamber = chamberManager.getChamber(chamberName);
-    final var context = chamber.execute(hasChamber ? args.subList(1, args.size()) : args);
-
+    final var chamberName = hasChamber ? args.getFirst() : Constants.DEFAULT_CHAMBER;
+    final var chamber = chamberManager.getChamber(chamberName, true);
     final var responseObject = new HashMap<String, String>();
-    responseObject.put("code", String.valueOf(context.getStatusCode()));
-    responseObject.put("output", context.getBuffer().toString());
+
+    if (chamber == null) {
+      responseObject.put("output", "Chamber not found: " + chamberName);
+      responseObject.put("code", "1");
+    } else {
+      final var context = chamber.execute(hasChamber ? args.subList(1, args.size()) : args);
+      responseObject.put("code", String.valueOf(context.getStatusCode()));
+      responseObject.put("output", context.getBuffer().toString());
+    }
 
     return ResponseEntity.ok().body(responseObject);
   }

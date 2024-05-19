@@ -1,5 +1,6 @@
 package me.jameschan.burrow;
 
+import java.time.Instant;
 import java.util.Scanner;
 
 public class BurrowCli {
@@ -23,7 +24,12 @@ public class BurrowCli {
         chamber = command.substring(USE_COMMAND.length()).trim();
       } else {
         try {
+          Instant start = Instant.now();
           final var data = BurrowClient.sendRequestToServer(uri, chamber + " " + command);
+          Instant end = Instant.now();
+          long duration = java.time.Duration.between(start, end).toMillis();
+          System.out.println("Request duration: " + duration + " ms");
+
           final var output = data.get("output");
           final var code = Integer.parseInt(data.get("code"));
           System.out.println(output);

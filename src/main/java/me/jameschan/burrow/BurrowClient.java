@@ -15,7 +15,7 @@ import org.springframework.lang.NonNull;
 
 public class BurrowClient {
   public static void main(final String[] args) {
-    final var data = sendRequestToServer("http://localhost:1128", ". root");
+    final var data = sendRequestToServer("http://localhost:1128", String.join(" ", args));
     System.out.println(data.get("output"));
     System.exit(Integer.parseInt(data.get("code")));
   }

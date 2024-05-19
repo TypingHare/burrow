@@ -45,12 +45,12 @@ public class ConfigCommand extends Command {
         buffer.append(configData);
       } else {
         // Retrieve configuration
-        buffer.append(String.format("%s -> \"%s\"%n", key, config.get(key)));
+        buffer.append(String.format("%s -> \"%s\"", key, config.get(key)));
       }
     } else {
       // Update configuration
       config.set(key, value);
-      buffer.append(String.format("%s -> \"%s\"%n", key, value));
+      buffer.append(String.format("%s -> \"%s\"", key, value));
       context.getChamber().saveConfig();
     }
 

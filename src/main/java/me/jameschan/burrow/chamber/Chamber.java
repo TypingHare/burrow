@@ -53,7 +53,7 @@ public class Chamber {
    *
    * @param name The name of the chamber to construct.
    */
-  public void construct(final String name) {
+  public void construct(final String name) throws ChamberNotFoundException {
     checkChamberDir(name);
     loadConfig();
     loadFurniture();
@@ -127,11 +127,11 @@ public class Chamber {
    *
    * @param name The name of the chamber.
    */
-  private void checkChamberDir(final String name) {
+  private void checkChamberDir(final String name) throws ChamberNotFoundException {
     final var dirPath = Constants.CHAMBER_ROOT_DIR.resolve(name).normalize();
     final var file = dirPath.toFile();
     if (!file.exists() || !file.isDirectory()) {
-      throw new RuntimeException("Chamber root directory does not exist: " + dirPath);
+      throw new ChamberNotFoundException(name);
     }
 
     context.set(Context.Key.CHAMBER_NAME, name);

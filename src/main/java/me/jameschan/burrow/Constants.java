@@ -10,7 +10,7 @@ public class Constants {
 
   public static final Path CHAMBER_ROOT_DIR = ROOT_DIR.resolve("chamber");
 
-  public static final String DEFAULT_APP = ".";
+  public static final String DEFAULT_CHAMBER = ".";
 
   public static final String CONFIG_FILE_NAME = "config.json";
 

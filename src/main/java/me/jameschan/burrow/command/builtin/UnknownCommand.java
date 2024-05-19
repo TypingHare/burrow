@@ -18,7 +18,7 @@ public class UnknownCommand extends Command {
     final var commandName = context.getCommandName();
     buffer.append("Unknown command: ").append(commandName).append("\n");
     if (args != null && args.length > 0) {
-      buffer.append("Arguments: ").append(String.join(" ", args));
+      buffer.append("Arguments: ").append(String.join(" ", args)).append("\n");
     }
 
     return 0;
