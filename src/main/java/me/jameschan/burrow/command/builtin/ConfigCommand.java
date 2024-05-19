@@ -1,4 +1,4 @@
-package me.jameschan.burrow.furniture.builtin.config.command;
+package me.jameschan.burrow.command.builtin;
 
 import me.jameschan.burrow.command.Command;
 import me.jameschan.burrow.context.RequestContext;

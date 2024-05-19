@@ -1,9 +1,8 @@
-package me.jameschan.burrow.furniture.builtin.keyvalue.command;
+package me.jameschan.burrow.furniture.builtin.keyvalue;
 
 import java.util.HashMap;
 import me.jameschan.burrow.command.Command;
 import me.jameschan.burrow.context.RequestContext;
-import me.jameschan.burrow.furniture.builtin.keyvalue.KeyValueFurniture;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "new", description = "Create an entry with key and value.")

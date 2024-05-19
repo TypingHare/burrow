@@ -1,8 +1,7 @@
-package me.jameschan.burrow.furniture.builtin.keyvalue.command;
+package me.jameschan.burrow.furniture.builtin.keyvalue;
 
 import me.jameschan.burrow.command.Command;
 import me.jameschan.burrow.context.RequestContext;
-import me.jameschan.burrow.furniture.builtin.keyvalue.KeyValueFurniture;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "key", description = "Find an entry associated with a specified key.")

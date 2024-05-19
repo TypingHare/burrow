@@ -3,7 +3,7 @@ package me.jameschan.burrow.furniture;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import me.jameschan.burrow.chamber.Chamber;
 import me.jameschan.burrow.chamber.ChamberBased;
@@ -14,27 +14,36 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Renovator extends ChamberBased {
-  private final Map<String, Furniture> byName = new HashMap<>();
+  private final Map<String, Furniture> byName = new LinkedHashMap<>();
 
   public Renovator(final Chamber chamber) {
     super(chamber);
   }
 
-  public void loadByName(final String name) {
+  public Class<? extends Furniture> checkIfFurnitureExist(final String name) {
     try {
       @SuppressWarnings("unchecked")
       final var clazz = (Class<? extends Furniture>) Class.forName(name);
-      loadByClass(clazz);
-    } catch (ClassNotFoundException ex) {
+      return clazz;
+    } catch (final ClassNotFoundException ex) {
       throw new RuntimeException(ex);
     }
   }
 
-  public void loadByClass(final Class<? extends Furniture> clazz) {
+  public void testFurnitureClass(final Class<? extends Furniture> clazz) {
     final String name = clazz.getName();
     if (!Furniture.class.isAssignableFrom(clazz)) {
-      throw new IllegalArgumentException("Class does not extend Furniture: " + name);
+      throw new ClassCastException("Class does not extend Furniture: " + name);
     }
+  }
+
+  public void loadByName(final String name) {
+    final var clazz = checkIfFurnitureExist(name);
+    loadByClass(clazz);
+  }
+
+  public void loadByClass(final Class<? extends Furniture> clazz) {
+    testFurnitureClass(clazz);
 
     Constructor<? extends Furniture> constructor;
     try {
@@ -46,12 +55,12 @@ public class Renovator extends ChamberBased {
     try {
       constructor.setAccessible(true);
       final var furniture = constructor.newInstance(getChamber());
-      byName.put(name, furniture);
+      byName.put(clazz.getName(), furniture);
     } catch (InstantiationException
         | IllegalArgumentException
         | InvocationTargetException
         | IllegalAccessException ex) {
-      throw new RuntimeException("Failed to instantiate furniture: " + name, ex);
+      throw new RuntimeException("Failed to instantiate furniture: " + clazz.getName(), ex);
     }
   }
 

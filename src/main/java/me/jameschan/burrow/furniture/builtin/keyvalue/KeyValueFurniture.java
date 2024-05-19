@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import me.jameschan.burrow.chamber.Chamber;
 import me.jameschan.burrow.furniture.Furniture;
-import me.jameschan.burrow.furniture.builtin.keyvalue.command.KeyCommand;
-import me.jameschan.burrow.furniture.builtin.keyvalue.command.NewCommand;
 import me.jameschan.burrow.hoard.Entry;
 
 public class KeyValueFurniture extends Furniture {
