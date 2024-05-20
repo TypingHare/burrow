@@ -8,16 +8,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class RequestContext extends Context {
+public class RequestContext extends ChamberContext {
   @Autowired
-  public RequestContext(final Context context) {
-    set(Context.Key.ROOT_DIR, context.getRootDir());
-    set(Context.Key.CONFIG_FILE, context.getConfigFile());
-    set(Context.Key.CHAMBER, context.getChamber());
-    set(Context.Key.CONFIG, context.getConfig());
-    set(Context.Key.HOARD, context.getHoard());
-    set(Context.Key.RENOVATOR, context.getRenovator());
-    set(Context.Key.COMMAND_MANAGER, context.getCommandManager());
+  public RequestContext(final ChamberContext chamberContext) {
+    set(ChamberContext.Key.ROOT_DIR, chamberContext.getRootDir());
+    set(ChamberContext.Key.CONFIG_FILE, chamberContext.getConfigFile());
+    set(ChamberContext.Key.CHAMBER, chamberContext.getChamber());
+    set(ChamberContext.Key.CONFIG, chamberContext.getConfig());
+    set(ChamberContext.Key.HOARD, chamberContext.getHoard());
+    set(ChamberContext.Key.RENOVATOR, chamberContext.getRenovator());
+    set(ChamberContext.Key.COMMAND_MANAGER, chamberContext.getCommandManager());
   }
 
   public Path getWorkingDir() {

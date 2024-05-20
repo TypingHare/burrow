@@ -27,8 +27,8 @@ public class DefaultCommand extends Command {
     final var buffer = context.getBuffer();
 
     if (version) {
-      final var appName = config.get(Config.Key.APP_NAME);
-      final var appVersion = config.get(Config.Key.APP_VERSION);
+      final var appName = config.get(Config.Key.CHAMBER_NAME);
+      final var appVersion = config.get(Config.Key.CHAMBER_VERSION);
       buffer.append(String.format("%s v%s%n", appName, appVersion));
     }
 

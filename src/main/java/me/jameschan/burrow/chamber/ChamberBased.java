@@ -1,6 +1,6 @@
 package me.jameschan.burrow.chamber;
 
-import me.jameschan.burrow.context.Context;
+import me.jameschan.burrow.context.ChamberContext;
 
 public class ChamberBased {
   private final Chamber chamber;
@@ -13,7 +13,7 @@ public class ChamberBased {
     return chamber;
   }
 
-  public Context getContext() {
+  public ChamberContext getContext() {
     return chamber.getContext();
   }
 }

@@ -12,7 +12,7 @@ import java.util.function.Predicate;
 import me.jameschan.burrow.Constants;
 import me.jameschan.burrow.command.CommandManager;
 import me.jameschan.burrow.config.Config;
-import me.jameschan.burrow.context.Context;
+import me.jameschan.burrow.context.ChamberContext;
 import me.jameschan.burrow.context.RequestContext;
 import me.jameschan.burrow.furniture.Furniture;
 import me.jameschan.burrow.furniture.Renovator;
@@ -29,23 +29,23 @@ import org.springframework.stereotype.Component;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Chamber {
   private final ApplicationContext applicationContext;
-  private final Context context;
+  private final ChamberContext chamberContext;
 
   @Autowired
   public Chamber(
-      final ApplicationContext applicationContext, @Qualifier("context") final Context context) {
+      final ApplicationContext applicationContext, @Qualifier("chamberContext") final ChamberContext chamberContext) {
     this.applicationContext = applicationContext;
-    this.context = context;
-    context.set(Context.Key.CHAMBER, this);
-    context.set(Context.Key.CONFIG, applicationContext.getBean(Config.class));
-    context.set(Context.Key.HOARD, applicationContext.getBean(Hoard.class, this));
-    context.set(Context.Key.RENOVATOR, applicationContext.getBean(Renovator.class, this));
-    context.set(
-        Context.Key.COMMAND_MANAGER, applicationContext.getBean(CommandManager.class, this));
+    this.chamberContext = chamberContext;
+    chamberContext.set(ChamberContext.Key.CHAMBER, this);
+    chamberContext.set(ChamberContext.Key.CONFIG, applicationContext.getBean(Config.class));
+    chamberContext.set(ChamberContext.Key.HOARD, applicationContext.getBean(Hoard.class, this));
+    chamberContext.set(ChamberContext.Key.RENOVATOR, applicationContext.getBean(Renovator.class, this));
+    chamberContext.set(
+        ChamberContext.Key.COMMAND_MANAGER, applicationContext.getBean(CommandManager.class, this));
   }
 
-  public Context getContext() {
-    return context;
+  public ChamberContext getContext() {
+    return chamberContext;
   }
 
   /**
@@ -77,11 +77,11 @@ public class Chamber {
     final var hasCommand = !rawArgs.isEmpty() && !rawArgs.getFirst().startsWith("-");
     final var commandName = hasCommand ? rawArgs.getFirst() : "";
     final var args = hasCommand ? rawArgs.subList(1, rawArgs.size()) : rawArgs;
-    final var requestContext = applicationContext.getBean(RequestContext.class, context);
+    final var requestContext = applicationContext.getBean(RequestContext.class, chamberContext);
     requestContext.set(RequestContext.Key.COMMAND_NAME, commandName);
     requestContext.set(RequestContext.Key.BUFFER, new StringBuffer());
 
-    final var statusCode = context.getCommandManager().execute(commandName, args, requestContext);
+    final var statusCode = chamberContext.getCommandManager().execute(commandName, args, requestContext);
     requestContext.set(RequestContext.Key.STATUS_CODE, statusCode);
 
     return requestContext;
@@ -89,8 +89,8 @@ public class Chamber {
 
   /** Saves the config of this chamber in JSON format. */
   public void saveConfig() {
-    final var configFile = context.getConfigFile();
-    final var content = new Gson().toJson(context.getConfig().getData());
+    final var configFile = chamberContext.getConfigFile();
+    final var content = new Gson().toJson(chamberContext.getConfig().getData());
     try {
       Files.write(configFile.toPath(), content.getBytes());
     } catch (final IOException ex) {
@@ -99,8 +99,8 @@ public class Chamber {
   }
 
   public void saveHoard() {
-    final var hoardFile = context.getHoardFile();
-    final var hoard = context.getHoard();
+    final var hoardFile = chamberContext.getHoardFile();
+    final var hoard = chamberContext.getHoard();
     final var objects = hoard.getEntries().stream().map(hoard::getEntryObject).toList();
     final var json =
         new Gson().toJson(objects, new TypeToken<List<Map<String, String>>>() {}.getType());
@@ -108,13 +108,13 @@ public class Chamber {
     try {
       Files.write(hoardFile.toPath(), json.getBytes());
     } catch (final IOException ex) {
-      throw new RuntimeException("Fail to save hoard for chamber: " + context.getChamberName(), ex);
+      throw new RuntimeException("Fail to save hoard for chamber: " + chamberContext.getChamberName(), ex);
     }
   }
 
   @NonNull
   public <T extends Furniture> T getFurniture(final Class<T> clazz) {
-    final var furniture = context.getRenovator().getFurniture(clazz);
+    final var furniture = chamberContext.getRenovator().getFurniture(clazz);
     if (furniture == null) {
       throw new RuntimeException("Failed to find furniture: " + clazz.getName());
     }
@@ -134,8 +134,8 @@ public class Chamber {
       throw new ChamberNotFoundException(name);
     }
 
-    context.set(Context.Key.CHAMBER_NAME, name);
-    context.set(Context.Key.ROOT_DIR, dirPath);
+    chamberContext.set(ChamberContext.Key.CHAMBER_NAME, name);
+    chamberContext.set(ChamberContext.Key.ROOT_DIR, dirPath);
   }
 
   /**
@@ -144,21 +144,21 @@ public class Chamber {
    * @throws RuntimeException if the chamber config file does not exist.
    */
   private void loadConfig() {
-    final var filePath = context.getRootDir().resolve(Constants.CONFIG_FILE_NAME).normalize();
-    context.set(Context.Key.CONFIG_FILE, filePath.toFile());
+    final var filePath = chamberContext.getRootDir().resolve(Constants.CONFIG_FILE_NAME).normalize();
+    chamberContext.set(ChamberContext.Key.CONFIG_FILE, filePath.toFile());
 
     if (!filePath.toFile().exists()) {
       throw new RuntimeException("Chamber config file does not exist: " + filePath);
     }
 
     try {
-      final var config = context.getConfig();
+      final var config = chamberContext.getConfig();
       final var content = Files.readString(filePath);
       final Type mapType = new TypeToken<Map<String, String>>() {}.getType();
       final Map<String, String> map = new Gson().fromJson(content, mapType);
       map.keySet().forEach(config::addKey);
       map.forEach(config::set);
-      context.set(Context.Key.CONFIG, config);
+      chamberContext.set(ChamberContext.Key.CONFIG, config);
     } catch (final Exception ex) {
       throw new RuntimeException("Fail to load config: " + filePath, ex);
     }
@@ -166,14 +166,14 @@ public class Chamber {
 
   /** Loads furniture. */
   private void loadFurniture() {
-    final var config = context.getConfig();
+    final var config = chamberContext.getConfig();
     final var furnitureListString = config.get(Config.Key.FURNITURE_LIST);
     final var furnitureList =
         Arrays.stream(furnitureListString.split(":"))
             .map(String::trim)
             .filter(Predicate.not(String::isEmpty))
             .toList();
-    furnitureList.forEach(context.getRenovator()::loadByName);
+    furnitureList.forEach(chamberContext.getRenovator()::loadByName);
   }
 
   /**
@@ -181,7 +181,7 @@ public class Chamber {
    * exist, create one.
    */
   private void loadHoard() {
-    final var filePath = context.getRootDir().resolve(Constants.HOARD_FILE_NAME);
+    final var filePath = chamberContext.getRootDir().resolve(Constants.HOARD_FILE_NAME);
     if (!filePath.toFile().exists()) {
       // Create a database file and write "[]"
       try {
@@ -192,13 +192,13 @@ public class Chamber {
       }
     }
 
-    context.set(Context.Key.HOARD_FILE, filePath.toFile());
+    chamberContext.set(ChamberContext.Key.HOARD_FILE, filePath.toFile());
 
     try {
       final var content = Files.readString(filePath);
       final Type mapType = new TypeToken<List<Map<String, String>>>() {}.getType();
       final List<Map<String, String>> entries = new Gson().fromJson(content, mapType);
-      entries.forEach(context.getHoard()::register);
+      entries.forEach(chamberContext.getHoard()::register);
     } catch (final IOException ex) {
       throw new RuntimeException(ex);
     }

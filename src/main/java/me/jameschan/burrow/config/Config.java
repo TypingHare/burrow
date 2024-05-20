@@ -22,9 +22,9 @@ public class Config {
   private final Map<String, String> data = new HashMap<>();
 
   public Config() {
-    addKey(Key.APP_NAME);
-    addKey(Key.APP_VERSION);
-    addKey(Key.APP_DEBUG);
+    addKey(Key.CHAMBER_NAME);
+    addKey(Key.CHAMBER_VERSION);
+    addKey(Key.CHAMBER_DEBUG);
     addKey(Key.FURNITURE_PATH);
     addKey(Key.FURNITURE_LIST);
   }
@@ -78,9 +78,9 @@ public class Config {
 
   /** Default configuration keys. */
   public static final class Key {
-    public static final String APP_NAME = "app.name";
-    public static final String APP_VERSION = "app.version";
-    public static final String APP_DEBUG = "app.debug";
+    public static final String CHAMBER_NAME = "chamber.name";
+    public static final String CHAMBER_VERSION = "chamber.version";
+    public static final String CHAMBER_DEBUG = "chamber.debug";
     public static final String FURNITURE_PATH = "furniture.path";
     public static final String FURNITURE_LIST = "furniture.list";
   }

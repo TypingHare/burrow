@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import me.jameschan.burrow.chamber.Chamber;
 import me.jameschan.burrow.chamber.ChamberBased;
-import me.jameschan.burrow.context.Context;
+import me.jameschan.burrow.context.ChamberContext;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -19,13 +19,13 @@ public class Hoard extends ChamberBased {
   public static final String KEY_ID = "id";
 
   private final Map<Integer, Entry> byId = new HashMap<>();
-  private final Context context;
+  private final ChamberContext chamberContext;
 
   private Integer maxId = 0;
 
   public Hoard(final Chamber chamber) {
     super(chamber);
-    this.context = chamber.getContext();
+    this.chamberContext = chamber.getContext();
   }
 
   public Entry getById(final int id) {
@@ -69,7 +69,7 @@ public class Hoard extends ChamberBased {
   }
 
   public Map<String, String> getEntryObject(final Entry entry) {
-    final var renovator = context.getRenovator();
+    final var renovator = chamberContext.getRenovator();
     final var entryObject = new HashMap<String, String>();
     entryObject.put(KEY_ID, String.valueOf(entry.getId()));
     renovator.getAllFurniture().forEach(furniture -> furniture.toEntryObject(entryObject, entry));
@@ -78,7 +78,7 @@ public class Hoard extends ChamberBased {
   }
 
   public Map<String, String> getFormattedObject(final Entry entry) {
-    final var renovator = context.getRenovator();
+    final var renovator = chamberContext.getRenovator();
     final var entryObject = new HashMap<String, String>();
     renovator
         .getAllFurniture()
