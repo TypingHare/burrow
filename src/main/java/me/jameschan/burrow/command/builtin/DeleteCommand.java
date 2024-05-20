@@ -18,7 +18,7 @@ public class DeleteCommand extends Command {
     final var hoard = context.getHoard();
     final var buffer = context.getBuffer();
     final var entry = hoard.delete(id);
-    buffer.append("Entry deleted: [").append(entry.getId()).append("] { }");
+    buffer.append(hoard.getFormattedEntryString(entry));
 
     return 0;
   }

@@ -2,10 +2,14 @@ package me.jameschan.burrow;
 
 import java.time.Instant;
 import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BurrowCli {
+  private static final Logger logger = LoggerFactory.getLogger(BurrowCli.class);
+
   public static void main(final String[] args) {
-    final var PROMPT = " > ";
+    final var PROMPT = "> ";
     final var EXIT_COMMAND = "exit";
     final var USE_COMMAND = "use";
 
@@ -35,7 +39,8 @@ public class BurrowCli {
           System.out.println(output);
           System.out.println("code: " + code);
         } catch (final Throwable throwable) {
-          System.out.println("Error: " + throwable.getMessage());
+          System.out.println("Internal Error: " + throwable.getMessage());
+          System.out.println(chamber + " " + command);
         }
       }
     }

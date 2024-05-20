@@ -34,6 +34,7 @@ public class CommandManager extends ChamberBased {
     register(CommandsCommand.class);
     register(HelpCommand.class);
     register(ConfigCommand.class);
+    register(FurnitureCommand.class);
 
     // Entry commands
     register(NewCommand.class);

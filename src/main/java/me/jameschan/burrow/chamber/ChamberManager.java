@@ -2,14 +2,15 @@ package me.jameschan.burrow.chamber;
 
 import java.util.Map;
 import java.util.concurrent.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ChamberManager {
-  private static final Logger logger = Logger.getLogger(ChamberManager.class.getName());
+  private static final Logger logger = LoggerFactory.getLogger(ChamberManager.class.getName());
 
   private final Map<String, Chamber> byName = new ConcurrentHashMap<>();
   private final ApplicationContext applicationContext;
@@ -40,7 +41,7 @@ public class ChamberManager {
           scheduler.schedule(() -> removeChamber(name), 300, TimeUnit.SECONDS);
         }
       } catch (final ChamberNotFoundException ex) {
-        logger.severe(ex.getMessage());
+        logger.error(ex.getMessage(), ex);
       }
     }
 

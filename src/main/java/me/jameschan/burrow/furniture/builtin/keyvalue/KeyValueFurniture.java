@@ -42,4 +42,9 @@ public class KeyValueFurniture extends Furniture {
   public List<Integer> getIdListByKey(final String key) {
     return byKey.getOrDefault(key, List.of());
   }
+
+  @Override
+  public void toFormattedObject(Map<String, String> printedObject, Entry entry) {
+    toEntryObject(printedObject, entry);
+  }
 }

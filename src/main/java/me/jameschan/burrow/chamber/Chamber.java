@@ -33,19 +33,25 @@ public class Chamber {
 
   @Autowired
   public Chamber(
-      final ApplicationContext applicationContext, @Qualifier("chamberContext") final ChamberContext chamberContext) {
+      final ApplicationContext applicationContext,
+      @Qualifier("chamberContext") final ChamberContext chamberContext) {
     this.applicationContext = applicationContext;
     this.chamberContext = chamberContext;
-    chamberContext.set(ChamberContext.Key.CHAMBER, this);
-    chamberContext.set(ChamberContext.Key.CONFIG, applicationContext.getBean(Config.class));
-    chamberContext.set(ChamberContext.Key.HOARD, applicationContext.getBean(Hoard.class, this));
-    chamberContext.set(ChamberContext.Key.RENOVATOR, applicationContext.getBean(Renovator.class, this));
-    chamberContext.set(
-        ChamberContext.Key.COMMAND_MANAGER, applicationContext.getBean(CommandManager.class, this));
+    initContext();
   }
 
   public ChamberContext getContext() {
     return chamberContext;
+  }
+
+  private void initContext() {
+    chamberContext.set(ChamberContext.Key.CHAMBER, this);
+    chamberContext.set(ChamberContext.Key.CONFIG, applicationContext.getBean(Config.class));
+    chamberContext.set(ChamberContext.Key.HOARD, applicationContext.getBean(Hoard.class, this));
+    chamberContext.set(
+        ChamberContext.Key.RENOVATOR, applicationContext.getBean(Renovator.class, this));
+    chamberContext.set(
+        ChamberContext.Key.COMMAND_MANAGER, applicationContext.getBean(CommandManager.class, this));
   }
 
   /**
@@ -58,6 +64,11 @@ public class Chamber {
     loadConfig();
     loadFurniture();
     loadHoard();
+  }
+
+  public void restart() throws ChamberNotFoundException {
+    initContext();
+    construct(chamberContext.getChamberName());
   }
 
   /** Destructs this chamber. */
@@ -81,7 +92,8 @@ public class Chamber {
     requestContext.set(RequestContext.Key.COMMAND_NAME, commandName);
     requestContext.set(RequestContext.Key.BUFFER, new StringBuffer());
 
-    final var statusCode = chamberContext.getCommandManager().execute(commandName, args, requestContext);
+    final var statusCode =
+        chamberContext.getCommandManager().execute(commandName, args, requestContext);
     requestContext.set(RequestContext.Key.STATUS_CODE, statusCode);
 
     return requestContext;
@@ -108,7 +120,8 @@ public class Chamber {
     try {
       Files.write(hoardFile.toPath(), json.getBytes());
     } catch (final IOException ex) {
-      throw new RuntimeException("Fail to save hoard for chamber: " + chamberContext.getChamberName(), ex);
+      throw new RuntimeException(
+          "Fail to save hoard for chamber: " + chamberContext.getChamberName(), ex);
     }
   }
 
@@ -144,7 +157,8 @@ public class Chamber {
    * @throws RuntimeException if the chamber config file does not exist.
    */
   private void loadConfig() {
-    final var filePath = chamberContext.getRootDir().resolve(Constants.CONFIG_FILE_NAME).normalize();
+    final var filePath =
+        chamberContext.getRootDir().resolve(Constants.CONFIG_FILE_NAME).normalize();
     chamberContext.set(ChamberContext.Key.CONFIG_FILE, filePath.toFile());
 
     if (!filePath.toFile().exists()) {

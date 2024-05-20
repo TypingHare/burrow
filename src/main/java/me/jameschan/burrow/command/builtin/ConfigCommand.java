@@ -1,5 +1,6 @@
 package me.jameschan.burrow.command.builtin;
 
+import me.jameschan.burrow.chamber.ChamberNotFoundException;
 import me.jameschan.burrow.command.Command;
 import me.jameschan.burrow.context.RequestContext;
 import picocli.CommandLine;
@@ -52,6 +53,11 @@ public class ConfigCommand extends Command {
       config.set(key, value);
       buffer.append(String.format("%s -> \"%s\"", key, value));
       context.getChamber().saveConfig();
+      try {
+        context.getChamber().restart();
+      } catch (final ChamberNotFoundException ex) {
+        buffer.append(ex.getMessage());
+      }
     }
 
     return 0;

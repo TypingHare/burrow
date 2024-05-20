@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -15,7 +16,16 @@ import org.springframework.lang.NonNull;
 
 public class BurrowClient {
   public static void main(final String[] args) {
-    final var data = sendRequestToServer("http://localhost:1128", String.join(" ", args));
+    final var argList = new ArrayList<String>();
+    for (final var arg : args) {
+      if (arg.contains(" ")) {
+        argList.add('"' + arg + '"');
+      } else {
+        argList.add(arg);
+      }
+    }
+
+    final var data = sendRequestToServer("http://localhost:1128", String.join(" ", argList));
     System.out.println(data.get("output"));
     System.exit(Integer.parseInt(data.get("code")));
   }
@@ -27,7 +37,7 @@ public class BurrowClient {
           response -> new String(response.getEntity().getContent().readAllBytes());
 
       final HttpPost postRequest = new HttpPost(uri);
-      final var json = String.format("{\"command\": \"%s\"}", command);
+      final var json = String.format("{\"command\": \"%s\"}", command.replace("\"", "\\\""));
       postRequest.setEntity(new StringEntity(json));
       postRequest.setHeader("Content-type", "application/json");
       final String responseBody = httpClient.execute(postRequest, responseHandler);

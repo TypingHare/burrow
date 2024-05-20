@@ -43,6 +43,9 @@ public class Hoard extends ChamberBased {
     this.byId.put(id, entry);
     properties.forEach(entry::set);
 
+    final var renovator = chamberContext.getRenovator();
+    renovator.getAllFurniture().forEach(furniture -> furniture.onCreateEntry(entry));
+
     return entry;
   }
 
@@ -55,6 +58,9 @@ public class Hoard extends ChamberBased {
     final var entry = new Entry(id);
     byId.put(id, entry);
     maxId = Math.max(maxId, id);
+
+    final var renovator = chamberContext.getRenovator();
+    renovator.getAllFurniture().forEach(furniture -> furniture.toEntry(entry, entryObject));
   }
 
   public Entry delete(final int id) {
@@ -91,7 +97,6 @@ public class Hoard extends ChamberBased {
     final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     final var object = getFormattedObject(entry);
     final var prettierString = gson.toJson(object).replaceAll("\"(\\w+)\":", "$1:");
-
-    return "[" + entry.getId() + "] " + prettierString + "\n";
+    return "[" + entry.getId() + "] " + prettierString;
   }
 }

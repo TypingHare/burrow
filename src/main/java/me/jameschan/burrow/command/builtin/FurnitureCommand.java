@@ -1,6 +1,8 @@
-package me.jameschan.burrow.furniture.builtin.furniture;
+package me.jameschan.burrow.command.builtin;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import me.jameschan.burrow.chamber.ChamberNotFoundException;
 import me.jameschan.burrow.command.Command;
 import me.jameschan.burrow.config.Config;
 import me.jameschan.burrow.context.RequestContext;
@@ -11,11 +13,12 @@ import picocli.CommandLine;
     name = "furniture",
     description = "List all furniture; add or delete a furniture.")
 public class FurnitureCommand extends Command {
-  @CommandLine.Parameters(index = "0", description = "instruction")
+  @CommandLine.Parameters(index = "0", description = "instruction (list/add/delete)")
   private String instruction;
 
   @CommandLine.Parameters(
       index = "1",
+      paramLabel = "<furniture-name>",
       description = "The name of the furniture to add/delete.",
       defaultValue = "")
   private String furnitureName;
@@ -30,6 +33,7 @@ public class FurnitureCommand extends Command {
       case INSTRUCTION.LIST -> printFurnitureNameList();
       case INSTRUCTION.ADD -> addFurniture();
       case INSTRUCTION.DELETE -> deleteFurniture();
+      case "" -> buffer.append("Please specify an instruction: list/add/delete");
       default -> buffer.append("No such instruction: ").append(instruction);
     }
 
@@ -38,12 +42,15 @@ public class FurnitureCommand extends Command {
 
   private void printFurnitureNameList() {
     final var furnitureCollection = context.getRenovator().getAllFurniture();
+
     buffer.append("Furniture list:\n");
-    var i = 0;
+    final var furnitureNameList = new ArrayList<String>();
     for (final var furniture : furnitureCollection) {
       final var furnitureName = furniture.getClass().getName();
-      buffer.append("[").append(i++).append("] ").append(furnitureName).append("\n");
+      furnitureNameList.add("[" + furnitureNameList.size() + "]" + furnitureName);
     }
+
+    buffer.append(String.join("\n", furnitureNameList));
   }
 
   private void addFurniture() {
@@ -54,7 +61,7 @@ public class FurnitureCommand extends Command {
     final var furnitureNameList =
         Arrays.stream(furnitureListString.split(":")).map(String::trim).toList();
     if (furnitureNameList.contains(furnitureName)) {
-      buffer.append("Furniture already exists: ").append(furnitureName).append("\n");
+      buffer.append("Furniture already exists: ").append(furnitureName);
       return;
     }
 
@@ -63,7 +70,7 @@ public class FurnitureCommand extends Command {
     try {
       clazz = renovator.checkIfFurnitureExist(furnitureName);
     } catch (final RuntimeException ex) {
-      buffer.append("Furniture not found: ").append(furnitureName).append("\n");
+      buffer.append("Furniture not found: ").append(furnitureName);
       return;
     }
 
@@ -79,6 +86,14 @@ public class FurnitureCommand extends Command {
     final var newFurnitureListString = furnitureListString + ":" + furnitureName;
     config.set(Config.Key.FURNITURE_LIST, newFurnitureListString);
     context.getChamber().saveConfig();
+
+    // Restart chamber
+    try {
+      context.getChamber().restart();
+      buffer.append("Chamber has been restarted");
+    } catch (final ChamberNotFoundException ex) {
+      buffer.append("Chamber not found: ").append(furnitureName);
+    }
   }
 
   private void deleteFurniture() {
