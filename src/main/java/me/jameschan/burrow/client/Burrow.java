@@ -3,7 +3,7 @@ package me.jameschan.burrow.client;
 import me.jameschan.burrow.common.BurrowRequest;
 import me.jameschan.burrow.utility.CommandUtility;
 
-public class BurrowCommand {
+public class Burrow {
   public static void main(final String[] args) throws BurrowClientInitializationException {
     final var command = CommandUtility.getOriginalCommand(args);
     final var client = new HttpBurrowClient();
@@ -11,7 +11,7 @@ public class BurrowCommand {
     request.setCommand(command);
 
     final var response = client.sendRequest(request);
-    System.out.print(response.getMessage());
+    System.out.println(response.getMessage());
     System.exit(response.getCode());
   }
 }

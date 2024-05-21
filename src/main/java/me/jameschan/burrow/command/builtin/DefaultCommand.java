@@ -29,11 +29,11 @@ public class DefaultCommand extends Command {
     if (version) {
       final var appName = config.get(Config.Key.CHAMBER_NAME);
       final var appVersion = config.get(Config.Key.CHAMBER_VERSION);
-      buffer.append(String.format("%s v%s%n", appName, appVersion));
+      buffer.append(String.format("%s v%s", appName, appVersion));
     }
 
     if (help) {
-      buffer.append("There is nothing I can help you with.\n");
+      buffer.append("There is nothing I can help you with for the time being.");
     }
 
     return 0;

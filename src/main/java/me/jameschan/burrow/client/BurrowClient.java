@@ -68,7 +68,7 @@ public abstract class BurrowClient {
     System.out.print("\033[" + (consoleWidth - rightSideStringLength) + "C");
     System.out.println(coloredRightSideString);
 
-    // Print the message
+    // Print the message and wrap the line
     System.out.println(response.getMessage());
   }
 
