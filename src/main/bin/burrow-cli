@@ -2,6 +2,6 @@
 
 SCRIPT_DIR=$(dirname "$0")
 JAR_NAME="burrow-1.0.0-all.jar"
-BURROW_CLI_CLASS="me.jameschan.burrow.BurrowCli"
+BURROW_CLI_CLASS="me.jameschan.burrow.client.BurrowCli"
 cd "$SCRIPT_DIR/../../../build/libs" || exit
 java -cp "$JAR_NAME" "$BURROW_CLI_CLASS"

@@ -1,11 +1,12 @@
-package me.jameschan.burrow.client;
+package me.jameschan.burrow.common;
 
 import java.beans.JavaBean;
 
 @JavaBean
 public class BurrowResponse {
   private Integer code;
-  public String message;
+
+  private String message;
 
   public Integer getCode() {
     return code;

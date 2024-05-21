@@ -1,4 +1,4 @@
-package me.jameschan.burrow.client;
+package me.jameschan.burrow.common;
 
 import java.beans.JavaBean;
 

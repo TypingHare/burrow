@@ -19,7 +19,7 @@ import picocli.CommandLine;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CommandManager extends ChamberBased {
-  private static final Logger log = LoggerFactory.getLogger(CommandManager.class);
+  private static final Logger logger = LoggerFactory.getLogger(CommandManager.class);
   private final Map<String, Class<? extends Command>> byName = new HashMap<>();
 
   public CommandManager(final Chamber chamber) {
@@ -52,7 +52,8 @@ public class CommandManager extends ChamberBased {
       final var command = constructor.newInstance(context);
       return new CommandLine(command).execute(args.toArray(new String[0]));
     } catch (final Exception ex) {
-      throw new RuntimeException("Fail to running command: " + commandName, ex);
+      logger.error("Fail to execute command.", ex);
+      return 1;
     }
   }
 

@@ -13,7 +13,10 @@ import picocli.CommandLine;
     name = "furniture",
     description = "List all furniture; add or delete a furniture.")
 public class FurnitureCommand extends Command {
-  @CommandLine.Parameters(index = "0", description = "instruction (list/add/delete)")
+  @CommandLine.Parameters(
+      index = "0",
+      description = "instruction (list/add/delete)",
+      defaultValue = "list")
   private String instruction;
 
   @CommandLine.Parameters(
@@ -42,15 +45,17 @@ public class FurnitureCommand extends Command {
 
   private void printFurnitureNameList() {
     final var furnitureCollection = context.getRenovator().getAllFurniture();
+    if (furnitureCollection.isEmpty()) {
+      buffer.append("No furniture found in this chamber.");
+    } else {
+      final var furnitureNameList = new ArrayList<String>();
+      for (final var furniture : furnitureCollection) {
+        final var furnitureName = furniture.getClass().getName();
+        furnitureNameList.add("[" + furnitureNameList.size() + "]" + furnitureName);
+      }
 
-    buffer.append("Furniture list:\n");
-    final var furnitureNameList = new ArrayList<String>();
-    for (final var furniture : furnitureCollection) {
-      final var furnitureName = furniture.getClass().getName();
-      furnitureNameList.add("[" + furnitureNameList.size() + "]" + furnitureName);
+      buffer.append(String.join("\n", furnitureNameList));
     }
-
-    buffer.append(String.join("\n", furnitureNameList));
   }
 
   private void addFurniture() {
