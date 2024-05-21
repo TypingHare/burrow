@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "burrow.server.port",
+      "type": "java.lang.String",
+      "description": "The port on which the server listens."
+    },
+    {
+      "name": "burrow.client.url",
+      "type": "java.lang.String",
+      "description": "The URL requested by the client."
+    }
+  ]
+}

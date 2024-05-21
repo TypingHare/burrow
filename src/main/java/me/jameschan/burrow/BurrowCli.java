@@ -14,7 +14,7 @@ public class BurrowCli {
     final var USE_COMMAND = "use";
 
     final var properties = BurrowClient.loadApplicationProperties();
-    final var uri = "http://localhost:" + properties.getProperty("server.port");
+    final var uri = "http://localhost:" + properties.getProperty("burrow.server.port");
     final var scanner = new Scanner(System.in);
 
     var isRunning = true;
