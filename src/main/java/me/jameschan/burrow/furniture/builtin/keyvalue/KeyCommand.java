@@ -16,8 +16,8 @@ public class KeyCommand extends Command {
   @Override
   public Integer call() throws Exception {
     final var hoard = context.getHoard();
-    final var keyValueFurniture = context.getChamber().getFurniture(KeyValueFurniture.class);
-    final var idList = keyValueFurniture.getIdListByKey(key);
+    final var idList = getFurniture(KeyValueFurniture.class).getIdListByKey(key);
+
     buffer.append("[\n");
     for (final var id : idList) {
       final var entry = hoard.getById(id);

@@ -13,13 +13,25 @@ public abstract class Furniture extends ChamberBased implements ConfigSupport, E
     super(chamber);
   }
 
+  /**
+   * Registers a new command.
+   *
+   * @param command The command to register.
+   */
   public void registerCommand(final Class<? extends Command> command) {
     getContext().getCommandManager().register(command);
   }
 
+  /**
+   * Disables a command.
+   *
+   * @param command The command to disable.
+   */
   public void disableCommand(final Class<? extends Command> command) {
     getContext().getCommandManager().disable(command);
   }
+
+
 
   @Override
   public Collection<String> configKeys() {
