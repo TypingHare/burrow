@@ -23,11 +23,11 @@ public class BurrowCli implements Callable<Integer> {
     var isRunning = true;
     while (isRunning) {
       client.printPrompt();
-      final var command = scanner.nextLine();
+      final var command = scanner.nextLine().trim();
       if (command.equals(CliCommand.$EXIT)) {
         isRunning = false;
-      } else if (command.startsWith(CliCommand.$USE)) {
-        client.setCurrentChamberName(command.substring(CliCommand.$USE.length()).trim());
+      } else if (command.startsWith("$")) {
+        resolveCliCommand(client, command);
       } else {
         final var request = new BurrowRequest();
         request.setCommand(command);
@@ -37,6 +37,14 @@ public class BurrowCli implements Callable<Integer> {
     }
 
     return 0;
+  }
+
+  private void resolveCliCommand(final BurrowClient client, final String command) {
+    if (command.startsWith(CliCommand.$USE)) {
+      client.setCurrentChamberName(command.substring(CliCommand.$USE.length()).trim());
+    } else {
+      System.out.println("Unknown CLI command: " + command);
+    }
   }
 
   private BurrowClient getBurrowClient() throws BurrowClientInitializationException {

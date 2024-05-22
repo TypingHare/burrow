@@ -54,11 +54,14 @@ public class BurrowServer {
       final var requestContext = chamberManager.executeCommand(chamberName, realArgs);
       response.setMessage(requestContext.getBuffer().toString());
       response.setCode(requestContext.getStatusCode());
-
     } catch (final ChamberNotFoundException ex) {
       response.setMessage("Chamber not found: " + chamberName);
       response.setCode(1);
+    } catch (final Throwable ex) {
+      response.setMessage("Internal error: " + ex.getMessage());
+      response.setCode(1);
     }
+
     return response;
   }
 

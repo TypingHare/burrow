@@ -129,16 +129,6 @@ public class Chamber {
     }
   }
 
-  @NonNull
-  public <T extends Furniture> T getFurniture(final Class<T> clazz) {
-    final var furniture = chamberContext.getRenovator().getFurniture(clazz);
-    if (furniture == null) {
-      throw new RuntimeException("Failed to find furniture: " + clazz.getName());
-    }
-
-    return furniture;
-  }
-
   /**
    * Checks if the chamber directory exists, and if it does, set ROOT_DIR for context.
    *
@@ -186,12 +176,14 @@ public class Chamber {
   private void loadFurniture() {
     final var config = chamberContext.getConfig();
     final var furnitureListString = config.get(Config.Key.FURNITURE_LIST);
-    final var furnitureList =
+    final var furnitureNameList =
         Arrays.stream(furnitureListString.split(":"))
             .map(String::trim)
             .filter(Predicate.not(String::isEmpty))
             .toList();
-    furnitureList.forEach(chamberContext.getRenovator()::loadByName);
+    chamberContext
+        .getRenovator()
+        .resolveDependencies(List.of(chamberContext.getChamberName()), furnitureNameList);
   }
 
   /**

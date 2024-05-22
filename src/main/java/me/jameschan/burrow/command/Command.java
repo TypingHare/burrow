@@ -5,6 +5,7 @@ import me.jameschan.burrow.context.RequestContext;
 import me.jameschan.burrow.furniture.Furniture;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,10 +17,10 @@ import org.springframework.stereotype.Component;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class Command implements Callable<Integer> {
 
-  // RequestContext instance holding the context in which this command is executed.
+  /** RequestContext instance holding the context in which this command is executed. */
   protected final RequestContext context;
 
-  // StringBuffer instance for buffering output or other data within the context.
+  /** StringBuffer instance for buffering output or other data within the context. */
   protected final StringBuffer buffer;
 
   /**
@@ -39,7 +40,13 @@ public abstract class Command implements Callable<Integer> {
    * @param furnitureClass the class type of the Furniture to retrieve
    * @return an instance of the specified Furniture class
    */
+  @NonNull
   public <T extends Furniture> T getFurniture(final Class<T> furnitureClass) {
-    return context.getRenovator().getFurniture(furnitureClass);
+    final var furniture = context.getRenovator().getFurniture(furnitureClass);
+    if (furniture == null) {
+      throw new RuntimeException("Failed to find furniture: " + furnitureClass.getName());
+    }
+
+    return furniture;
   }
 }

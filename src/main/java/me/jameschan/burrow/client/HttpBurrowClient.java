@@ -1,10 +1,9 @@
 package me.jameschan.burrow.client;
 
 import com.google.gson.Gson;
-import java.io.IOException;
-
 import me.jameschan.burrow.common.BurrowRequest;
 import me.jameschan.burrow.common.BurrowResponse;
+import org.apache.hc.client5.http.HttpHostConnectException;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler;
@@ -30,8 +29,16 @@ public class HttpBurrowClient extends BurrowClient {
       postRequest.setHeader("Content-type", "application/json");
       final String responseBody = httpClient.execute(postRequest, responseHandler);
       return new Gson().fromJson(responseBody, BurrowResponse.class);
-    } catch (final IOException ex) {
-      throw new RuntimeException(ex);
+    } catch (final HttpHostConnectException ex) {
+      final var response = new BurrowResponse();
+      response.setCode(1);
+      response.setMessage("Fail to connect to server: " + uri);
+      return response;
+    } catch (final Throwable ex) {
+      final var response = new BurrowResponse();
+      response.setCode(1);
+      response.setMessage("Unknown local error: " + ex.getMessage());
+      return response;
     }
   }
 }

@@ -2,11 +2,10 @@ package me.jameschan.burrow.furniture;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import me.jameschan.burrow.chamber.Chamber;
 import me.jameschan.burrow.chamber.ChamberBased;
+import me.jameschan.burrow.furniture.annotation.BurrowFurniture;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,6 +17,36 @@ public class Renovator extends ChamberBased {
 
   public Renovator(final Chamber chamber) {
     super(chamber);
+  }
+
+  public void resolveDependencies(
+      final List<String> dependencyPath, final List<String> dependencies) {
+    if (dependencies.isEmpty()) {
+      return;
+    }
+
+    for (final var dependency : dependencies) {
+      // If the dependency is found within the dependency path, a circular dependency is found
+      if (dependencyPath.contains(dependency)) {
+        throw new CircularDependencyException(dependencyPath);
+      }
+
+      // Load the furniture
+      final var furniture = loadByName(dependency);
+      final var furnitureClass = furniture.getClass();
+      final var nextDependencies =
+          Arrays.stream(furnitureClass.getDeclaredAnnotation(BurrowFurniture.class).dependencies())
+              .map(Class::getName)
+              .toList();
+
+      // Resolve the dependency
+      final var nextDependencyPath = new ArrayList<>(dependencyPath);
+      nextDependencyPath.add(dependency);
+      resolveDependencies(nextDependencyPath, nextDependencies);
+
+      // Add the dependency to the map
+      byName.put(furnitureClass.getName(), furniture);
+    }
   }
 
   public Class<? extends Furniture> checkIfFurnitureExist(final String name) {
@@ -37,13 +66,18 @@ public class Renovator extends ChamberBased {
     }
   }
 
-  public void loadByName(final String name) {
-    final var clazz = checkIfFurnitureExist(name);
-    loadByClass(clazz);
+  public Furniture loadByName(final String name) {
+    return loadByClass(checkIfFurnitureExist(name));
   }
 
-  public void loadByClass(final Class<? extends Furniture> clazz) {
+  public Furniture loadByClass(final Class<? extends Furniture> clazz) {
     testFurnitureClass(clazz);
+
+    final var burrowFurnitureAnnotation = clazz.getAnnotation(BurrowFurniture.class);
+    if (burrowFurnitureAnnotation == null) {
+      throw new RuntimeException(
+          "Furniture class is not annotated by BurrowFurniture: " + clazz.getName());
+    }
 
     Constructor<? extends Furniture> constructor;
     try {
@@ -54,8 +88,7 @@ public class Renovator extends ChamberBased {
 
     try {
       constructor.setAccessible(true);
-      final var furniture = constructor.newInstance(getChamber());
-      byName.put(clazz.getName(), furniture);
+      return constructor.newInstance(getChamber());
     } catch (InstantiationException
         | IllegalArgumentException
         | InvocationTargetException
