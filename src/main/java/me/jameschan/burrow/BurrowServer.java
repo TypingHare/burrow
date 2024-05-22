@@ -2,6 +2,7 @@ package me.jameschan.burrow;
 
 import jakarta.annotation.PreDestroy;
 import me.jameschan.burrow.chamber.ChamberManager;
+import me.jameschan.burrow.chamber.ChamberNotFoundException;
 import me.jameschan.burrow.common.BurrowRequest;
 import me.jameschan.burrow.common.BurrowResponse;
 import me.jameschan.burrow.utility.CommandUtility;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BurrowServer {
   private static final Logger logger = LoggerFactory.getLogger(BurrowServer.class);
-
   private final ChamberManager chamberManager;
 
   @Autowired
@@ -34,9 +34,10 @@ public class BurrowServer {
 
   @EventListener(ContextRefreshedEvent.class)
   public void onStart() {
-    final var chamber = chamberManager.getChamber(Constants.DEFAULT_CHAMBER, false);
-    if (chamber == null) {
-      System.out.println("Fail to initialize the default chamber.");
+    try {
+      chamberManager.initChamber(Constants.DEFAULT_CHAMBER);
+    } catch (final ChamberNotFoundException ex) {
+      logger.error("Fail to initialize the default chamber.", ex);
       System.exit(1);
     }
   }
@@ -46,18 +47,18 @@ public class BurrowServer {
     final var args = CommandUtility.splitArguments(request.getCommand());
     final var hasChamber = !args.isEmpty() && !args.getFirst().startsWith("-");
     final var chamberName = hasChamber ? args.getFirst() : Constants.DEFAULT_CHAMBER;
-    final var chamber = chamberManager.getChamber(chamberName, true);
-    final var response = new BurrowResponse();
+    final var realArgs = hasChamber ? args.subList(1, args.size()) : args;
 
-    if (chamber == null) {
+    var response = new BurrowResponse();
+    try {
+      final var requestContext = chamberManager.executeCommand(chamberName, realArgs);
+      response.setMessage(requestContext.getBuffer().toString());
+      response.setCode(requestContext.getStatusCode());
+
+    } catch (final ChamberNotFoundException ex) {
       response.setMessage("Chamber not found: " + chamberName);
       response.setCode(1);
-    } else {
-      final var context = chamber.execute(hasChamber ? args.subList(1, args.size()) : args);
-      response.setMessage(context.getBuffer().toString());
-      response.setCode(context.getStatusCode());
     }
-
     return response;
   }
 

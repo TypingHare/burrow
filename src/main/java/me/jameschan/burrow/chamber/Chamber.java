@@ -44,6 +44,10 @@ public class Chamber {
     return chamberContext;
   }
 
+  public ApplicationContext getApplicationContext() {
+    return applicationContext;
+  }
+
   private void initContext() {
     chamberContext.set(ChamberContext.Key.CHAMBER, this);
     chamberContext.set(ChamberContext.Key.CONFIG, applicationContext.getBean(Config.class));

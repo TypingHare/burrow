@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 import me.jameschan.burrow.chamber.Chamber;
 import me.jameschan.burrow.furniture.Furniture;
+import me.jameschan.burrow.furniture.annotation.BurrowFurniture;
 import me.jameschan.burrow.hoard.Entry;
 
+@BurrowFurniture
 public class KeyValueFurniture extends Furniture {
   private final Map<String, List<Integer>> byKey = new HashMap<>();
 
