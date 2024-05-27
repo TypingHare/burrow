@@ -18,11 +18,24 @@ public class KeyValueFurniture extends Furniture {
 
     registerCommand(KeyCommand.class);
     registerCommand(NewCommand.class);
+    registerCommand(KeysCommand.class);
+    registerCommand(ValuesCommand.class);
+    registerCommand(CountCommand.class);
   }
 
   public static final class EntryKey {
     public static final String KEY = "key";
     public static final String VALUE = "value";
+  }
+
+  public Map<String, List<Integer>> getKeyIdListMap() {
+    return byKey;
+  }
+
+  @Override
+  public void onCreateEntry(final Entry entry) {
+    final var key = entry.get(EntryKey.KEY);
+    byKey.computeIfAbsent(key, k -> new ArrayList<>()).add(entry.getId());
   }
 
   @Override

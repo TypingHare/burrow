@@ -14,15 +14,12 @@ import me.jameschan.burrow.command.CommandManager;
 import me.jameschan.burrow.config.Config;
 import me.jameschan.burrow.context.ChamberContext;
 import me.jameschan.burrow.context.RequestContext;
-import me.jameschan.burrow.furniture.Furniture;
 import me.jameschan.burrow.furniture.Renovator;
 import me.jameschan.burrow.hoard.Hoard;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,12 +29,9 @@ public class Chamber {
   private final ChamberContext chamberContext;
 
   @Autowired
-  public Chamber(
-      final ApplicationContext applicationContext,
-      @Qualifier("chamberContext") final ChamberContext chamberContext) {
+  public Chamber(final ApplicationContext applicationContext, final ChamberContext chamberContext) {
     this.applicationContext = applicationContext;
     this.chamberContext = chamberContext;
-    initContext();
   }
 
   public ChamberContext getContext() {
@@ -62,16 +56,22 @@ public class Chamber {
    * Constructs this chamber.
    *
    * @param name The name of the chamber to construct.
+   * @throws ChamberNotFoundException if the chamber folder does not exist.
    */
   public void construct(final String name) throws ChamberNotFoundException {
+    initContext();
     checkChamberDir(name);
     loadConfig();
     loadFurniture();
     loadHoard();
   }
 
+  /**
+   * Restarts this chamber.
+   *
+   * @throws ChamberNotFoundException if the chamber folder does not exist.
+   */
   public void restart() throws ChamberNotFoundException {
-    initContext();
     construct(chamberContext.getChamberName());
   }
 
@@ -103,7 +103,7 @@ public class Chamber {
     return requestContext;
   }
 
-  /** Saves the config of this chamber in JSON format. */
+  /** Saves the config in JSON format. */
   public void saveConfig() {
     final var configFile = chamberContext.getConfigFile();
     final var content = new Gson().toJson(chamberContext.getConfig().getData());
@@ -114,6 +114,7 @@ public class Chamber {
     }
   }
 
+  /** Saves the hoard in JSON format. */
   public void saveHoard() {
     final var hoardFile = chamberContext.getHoardFile();
     final var hoard = chamberContext.getHoard();

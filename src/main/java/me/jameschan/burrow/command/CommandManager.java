@@ -41,6 +41,7 @@ public class CommandManager extends ChamberBased {
     register(EntryCommand.class);
     register(ExistCommand.class);
     register(DeleteCommand.class);
+    register(EntriesCommand.class);
   }
 
   public int execute(
@@ -50,7 +51,10 @@ public class CommandManager extends ChamberBased {
     try {
       final var constructor = commandClass.getConstructor(RequestContext.class);
       final var command = constructor.newInstance(context);
-      return new CommandLine(command).execute(args.toArray(new String[0]));
+      return new CommandLine(command)
+          .setParameterExceptionHandler(command)
+          .setExecutionExceptionHandler(command)
+          .execute(args.toArray(new String[0]));
     } catch (final Exception ex) {
       logger.error("Fail to execute command.", ex);
       return 1;

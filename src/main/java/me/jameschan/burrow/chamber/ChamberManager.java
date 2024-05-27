@@ -26,24 +26,33 @@ public class ChamberManager {
     this.applicationContext = applicationContext;
   }
 
-  public void removeChamber(final String name) {
-    final var chamber = byName.get(name);
+  public Chamber initiate(final String chamberName) throws ChamberNotFoundException {
+    final Chamber chamber = applicationContext.getBean(Chamber.class);
+    chamber.construct(chamberName);
+    byName.put(chamberName, chamber);
+
+    logger.info("Chamber initiated: {}", chamberName);
+    return chamber;
+  }
+
+  public void terminate(final String chamberName) {
+    final var chamber = byName.get(chamberName);
     if (chamber == null) {
       return;
     }
 
-    byName.remove(name);
+    byName.remove(chamberName);
     chamber.destruct();
-    logger.info("Removed chamber: {}", name);
+    logger.info("Chamber terminated: {}", chamberName);
   }
 
   public Chamber getChamber(final String name, final boolean autoDelete)
       throws ChamberNotFoundException {
     if (!byName.containsKey(name)) {
       if (autoDelete) {
-        scheduler.schedule(() -> removeChamber(name), 300, TimeUnit.SECONDS);
+        scheduler.schedule(() -> terminate(name), 300, TimeUnit.SECONDS);
       }
-      return initChamber(name);
+      return initiate(name);
     }
 
     return byName.get(name);
@@ -55,14 +64,6 @@ public class ChamberManager {
     beforeExecuteCommandListeners.forEach(listener -> listener.accept(chamber));
 
     return chamber.execute(args);
-  }
-
-  public Chamber initChamber(final String name) throws ChamberNotFoundException {
-    final Chamber chamber = applicationContext.getBean(Chamber.class);
-    chamber.construct(name);
-    byName.put(name, chamber);
-
-    return chamber;
   }
 
   public void destructAllChambers() {

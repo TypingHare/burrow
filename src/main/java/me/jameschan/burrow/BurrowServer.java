@@ -35,7 +35,7 @@ public class BurrowServer {
   @EventListener(ContextRefreshedEvent.class)
   public void onStart() {
     try {
-      chamberManager.initChamber(Constants.DEFAULT_CHAMBER);
+      chamberManager.initiate(Constants.DEFAULT_CHAMBER);
     } catch (final ChamberNotFoundException ex) {
       logger.error("Fail to initialize the default chamber.", ex);
       System.exit(1);

@@ -91,6 +91,7 @@ public class FurnitureCommand extends Command {
     final var newFurnitureListString = furnitureListString + ":" + furnitureName;
     config.set(Config.Key.FURNITURE_LIST, newFurnitureListString);
     context.getChamber().saveConfig();
+    buffer.append("Furniture added: ").append(furnitureName).append("\n");
 
     // Restart chamber
     try {

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import picocli.CommandLine;
 
 /**
  * Abstract class representing a command that can be executed within a given request context. This
@@ -15,7 +16,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class Command implements Callable<Integer> {
+public abstract class Command
+    implements Callable<Integer>,
+        CommandLine.IParameterExceptionHandler,
+        CommandLine.IExecutionExceptionHandler {
 
   /** RequestContext instance holding the context in which this command is executed. */
   protected final RequestContext context;
@@ -32,6 +36,31 @@ public abstract class Command implements Callable<Integer> {
   public Command(final RequestContext context) {
     this.context = context;
     this.buffer = context.getBuffer();
+  }
+
+  @Override
+  public int handleParseException(final CommandLine.ParameterException ex, final String[] args) {
+    if (ex instanceof CommandLine.MissingParameterException) {
+      final var missingParams = ((CommandLine.MissingParameterException) ex).getMissing();
+      final var paramLabelList =
+          missingParams.stream().map(CommandLine.Model.ArgSpec::paramLabel).toList();
+      buffer.append("Missing parameters: ").append(String.join(" ", paramLabelList));
+    } else {
+      buffer.append("Fail to parse command: ").append(ex.getMessage());
+    }
+
+    return 1;
+  }
+
+  @Override
+  public int handleExecutionException(
+      final Exception ex,
+      final CommandLine commandLine,
+      final CommandLine.ParseResult fullParseResult) {
+    buffer.append("Fail to execute command: ").append(ex.getMessage());
+
+    ex.printStackTrace();
+    return 1;
   }
 
   /**
