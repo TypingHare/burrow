@@ -1,8 +1,8 @@
 package me.jameschan.burrow.client;
 
 import com.google.gson.Gson;
-import me.jameschan.burrow.common.BurrowRequest;
-import me.jameschan.burrow.common.BurrowResponse;
+import me.jameschan.burrow.kernel.common.BurrowRequest;
+import me.jameschan.burrow.kernel.common.BurrowResponse;
 import org.apache.hc.client5.http.HttpHostConnectException;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.HttpClients;

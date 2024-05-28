@@ -2,7 +2,7 @@
 
 #SCRIPT_DIR=$(dirname "$0")
 #JAR_NAME="burrow-1.0.0-all.jar"
-#BURROW_SERVER_CLASS="me.jameschan.burrow.BurrowServer"
+#BURROW_SERVER_CLASS="me.jameschan.burrow.server.BurrowServer"
 #cd "$SCRIPT_DIR/../../../build/libs" || exit
 #java -cp "$JAR_NAME" "$BURROW_SERVER_CLASS" "$@"
 

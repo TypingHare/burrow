@@ -6,8 +6,8 @@ import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Properties;
-import me.jameschan.burrow.common.BurrowRequest;
-import me.jameschan.burrow.common.BurrowResponse;
+import me.jameschan.burrow.kernel.common.BurrowRequest;
+import me.jameschan.burrow.kernel.common.BurrowResponse;
 import picocli.CommandLine;
 
 public abstract class BurrowClient {
@@ -32,6 +32,12 @@ public abstract class BurrowClient {
     // Get the URL of the server to send requests
     final var uriString = properties.getProperty("burrow.client.url");
     this.uri = URI.create(uriString);
+  }
+
+  public static int getConsoleWidth() {
+    final var commandSpec = CommandLine.Model.CommandSpec.create();
+    final var message = commandSpec.usageMessage().autoWidth(true);
+    return message.width();
   }
 
   public BurrowResponse sendRequestTiming(final BurrowRequest request) {
@@ -70,12 +76,6 @@ public abstract class BurrowClient {
 
     // Print the message and wrap the line
     System.out.println(response.getMessage());
-  }
-
-  public static int getConsoleWidth() {
-    final var commandSpec = CommandLine.Model.CommandSpec.create();
-    final var message = commandSpec.usageMessage().autoWidth(true);
-    return message.width();
   }
 
   public void setCurrentChamberName(final String currentChamberName) {

@@ -20,13 +20,14 @@ dependencies {
     // Picocli
     implementation("info.picocli:picocli:4.7.6")
 
-    // Apache
+    // Apache Http Client
     implementation("org.apache.httpcomponents.client5:httpclient5-cache:5.3.1")
 
     // Utility
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.google.guava:guava:33.2.0-jre")
 
+    // Testing
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }

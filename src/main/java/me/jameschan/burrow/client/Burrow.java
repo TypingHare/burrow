@@ -1,7 +1,7 @@
 package me.jameschan.burrow.client;
 
-import me.jameschan.burrow.common.BurrowRequest;
-import me.jameschan.burrow.utility.CommandUtility;
+import me.jameschan.burrow.kernel.common.BurrowRequest;
+import me.jameschan.burrow.kernel.utility.CommandUtility;
 
 public class Burrow {
   public static void main(final String[] args) throws BurrowClientInitializationException {
