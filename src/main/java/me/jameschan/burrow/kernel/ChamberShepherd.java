@@ -3,7 +3,6 @@ package me.jameschan.burrow.kernel;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import me.jameschan.burrow.kernel.common.*;
-import me.jameschan.burrow.kernel.config.ConfigFileNotFoundException;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.utility.CommandUtility;
 import org.slf4j.Logger;
@@ -24,8 +23,7 @@ public class ChamberShepherd {
     this.applicationContext = applicationContext;
   }
 
-  public Chamber initiate(final String chamberName)
-      throws ChamberNotFoundException, ConfigFileNotFoundException {
+  public Chamber initiate(final String chamberName) throws ChamberInitializationException {
     final var chamber = applicationContext.getBean(Chamber.class);
     chamber.initiate(chamberName);
     chamberStore.put(chamberName, chamber);
@@ -45,13 +43,8 @@ public class ChamberShepherd {
     }
   }
 
-  public Chamber getChamber(final String name)
-      throws ChamberNotFoundException, ConfigFileNotFoundException {
-    if (!chamberStore.containsKey(name)) {
-      initiate(name);
-    }
-
-    return chamberStore.get(name);
+  public Chamber getChamber(final String name) throws ChamberInitializationException {
+    return chamberStore.containsKey(name) ? chamberStore.get(name) : initiate(name);
   }
 
   public BurrowResponse processRequest(final BurrowRequest request) {
@@ -69,7 +62,7 @@ public class ChamberShepherd {
 
       response.setMessage(requestContext.getBuffer().toString());
       response.setCode(requestContext.getExitCode());
-    } catch (final ChamberNotFoundException | ConfigFileNotFoundException ex) {
+    } catch (final ChamberInitializationException ex) {
       response.setMessage(ex.getMessage());
       response.setCode(ExitCode.ERROR);
     } catch (final Throwable ex) {

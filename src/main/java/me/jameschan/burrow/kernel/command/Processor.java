@@ -8,10 +8,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import me.jameschan.burrow.kernel.Chamber;
 import me.jameschan.burrow.kernel.ChamberModule;
-import me.jameschan.burrow.kernel.command.builtin.CommandsCommand;
-import me.jameschan.burrow.kernel.command.builtin.DefaultCommand;
-import me.jameschan.burrow.kernel.command.builtin.RootCommand;
-import me.jameschan.burrow.kernel.command.builtin.UnknownCommand;
+import me.jameschan.burrow.kernel.command.builtin.*;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import org.slf4j.Logger;
@@ -43,6 +40,11 @@ public class Processor extends ChamberModule {
     // Chamber scope commands
     register(RootCommand.class);
     register(CommandsCommand.class);
+    register(HelpCommand.class);
+
+    // Config and Furniture
+    register(ConfigCommand.class);
+    register(FurnitureCommand.class);
   }
 
   public int execute(

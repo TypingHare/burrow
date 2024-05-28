@@ -13,6 +13,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import picocli.CommandLine;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -24,7 +25,7 @@ public class Renovator extends ChamberModule {
   }
 
   /** Loads furniture. */
-  public void loadFurniture() {
+  public void loadFurniture() throws FurnitureNotFoundException, InvalidFurnitureClassException {
     final var furnitureListString = context.getConfig().get(Config.Key.FURNITURE_LIST);
     final var furnitureNameList =
         Arrays.stream(furnitureListString.split(Constants.FURNITURE_NAME_SEPARATOR))
@@ -36,7 +37,8 @@ public class Renovator extends ChamberModule {
   }
 
   public void resolveDependencies(
-      final List<String> dependencyPath, final List<String> dependencyList) {
+      final List<String> dependencyPath, final List<String> dependencyList)
+      throws FurnitureNotFoundException, InvalidFurnitureClassException {
     for (final var dependency : dependencyList) {
       // If the dependency is found within the dependency path, a circular dependency is found
       if (dependencyPath.contains(dependency)) {
@@ -61,28 +63,34 @@ public class Renovator extends ChamberModule {
     }
   }
 
-  public Class<? extends Furniture> checkIfFurnitureExist(final String name) {
+  public Class<? extends Furniture> checkIfFurnitureExist(final String name)
+      throws FurnitureNotFoundException {
     try {
       @SuppressWarnings("unchecked")
-      final var clazz = (Class<? extends Furniture>) Class.forName(name);
-      return clazz;
+      final Class<? extends Furniture> furnitureClass =
+          (Class<? extends Furniture>) Class.forName(name);
+      return furnitureClass;
     } catch (final ClassNotFoundException ex) {
-      throw new RuntimeException(ex);
+      throw new FurnitureNotFoundException(name);
     }
   }
 
-  public void testFurnitureClass(final Class<? extends Furniture> clazz) {
-    final String name = clazz.getName();
-    if (!Furniture.class.isAssignableFrom(clazz)) {
-      throw new ClassCastException("Class does not extend Furniture: " + name);
+  public void testFurnitureClass(final Class<? extends Furniture> furnitureClass)
+      throws InvalidFurnitureClassException {
+    // Check if the given class extends the Furniture class and is annotated correctly
+    if (!Furniture.class.isAssignableFrom(furnitureClass)
+        || furnitureClass.getAnnotation(CommandLine.Command.class) == null) {
+      throw new InvalidFurnitureClassException(furnitureClass.getName());
     }
   }
 
-  public Furniture loadByName(final String name) {
+  public Furniture loadByName(final String name)
+      throws FurnitureNotFoundException, InvalidFurnitureClassException {
     return loadByClass(checkIfFurnitureExist(name));
   }
 
-  public Furniture loadByClass(final Class<? extends Furniture> clazz) {
+  public Furniture loadByClass(final Class<? extends Furniture> clazz)
+      throws InvalidFurnitureClassException {
     testFurnitureClass(clazz);
 
     final var burrowFurnitureAnnotation = clazz.getAnnotation(BurrowFurniture.class);

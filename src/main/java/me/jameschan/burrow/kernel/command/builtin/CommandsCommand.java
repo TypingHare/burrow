@@ -6,7 +6,7 @@ import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "commands", description = "List all commands and descriptions.")
+@CommandLine.Command(name = "commands", description = "List all commands with descriptions.")
 public class CommandsCommand extends Command {
   public CommandsCommand(final RequestContext requestContext) {
     super(requestContext);

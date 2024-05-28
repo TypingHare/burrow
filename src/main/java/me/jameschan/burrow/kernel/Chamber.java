@@ -44,24 +44,34 @@ public class Chamber {
     return name;
   }
 
-  public void initiate(final String name)
-      throws ChamberNotFoundException, ConfigFileNotFoundException {
+  public void initiate(final String name) throws ChamberInitializationException {
     context.set(ChamberContext.Key.CHAMBER, this);
     context.set(ChamberContext.Key.CONFIG, getModuleObject(Config.class));
     context.set(ChamberContext.Key.HOARD, getModuleObject(Hoard.class));
     context.set(ChamberContext.Key.RENOVATOR, getModuleObject(Renovator.class));
     context.set(ChamberContext.Key.PROCESSOR, getModuleObject(Processor.class));
 
-    checkChamberDirectory(name);
-    context.getConfig().loadFromFile();
-    context.getRenovator().loadFurniture();
-    context.getHoard().loadFromFile();
+    try {
+      checkChamberDirectory(name);
+      context.getConfig().loadFromFile();
+      context.getRenovator().loadFurniture();
+      context.getHoard().loadFromFile();
+    } catch (final Throwable ex) {
+      throw new ChamberInitializationException(ex);
+    }
 
     this.name = name;
   }
 
   public void terminate() {
     context.getHoard().saveToFile();
+  }
+
+  public void restart() throws ChamberInitializationException {
+    terminate();
+
+    final var chamberShepherd = applicationContext.getBean(ChamberShepherd.class);
+    chamberShepherd.initiate(this.name);
   }
 
   public void execute(final RequestContext requestContext, final List<String> args) {
