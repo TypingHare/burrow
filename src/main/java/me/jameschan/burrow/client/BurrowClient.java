@@ -15,6 +15,7 @@ public abstract class BurrowClient {
 
   protected final Properties properties = new Properties();
   protected final URI uri;
+  protected String workingDirectory;
   protected String currentChamberName;
   protected String lastCommand = "";
   protected Duration lastRequestDuration = Duration.ZERO;
@@ -32,12 +33,23 @@ public abstract class BurrowClient {
     // Get the URL of the server to send requests
     final var uriString = properties.getProperty("burrow.client.url");
     this.uri = URI.create(uriString);
+
+    // Environment
+    workingDirectory = System.getProperty("user.dir");
   }
 
   public static int getConsoleWidth() {
     final var commandSpec = CommandLine.Model.CommandSpec.create();
     final var message = commandSpec.usageMessage().autoWidth(true);
     return message.width();
+  }
+
+  public BurrowRequest prepareRequest(final String command) {
+    final var request = new BurrowRequest();
+    request.setCommand(command);
+    request.setWorkingDirectory(workingDirectory);
+
+    return request;
   }
 
   public BurrowResponse sendRequestTiming(final BurrowRequest request) {

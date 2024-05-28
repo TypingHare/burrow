@@ -2,7 +2,6 @@ package me.jameschan.burrow.client;
 
 import java.util.Scanner;
 import java.util.concurrent.Callable;
-import me.jameschan.burrow.kernel.common.BurrowRequest;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "Burrow CLI", version = "1.0.0", mixinStandardHelpOptions = true)
@@ -29,9 +28,7 @@ public class BurrowCli implements Callable<Integer> {
       } else if (command.startsWith("$")) {
         resolveCliCommand(client, command);
       } else {
-        final var request = new BurrowRequest();
-        request.setCommand(command);
-        final var response = client.sendRequestTiming(request);
+        final var response = client.sendRequestTiming(client.prepareRequest(command));
         client.printResponse(response);
       }
     }
