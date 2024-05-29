@@ -10,5 +10,7 @@ public interface EntrySupport {
 
   void onCreateEntry(final Entry entry);
 
+  void onDeleteEntry(final Entry entry);
+
   void toFormattedObject(final Map<String, String> formattedObject, final Entry entry);
 }

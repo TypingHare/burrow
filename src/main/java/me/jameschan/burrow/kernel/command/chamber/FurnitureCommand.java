@@ -55,7 +55,7 @@ public class FurnitureCommand extends Command {
     final var furnitureNameList = new ArrayList<String>();
     for (final var furniture : furnitureCollection) {
       final var furnitureName = furniture.getClass().getName();
-      furnitureNameList.add("[" + furnitureNameList.size() + "]" + furnitureName);
+      furnitureNameList.add("[" + furnitureNameList.size() + "] " + furnitureName);
     }
 
     buffer.append(String.join("\n", furnitureNameList));
@@ -90,7 +90,7 @@ public class FurnitureCommand extends Command {
     final var newFurnitureListString = furnitureListString + ":" + furnitureName;
     config.set(Config.Key.FURNITURE_LIST, newFurnitureListString);
     context.getConfig().saveToFile();
-    buffer.append("Furniture added: ").append(furnitureName).append("\n");
+    buffer.append("Furniture added: ").append(furnitureName);
 
     // Restart chamber
     context.getChamber().restart();

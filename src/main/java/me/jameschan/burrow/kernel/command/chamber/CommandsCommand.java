@@ -3,7 +3,9 @@ package me.jameschan.burrow.kernel.command.chamber;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import me.jameschan.burrow.kernel.command.Command;
+import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.AmbiguousSimpleNameException;
 import me.jameschan.burrow.kernel.furniture.FurnitureNotFoundException;
 import picocli.CommandLine;
 
@@ -21,7 +23,7 @@ public class CommandsCommand extends Command {
   }
 
   @Override
-  public Integer call() throws FurnitureNotFoundException {
+  public Integer call() throws FurnitureNotFoundException, AmbiguousSimpleNameException {
     final var commands =
         furnitureName.isEmpty()
             ? context.getProcessor().getAllCommands()
@@ -36,8 +38,10 @@ public class CommandsCommand extends Command {
       commandStringLines.add(String.format("%s: %s", Strings.padEnd(name, 14, ' '), description));
     }
 
-    buffer.append(String.join("\n", commandStringLines));
+    if (!commandStringLines.isEmpty()) {
+      buffer.append(String.join("\n", commandStringLines));
+    }
 
-    return 0;
+    return ExitCode.SUCCESS;
   }
 }

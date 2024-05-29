@@ -1,10 +1,7 @@
 package me.jameschan.burrow.kernel.command;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import me.jameschan.burrow.kernel.Chamber;
 import me.jameschan.burrow.kernel.ChamberModule;
@@ -45,6 +42,7 @@ public class Processor extends ChamberModule {
     register(HelpCommand.class);
     register(ConfigCommand.class);
     register(FurnitureCommand.class);
+    register(FurnitureListCommand.class);
 
     // Entry related commands
     register(NewCommand.class);

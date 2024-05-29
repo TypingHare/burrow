@@ -13,12 +13,12 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-import picocli.CommandLine;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Renovator extends ChamberModule {
   private final Map<String, Furniture> furnitureStore = new LinkedHashMap<>();
+  private final Map<String, List<String>> fullNameMap = new HashMap<>();
 
   public Renovator(@NonNull final Chamber chamber) {
     super(chamber);
@@ -58,9 +58,21 @@ public class Renovator extends ChamberModule {
       nextDependencyPath.add(dependency);
       resolveDependencies(nextDependencyPath, nextDependencyList);
 
-      // Add the dependency to the store
-      furnitureStore.put(furnitureClass.getName(), furniture);
+      register(furniture);
     }
+  }
+
+  private void register(@NonNull final Furniture furniture) {
+    final var fullName = furniture.getClass().getName();
+    final var simpleName = getSimpleName(fullName);
+    furnitureStore.put(fullName, furniture);
+    fullNameMap.computeIfAbsent(simpleName, k -> new ArrayList<>()).add(fullName);
+  }
+
+  @NonNull
+  public String getSimpleName(@NonNull final String fullName) {
+    final var sp = fullName.split("\\.");
+    return sp.length > 2 ? sp[sp.length - 2] : "";
   }
 
   @NonNull
@@ -80,7 +92,7 @@ public class Renovator extends ChamberModule {
       throws InvalidFurnitureClassException {
     // Check if the given class extends the Furniture class and is annotated correctly
     if (!Furniture.class.isAssignableFrom(furnitureClass)
-        || furnitureClass.getAnnotation(CommandLine.Command.class) == null) {
+        || furnitureClass.getDeclaredAnnotation(BurrowFurniture.class) == null) {
       throw new InvalidFurnitureClassException(furnitureClass.getName());
     }
   }
@@ -138,9 +150,42 @@ public class Renovator extends ChamberModule {
   }
 
   @NonNull
-  public Furniture getFurnitureByName(@NonNull final String furnitureName)
+  public Furniture getFurnitureByFullName(@NonNull final String fullName)
       throws FurnitureNotFoundException {
-    return Optional.ofNullable(furnitureStore.get(furnitureName))
-        .orElseThrow(() -> new FurnitureNotFoundException(furnitureName));
+    return Optional.ofNullable(furnitureStore.get(fullName))
+        .orElseThrow(() -> new FurnitureNotFoundException(fullName));
+  }
+
+  @NonNull
+  public Furniture getFurnitureBySimpleName(@NonNull final String simpleName)
+      throws FurnitureNotFoundException, AmbiguousSimpleNameException {
+    final var fullNameList = fullNameMap.get(simpleName);
+    if (fullNameList == null) {
+      throw new FurnitureNotFoundException(simpleName);
+    }
+
+    if (fullNameList.size() > 1) {
+      throw new AmbiguousSimpleNameException(simpleName);
+    }
+
+    return getFurnitureByFullName(fullNameList.getFirst());
+  }
+
+  @NonNull
+  public Furniture getFurnitureByName(@NonNull final String name)
+      throws FurnitureNotFoundException, AmbiguousSimpleNameException {
+    return name.contains(".") ? getFurnitureByFullName(name) : getFurnitureBySimpleName(name);
+  }
+
+  @NonNull
+  public Collection<String> getAllSimpleNames() {
+    return fullNameMap.keySet();
+  }
+
+  @NonNull
+  public Collection<String> getAllFullNames() {
+    return furnitureStore.values().stream()
+        .map(furniture -> furniture.getClass().getName())
+        .toList();
   }
 }

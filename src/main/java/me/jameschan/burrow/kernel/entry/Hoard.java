@@ -101,6 +101,7 @@ public class Hoard extends ChamberModule {
 
   public Entry delete(final int id) {
     final var entry = getById(id);
+    context.getRenovator().getAllFurniture().forEach(furniture -> furniture.onDeleteEntry(entry));
     entryStore.remove(id);
 
     return entry;
