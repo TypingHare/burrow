@@ -1,20 +1,32 @@
-package me.jameschan.burrow.kernel.command.builtin;
+package me.jameschan.burrow.kernel.command.chamber;
 
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.FurnitureNotFoundException;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "commands", description = "List all commands with descriptions.")
 public class CommandsCommand extends Command {
+  @CommandLine.Parameters(
+      index = "0",
+      paramLabel = "<furniture-name>",
+      description = "",
+      defaultValue = "")
+  private String furnitureName;
+
   public CommandsCommand(final RequestContext requestContext) {
     super(requestContext);
   }
 
   @Override
-  public Integer call() {
-    final var commands = context.getProcessor().getAllCommands();
+  public Integer call() throws FurnitureNotFoundException {
+    final var commands =
+        furnitureName.isEmpty()
+            ? context.getProcessor().getAllCommands()
+            : context.getRenovator().getFurnitureByName(furnitureName).getAllCommands();
+
     final var commandStringLines = new ArrayList<String>();
     for (final var command : commands) {
       final var commandAnnotation = command.getDeclaredAnnotation(CommandLine.Command.class);

@@ -25,7 +25,16 @@ public class ChamberShepherd {
 
   public Chamber initiate(final String chamberName) throws ChamberInitializationException {
     final var chamber = applicationContext.getBean(Chamber.class);
-    chamber.initiate(chamberName);
+    logger.info("Chamber initiating: {}", chamberName);
+
+    try {
+      chamber.initiate(chamberName);
+    } catch (final ChamberInitializationException ex) {
+      logger.error(ex.getMessage());
+      logger.error("Fail to initiate chamber: {}", chamberName);
+      throw ex;
+    }
+
     chamberStore.put(chamberName, chamber);
     logger.info("Chamber initiated: {}", chamberName);
 
@@ -63,7 +72,7 @@ public class ChamberShepherd {
       response.setMessage(requestContext.getBuffer().toString());
       response.setCode(requestContext.getExitCode());
     } catch (final ChamberInitializationException ex) {
-      response.setMessage(ex.getMessage());
+      response.setMessage("Fail to initiate: " + chamberName + "\n" + ex.getMessage());
       response.setCode(ExitCode.ERROR);
     } catch (final Throwable ex) {
       response.setMessage("Internal error: " + ex.getMessage());
@@ -74,6 +83,6 @@ public class ChamberShepherd {
   }
 
   public void terminateAll() {
-    chamberStore.values().forEach(Chamber::terminate);
+    chamberStore.keySet().forEach(this::terminate);
   }
 }

@@ -1,4 +1,4 @@
-package me.jameschan.burrow.kernel.command.builtin;
+package me.jameschan.burrow.kernel.command.chamber;
 
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;

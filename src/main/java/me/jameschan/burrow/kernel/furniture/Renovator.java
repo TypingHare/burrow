@@ -20,7 +20,7 @@ import picocli.CommandLine;
 public class Renovator extends ChamberModule {
   private final Map<String, Furniture> furnitureStore = new LinkedHashMap<>();
 
-  public Renovator(final Chamber chamber) {
+  public Renovator(@NonNull final Chamber chamber) {
     super(chamber);
   }
 
@@ -37,7 +37,7 @@ public class Renovator extends ChamberModule {
   }
 
   public void resolveDependencies(
-      final List<String> dependencyPath, final List<String> dependencyList)
+      @NonNull final List<String> dependencyPath, @NonNull final List<String> dependencyList)
       throws FurnitureNotFoundException, InvalidFurnitureClassException {
     for (final var dependency : dependencyList) {
       // If the dependency is found within the dependency path, a circular dependency is found
@@ -63,7 +63,8 @@ public class Renovator extends ChamberModule {
     }
   }
 
-  public Class<? extends Furniture> checkIfFurnitureExist(final String name)
+  @NonNull
+  public Class<? extends Furniture> checkIfFurnitureExist(@NonNull final String name)
       throws FurnitureNotFoundException {
     try {
       @SuppressWarnings("unchecked")
@@ -75,7 +76,7 @@ public class Renovator extends ChamberModule {
     }
   }
 
-  public void testFurnitureClass(final Class<? extends Furniture> furnitureClass)
+  public void testFurnitureClass(@NonNull final Class<? extends Furniture> furnitureClass)
       throws InvalidFurnitureClassException {
     // Check if the given class extends the Furniture class and is annotated correctly
     if (!Furniture.class.isAssignableFrom(furnitureClass)
@@ -84,12 +85,14 @@ public class Renovator extends ChamberModule {
     }
   }
 
-  public Furniture loadByName(final String name)
+  @NonNull
+  public Furniture loadByName(@NonNull final String name)
       throws FurnitureNotFoundException, InvalidFurnitureClassException {
     return loadByClass(checkIfFurnitureExist(name));
   }
 
-  public Furniture loadByClass(final Class<? extends Furniture> clazz)
+  @NonNull
+  public Furniture loadByClass(@NonNull final Class<? extends Furniture> clazz)
       throws InvalidFurnitureClassException {
     testFurnitureClass(clazz);
 
@@ -132,5 +135,12 @@ public class Renovator extends ChamberModule {
     }
 
     return furniture;
+  }
+
+  @NonNull
+  public Furniture getFurnitureByName(@NonNull final String furnitureName)
+      throws FurnitureNotFoundException {
+    return Optional.ofNullable(furnitureStore.get(furnitureName))
+        .orElseThrow(() -> new FurnitureNotFoundException(furnitureName));
   }
 }

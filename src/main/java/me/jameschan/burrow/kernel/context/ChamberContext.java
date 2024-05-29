@@ -6,6 +6,7 @@ import me.jameschan.burrow.kernel.Chamber;
 import me.jameschan.burrow.kernel.command.Processor;
 import me.jameschan.burrow.kernel.config.Config;
 import me.jameschan.burrow.kernel.entry.Hoard;
+import me.jameschan.burrow.kernel.formatter.Formatter;
 import me.jameschan.burrow.kernel.furniture.Renovator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -34,6 +35,10 @@ public class ChamberContext extends Context {
     return get(Key.PROCESSOR, Processor.class);
   }
 
+  public Formatter getFormatter() {
+    return get(Key.FORMATTER, Formatter.class);
+  }
+
   public Path getRootDir() {
     return get(Key.ROOT_DIR, Path.class);
   }
@@ -59,6 +64,7 @@ public class ChamberContext extends Context {
     public static final String HOARD = "HOARD";
     public static final String RENOVATOR = "RENOVATOR";
     public static final String PROCESSOR = "PROCESSOR";
+    public static final String FORMATTER = "FORMATTER";
 
     // Root directories and crucial file paths
     public static final String ROOT_DIR = "ROOT_DIR";

@@ -1,4 +1,4 @@
-package me.jameschan.burrow.kernel.command.builtin;
+package me.jameschan.burrow.kernel.command.chamber;
 
 import java.util.ArrayList;
 import java.util.Arrays;

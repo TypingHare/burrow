@@ -4,10 +4,10 @@ import java.util.List;
 import me.jameschan.burrow.kernel.command.Processor;
 import me.jameschan.burrow.kernel.common.Constants;
 import me.jameschan.burrow.kernel.config.Config;
-import me.jameschan.burrow.kernel.config.ConfigFileNotFoundException;
 import me.jameschan.burrow.kernel.context.ChamberContext;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.entry.Hoard;
+import me.jameschan.burrow.kernel.formatter.Formatter;
 import me.jameschan.burrow.kernel.furniture.Renovator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -50,6 +50,7 @@ public class Chamber {
     context.set(ChamberContext.Key.HOARD, getModuleObject(Hoard.class));
     context.set(ChamberContext.Key.RENOVATOR, getModuleObject(Renovator.class));
     context.set(ChamberContext.Key.PROCESSOR, getModuleObject(Processor.class));
+    context.set(ChamberContext.Key.FORMATTER, getModuleObject(Formatter.class));
 
     try {
       checkChamberDirectory(name);

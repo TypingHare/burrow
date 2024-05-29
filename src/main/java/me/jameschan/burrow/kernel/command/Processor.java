@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.function.Predicate;
 import me.jameschan.burrow.kernel.Chamber;
 import me.jameschan.burrow.kernel.ChamberModule;
-import me.jameschan.burrow.kernel.command.builtin.*;
+import me.jameschan.burrow.kernel.command.chamber.*;
+import me.jameschan.burrow.kernel.command.entry.*;
+import me.jameschan.burrow.kernel.command.special.*;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import org.slf4j.Logger;
@@ -41,10 +43,15 @@ public class Processor extends ChamberModule {
     register(RootCommand.class);
     register(CommandsCommand.class);
     register(HelpCommand.class);
-
-    // Config and Furniture
     register(ConfigCommand.class);
     register(FurnitureCommand.class);
+
+    // Entry related commands
+    register(NewCommand.class);
+    register(EntryCommand.class);
+    register(ExistCommand.class);
+    register(DeleteCommand.class);
+    register(EntriesCommand.class);
   }
 
   public int execute(
@@ -65,26 +72,27 @@ public class Processor extends ChamberModule {
     }
   }
 
-  public void register(Class<? extends Command> clazz) {
-    final var commandAnnotation = clazz.getDeclaredAnnotationsByType(CommandLine.Command.class);
+  public void register(final Class<? extends Command> commandClass) {
+    final var commandAnnotation =
+        commandClass.getDeclaredAnnotationsByType(CommandLine.Command.class);
     if (commandAnnotation.length == 0) {
       throw new RuntimeException(
           "Fail to register command, as it is not annotated by "
               + "picocli.CommandLine.Command: "
-              + clazz.getName());
+              + commandClass.getName());
     }
 
     final var commandName = commandAnnotation[0].name();
-    commandClassStore.put(commandName, clazz);
+    commandClassStore.put(commandName, commandClass);
   }
 
-  public void disable(Class<? extends Command> clazz) {
-    final var commandAnnotation = clazz.getDeclaredAnnotation(CommandLine.Command.class);
+  public void disable(final Class<? extends Command> commandClass) {
+    final var commandAnnotation = commandClass.getDeclaredAnnotation(CommandLine.Command.class);
     if (commandAnnotation == null) {
       throw new RuntimeException(
           "Fail to register command, as it is not annotated by "
               + "picocli.CommandLine.Command: "
-              + clazz.getName());
+              + commandClass.getName());
     }
 
     final var commandName = commandAnnotation.name();

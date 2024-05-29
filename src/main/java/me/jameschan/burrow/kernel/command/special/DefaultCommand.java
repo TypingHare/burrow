@@ -1,4 +1,4 @@
-package me.jameschan.burrow.kernel.command.builtin;
+package me.jameschan.burrow.kernel.command.special;
 
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.command.Processor;
@@ -30,7 +30,7 @@ public class DefaultCommand extends Command {
     final var config = context.getConfig();
 
     if (version) {
-      final var chamberName = chamber.getName();
+      final var chamberName = context.getConfig().get(Config.Key.CHAMBER_NAME);
       final var version = config.get(Config.Key.CHAMBER_VERSION);
       buffer.append(String.format("%s v%s", chamberName, version));
     }

@@ -8,7 +8,7 @@ import java.util.Optional;
  * Represents an entry with a unique identifier and a set of key-value properties. This class
  * facilitates the storage and retrieval of properties associated with an entry.
  */
-public class Entry {
+public final class Entry {
   /** The unique identifier for this entry. */
   private final int id;
 
