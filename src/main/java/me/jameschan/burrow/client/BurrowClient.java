@@ -63,12 +63,12 @@ public abstract class BurrowClient {
 
   protected abstract BurrowResponse sendRequest(final BurrowRequest request);
 
-  public String getPrompt() {
-    return currentChamberName + "> ";
+  public String getCurrentChamberName() {
+    return currentChamberName;
   }
 
-  public void printPrompt() {
-    System.out.print(CommandLine.Help.Ansi.AUTO.string("@|blue " + getPrompt() + "|@"));
+  public void setCurrentChamberName(final String currentChamberName) {
+    this.currentChamberName = currentChamberName;
   }
 
   public void printResponse(final BurrowResponse response) {
@@ -88,10 +88,6 @@ public abstract class BurrowClient {
 
     // Print the message and wrap the line
     System.out.println(response.getMessage());
-  }
-
-  public void setCurrentChamberName(final String currentChamberName) {
-    this.currentChamberName = currentChamberName;
   }
 
   protected String getColoredCodeString(int code) {

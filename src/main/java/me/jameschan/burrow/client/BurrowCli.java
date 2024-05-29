@@ -1,7 +1,10 @@
 package me.jameschan.burrow.client;
 
-import java.util.Scanner;
 import java.util.concurrent.Callable;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.impl.history.DefaultHistory;
+import org.jline.terminal.TerminalBuilder;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "Burrow CLI", version = "1.0.0", mixinStandardHelpOptions = true)
@@ -18,13 +21,17 @@ public class BurrowCli implements Callable<Integer> {
     final var client = getBurrowClient();
     client.setCurrentChamberName(DEFAULT_CHAMBER_NAME);
 
-    final var scanner = new Scanner(System.in);
+    final var terminal = TerminalBuilder.terminal();
+    final LineReader reader =
+        LineReaderBuilder.builder().terminal(terminal).history(new DefaultHistory()).build();
+
     var isRunning = true;
     while (isRunning) {
-      client.printPrompt();
-      final var command = scanner.nextLine().trim();
+      final var prompt = getPromptString(client);
+      final var command = reader.readLine(prompt).trim();
       if (command.equals(CliCommand.$EXIT)) {
         isRunning = false;
+        terminal.close();
       } else if (command.startsWith("$")) {
         resolveCliCommand(client, command);
       } else {
@@ -46,6 +53,11 @@ public class BurrowCli implements Callable<Integer> {
 
   private BurrowClient getBurrowClient() throws BurrowClientInitializationException {
     return new HttpBurrowClient();
+  }
+
+  private String getPromptString(final BurrowClient client) {
+    final var chamberName = client.getCurrentChamberName();
+    return CommandLine.Help.Ansi.AUTO.string("@|blue " + chamberName + "> |@");
   }
 
   public static final class CliCommand {

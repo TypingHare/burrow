@@ -1,7 +1,6 @@
 package me.jameschan.burrow.kernel.command.entry;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;

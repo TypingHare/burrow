@@ -8,7 +8,7 @@ public class Burrow {
     final var client = new HttpBurrowClient();
     final var request = client.prepareRequest(command);
     final var response = client.sendRequest(request);
-    
+
     System.out.println(response.getMessage());
     System.exit(response.getCode());
   }

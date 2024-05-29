@@ -1,6 +1,5 @@
 package me.jameschan.burrow.kernel.furniture.annotation;
 
-
 import java.lang.annotation.*;
 
 @Target({ElementType.TYPE})

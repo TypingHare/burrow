@@ -1,9 +1,7 @@
 package me.jameschan.burrow.kernel.command.chamber;
 
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
@@ -26,12 +24,14 @@ public class FurnitureListCommand extends Command {
     final var renovator = context.getRenovator();
     final var nameList = full ? renovator.getAllFullNames() : renovator.getAllSimpleNames();
 
-    final var i = new AtomicInteger(0);
-    final var lineList =
-        nameList.stream()
-            .map(name -> "[" + i.getAndIncrement() + "] " + name)
-            .collect(Collectors.joining("\n"));
-    buffer.append(lineList);
+    if (!nameList.isEmpty()) {
+      final var i = new AtomicInteger(0);
+      final var lineList =
+          nameList.stream()
+              .map(name -> "[" + i.getAndIncrement() + "] " + name)
+              .collect(Collectors.joining("\n"));
+      buffer.append(lineList);
+    }
 
     return ExitCode.SUCCESS;
   }

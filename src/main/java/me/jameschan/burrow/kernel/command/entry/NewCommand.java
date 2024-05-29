@@ -6,10 +6,7 @@ import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import picocli.CommandLine;
 
-@CommandLine.Command(
-    name = "new",
-    mixinStandardHelpOptions = true,
-    description = "Create a new entry and print the new try.")
+@CommandLine.Command(name = "new", description = "Create a new entry and print the new try.")
 public class NewCommand extends Command {
   public NewCommand(final RequestContext context) {
     super(context);

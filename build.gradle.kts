@@ -17,8 +17,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web:3.2.5")
     implementation("org.springframework.boot:spring-boot-loader:3.2.5")
 
-    // Picocli
+    // Picocli and JLine
     implementation("info.picocli:picocli:4.7.6")
+    implementation("org.jline:jline:3.26.1")
 
     // Apache Http Client
     implementation("org.apache.httpcomponents.client5:httpclient5-cache:5.3.1")
@@ -40,14 +41,6 @@ tasks.register<JavaExec>("server") {
     group = "application"
     description = "Alias for bootRun"
     dependsOn("bootRun")
-}
-
-tasks.register<JavaExec>("cli") {
-    group = "application"
-    description = "Run the Burrow CLI."
-    mainClass.set("me.jameschan.burrow.BurrowCli")
-    classpath = sourceSets["main"].runtimeClasspath
-    standardInput = System.`in`
 }
 
 tasks.shadowJar {
