@@ -1,6 +1,7 @@
 package me.jameschan.burrow.kernel.command;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Callable;
 import me.jameschan.burrow.kernel.ChamberModule;
 import me.jameschan.burrow.kernel.common.ExitCode;
@@ -80,5 +81,9 @@ public abstract class Command extends ChamberModule
     if (!lines.isEmpty()) {
       buffer.append(String.join("\n", lines));
     }
+  }
+
+  public int executeOther(final String commandName, final List<String> args) {
+    return context.getProcessor().execute(commandName, args, requestContext);
   }
 }

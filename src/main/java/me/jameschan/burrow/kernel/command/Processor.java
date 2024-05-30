@@ -53,12 +53,12 @@ public class Processor extends ChamberModule {
   }
 
   public int execute(
-      final String commandName, final List<String> args, final RequestContext context) {
+      final String commandName, final List<String> args, final RequestContext requestContext) {
     final var commandClass = commandClassStore.getOrDefault(commandName, UnknownCommand.class);
 
     try {
       final var constructor = commandClass.getConstructor(RequestContext.class);
-      final var command = constructor.newInstance(context);
+      final var command = constructor.newInstance(requestContext);
       return new CommandLine(command)
           .setParameterExceptionHandler(command)
           .setExecutionExceptionHandler(command)
