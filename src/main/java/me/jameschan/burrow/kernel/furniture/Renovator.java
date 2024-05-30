@@ -61,6 +61,7 @@ public class Renovator extends ChamberModule {
 
       register(furniture);
       loadConfigFrom(furniture);
+      furniture.init();
     }
   }
 

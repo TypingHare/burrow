@@ -33,7 +33,10 @@ public class SchedulerFurniture extends Furniture {
 
   public SchedulerFurniture(final Chamber chamber) {
     super(chamber);
+  }
 
+  @Override
+  public void init() {
     final var aspectFurniture = use(AspectFurniture.class);
     aspectFurniture.beforeExecution(
         (chamberToAccess, requestContext) -> {

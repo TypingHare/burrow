@@ -7,7 +7,9 @@ import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "furniture-list", description = "")
+@CommandLine.Command(
+    name = "furniture-list",
+    description = "Prints the list of furniture of this chamber.")
 public class FurnitureListCommand extends Command {
   @CommandLine.Option(
       names = {"-f", "--full"},

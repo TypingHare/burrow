@@ -41,8 +41,8 @@ public class Processor extends ChamberModule {
     register(CommandsCommand.class);
     register(HelpCommand.class);
     register(ConfigCommand.class);
-    register(FurnitureCommand.class);
     register(FurnitureListCommand.class);
+    register(FurnitureAddCommand.class);
 
     // Entry related commands
     register(NewCommand.class);

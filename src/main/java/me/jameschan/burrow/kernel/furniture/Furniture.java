@@ -41,6 +41,11 @@ public abstract class Furniture extends ChamberModule
     return commandSet;
   }
 
+  /**
+   * Initializes this furniture. This method will be called after all its dependencies are resolved.
+   */
+  public void init() {}
+
   public void onTerminate() {}
 
   @Override
