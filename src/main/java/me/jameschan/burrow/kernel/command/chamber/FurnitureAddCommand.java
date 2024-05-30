@@ -1,6 +1,8 @@
 package me.jameschan.burrow.kernel.command.chamber;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Predicate;
 import me.jameschan.burrow.kernel.ChamberInitializationException;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
@@ -32,6 +34,7 @@ public class FurnitureAddCommand extends Command {
     final var furnitureNameList =
         Arrays.stream(furnitureListString.split(Renovator.FURNITURE_NAME_SEPARATOR))
             .map(String::trim)
+            .filter(Predicate.not(String::isEmpty))
             .toList();
     if (furnitureNameList.contains(furnitureName)) {
       buffer.append("Furniture already exists: ").append(furnitureName);
@@ -48,8 +51,10 @@ public class FurnitureAddCommand extends Command {
     }
 
     // Add the furniture to the list and update the config file
+    final var newFurnitureList = new ArrayList<>(furnitureNameList);
+    newFurnitureList.add(furnitureName);
     final var newFurnitureListString =
-        furnitureListString + Renovator.FURNITURE_NAME_SEPARATOR + furnitureName;
+        String.join(Renovator.FURNITURE_NAME_SEPARATOR, newFurnitureList);
     config.set(Config.Key.FURNITURE_LIST, newFurnitureListString);
     context.getConfig().saveToFile();
 

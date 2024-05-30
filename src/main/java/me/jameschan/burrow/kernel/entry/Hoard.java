@@ -27,6 +27,7 @@ public class Hoard extends ChamberModule {
 
   public void loadFromFile() {
     final var filePath = context.getRootDir().resolve(HOARD_FILE_NAME);
+    context.set(ChamberContext.Key.HOARD_FILE, filePath.toFile());
     if (!filePath.toFile().exists()) {
       // Create a database file and write "[]"
       try {
@@ -36,9 +37,6 @@ public class Hoard extends ChamberModule {
         throw new RuntimeException("Fail to create database: " + filePath, ex);
       }
     }
-
-    // Update context
-    context.set(ChamberContext.Key.HOARD_FILE, filePath.toFile());
 
     try {
       final var content = Files.readString(filePath);
@@ -129,11 +127,4 @@ public class Hoard extends ChamberModule {
 
     return entryObject;
   }
-
-  //  public String getFormattedEntryString(final Entry entry) {
-  //    final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-  //    final var object = getFormattedObject(entry);
-  //    final var prettierString = gson.toJson(object).replaceAll("\"(\\w+)\":", "$1:");
-  //    return "[" + entry.getId() + "] " + prettierString;
-  //  }
 }

@@ -1,6 +1,5 @@
 package me.jameschan.burrow.kernel;
 
-import java.nio.file.Path;
 import java.util.List;
 import me.jameschan.burrow.kernel.command.Processor;
 import me.jameschan.burrow.kernel.config.Config;
