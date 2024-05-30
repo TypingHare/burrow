@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import me.jameschan.burrow.kernel.ChamberInitializationException;
 import me.jameschan.burrow.kernel.command.Command;
-import me.jameschan.burrow.kernel.common.Constants;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.config.Config;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.FurnitureNotFoundException;
 import me.jameschan.burrow.kernel.furniture.InvalidFurnitureClassException;
+import me.jameschan.burrow.kernel.furniture.Renovator;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -69,7 +69,7 @@ public class FurnitureCommand extends Command {
     final var config = context.getConfig();
     final var furnitureListString = config.get(Config.Key.FURNITURE_LIST);
     final var furnitureNameList =
-        Arrays.stream(furnitureListString.split(Constants.FURNITURE_NAME_SEPARATOR))
+        Arrays.stream(furnitureListString.split(Renovator.FURNITURE_NAME_SEPARATOR))
             .map(String::trim)
             .toList();
     if (furnitureNameList.contains(furnitureName)) {
@@ -102,12 +102,12 @@ public class FurnitureCommand extends Command {
     final var config = context.getConfig();
     final var furnitureListString = config.get(Config.Key.FURNITURE_LIST);
     final var newFurnitureNameList =
-        Arrays.stream(furnitureListString.split(Constants.FURNITURE_NAME_SEPARATOR))
+        Arrays.stream(furnitureListString.split(Renovator.FURNITURE_NAME_SEPARATOR))
             .map(String::trim)
             .filter(fn -> fn.equals(furnitureName))
             .toList();
     final var newFurnitureListString =
-        String.join(Constants.FURNITURE_NAME_SEPARATOR, newFurnitureNameList);
+        String.join(Renovator.FURNITURE_NAME_SEPARATOR, newFurnitureNameList);
     config.set(Config.Key.FURNITURE_LIST, newFurnitureListString);
     context.getConfig().saveToFile();
 

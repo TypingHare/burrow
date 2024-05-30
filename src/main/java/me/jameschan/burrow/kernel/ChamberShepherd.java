@@ -1,5 +1,6 @@
 package me.jameschan.burrow.kernel;
 
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import me.jameschan.burrow.kernel.common.*;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Component;
 
 @Component()
 public class ChamberShepherd {
+  public static final Path CHAMBER_ROOT_DIR = Burrow.ROOT_DIR.resolve("chamber");
+  public static final String ROOT_CHAMBER_NAME = ".";
+
   private static final Logger logger = LoggerFactory.getLogger(ChamberShepherd.class);
 
   private final ApplicationContext applicationContext;
@@ -21,6 +25,11 @@ public class ChamberShepherd {
   @Autowired
   public ChamberShepherd(final ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
+  }
+
+  /** Initiates the root chamber. */
+  public void init() throws ChamberInitializationException {
+    initiate(ROOT_CHAMBER_NAME);
   }
 
   public Chamber initiate(final String chamberName) throws ChamberInitializationException {
@@ -59,7 +68,7 @@ public class ChamberShepherd {
   public BurrowResponse processRequest(final BurrowRequest request) {
     final var args = CommandUtility.splitArguments(request.getCommand());
     final var hasChamber = !args.isEmpty() && !args.getFirst().startsWith("-");
-    final var chamberName = hasChamber ? args.getFirst() : Constants.DEFAULT_CHAMBER;
+    final var chamberName = hasChamber ? args.getFirst() : ROOT_CHAMBER_NAME;
     final var realArgs = hasChamber ? args.subList(1, args.size()) : args;
 
     final BurrowResponse response = new BurrowResponse();

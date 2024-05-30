@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.util.*;
 import me.jameschan.burrow.kernel.Chamber;
 import me.jameschan.burrow.kernel.ChamberModule;
-import me.jameschan.burrow.kernel.common.Constants;
 import me.jameschan.burrow.kernel.common.Types;
 import me.jameschan.burrow.kernel.context.ChamberContext;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Hoard extends ChamberModule {
+  public static final String HOARD_FILE_NAME = "hoard.json";
   public static final String KEY_ID = "id";
 
   private final Map<Integer, Entry> entryStore = new HashMap<>();
@@ -26,7 +26,7 @@ public class Hoard extends ChamberModule {
   }
 
   public void loadFromFile() {
-    final var filePath = context.getRootDir().resolve(Constants.HOARD_FILE_NAME);
+    final var filePath = context.getRootDir().resolve(HOARD_FILE_NAME);
     if (!filePath.toFile().exists()) {
       // Create a database file and write "[]"
       try {

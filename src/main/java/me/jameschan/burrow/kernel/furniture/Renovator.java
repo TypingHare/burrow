@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.function.Predicate;
 import me.jameschan.burrow.kernel.Chamber;
 import me.jameschan.burrow.kernel.ChamberModule;
-import me.jameschan.burrow.kernel.common.Constants;
 import me.jameschan.burrow.kernel.config.Config;
 import me.jameschan.burrow.kernel.furniture.annotation.BurrowFurniture;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -17,6 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Renovator extends ChamberModule {
+  public static final String FURNITURE_NAME_SEPARATOR = ":";
+
   private final Map<String, Furniture> furnitureStore = new LinkedHashMap<>();
   private final Map<String, List<String>> fullNameMap = new HashMap<>();
 
@@ -28,7 +29,7 @@ public class Renovator extends ChamberModule {
   public void loadFurniture() throws FurnitureNotFoundException, InvalidFurnitureClassException {
     final var furnitureListString = context.getConfig().get(Config.Key.FURNITURE_LIST);
     final var furnitureNameList =
-        Arrays.stream(furnitureListString.split(Constants.FURNITURE_NAME_SEPARATOR))
+        Arrays.stream(furnitureListString.split(Renovator.FURNITURE_NAME_SEPARATOR))
             .map(String::trim)
             .filter(Predicate.not(String::isEmpty))
             .toList();

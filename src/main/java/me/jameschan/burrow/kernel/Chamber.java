@@ -1,8 +1,8 @@
 package me.jameschan.burrow.kernel;
 
+import java.nio.file.Path;
 import java.util.List;
 import me.jameschan.burrow.kernel.command.Processor;
-import me.jameschan.burrow.kernel.common.Constants;
 import me.jameschan.burrow.kernel.config.Config;
 import me.jameschan.burrow.kernel.context.ChamberContext;
 import me.jameschan.burrow.kernel.context.RequestContext;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Chamber {
+
   private final ApplicationContext applicationContext;
   private final ChamberContext context;
   private String name;
@@ -93,7 +94,7 @@ public class Chamber {
   }
 
   private void checkChamberDirectory(final String name) throws ChamberNotFoundException {
-    final var dirPath = Constants.CHAMBER_ROOT_DIR.resolve(name).normalize();
+    final var dirPath = ChamberShepherd.CHAMBER_ROOT_DIR.resolve(name).normalize();
     final var file = dirPath.toFile();
     if (!file.isDirectory()) {
       throw new ChamberNotFoundException(name);

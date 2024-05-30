@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import me.jameschan.burrow.kernel.Chamber;
 import me.jameschan.burrow.kernel.ChamberModule;
-import me.jameschan.burrow.kernel.common.Constants;
 import me.jameschan.burrow.kernel.common.Types;
 import me.jameschan.burrow.kernel.context.ChamberContext;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -23,6 +22,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Config extends ChamberModule {
+  /** Config file name; */
+  public static final String CONFIG_FILE_NAME = "config.json";
 
   /** Set containing allowed keys for configuration. */
   private final Set<String> allowedKeySet = new HashSet<>();
@@ -35,8 +36,6 @@ public class Config extends ChamberModule {
     super(chamber);
     addAllowedKey(Key.CHAMBER_NAME);
     addAllowedKey(Key.CHAMBER_VERSION);
-    addAllowedKey(Key.CHAMBER_DEBUG);
-    addAllowedKey(Key.FURNITURE_PATH);
     addAllowedKey(Key.FURNITURE_LIST);
   }
 
@@ -78,7 +77,7 @@ public class Config extends ChamberModule {
   }
 
   public void loadFromFile() throws ConfigFileNotFoundException {
-    final var filePath = getContext().getRootDir().resolve(Constants.CONFIG_FILE_NAME).normalize();
+    final var filePath = getContext().getRootDir().resolve(CONFIG_FILE_NAME).normalize();
     context.set(ChamberContext.Key.CONFIG_FILE, filePath.toFile());
 
     if (!filePath.toFile().exists()) {
@@ -121,8 +120,6 @@ public class Config extends ChamberModule {
   public static final class Key {
     public static final String CHAMBER_NAME = "chamber.name";
     public static final String CHAMBER_VERSION = "chamber.version";
-    public static final String CHAMBER_DEBUG = "chamber.debug";
-    public static final String FURNITURE_PATH = "furniture.path";
     public static final String FURNITURE_LIST = "furniture.list";
   }
 }
