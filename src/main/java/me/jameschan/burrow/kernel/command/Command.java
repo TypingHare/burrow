@@ -1,5 +1,6 @@
 package me.jameschan.burrow.kernel.command;
 
+import java.util.Collection;
 import java.util.concurrent.Callable;
 import me.jameschan.burrow.kernel.ChamberModule;
 import me.jameschan.burrow.kernel.common.ExitCode;
@@ -73,5 +74,11 @@ public abstract class Command extends ChamberModule
   @NonNull
   public <T extends Furniture> T getFurniture(final Class<T> furnitureClass) {
     return context.getRenovator().getFurniture(furnitureClass);
+  }
+
+  public void bufferAppendLines(final Collection<String> lines) {
+    if (!lines.isEmpty()) {
+      buffer.append(String.join("\n", lines));
+    }
   }
 }

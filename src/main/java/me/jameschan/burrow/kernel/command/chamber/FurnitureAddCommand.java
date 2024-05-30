@@ -61,11 +61,9 @@ public class FurnitureAddCommand extends Command {
       config.set(Config.Key.FURNITURE_LIST, furnitureListString);
       context.getConfig().saveToFile();
       buffer
-          .append("Fail to add the furniture because of a failure restart process: ")
-          .append("\n")
+          .append("Fail to add the furniture due to a failure of restarting.\n")
           .append("Error: ")
           .append(ex.getCause().getMessage());
-      ex.printStackTrace();
       return ExitCode.ERROR;
     }
 

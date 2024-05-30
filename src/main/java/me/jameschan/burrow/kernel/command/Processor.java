@@ -63,8 +63,8 @@ public class Processor extends ChamberModule {
           .setParameterExceptionHandler(command)
           .setExecutionExceptionHandler(command)
           .execute(args.toArray(new String[0]));
-    } catch (final Exception ex) {
-      logger.error("Fail to execute command.", ex);
+    } catch (final Throwable ex) {
+      logger.error("Fail to execute command: {}", commandName, ex);
 
       return ExitCode.ERROR;
     }
