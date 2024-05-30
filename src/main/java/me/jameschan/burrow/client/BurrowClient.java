@@ -88,7 +88,10 @@ public abstract class BurrowClient {
     System.out.println(coloredRightSideString);
 
     // Print the message and wrap the line
-    System.out.println(response.getMessage());
+    final var message = response.getMessage();
+    if (!message.isEmpty()) {
+      System.out.println(response.getMessage());
+    }
   }
 
   protected String getColoredCodeString(int code) {
