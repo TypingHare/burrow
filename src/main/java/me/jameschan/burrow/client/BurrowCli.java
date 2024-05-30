@@ -3,11 +3,17 @@ package me.jameschan.burrow.client;
 import java.util.concurrent.Callable;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.UserInterruptException;
 import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.TerminalBuilder;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "Burrow CLI", version = "1.0.0", mixinStandardHelpOptions = true)
+@CommandLine.Command(
+    name = "Burrow CLI",
+    version = "1.0.0",
+    mixinStandardHelpOptions = true,
+    description =
+        "Interactive command-line tool for managing and interacting with Burrow chambers.")
 public class BurrowCli implements Callable<Integer> {
   public static final String DEFAULT_CHAMBER_NAME = ".";
 
@@ -27,16 +33,24 @@ public class BurrowCli implements Callable<Integer> {
 
     var isRunning = true;
     while (isRunning) {
-      final var prompt = getPromptString(client);
-      final var command = reader.readLine(prompt).trim();
-      if (command.equals(CliCommand.$EXIT)) {
+      try {
+        final var prompt = getPromptString(client);
+        final var command = reader.readLine(prompt).trim();
+
+        if (command.isEmpty()) continue;
+
+        if (command.equals(CliCommand.$EXIT)) {
+          isRunning = false;
+          terminal.close();
+        } else if (command.startsWith("$")) {
+          resolveCliCommand(client, command);
+        } else {
+          final var response = client.sendRequestTiming(client.prepareRequest(command));
+          client.printResponse(response);
+        }
+      } catch (final UserInterruptException ex) {
         isRunning = false;
-        terminal.close();
-      } else if (command.startsWith("$")) {
-        resolveCliCommand(client, command);
-      } else {
-        final var response = client.sendRequestTiming(client.prepareRequest(command));
-        client.printResponse(response);
+        System.out.println("またね");
       }
     }
 
