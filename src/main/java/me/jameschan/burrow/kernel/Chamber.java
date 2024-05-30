@@ -83,6 +83,7 @@ public class Chamber {
     requestContext.set(RequestContext.Key.CHAMBER_CONTEXT, context);
     requestContext.set(RequestContext.Key.COMMAND_NAME, commandName);
     requestContext.set(RequestContext.Key.BUFFER, new StringBuilder());
+    requestContext.set(RequestContext.Key.IMMEDIATE_COMMAND, "");
 
     final var exitCode = context.getProcessor().execute(commandName, realArgs, requestContext);
     requestContext.set(RequestContext.Key.EXIT_CODE, exitCode);

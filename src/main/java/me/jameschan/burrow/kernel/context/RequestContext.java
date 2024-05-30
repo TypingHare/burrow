@@ -33,6 +33,11 @@ public class RequestContext extends Context {
     return get(Key.BUFFER, StringBuilder.class);
   }
 
+  @NonNull
+  public String getImmediateCommand() {
+    return get(Key.IMMEDIATE_COMMAND, String.class);
+  }
+
   public static final class Key {
     // Chamber context
     public static final String CHAMBER_CONTEXT = "CHAMBER_CONTEXT";
@@ -44,5 +49,6 @@ public class RequestContext extends Context {
     // Result context
     public static final String EXIT_CODE = "EXIT_CODE";
     public static final String BUFFER = "BUFFER";
+    public static final String IMMEDIATE_COMMAND = "IMMEDIATE_COMMAND";
   }
 }

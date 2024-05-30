@@ -89,6 +89,7 @@ public class ChamberShepherd {
       chamber.execute(requestContext, realArgs);
       response.setMessage(requestContext.getBuffer().toString());
       response.setCode(requestContext.getExitCode());
+      response.setImmediateCommand(requestContext.getImmediateCommand());
 
       // Trigger after execution listeners
       afterExecutionListeners.forEach(listener -> listener.accept(chamber, requestContext));

@@ -40,8 +40,8 @@ public class BurrowCli implements Callable<Integer> {
         if (command.isEmpty()) continue;
 
         if (command.equals(CliCommand.$EXIT)) {
-          isRunning = false;
           terminal.close();
+          System.exit(0);
         } else if (command.startsWith("$")) {
           resolveCliCommand(client, command);
         } else {
