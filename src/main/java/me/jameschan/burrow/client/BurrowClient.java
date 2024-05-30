@@ -48,6 +48,7 @@ public abstract class BurrowClient {
     final var request = new BurrowRequest();
     request.setCommand(command);
     request.setWorkingDirectory(workingDirectory);
+    request.setConsoleWidth(getConsoleWidth());
 
     return request;
   }

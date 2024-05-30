@@ -2,6 +2,7 @@ package me.jameschan.burrow.kernel.furniture.support;
 
 import java.util.Collection;
 import me.jameschan.burrow.kernel.config.Config;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public interface ConfigSupport {
@@ -18,5 +19,5 @@ public interface ConfigSupport {
    *
    * @param config The config to initialize.
    */
-  void initConfig(final Config config);
+  void initConfig(@NonNull final Config config);
 }

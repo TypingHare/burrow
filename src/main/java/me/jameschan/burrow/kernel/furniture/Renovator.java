@@ -60,6 +60,7 @@ public class Renovator extends ChamberModule {
       resolveDependencies(nextDependencyPath, nextDependencyList);
 
       register(furniture);
+      loadConfigFrom(furniture);
     }
   }
 
@@ -68,6 +69,16 @@ public class Renovator extends ChamberModule {
     final var simpleName = getSimpleName(fullName);
     furnitureStore.put(fullName, furniture);
     fullNameMap.computeIfAbsent(simpleName, k -> new ArrayList<>()).add(fullName);
+  }
+
+  private void loadConfigFrom(@NonNull final Furniture furniture) {
+    final var config = context.getConfig();
+    final var configKeys = furniture.configKeys();
+    if (configKeys != null) {
+      configKeys.forEach(config::addAllowedKey);
+    }
+
+    furniture.initConfig(config);
   }
 
   @NonNull

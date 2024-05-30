@@ -76,6 +76,14 @@ public class Config extends ChamberModule {
     store.put(key, value);
   }
 
+  public void setIfAbsent(final String key, final String value) {
+    if (!allowedKeySet.contains(key)) {
+      throw new IllegalKeyException(key);
+    }
+
+    store.putIfAbsent(key, value);
+  }
+
   public void loadFromFile() throws ConfigFileNotFoundException {
     final var filePath = getContext().getRootDir().resolve(CONFIG_FILE_NAME).normalize();
     context.set(ChamberContext.Key.CONFIG_FILE, filePath.toFile());

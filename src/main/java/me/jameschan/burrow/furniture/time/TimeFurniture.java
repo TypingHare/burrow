@@ -12,6 +12,7 @@ import me.jameschan.burrow.kernel.config.Config;
 import me.jameschan.burrow.kernel.entry.Entry;
 import me.jameschan.burrow.kernel.furniture.Furniture;
 import me.jameschan.burrow.kernel.furniture.annotation.BurrowFurniture;
+import org.springframework.lang.NonNull;
 
 @BurrowFurniture
 public class TimeFurniture extends Furniture {
@@ -25,7 +26,7 @@ public class TimeFurniture extends Furniture {
   }
 
   @Override
-  public void initConfig(final Config config) {
+  public void initConfig(@NonNull final Config config) {
     config.set(ConfigKey.TIME_DATE_FORMAT, "MM/dd, yyyy");
   }
 
