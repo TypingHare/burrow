@@ -119,6 +119,8 @@ public class ConfigCommand extends Command {
   }
 
   private String getColoredLine(final String key, final String value) {
-    return getColoredKey(key) + KEY_VALUE_SEPARATOR + getColoredValue(value);
+    return getColoredKey(key)
+        + CommandLine.Help.Ansi.ON.string("@|magenta " + KEY_VALUE_SEPARATOR + "|@")
+        + getColoredValue("\"" + value + "\"");
   }
 }
