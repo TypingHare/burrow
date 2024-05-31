@@ -17,7 +17,7 @@ public class EntriesCommand extends Command {
   }
 
   @Override
-  public Integer call() throws Exception {
+  public Integer call() {
     final var idListString = idList.trim();
     if (idListString.length() < 2) {
       buffer.append("Invalid id list string: ").append(idListString);

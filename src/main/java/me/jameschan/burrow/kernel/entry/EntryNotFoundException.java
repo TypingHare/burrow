@@ -13,6 +13,6 @@ public class EntryNotFoundException extends RuntimeException {
    * @param id The unique identifier of the entry that was not found.
    */
   public EntryNotFoundException(final Integer id) {
-    super(String.format("Entry not found: %d", id));
+    super(String.format("Entry with ID %d not found.", id));
   }
 }

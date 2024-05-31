@@ -17,12 +17,8 @@ public class EntryCommand extends Command {
   @Override
   public Integer call() {
     final var hoard = context.getHoard();
-    if (!hoard.exist(id)) {
-      buffer.append("Could not find entry with ID: ").append(id);
-      return ExitCode.ERROR;
-    }
-
     buffer.append(context.getFormatter().format(hoard.getById(id)));
+
     return ExitCode.SUCCESS;
   }
 }

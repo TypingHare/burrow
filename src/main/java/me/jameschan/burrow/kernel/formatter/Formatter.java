@@ -40,7 +40,7 @@ public class Formatter extends ChamberModule {
       return NULL;
     } else {
       final var allFurniture = context.getRenovator().getAllFurniture();
-      final var formattedObject = new HashMap<String, String>();
+      final var formattedObject = new HashMap<>(entry.getProperties());
       allFurniture.forEach(furniture -> furniture.toFormattedObject(formattedObject, entry));
 
       String result = null;

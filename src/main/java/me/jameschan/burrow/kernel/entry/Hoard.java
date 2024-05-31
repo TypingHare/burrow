@@ -64,7 +64,7 @@ public class Hoard extends ChamberModule {
     return entryStore.containsKey(id);
   }
 
-  public Entry getById(final int id) {
+  public Entry getById(final int id) throws EntryNotFoundException {
     return Optional.ofNullable(entryStore.get(id))
         .orElseThrow(() -> new EntryNotFoundException(id));
   }
@@ -88,6 +88,7 @@ public class Hoard extends ChamberModule {
     }
 
     final var entry = new Entry(id);
+    entryObject.forEach(entry::set);
     entryStore.put(id, entry);
     maxId = Math.max(maxId, id);
 
@@ -97,7 +98,20 @@ public class Hoard extends ChamberModule {
         .forEach(furniture -> furniture.toEntry(entry, entryObject));
   }
 
-  public Entry delete(final int id) {
+  public Entry update(final int id, final Map<String, String> properties)
+      throws EntryNotFoundException {
+    final var entry = getById(id);
+    entry.getProperties().putAll(properties);
+
+    context
+        .getRenovator()
+        .getAllFurniture()
+        .forEach(furniture -> furniture.onUpdateEntry(entry, properties));
+
+    return entry;
+  }
+
+  public Entry delete(final int id) throws EntryNotFoundException {
     final var entry = getById(id);
     context.getRenovator().getAllFurniture().forEach(furniture -> furniture.onDeleteEntry(entry));
     entryStore.remove(id);
@@ -111,19 +125,9 @@ public class Hoard extends ChamberModule {
 
   public Map<String, String> getEntryObject(final Entry entry) {
     final var renovator = context.getRenovator();
-    final var entryObject = new HashMap<String, String>();
+    final var entryObject = new HashMap<>(entry.getProperties());
     entryObject.put(KEY_ID, String.valueOf(entry.getId()));
     renovator.getAllFurniture().forEach(furniture -> furniture.toEntryObject(entryObject, entry));
-
-    return entryObject;
-  }
-
-  public Map<String, String> getFormattedObject(final Entry entry) {
-    final var entryObject = new HashMap<String, String>();
-    context
-        .getRenovator()
-        .getAllFurniture()
-        .forEach(furniture -> furniture.toFormattedObject(entryObject, entry));
 
     return entryObject;
   }

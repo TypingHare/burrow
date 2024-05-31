@@ -61,8 +61,7 @@ public abstract class Command extends ChamberModule
       final Exception ex,
       final CommandLine commandLine,
       final CommandLine.ParseResult fullParseResult) {
-    buffer.append("Fail to execute command: ").append(ex.getMessage());
-    ex.printStackTrace();
+    buffer.append("Error: ").append(ex.getMessage());
 
     return ExitCode.ERROR;
   }

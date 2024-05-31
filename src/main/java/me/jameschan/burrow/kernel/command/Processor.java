@@ -50,6 +50,7 @@ public class Processor extends ChamberModule {
     register(ExistCommand.class);
     register(DeleteCommand.class);
     register(EntriesCommand.class);
+    register(SetCommand.class);
   }
 
   public int execute(

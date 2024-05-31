@@ -66,6 +66,10 @@ public abstract class Furniture extends ChamberModule
   public void onCreateEntry(final Entry entry) {}
 
   @Override
+  public void onUpdateEntry(
+      @NonNull final Entry entry, @NonNull final Map<String, String> properties) {}
+
+  @Override
   public void onDeleteEntry(final Entry entry) {}
 
   @Override
