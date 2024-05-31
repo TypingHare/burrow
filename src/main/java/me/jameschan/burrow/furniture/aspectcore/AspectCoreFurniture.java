@@ -1,4 +1,4 @@
-package me.jameschan.burrow.furniture.aspect;
+package me.jameschan.burrow.furniture.aspectcore;
 
 import java.util.function.BiConsumer;
 import me.jameschan.burrow.kernel.Chamber;
@@ -7,9 +7,11 @@ import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.Furniture;
 import me.jameschan.burrow.kernel.furniture.annotation.BurrowFurniture;
 
-@BurrowFurniture
-public class AspectFurniture extends Furniture {
-  public AspectFurniture(final Chamber chamber) {
+@BurrowFurniture(
+    simpleName = "AspectCore",
+    description = "Core furniture for adding listeners for executions.")
+public class AspectCoreFurniture extends Furniture {
+  public AspectCoreFurniture(final Chamber chamber) {
     super(chamber);
   }
 

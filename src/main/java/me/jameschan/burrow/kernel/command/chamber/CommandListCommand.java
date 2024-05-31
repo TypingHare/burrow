@@ -9,16 +9,19 @@ import me.jameschan.burrow.kernel.furniture.AmbiguousSimpleNameException;
 import me.jameschan.burrow.kernel.furniture.FurnitureNotFoundException;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "commands", description = "List all commands with descriptions.")
-public class CommandsCommand extends Command {
+@CommandLine.Command(
+    name = "command-list",
+    description = "Print a list of all commands with descriptions.")
+public class CommandListCommand extends Command {
   @CommandLine.Parameters(
       index = "0",
       paramLabel = "<furniture-name>",
-      description = "",
+      description =
+          "The name of a specific furniture. Only print the commands associated with the furniture.",
       defaultValue = "")
   private String furnitureName;
 
-  public CommandsCommand(final RequestContext requestContext) {
+  public CommandListCommand(final RequestContext requestContext) {
     super(requestContext);
   }
 
@@ -35,7 +38,7 @@ public class CommandsCommand extends Command {
       final var name = commandAnnotation.name();
       final var descriptionArray = commandAnnotation.description();
       final var description = descriptionArray.length > 0 ? descriptionArray[0] : "";
-      commandStringLines.add(String.format("%s: %s", Strings.padEnd(name, 14, ' '), description));
+      commandStringLines.add(Strings.padEnd(name, 16, ' ') + description);
     }
 
     if (!commandStringLines.isEmpty()) {

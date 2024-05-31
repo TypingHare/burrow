@@ -7,7 +7,9 @@ import me.jameschan.burrow.kernel.entry.Entry;
 import me.jameschan.burrow.kernel.furniture.Furniture;
 import me.jameschan.burrow.kernel.furniture.annotation.BurrowFurniture;
 
-@BurrowFurniture(dependencies = {KeyValueFurniture.class, TimeFurniture.class})
+@BurrowFurniture(
+    simpleName = "budget",
+    dependencies = {KeyValueFurniture.class, TimeFurniture.class})
 public class BudgetFurniture extends Furniture {
   public BudgetFurniture(final Chamber chamber) {
     super(chamber);

@@ -9,13 +9,18 @@ import me.jameschan.burrow.kernel.entry.Entry;
 import me.jameschan.burrow.kernel.furniture.Furniture;
 import me.jameschan.burrow.kernel.furniture.annotation.BurrowFurniture;
 
-@BurrowFurniture
+@BurrowFurniture(
+    simpleName = "KeyValue",
+    description = "Implemented key-value pair functionalities for entries.")
 public class KeyValueFurniture extends Furniture {
   private final Map<String, List<Integer>> idListStore = new HashMap<>();
 
   public KeyValueFurniture(final Chamber chamber) {
     super(chamber);
+  }
 
+  @Override
+  public void init() {
     registerCommand(NewCommand.class);
     registerCommand(KeyCommand.class);
     registerCommand(CountCommand.class);

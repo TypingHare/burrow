@@ -3,6 +3,7 @@ package me.jameschan.burrow.kernel.config;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -34,9 +35,16 @@ public class Config extends ChamberModule {
   /** Constructs a new Config instance with default allowed keys. */
   public Config(final Chamber chamber) {
     super(chamber);
+
     addAllowedKey(Key.CHAMBER_NAME);
     addAllowedKey(Key.CHAMBER_VERSION);
+    addAllowedKey(Key.CHAMBER_DESCRIPTION);
     addAllowedKey(Key.FURNITURE_LIST);
+
+    setIfAbsent(Key.CHAMBER_NAME, "");
+    setIfAbsent(Key.CHAMBER_VERSION, "1.0.0");
+    setIfAbsent(Key.CHAMBER_DESCRIPTION, "No description.");
+    setIfAbsent(Key.FURNITURE_LIST, "");
   }
 
   /**
@@ -69,19 +77,19 @@ public class Config extends ChamberModule {
    * @param value The value to be associated with the specified key.
    * @throws IllegalKeyException If the key is not present in the predefined set of allowed keys.
    */
-  public void set(final String key, final String value) {
+  public <T> void set(final String key, final T value) {
     if (!allowedKeySet.contains(key)) {
       throw new IllegalKeyException(key);
     }
-    store.put(key, value);
+    store.put(key, value.toString());
   }
 
-  public void setIfAbsent(final String key, final String value) {
+  public <T> void setIfAbsent(final String key, final T value) {
     if (!allowedKeySet.contains(key)) {
       throw new IllegalKeyException(key);
     }
 
-    store.putIfAbsent(key, value);
+    store.putIfAbsent(key, value.toString());
   }
 
   public void loadFromFile() throws ConfigFileNotFoundException {
@@ -94,8 +102,7 @@ public class Config extends ChamberModule {
 
     try {
       final var config = context.getConfig();
-      final var content = Files.readString(filePath);
-      final Map<String, String> map = new Gson().fromJson(content, Types.STRING_STRING_MAP);
+      final var map = loadFromConfigFile(filePath);
       map.keySet().forEach(config::addAllowedKey);
       map.forEach(config::set);
       context.set(ChamberContext.Key.CONFIG, config);
@@ -124,10 +131,16 @@ public class Config extends ChamberModule {
     return store;
   }
 
+  public static Map<String, String> loadFromConfigFile(final Path filePath) throws IOException {
+    final var content = Files.readString(filePath);
+    return new Gson().fromJson(content, Types.STRING_STRING_MAP);
+  }
+
   /** Default configuration keys. */
   public static final class Key {
     public static final String CHAMBER_NAME = "chamber.name";
     public static final String CHAMBER_VERSION = "chamber.version";
+    public static final String CHAMBER_DESCRIPTION = "chamber.description";
     public static final String FURNITURE_LIST = "furniture.list";
   }
 }

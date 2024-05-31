@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Component()
 public class ChamberShepherd {
-  public static final Path CHAMBER_ROOT_DIR = Burrow.ROOT_DIR.resolve("chamber").normalize();
+  public static final Path CHAMBER_ROOT_DIR = Burrow.ROOT_DIR.resolve("chamber");
   public static final String ROOT_CHAMBER_NAME = ".";
 
   private static final Logger logger = LoggerFactory.getLogger(ChamberShepherd.class);

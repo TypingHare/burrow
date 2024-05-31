@@ -40,8 +40,8 @@ public final class Entry {
    * @param key The key of the property to set.
    * @param value The value to associate with the key.
    */
-  public void set(final String key, final String value) {
-    properties.put(key, value);
+  public <T> void set(final String key, final T value) {
+    properties.put(key, value.toString());
   }
 
   /**

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import me.jameschan.burrow.furniture.aspect.AspectFurniture;
+import me.jameschan.burrow.furniture.aspectcore.AspectCoreFurniture;
 import me.jameschan.burrow.kernel.Chamber;
 import me.jameschan.burrow.kernel.ChamberShepherd;
 import me.jameschan.burrow.kernel.config.Config;
@@ -15,7 +15,10 @@ import me.jameschan.burrow.kernel.furniture.Furniture;
 import me.jameschan.burrow.kernel.furniture.annotation.BurrowFurniture;
 import org.springframework.lang.NonNull;
 
-@BurrowFurniture(dependencies = {AspectFurniture.class})
+@BurrowFurniture(
+    simpleName = "scheduler",
+    description = "Schedule auto terminations for unused chambers.",
+    dependencies = {AspectCoreFurniture.class})
 public class SchedulerFurniture extends Furniture {
   private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
   private final Map<String, Integer> lastAccessedTime = new HashMap<>();
@@ -37,7 +40,7 @@ public class SchedulerFurniture extends Furniture {
 
   @Override
   public void init() {
-    final var aspectFurniture = use(AspectFurniture.class);
+    final var aspectFurniture = use(AspectCoreFurniture.class);
     aspectFurniture.beforeExecution(
         (chamberToAccess, requestContext) -> {
           final var chamberName = chamberToAccess.getName();

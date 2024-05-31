@@ -1,11 +1,5 @@
 package me.jameschan.burrow.furniture.dictator;
 
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import me.jameschan.burrow.kernel.Chamber;
 import me.jameschan.burrow.kernel.ChamberShepherd;
 import me.jameschan.burrow.kernel.command.Command;
@@ -20,13 +14,16 @@ public class ChamberNewCommand extends Command {
   @CommandLine.Parameters(index = "0", description = "The name of the new chamber.")
   private String name;
 
+  @CommandLine.Parameters(index = "1", description = "The description of the new chamber.")
+  private String description;
+
   public ChamberNewCommand(final RequestContext requestContext) {
     super(requestContext);
   }
 
   @Override
   public Integer call() throws Exception {
-    final var chamberList = getAllChambers();
+    final var chamberList = DictatorFurniture.getAllChambers();
     if (chamberList.contains(name)) {
       buffer.append("Chamber already exists.");
       return ExitCode.ERROR;
@@ -42,11 +39,10 @@ public class ChamberNewCommand extends Command {
     final var applicationContext = context.getChamber().getApplicationContext();
     final var chamber = applicationContext.getBean(Chamber.class);
 
-    // Create a config
+    // Create a config and set the chamber's name and description
     final var config = applicationContext.getBean(Config.class, chamber);
     config.set(Config.Key.CHAMBER_NAME, name);
-    config.set(Config.Key.CHAMBER_VERSION, "1.0.0");
-    config.set(Config.Key.FURNITURE_LIST, "");
+    config.set(Config.Key.CHAMBER_DESCRIPTION, description);
 
     // Create a new config file
     final var configFile = newChamberRootDir.resolve(Config.CONFIG_FILE_NAME).normalize().toFile();
@@ -54,18 +50,5 @@ public class ChamberNewCommand extends Command {
     config.saveToFile();
 
     return ExitCode.SUCCESS;
-  }
-
-  public static List<String> getAllChambers() throws IOException {
-    final List<String> chamberList = new ArrayList<>();
-    final var chamberRootDirString = ChamberShepherd.CHAMBER_ROOT_DIR.toString();
-    try (final DirectoryStream<Path> stream =
-        Files.newDirectoryStream(ChamberShepherd.CHAMBER_ROOT_DIR, Files::isDirectory)) {
-      for (Path entry : stream) {
-        chamberList.add(entry.toString().substring(chamberRootDirString.length()));
-      }
-    }
-
-    return chamberList;
   }
 }

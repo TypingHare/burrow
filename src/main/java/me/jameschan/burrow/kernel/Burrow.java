@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Burrow {
-  public static final Path ROOT_DIR = Path.of("/opt/burrow/");
+  public static final Path ROOT_DIR = Path.of("/opt/burrow/").normalize().toAbsolutePath();
 
   public Burrow() {
     checkRootDir();

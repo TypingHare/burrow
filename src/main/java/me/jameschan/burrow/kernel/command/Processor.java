@@ -38,7 +38,7 @@ public class Processor extends ChamberModule {
 
     // Chamber scope commands
     register(RootCommand.class);
-    register(CommandsCommand.class);
+    register(CommandListCommand.class);
     register(HelpCommand.class);
     register(ConfigCommand.class);
     register(FurnitureListCommand.class);
