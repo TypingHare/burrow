@@ -1,6 +1,7 @@
 package me.jameschan.burrow.client;
 
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.UserInterruptException;
@@ -31,17 +32,26 @@ public class BurrowCli implements Callable<Integer> {
     final LineReader reader =
         LineReaderBuilder.builder().terminal(terminal).history(new DefaultHistory()).build();
 
-    var isRunning = true;
-    while (isRunning) {
+    final Consumer<Integer> exit =
+        (exitCode) -> {
+          try {
+            terminal.close();
+          } catch (final Throwable ignored) {
+          }
+
+          System.out.println("またね");
+          System.exit(exitCode);
+        };
+
+    //noinspection InfiniteLoopStatement
+    while (true) {
       try {
         final var prompt = getPromptString(client);
         final var command = reader.readLine(prompt).trim();
 
         if (command.isEmpty()) continue;
-
         if (command.equals(CliCommand.$EXIT)) {
-          terminal.close();
-          System.exit(0);
+          exit.accept(0);
         } else if (command.startsWith("$")) {
           resolveCliCommand(client, command);
         } else {
@@ -49,12 +59,9 @@ public class BurrowCli implements Callable<Integer> {
           client.printResponse(response);
         }
       } catch (final UserInterruptException ex) {
-        isRunning = false;
-        System.out.println("またね");
+        exit.accept(0);
       }
     }
-
-    return 0;
   }
 
   private void resolveCliCommand(final BurrowClient client, final String command) {
