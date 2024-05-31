@@ -1,6 +1,8 @@
 package me.jameschan.burrow.kernel;
 
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,7 @@ public class ChamberShepherd {
   public Chamber initiate(final String chamberName) throws ChamberInitializationException {
     final var chamber = applicationContext.getBean(Chamber.class);
     logger.info("Chamber initiating: {}", chamberName);
+    final var start = Instant.now();
 
     try {
       chamber.initiate(chamberName);
@@ -52,7 +55,8 @@ public class ChamberShepherd {
     }
 
     chamberStore.put(chamberName, chamber);
-    logger.info("Chamber initiated: {}", chamberName);
+    final var duration = Duration.between(start, Instant.now());
+    logger.info("Chamber initiated: {} ({} ms)", chamberName, duration.toMillis());
 
     return chamber;
   }

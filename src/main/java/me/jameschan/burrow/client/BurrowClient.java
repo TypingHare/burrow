@@ -54,9 +54,9 @@ public abstract class BurrowClient {
   }
 
   public BurrowResponse sendRequestTiming(final BurrowRequest request) {
-    final Instant start = Instant.now();
+    final var start = Instant.now();
+    final var response = sendRequest(request);
     lastCommand = request.getCommand();
-    final BurrowResponse response = sendRequest(request);
     lastRequestDuration = Duration.between(start, Instant.now());
 
     return response;
