@@ -10,6 +10,7 @@ import me.jameschan.burrow.kernel.common.Types;
 import me.jameschan.burrow.kernel.context.ChamberContext;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,7 +19,7 @@ public class Hoard extends ChamberModule {
   public static final String HOARD_FILE_NAME = "hoard.json";
   public static final String KEY_ID = "id";
 
-  private final Map<Integer, Entry> entryStore = new HashMap<>();
+  private final List<Entry> entryStore = new ArrayList<>();
   private Integer maxId = 0;
 
   public Hoard(final Chamber chamber) {
@@ -50,8 +51,9 @@ public class Hoard extends ChamberModule {
 
   public void saveToFile() {
     final var hoardFile = context.getHoardFile();
-    final var objects = getAllEntries().stream().map(this::getEntryObject).toList();
-    final var json = new Gson().toJson(objects, Types.STRING_STRING_MAP_List);
+    final var objectList =
+        getAllEntries().stream().filter(Objects::nonNull).map(this::getEntryObject).toList();
+    final var json = new Gson().toJson(objectList, Types.STRING_STRING_MAP_List);
 
     try {
       Files.write(hoardFile.toPath(), json.getBytes());
@@ -60,36 +62,47 @@ public class Hoard extends ChamberModule {
     }
   }
 
-  public boolean exist(final int id) {
-    return entryStore.containsKey(id);
-  }
-
+  @NonNull
   public Entry getById(final int id) throws EntryNotFoundException {
-    return Optional.ofNullable(entryStore.get(id))
-        .orElseThrow(() -> new EntryNotFoundException(id));
+    try {
+      final var entry = entryStore.get(id);
+      if (entry == null) {
+        throw new EntryNotFoundException(id);
+      }
+
+      return entry;
+    } catch (final IndexOutOfBoundsException ex) {
+      throw new EntryNotFoundException(id);
+    }
   }
 
+  @NonNull
   public Entry create(final Map<String, String> properties) {
-    final var id = ++maxId;
+    final int id = ++maxId;
     final var entry = new Entry(id);
-
-    this.entryStore.put(id, entry);
     properties.forEach(entry::set);
-
     context.getRenovator().getAllFurniture().forEach(furniture -> furniture.onCreateEntry(entry));
+
+    // Put the entry to the store
+    for (int i = entryStore.size(); i <= id; ++i) entryStore.add(null);
+    this.entryStore.set(id, entry);
 
     return entry;
   }
 
   public void register(final Map<String, String> entryObject) {
     final var id = Integer.parseInt(entryObject.get(KEY_ID));
-    if (entryStore.containsKey(id)) {
+    try {
+      getById(id);
       throw new DuplicateIdException(id);
+    } catch (final EntryNotFoundException ignored) {
     }
 
     final var entry = new Entry(id);
     entryObject.forEach(entry::set);
-    entryStore.put(id, entry);
+
+    for (int i = entryStore.size(); i <= id; ++i) entryStore.add(null);
+    entryStore.set(id, entry);
     maxId = Math.max(maxId, id);
 
     context
@@ -98,6 +111,7 @@ public class Hoard extends ChamberModule {
         .forEach(furniture -> furniture.toEntry(entry, entryObject));
   }
 
+  @NonNull
   public Entry update(final int id, final Map<String, String> properties)
       throws EntryNotFoundException {
     final var entry = getById(id);
@@ -111,6 +125,7 @@ public class Hoard extends ChamberModule {
     return entry;
   }
 
+  @NonNull
   public Entry delete(final int id) throws EntryNotFoundException {
     final var entry = getById(id);
     context.getRenovator().getAllFurniture().forEach(furniture -> furniture.onDeleteEntry(entry));
@@ -119,10 +134,12 @@ public class Hoard extends ChamberModule {
     return entry;
   }
 
+  @NonNull
   public Collection<Entry> getAllEntries() {
-    return entryStore.values();
+    return entryStore.stream().filter(Objects::nonNull).toList();
   }
 
+  @NonNull
   public Map<String, String> getEntryObject(final Entry entry) {
     final var renovator = context.getRenovator();
     final var entryObject = new HashMap<>(entry.getProperties());

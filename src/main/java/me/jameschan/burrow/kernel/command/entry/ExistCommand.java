@@ -16,7 +16,7 @@ public class ExistCommand extends Command {
 
   @Override
   public Integer call() {
-    buffer.append(context.getHoard().exist(id) ? "true" : "false");
+    buffer.append(context.getHoard().getById(id) != null ? "true" : "false");
 
     return ExitCode.SUCCESS;
   }
