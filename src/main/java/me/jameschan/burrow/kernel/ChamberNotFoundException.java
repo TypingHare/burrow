@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 
 /** Exception thrown when a specified chamber is not found. */
 public class ChamberNotFoundException extends FileNotFoundException {
-
   /**
    * Constructs a new ChamberNotFoundException with the specified chamber name.
    *

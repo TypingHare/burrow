@@ -8,6 +8,7 @@ import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.config.Config;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.utility.ColorUtility;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -25,10 +26,11 @@ public class ChamberListCommand extends Command {
     for (final var chamberName : chamberNameList) {
       final var configFile =
           ChamberShepherd.CHAMBER_ROOT_DIR.resolve(chamberName).resolve(Config.CONFIG_FILE_NAME);
-      System.out.println(ChamberShepherd.CHAMBER_ROOT_DIR);
       final var configMap = Config.loadFromConfigFile(configFile);
       final var description = configMap.get(Config.Key.CHAMBER_DESCRIPTION);
-      lines.add(Strings.padEnd(chamberName, 16, ' ') + description);
+      lines.add(
+          ColorUtility.render(Strings.padEnd(chamberName, 16, ' '), ColorUtility.Type.CHAMBER)
+              + ColorUtility.render(description, ColorUtility.Type.DESCRIPTION));
     }
 
     bufferAppendLines(lines);

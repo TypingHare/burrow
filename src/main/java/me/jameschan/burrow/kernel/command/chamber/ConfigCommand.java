@@ -10,6 +10,7 @@ import me.jameschan.burrow.kernel.config.IllegalKeyException;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.AmbiguousSimpleNameException;
 import me.jameschan.burrow.kernel.furniture.FurnitureNotFoundException;
+import me.jameschan.burrow.kernel.utility.ColorUtility;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -111,16 +112,16 @@ public class ConfigCommand extends Command {
   }
 
   private String getColoredKey(final String key) {
-    return CommandLine.Help.Ansi.ON.string("@|blue " + key + "|@");
+    return ColorUtility.render(key, ColorUtility.Type.KEY);
   }
 
   private String getColoredValue(final String value) {
-    return CommandLine.Help.Ansi.ON.string("@|green " + value + "|@");
+    return ColorUtility.render(value, ColorUtility.Type.VALUE);
   }
 
   private String getColoredLine(final String key, final String value) {
     return getColoredKey(key)
-        + CommandLine.Help.Ansi.ON.string("@|magenta " + KEY_VALUE_SEPARATOR + "|@")
+        + ColorUtility.render(KEY_VALUE_SEPARATOR, ColorUtility.Type.SYMBOL)
         + getColoredValue("\"" + value + "\"");
   }
 }

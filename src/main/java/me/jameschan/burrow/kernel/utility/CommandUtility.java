@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class CommandUtility {
+public final class CommandUtility {
 
   /**
    * Constructs the original command string from an array of arguments.

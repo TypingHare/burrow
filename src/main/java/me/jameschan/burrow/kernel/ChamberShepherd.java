@@ -11,6 +11,7 @@ import java.util.function.BiConsumer;
 import me.jameschan.burrow.kernel.common.*;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.utility.CommandUtility;
+import me.jameschan.burrow.kernel.utility.ErrorUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,11 +98,8 @@ public class ChamberShepherd {
 
       // Trigger after execution listeners
       afterExecutionListeners.forEach(listener -> listener.accept(chamber, requestContext));
-    } catch (final ChamberInitializationException ex) {
-      response.setMessage("Fail to initiate: " + chamberName + "\n" + ex.getMessage());
-      response.setCode(ExitCode.ERROR);
     } catch (final Throwable ex) {
-      response.setMessage("Internal error: " + ex.getMessage());
+      response.setMessage(String.join("\n", ErrorUtility.getStackTrace(ex)));
       response.setCode(ExitCode.ERROR);
     }
 
