@@ -5,11 +5,13 @@ import me.jameschan.burrow.kernel.command.Processor;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.config.Config;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
 @CommandLine.Command(
     name = Processor.DEFAULT_COMMAND_NAME,
     description = "Prints the help information of the application.")
+@CommandType(CommandType.SPECIAL)
 public class DefaultCommand extends Command {
   @CommandLine.Option(
       names = {"-v", "--version"},

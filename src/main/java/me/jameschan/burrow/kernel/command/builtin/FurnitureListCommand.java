@@ -1,15 +1,15 @@
-package me.jameschan.burrow.kernel.command.chamber;
+package me.jameschan.burrow.kernel.command.builtin;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
-@CommandLine.Command(
-    name = "furniture-list",
-    description = "Prints the list of furniture of this chamber.")
+@CommandLine.Command(name = "flist", description = "Prints the list of furniture of this chamber.")
+@CommandType(CommandType.BUILTIN)
 public class FurnitureListCommand extends Command {
   @CommandLine.Option(
       names = {"-f", "--full"},

@@ -1,4 +1,4 @@
-package me.jameschan.burrow.kernel.command.chamber;
+package me.jameschan.burrow.kernel.command.builtin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,9 +11,11 @@ import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.FurnitureNotFoundException;
 import me.jameschan.burrow.kernel.furniture.InvalidFurnitureClassException;
 import me.jameschan.burrow.kernel.furniture.Renovator;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "furniture-add", description = "Add a furniture to the chamber.")
+@CommandLine.Command(name = "fadd", description = "Add a furniture to the chamber.")
+@CommandType(CommandType.BUILTIN)
 public class FurnitureAddCommand extends Command {
   @CommandLine.Parameters(
       index = "0",
@@ -31,6 +33,7 @@ public class FurnitureAddCommand extends Command {
     final var renovator = context.getRenovator();
     final var config = context.getConfig();
     final var furnitureListString = config.get(Config.Key.FURNITURE_LIST);
+    assert furnitureListString != null;
     final var furnitureNameList =
         Arrays.stream(furnitureListString.split(Renovator.FURNITURE_NAME_SEPARATOR))
             .map(String::trim)
@@ -71,8 +74,6 @@ public class FurnitureAddCommand extends Command {
           .append(ex.getCause().getMessage());
       return ExitCode.ERROR;
     }
-
-    buffer.append("Furniture added: ").append(furnitureName);
 
     return ExitCode.SUCCESS;
   }

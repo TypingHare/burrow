@@ -5,9 +5,11 @@ import java.util.List;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "entries", description = "Retrieve a list of entries.")
+@CommandType(CommandType.ENTRY)
 public class EntriesCommand extends Command {
   @CommandLine.Parameters(index = "0", description = "A list of IDs to retrieve.")
   private String idList;

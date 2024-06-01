@@ -4,9 +4,11 @@ import java.util.Map;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "set", description = "Set a property for a specific entry.")
+@CommandType(CommandType.ENTRY)
 public class SetCommand extends Command {
   @CommandLine.Parameters(index = "0", description = "The ID of the entry to update.")
   private Integer id;

@@ -4,9 +4,11 @@ import java.util.HashMap;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "new", description = "Create an entry with key and value.")
+@CommandType(CommandType.ENTRY)
 public class NewCommand extends Command {
   @CommandLine.Parameters(index = "0", description = "The key of the entry.")
   private String key;

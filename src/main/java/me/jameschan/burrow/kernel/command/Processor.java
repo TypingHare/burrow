@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import me.jameschan.burrow.kernel.Chamber;
 import me.jameschan.burrow.kernel.ChamberModule;
-import me.jameschan.burrow.kernel.command.chamber.*;
+import me.jameschan.burrow.kernel.command.builtin.*;
 import me.jameschan.burrow.kernel.command.entry.*;
 import me.jameschan.burrow.kernel.command.special.*;
 import me.jameschan.burrow.kernel.common.ExitCode;
@@ -26,13 +26,15 @@ public class Processor extends ChamberModule {
       ImmutableList.of(UnknownCommand.class, DefaultCommand.class);
   public static final List<Class<? extends Command>> BUILTIN_COMMAND_LIST =
       ImmutableList.of(
+          // Special commands
           UnknownCommand.class,
           DefaultCommand.class,
+          // Chamber commands
           RootCommand.class,
           CommandListCommand.class,
           HelpCommand.class,
-          ConfigCommand.class,
           ConfigItemCommand.class,
+          ConfigListCommand.class,
           FurnitureListCommand.class,
           FurnitureAddCommand.class,
           DescriptionCommand.class,
@@ -86,16 +88,7 @@ public class Processor extends ChamberModule {
   }
 
   public void disable(final Class<? extends Command> commandClass) {
-    final var commandAnnotation = commandClass.getDeclaredAnnotation(CommandLine.Command.class);
-    if (commandAnnotation == null) {
-      throw new RuntimeException(
-          "Fail to register command, as it is not annotated by "
-              + "picocli.CommandLine.Command: "
-              + commandClass.getName());
-    }
-
-    final var commandName = commandAnnotation.name();
-    commandClassStore.remove(commandName);
+    commandClassStore.entrySet().removeIf(entry -> entry.getValue() == commandClass);
   }
 
   public Collection<Class<? extends Command>> getAllCommands() {

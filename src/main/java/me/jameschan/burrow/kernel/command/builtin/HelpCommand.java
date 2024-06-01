@@ -1,11 +1,13 @@
-package me.jameschan.burrow.kernel.command.chamber;
+package me.jameschan.burrow.kernel.command.builtin;
 
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "help", description = "Show the usage of a command.")
+@CommandType(CommandType.BUILTIN)
 public class HelpCommand extends Command {
   @CommandLine.Parameters(
       index = "0",

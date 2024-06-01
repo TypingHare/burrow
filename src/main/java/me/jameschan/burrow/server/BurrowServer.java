@@ -1,7 +1,6 @@
 package me.jameschan.burrow.server;
 
 import jakarta.annotation.PreDestroy;
-import me.jameschan.burrow.kernel.Burrow;
 import me.jameschan.burrow.kernel.ChamberInitializationException;
 import me.jameschan.burrow.kernel.ChamberShepherd;
 import me.jameschan.burrow.kernel.common.*;
@@ -21,12 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class BurrowServer {
   private static final Logger logger = LoggerFactory.getLogger(BurrowServer.class);
 
-  private final Burrow burrow;
   private final ChamberShepherd chamberShepherd;
 
   @Autowired
-  public BurrowServer(final Burrow burrow, final ChamberShepherd chamberShepherd) {
-    this.burrow = burrow;
+  public BurrowServer(final ChamberShepherd chamberShepherd) {
     this.chamberShepherd = chamberShepherd;
   }
 

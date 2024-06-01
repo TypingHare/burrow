@@ -3,10 +3,12 @@ package me.jameschan.burrow.kernel.command.special;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.command.Processor;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import me.jameschan.burrow.kernel.utility.CommandUtility;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = Processor.UNKNOWN_COMMAND_NAME, description = "Unknown command.")
+@CommandType(CommandType.SPECIAL)
 public class UnknownCommand extends Command {
   @CommandLine.Parameters(arity = "0..*")
   private String[] args;

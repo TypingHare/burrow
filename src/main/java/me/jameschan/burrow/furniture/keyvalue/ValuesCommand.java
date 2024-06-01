@@ -3,9 +3,11 @@ package me.jameschan.burrow.furniture.keyvalue;
 import java.util.ArrayList;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "values", description = "Retrieve values of a specified key.")
+@CommandType(CommandType.ENTRY)
 public class ValuesCommand extends Command {
   @CommandLine.Parameters(
       index = "0",

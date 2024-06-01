@@ -1,10 +1,17 @@
 package me.jameschan.burrow.kernel.utility;
 
+import org.springframework.lang.NonNull;
 import picocli.CommandLine;
 
 public final class ColorUtility {
-  public static String render(final String string, final Type type) {
-    return CommandLine.Help.Ansi.ON.string("@|" + type.getModifier() + " " + string + "|@");
+  @NonNull
+  public static String render(@NonNull final String string, @NonNull final String modifier) {
+    return CommandLine.Help.Ansi.ON.string("@|" + modifier.trim() + " " + string + "|@");
+  }
+
+  @NonNull
+  public static String render(@NonNull final String string, @NonNull final Type type) {
+    return render(string, type.getModifier());
   }
 
   public enum Type {
@@ -23,6 +30,7 @@ public final class ColorUtility {
       this.modifier = modifier;
     }
 
+    @NonNull
     public String getModifier() {
       return modifier;
     }

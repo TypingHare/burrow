@@ -1,4 +1,4 @@
-package me.jameschan.burrow.kernel.command.chamber;
+package me.jameschan.burrow.kernel.command.builtin;
 
 import com.google.common.base.Strings;
 import java.util.ArrayList;
@@ -7,11 +7,11 @@ import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.AmbiguousSimpleNameException;
 import me.jameschan.burrow.kernel.furniture.FurnitureNotFoundException;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
-@CommandLine.Command(
-    name = "command-list",
-    description = "Print a list of all commands with descriptions.")
+@CommandLine.Command(name = "list", description = "Print a list of all commands with descriptions.")
+@CommandType(CommandType.BUILTIN)
 public class CommandListCommand extends Command {
   @CommandLine.Parameters(
       index = "0",
@@ -32,18 +32,16 @@ public class CommandListCommand extends Command {
             ? context.getProcessor().getAllCommands()
             : context.getRenovator().getFurnitureByName(furnitureName).getAllCommands();
 
-    final var commandStringLines = new ArrayList<String>();
+    final var lines = new ArrayList<String>();
     for (final var command : commands) {
       final var commandAnnotation = command.getDeclaredAnnotation(CommandLine.Command.class);
       final var name = commandAnnotation.name();
       final var descriptionArray = commandAnnotation.description();
       final var description = descriptionArray.length > 0 ? descriptionArray[0] : "";
-      commandStringLines.add(Strings.padEnd(name, 16, ' ') + description);
+      lines.add(Strings.padEnd(name, 16, ' ') + description);
     }
 
-    if (!commandStringLines.isEmpty()) {
-      buffer.append(String.join("\n", commandStringLines));
-    }
+    bufferAppendLines(lines);
 
     return ExitCode.SUCCESS;
   }

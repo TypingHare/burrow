@@ -3,9 +3,11 @@ package me.jameschan.burrow.furniture.keyvalue;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "key", description = "Find an entry associated with a specified key.")
+@CommandType(CommandType.ENTRY)
 public class KeyCommand extends Command {
   @CommandLine.Parameters(index = "0", description = "The key of the entry.")
   private String key;

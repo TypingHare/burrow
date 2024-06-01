@@ -1,4 +1,4 @@
-package me.jameschan.burrow.kernel.command.chamber;
+package me.jameschan.burrow.kernel.command.builtin;
 
 import java.util.Arrays;
 import me.jameschan.burrow.kernel.ChamberInitializationException;
@@ -7,11 +7,13 @@ import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.config.Config;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.Renovator;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
 @CommandLine.Command(
     name = "furniture",
     description = "List all furniture; add or delete a furniture.")
+@CommandType(CommandType.BUILTIN)
 public class FurnitureCommand extends Command {
   @CommandLine.Parameters(
       index = "0",
