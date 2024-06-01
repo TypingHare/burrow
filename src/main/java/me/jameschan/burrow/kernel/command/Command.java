@@ -140,4 +140,20 @@ public abstract class Command extends ChamberModule
   public int executeOther(final String commandName, final List<String> args) {
     return executeOther(commandName, args, false);
   }
+
+  @NonNull
+  public static CommandLine.Command getCommandAnnotation(
+      @NonNull final Class<? extends Command> commandClass) {
+    return commandClass.getDeclaredAnnotation(CommandLine.Command.class);
+  }
+
+  @NonNull
+  public static String getName(@NonNull final Class<? extends Command> commandClass) {
+    return getCommandAnnotation(commandClass).name();
+  }
+
+  @NonNull
+  public static String[] getDescription(@NonNull final Class<? extends Command> commandClass) {
+    return getCommandAnnotation(commandClass).description();
+  }
 }

@@ -2,6 +2,7 @@ package me.jameschan.burrow.kernel.command.builtin;
 
 import com.google.common.base.Strings;
 import java.util.ArrayList;
+import java.util.Comparator;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
@@ -27,16 +28,17 @@ public class CommandListCommand extends Command {
 
   @Override
   public Integer call() throws FurnitureNotFoundException, AmbiguousSimpleNameException {
-    final var commands =
+    final var commandClassList =
         furnitureName.isEmpty()
             ? context.getProcessor().getAllCommands()
             : context.getRenovator().getFurnitureByName(furnitureName).getAllCommands();
+    final var sortedCommandClassList =
+        commandClassList.stream().sorted(Comparator.comparing(Command::getName)).toList();
 
     final var lines = new ArrayList<String>();
-    for (final var command : commands) {
-      final var commandAnnotation = command.getDeclaredAnnotation(CommandLine.Command.class);
-      final var name = commandAnnotation.name();
-      final var descriptionArray = commandAnnotation.description();
+    for (final var commandClass : sortedCommandClassList) {
+      final var name = Command.getName(commandClass);
+      final var descriptionArray = Command.getDescription(commandClass);
       final var description = descriptionArray.length > 0 ? descriptionArray[0] : "";
       lines.add(Strings.padEnd(name, 16, ' ') + description);
     }

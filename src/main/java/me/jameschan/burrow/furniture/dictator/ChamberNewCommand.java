@@ -7,9 +7,11 @@ import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.config.Config;
 import me.jameschan.burrow.kernel.context.ChamberContext;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "chamber-new", description = "Creates a new chamber")
+@CommandLine.Command(name = "rnew", description = "Creates a new chamber")
+@CommandType(CommandType.BUILTIN)
 public class ChamberNewCommand extends Command {
   @CommandLine.Parameters(index = "0", description = "The name of the new chamber.")
   private String name;

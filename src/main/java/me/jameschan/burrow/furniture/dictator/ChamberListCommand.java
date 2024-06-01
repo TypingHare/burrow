@@ -8,12 +8,14 @@ import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.config.Config;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import me.jameschan.burrow.kernel.utility.ColorUtility;
 import picocli.CommandLine;
 
 @CommandLine.Command(
-    name = "chamber-list",
+    name = "rlist",
     description = "Print the list of all chambers with descriptions.")
+@CommandType(CommandType.BUILTIN)
 public class ChamberListCommand extends Command {
   public ChamberListCommand(final RequestContext requestContext) {
     super(requestContext);
