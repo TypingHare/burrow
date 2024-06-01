@@ -24,6 +24,24 @@ public class Processor extends ChamberModule {
   public static final String UNKNOWN_COMMAND_NAME = "unknown";
   public static final ImmutableList<Class<? extends Command>> SPECIAL_COMMAND_LIST =
       ImmutableList.of(UnknownCommand.class, DefaultCommand.class);
+  public static final List<Class<? extends Command>> BUILTIN_COMMAND_LIST =
+      ImmutableList.of(
+          UnknownCommand.class,
+          DefaultCommand.class,
+          RootCommand.class,
+          CommandListCommand.class,
+          HelpCommand.class,
+          ConfigCommand.class,
+          ConfigItemCommand.class,
+          FurnitureListCommand.class,
+          FurnitureAddCommand.class,
+          DescriptionCommand.class,
+          NewCommand.class,
+          EntryCommand.class,
+          ExistCommand.class,
+          DeleteCommand.class,
+          EntriesCommand.class,
+          SetCommand.class);
 
   private static final Logger logger = LoggerFactory.getLogger(Processor.class);
 
@@ -32,25 +50,7 @@ public class Processor extends ChamberModule {
   public Processor(final Chamber chamber) {
     super(chamber);
 
-    // Special commands
-    register(DefaultCommand.class);
-    register(UnknownCommand.class);
-
-    // Chamber scope commands
-    register(RootCommand.class);
-    register(CommandListCommand.class);
-    register(HelpCommand.class);
-    register(ConfigCommand.class);
-    register(FurnitureListCommand.class);
-    register(FurnitureAddCommand.class);
-
-    // Entry related commands
-    register(NewCommand.class);
-    register(EntryCommand.class);
-    register(ExistCommand.class);
-    register(DeleteCommand.class);
-    register(EntriesCommand.class);
-    register(SetCommand.class);
+    BUILTIN_COMMAND_LIST.forEach(this::register);
   }
 
   public int execute(

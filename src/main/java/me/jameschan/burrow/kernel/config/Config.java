@@ -14,6 +14,8 @@ import me.jameschan.burrow.kernel.common.Types;
 import me.jameschan.burrow.kernel.context.ChamberContext;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -64,7 +66,8 @@ public class Config extends ChamberModule {
    * @return The value associated with the specified key, or {@code null} if no value is mapped to
    *     the key.
    */
-  public String get(final String key) {
+  @Nullable
+  public String get(@NonNull final String key) {
     return store.get(key);
   }
 

@@ -9,6 +9,7 @@ public final class ColorUtility {
 
   public enum Type {
     SYMBOL("magenta"),
+    NULL("red,italic"),
     CHAMBER("bold,cyan"),
     DESCRIPTION("yellow"),
     KEY("blue"),
