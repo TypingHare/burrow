@@ -71,6 +71,11 @@ public class Config extends ChamberModule {
     return store.get(key);
   }
 
+  @Nullable
+  public String getOrDefault(@NonNull final String key, final String defaultValue) {
+    return store.getOrDefault(key, defaultValue);
+  }
+
   /**
    * Inserts or updates the value associated with the specified key. Only keys present in the
    * allowed key set are permitted; attempts to insert other keys will result in an

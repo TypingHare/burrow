@@ -10,14 +10,14 @@ import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import me.jameschan.burrow.kernel.utility.ColorUtility;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "clist", description = "Print a list of all config items.")
+@CommandLine.Command(name = "clist", description = "Display a list of all configuration items.")
 @CommandType(CommandType.BUILTIN)
 public class ConfigListCommand extends Command {
   public static final String KEY_VALUE_SEPARATOR = " -> ";
 
   @CommandLine.Option(
       names = {"-f", "--furniture"},
-      description = "",
+      description = "Filter configuration items by furniture name.",
       defaultValue = CommandLine.Option.NULL_VALUE)
   private String furnitureName;
 

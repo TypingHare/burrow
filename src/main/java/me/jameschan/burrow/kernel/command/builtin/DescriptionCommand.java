@@ -8,7 +8,9 @@ import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import me.jameschan.burrow.kernel.utility.ColorUtility;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "description", description = "Retrieve or update description.")
+@CommandLine.Command(
+    name = "description",
+    description = "Retrieve or update the current chamber's description.")
 @CommandType(CommandType.BUILTIN)
 public class DescriptionCommand extends Command {
   @CommandLine.Parameters(

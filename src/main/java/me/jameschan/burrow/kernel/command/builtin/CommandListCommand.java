@@ -11,7 +11,9 @@ import me.jameschan.burrow.kernel.furniture.FurnitureNotFoundException;
 import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "list", description = "Print a list of all commands with descriptions.")
+@CommandLine.Command(
+    name = "list",
+    description = "Display a list of all available commands along with their descriptions.")
 @CommandType(CommandType.BUILTIN)
 public class CommandListCommand extends Command {
   @CommandLine.Parameters(

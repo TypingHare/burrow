@@ -14,13 +14,13 @@ import me.jameschan.burrow.kernel.furniture.Renovator;
 import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "fadd", description = "Add a furniture to the chamber.")
+@CommandLine.Command(name = "fadd", description = "Add a furniture for the current chamber.")
 @CommandType(CommandType.BUILTIN)
 public class FurnitureAddCommand extends Command {
   @CommandLine.Parameters(
       index = "0",
       paramLabel = "<furniture-name>",
-      description = "The full name of the furniture to add/delete.")
+      description = "The full name of the furniture to add.")
   private String furnitureName;
 
   public FurnitureAddCommand(final RequestContext requestContext) {

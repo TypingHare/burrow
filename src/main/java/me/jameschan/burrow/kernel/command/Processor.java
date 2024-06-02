@@ -29,7 +29,7 @@ public class Processor extends ChamberModule {
           // Special commands
           UnknownCommand.class,
           DefaultCommand.class,
-          // Chamber commands
+          // Builtin commands
           RootCommand.class,
           CommandListCommand.class,
           HelpCommand.class,
@@ -37,7 +37,9 @@ public class Processor extends ChamberModule {
           ConfigListCommand.class,
           FurnitureListCommand.class,
           FurnitureAddCommand.class,
+          FurnitureRemoveCommand.class,
           DescriptionCommand.class,
+          // Entry commands
           NewCommand.class,
           EntryCommand.class,
           ExistCommand.class,

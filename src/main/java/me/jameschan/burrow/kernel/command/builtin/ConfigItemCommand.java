@@ -1,4 +1,3 @@
-
 package me.jameschan.burrow.kernel.command.builtin;
 
 import me.jameschan.burrow.kernel.command.Command;
@@ -8,15 +7,17 @@ import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import me.jameschan.burrow.kernel.utility.ColorUtility;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "c", description = "Retrieve or update the value of a config item.")
+@CommandLine.Command(
+    name = "c",
+    description = "Retrieve or update the value of a configuration item.")
 @CommandType(CommandType.BUILTIN)
 public class ConfigItemCommand extends Command {
-  @CommandLine.Parameters(index = "0", description = "The key of the item to retrieve.")
+  @CommandLine.Parameters(index = "0", description = "The key of the item to retrieve or update.")
   private String key;
 
   @CommandLine.Parameters(
       index = "1",
-      description = "The value to update.",
+      description = "The value to be updated.",
       defaultValue = CommandLine.Option.NULL_VALUE)
   private String value;
 
