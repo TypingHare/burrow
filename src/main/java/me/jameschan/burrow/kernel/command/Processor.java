@@ -44,10 +44,12 @@ public class Processor extends ChamberModule {
           EntryCommand.class,
           ExistCommand.class,
           DeleteCommand.class,
+          CountCommand.class,
           EntriesCommand.class,
           PropCommand.class,
           SetCommand.class,
-          UnsetCommand.class);
+          UnsetCommand.class,
+          SumCommand.class);
 
   private static final Logger logger = LoggerFactory.getLogger(Processor.class);
 
