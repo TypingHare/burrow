@@ -7,7 +7,7 @@ import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "new", description = "Create a new entry and print the new try.")
+@CommandLine.Command(name = "new", description = "Create a new entry.")
 @CommandType(CommandType.ENTRY)
 public class NewCommand extends Command {
   public NewCommand(final RequestContext context) {

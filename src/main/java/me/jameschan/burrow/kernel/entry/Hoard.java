@@ -112,7 +112,7 @@ public class Hoard extends ChamberModule {
   }
 
   @NonNull
-  public Entry update(final int id, final Map<String, String> properties)
+  public Entry setProperties(final int id, @NonNull final Map<String, String> properties)
       throws EntryNotFoundException {
     final var entry = getById(id);
     entry.getProperties().putAll(properties);
@@ -121,6 +121,15 @@ public class Hoard extends ChamberModule {
         .getRenovator()
         .getAllFurniture()
         .forEach(furniture -> furniture.onUpdateEntry(entry, properties));
+
+    return entry;
+  }
+
+  public Entry unsetProperties(final int id, final Collection<String> keys)
+      throws EntryNotFoundException {
+    final var entry = getById(id);
+    final var properties = entry.getProperties();
+    keys.forEach(properties::remove);
 
     return entry;
   }

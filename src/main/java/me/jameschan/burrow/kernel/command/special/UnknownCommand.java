@@ -7,7 +7,9 @@ import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import me.jameschan.burrow.kernel.utility.CommandUtility;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = Processor.UNKNOWN_COMMAND_NAME, description = "Unknown command.")
+@CommandLine.Command(
+    name = Processor.UNKNOWN_COMMAND_NAME,
+    description = "A special command that is executed when an unknown command is used.")
 @CommandType(CommandType.SPECIAL)
 public class UnknownCommand extends Command {
   @CommandLine.Parameters(arity = "0..*")

@@ -12,7 +12,7 @@ import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
 @CommandLine.Command(
-    name = "list",
+    name = "mlist",
     description = "Display a list of all available commands along with their descriptions.")
 @CommandType(CommandType.BUILTIN)
 public class CommandListCommand extends Command {

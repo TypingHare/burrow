@@ -3,6 +3,8 @@ package me.jameschan.burrow.kernel.entry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 /**
  * Represents an entry with a unique identifier and a set of key-value properties. This class
@@ -40,7 +42,7 @@ public final class Entry {
    * @param key The key of the property to set.
    * @param value The value to associate with the key.
    */
-  public <T> void set(final String key, final T value) {
+  public <T> void set(@NonNull final String key, @NonNull final T value) {
     properties.put(key, value.toString());
   }
 
@@ -49,6 +51,7 @@ public final class Entry {
    *
    * @return A map containing all key-value pairs of properties associated with this entry.
    */
+  @NonNull
   public Map<String, String> getProperties() {
     return properties;
   }
@@ -60,7 +63,8 @@ public final class Entry {
    * @return The value associated with the specified key.
    * @throws KeyNotFoundException If the key does not exist in the properties map.
    */
-  public String get(final String key) {
+  @Nullable
+  public String get(@NonNull final String key) {
     return Optional.ofNullable(properties.get(key))
         .orElseThrow(() -> new KeyNotFoundException(key));
   }
