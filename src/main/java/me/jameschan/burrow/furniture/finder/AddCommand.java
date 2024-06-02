@@ -4,9 +4,11 @@ import java.nio.file.Path;
 import java.util.List;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "add", description = "Add a directory.")
+@CommandType(FinderFurniture.CommandType.FINDER)
 public class AddCommand extends Command {
   @CommandLine.Parameters(index = "0", paramLabel = "directory-path", description = "")
   private String directoryPath;

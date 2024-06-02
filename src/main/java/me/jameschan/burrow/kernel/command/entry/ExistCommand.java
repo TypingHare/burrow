@@ -5,6 +5,7 @@ import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.entry.EntryNotFoundException;
 import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
+import me.jameschan.burrow.kernel.utility.ColorUtility;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "exist", description = "Check if an entry exists.")
@@ -21,9 +22,9 @@ public class ExistCommand extends Command {
   public Integer call() {
     try {
       context.getHoard().getById(id);
-      buffer.append(true);
+      buffer.append(ColorUtility.render("true", ColorUtility.Type.KEYWORD));
     } catch (final EntryNotFoundException ex) {
-      buffer.append(false);
+      buffer.append(ColorUtility.render("false", ColorUtility.Type.KEYWORD));
     }
 
     return ExitCode.SUCCESS;

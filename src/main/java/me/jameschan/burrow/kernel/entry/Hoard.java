@@ -99,6 +99,7 @@ public class Hoard extends ChamberModule {
     }
 
     final var entry = new Entry(id);
+    entryObject.remove(KEY_ID);
     entryObject.forEach(entry::set);
 
     for (int i = entryStore.size(); i <= id; ++i) entryStore.add(null);

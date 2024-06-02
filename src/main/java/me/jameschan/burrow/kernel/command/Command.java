@@ -7,6 +7,7 @@ import me.jameschan.burrow.kernel.ChamberModule;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.Furniture;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import me.jameschan.burrow.kernel.utility.ErrorUtility;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -144,7 +145,7 @@ public abstract class Command extends ChamberModule
   @NonNull
   public static CommandLine.Command getCommandAnnotation(
       @NonNull final Class<? extends Command> commandClass) {
-    return commandClass.getDeclaredAnnotation(CommandLine.Command.class);
+    return commandClass.getAnnotation(CommandLine.Command.class);
   }
 
   @NonNull
@@ -155,5 +156,11 @@ public abstract class Command extends ChamberModule
   @NonNull
   public static String[] getDescription(@NonNull final Class<? extends Command> commandClass) {
     return getCommandAnnotation(commandClass).description();
+  }
+
+  @NonNull
+  public static String getType(@NonNull final Class<? extends Command> commandClass) {
+    final var commandType = commandClass.getAnnotation(CommandType.class);
+    return commandType == null ? CommandType.OTHER : commandType.value();
   }
 }

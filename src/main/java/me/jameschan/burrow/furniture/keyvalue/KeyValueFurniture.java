@@ -23,7 +23,7 @@ public class KeyValueFurniture extends Furniture {
   public void init() {
     registerCommand(NewCommand.class);
     registerCommand(KeyCommand.class);
-    registerCommand(CountCommand.class);
+    registerCommand(KeyCountCommand.class);
     registerCommand(KeysCommand.class);
     registerCommand(ValuesCommand.class);
   }
@@ -65,13 +65,13 @@ public class KeyValueFurniture extends Furniture {
   }
 
   @Override
-  public void toEntryObject(Map<String, String> entryObject, Entry entry) {
+  public void toEntryObject(final Map<String, String> entryObject, final Entry entry) {
     entryObject.put(EntryKey.KEY, entry.get(EntryKey.KEY));
     entryObject.put(EntryKey.VALUE, entry.get(EntryKey.VALUE));
   }
 
   @Override
-  public void toFormattedObject(Map<String, String> printedObject, Entry entry) {
+  public void toFormattedObject(final Map<String, String> printedObject, final Entry entry) {
     toEntryObject(printedObject, entry);
   }
 

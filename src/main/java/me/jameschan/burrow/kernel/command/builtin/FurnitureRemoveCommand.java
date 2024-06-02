@@ -6,9 +6,11 @@ import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.config.Config;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.Renovator;
+import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "frm", description = "Remove a furniture from the current chamber.")
+@CommandType(CommandType.BUILTIN)
 public class FurnitureRemoveCommand extends Command {
   @CommandLine.Parameters(
       index = "0",

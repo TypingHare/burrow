@@ -15,6 +15,8 @@ import picocli.CommandLine;
 public class ConfigListCommand extends Command {
   public static final String KEY_VALUE_SEPARATOR = " -> ";
 
+  // The --furniture option allows specifying a furniture name to filter configuration items.
+  // If not provided, all configuration items will be displayed.
   @CommandLine.Option(
       names = {"-f", "--furniture"},
       description = "Filter configuration items by furniture name.",

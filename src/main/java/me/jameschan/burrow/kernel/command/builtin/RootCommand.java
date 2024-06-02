@@ -2,6 +2,7 @@ package me.jameschan.burrow.kernel.command.builtin;
 
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
+import me.jameschan.burrow.kernel.context.ChamberContext;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
@@ -15,8 +16,11 @@ public class RootCommand extends Command {
 
   @Override
   public Integer call() {
-    buffer.append(context.getRootDir().toString());
-
+    buffer.append(getRootDirectoryAbsolutePath(context));
     return ExitCode.SUCCESS;
+  }
+
+  public static String getRootDirectoryAbsolutePath(final ChamberContext context) {
+    return context.getRootDir().toString();
   }
 }

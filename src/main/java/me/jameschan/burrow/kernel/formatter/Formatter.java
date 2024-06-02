@@ -1,11 +1,10 @@
 package me.jameschan.burrow.kernel.formatter;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import java.util.*;
 import me.jameschan.burrow.kernel.Chamber;
 import me.jameschan.burrow.kernel.ChamberModule;
 import me.jameschan.burrow.kernel.entry.Entry;
+import me.jameschan.burrow.kernel.utility.ColorUtility;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -71,8 +70,16 @@ public class Formatter extends ChamberModule {
   }
 
   private String formatEntry(final Entry entry, final Map<String, String> formattedObject) {
-    final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    final var prettierString = gson.toJson(formattedObject).replaceAll("\"(\\w+)\":", "$1:");
-    return "[" + entry.getId() + "] " + prettierString;
+    final var lines = new ArrayList<String>();
+    lines.add("[" + entry.getId() + "] {");
+    for (final var objectEntry : formattedObject.entrySet()) {
+      final var key = ColorUtility.render(objectEntry.getKey(), ColorUtility.Type.KEY);
+      final var value =
+          ColorUtility.render('"' + objectEntry.getValue() + '"', ColorUtility.Type.VALUE);
+      lines.add("  " + key + ": " + value);
+    }
+    lines.add("}");
+
+    return String.join("\n", lines);
   }
 }

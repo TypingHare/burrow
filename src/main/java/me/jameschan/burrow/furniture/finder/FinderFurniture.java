@@ -19,4 +19,8 @@ public class FinderFurniture extends Furniture {
     registerCommand(AddCommand.class);
     registerCommand(SearchCommand.class);
   }
+
+  public static final class CommandType {
+    public static final String FINDER = "Finder";
+  }
 }

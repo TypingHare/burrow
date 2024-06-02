@@ -2,7 +2,6 @@ package me.jameschan.burrow.kernel.command;
 
 import com.google.common.collect.ImmutableList;
 import java.util.*;
-import java.util.function.Predicate;
 import me.jameschan.burrow.kernel.Chamber;
 import me.jameschan.burrow.kernel.ChamberModule;
 import me.jameschan.burrow.kernel.command.builtin.*;
@@ -20,10 +19,8 @@ import picocli.CommandLine;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Processor extends ChamberModule {
-  public static final String DEFAULT_COMMAND_NAME = "";
-  public static final String UNKNOWN_COMMAND_NAME = "unknown";
-  public static final ImmutableList<Class<? extends Command>> SPECIAL_COMMAND_LIST =
-      ImmutableList.of(UnknownCommand.class, DefaultCommand.class);
+  public static final String DEFAULT_COMMAND_NAME = "__default__";
+  public static final String UNKNOWN_COMMAND_NAME = "__unknown__";
   public static final List<Class<? extends Command>> BUILTIN_COMMAND_LIST =
       ImmutableList.of(
           // Special commands
@@ -80,16 +77,15 @@ public class Processor extends ChamberModule {
   }
 
   public void register(final Class<? extends Command> commandClass) {
-    final var commandAnnotation =
-        commandClass.getDeclaredAnnotationsByType(CommandLine.Command.class);
-    if (commandAnnotation.length == 0) {
+    final var commandAnnotation = commandClass.getAnnotation(CommandLine.Command.class);
+    if (commandAnnotation == null) {
       throw new RuntimeException(
           "Fail to register command, as it is not annotated by "
               + "picocli.CommandLine.Command: "
               + commandClass.getName());
     }
 
-    final var commandName = commandAnnotation[0].name();
+    final var commandName = commandAnnotation.name();
     commandClassStore.put(commandName, commandClass);
   }
 
@@ -98,9 +94,7 @@ public class Processor extends ChamberModule {
   }
 
   public Collection<Class<? extends Command>> getAllCommands() {
-    return commandClassStore.values().stream()
-        .filter(Predicate.not(SPECIAL_COMMAND_LIST::contains))
-        .toList();
+    return commandClassStore.values();
   }
 
   public Class<? extends Command> getCommand(final String commandName) {

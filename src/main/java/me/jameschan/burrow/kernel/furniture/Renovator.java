@@ -28,6 +28,10 @@ public class Renovator extends ChamberModule {
   /** Loads furniture. */
   public void loadFurniture() throws FurnitureNotFoundException, InvalidFurnitureClassException {
     final var furnitureListString = context.getConfig().get(Config.Key.FURNITURE_LIST);
+    if (furnitureListString == null) {
+      return;
+    }
+
     final var furnitureNameList =
         Arrays.stream(furnitureListString.split(Renovator.FURNITURE_NAME_SEPARATOR))
             .map(String::trim)

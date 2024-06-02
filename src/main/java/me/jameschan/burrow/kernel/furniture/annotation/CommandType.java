@@ -9,6 +9,7 @@ public @interface CommandType {
   String SPECIAL = "Special";
   String BUILTIN = "Builtin";
   String ENTRY = "Entry";
+  String OTHER = "Other";
 
   /**
    * Returns the type of the annotated command.

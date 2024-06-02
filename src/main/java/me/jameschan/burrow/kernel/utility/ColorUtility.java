@@ -15,14 +15,17 @@ public final class ColorUtility {
   }
 
   public enum Type {
+    SUCCESS("bold,green"),
+    ERROR("bold,red"),
     SYMBOL("magenta"),
+    KEYWORD("magenta,italic"),
     NULL("red,italic"),
-    CHAMBER("bold,cyan"),
-    DESCRIPTION("yellow"),
+    CHAMBER("bold,fg(134)"),
+    DESCRIPTION("fg(222)"),
     KEY("blue"),
     VALUE("green"),
-    SUCCESS("bold,green"),
-    ERROR("bold,red");
+    COMMAND_NAME("cyan"),
+    COMMAND_TYPE("bg(21),fg(208)");
 
     private final String modifier;
 
