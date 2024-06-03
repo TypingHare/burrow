@@ -195,12 +195,12 @@ public class Renovator extends ChamberModule {
   }
 
   @NonNull
-  public Collection<String> getAllSimpleNames() {
-    return fullNameMap.keySet();
+  public Map<String, List<String>> getFullNameMap() {
+    return fullNameMap;
   }
 
   @NonNull
-  public Collection<String> getAllFullNames() {
+  public List<String> getAllFullNames() {
     return furnitureStore.values().stream()
         .map(furniture -> furniture.getClass().getName())
         .toList();

@@ -8,6 +8,7 @@ import me.jameschan.burrow.kernel.furniture.AmbiguousSimpleNameException;
 import me.jameschan.burrow.kernel.furniture.FurnitureNotFoundException;
 import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import me.jameschan.burrow.kernel.utility.ColorUtility;
+import org.springframework.lang.NonNull;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "clist", description = "Display a list of all configuration items.")
@@ -28,7 +29,7 @@ public class ConfigListCommand extends Command {
   }
 
   @Override
-  public Integer call() throws Exception {
+  public Integer call() throws FurnitureNotFoundException, AmbiguousSimpleNameException {
     final var configStore = context.getConfig().getStore();
     final var configKeys = furnitureName == null ? configStore.keySet() : getConfigKeys();
     final List<Map.Entry<String, String>> configToPrint =
@@ -48,12 +49,14 @@ public class ConfigListCommand extends Command {
     return ExitCode.SUCCESS;
   }
 
-  private String getColoredLine(final String key, final String value) {
+  @NonNull
+  private String getColoredLine(@NonNull final String key, @NonNull final String value) {
     return ColorUtility.render(key, ColorUtility.Type.KEY)
         + ColorUtility.render(KEY_VALUE_SEPARATOR, ColorUtility.Type.SYMBOL)
         + ColorUtility.render("\"" + value + "\"", ColorUtility.Type.VALUE);
   }
 
+  @NonNull
   private Collection<String> getConfigKeys()
       throws FurnitureNotFoundException, AmbiguousSimpleNameException {
     return Optional.ofNullable(

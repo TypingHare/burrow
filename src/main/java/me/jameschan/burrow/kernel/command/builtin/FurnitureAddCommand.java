@@ -7,11 +7,13 @@ import me.jameschan.burrow.kernel.ChamberInitializationException;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.config.Config;
+import me.jameschan.burrow.kernel.context.ChamberContext;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.FurnitureNotFoundException;
 import me.jameschan.burrow.kernel.furniture.InvalidFurnitureClassException;
 import me.jameschan.burrow.kernel.furniture.Renovator;
 import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
+import org.springframework.lang.NonNull;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "fadd", description = "Add a furniture for the current chamber.")
@@ -76,5 +78,9 @@ public class FurnitureAddCommand extends Command {
     }
 
     return ExitCode.SUCCESS;
+  }
+
+  public static boolean checkIfFurnitureExist(@NonNull final ChamberContext context) {
+
   }
 }

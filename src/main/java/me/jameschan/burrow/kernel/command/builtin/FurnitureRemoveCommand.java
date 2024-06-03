@@ -23,7 +23,7 @@ public class FurnitureRemoveCommand extends Command {
   }
 
   @Override
-  public Integer call() throws Exception {
+  public Integer call() {
     final var config = context.getConfig();
     final var furnitureListString = config.getOrDefault(Config.Key.FURNITURE_LIST, "");
     assert furnitureListString != null;

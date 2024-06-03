@@ -19,7 +19,7 @@ public final class ColorUtility {
     ERROR("bold,red"),
     SYMBOL("magenta"),
     KEYWORD("magenta,italic"),
-    NULL("red,italic"),
+    NULL("magenta,italic"),
     CHAMBER("bold,fg(134)"),
     DESCRIPTION("fg(222)"),
     KEY("blue"),

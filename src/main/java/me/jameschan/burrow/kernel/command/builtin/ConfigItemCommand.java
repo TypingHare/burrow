@@ -1,10 +1,14 @@
 package me.jameschan.burrow.kernel.command.builtin;
 
+import me.jameschan.burrow.kernel.ChamberInitializationException;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
+import me.jameschan.burrow.kernel.context.ChamberContext;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import me.jameschan.burrow.kernel.utility.ColorUtility;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -26,28 +30,36 @@ public class ConfigItemCommand extends Command {
   }
 
   @Override
-  public Integer call() {
+  public Integer call() throws ChamberInitializationException {
     if (value == null) {
       retrieve();
+      context.getChamber().restart();
     } else {
-      update();
+      updateConfigItem(context, key, value);
     }
 
     return ExitCode.SUCCESS;
   }
 
   private void retrieve() {
-    final var config = context.getConfig();
-    final var value = config.get(key);
+    final var value = retrieveConfigItem(context, key);
     if (value == null) {
       buffer.append(ColorUtility.render("null", ColorUtility.Type.NULL));
     } else {
-      buffer.append(ColorUtility.render(config.get(key), ColorUtility.Type.VALUE));
+      buffer.append(ColorUtility.render(value, ColorUtility.Type.VALUE));
     }
   }
 
-  private void update() {
-    final var config = context.getConfig();
-    config.set(key, value);
+  @Nullable
+  public static String retrieveConfigItem(
+      @NonNull final ChamberContext context, @NonNull final String key) {
+    return context.getConfig().get(key);
+  }
+
+  public static void updateConfigItem(
+      @NonNull final ChamberContext context,
+      @NonNull final String key,
+      @NonNull final String value) {
+    context.getConfig().set(key, value);
   }
 }
