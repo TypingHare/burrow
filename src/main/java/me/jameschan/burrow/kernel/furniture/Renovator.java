@@ -50,6 +50,10 @@ public class Renovator extends ChamberModule {
         throw new CircularDependencyException(dependencyPath);
       }
 
+      if (furnitureStore.containsKey(dependency)) {
+        continue;
+      }
+
       // Load the furniture
       final var furniture = loadByName(dependency);
       final var furnitureClass = furniture.getClass();
@@ -63,9 +67,12 @@ public class Renovator extends ChamberModule {
       nextDependencyPath.add(dependency);
       resolveDependencies(nextDependencyPath, nextDependencyList);
 
-      register(furniture);
-      loadConfigFrom(furniture);
-      furniture.init();
+      // Register the dependency
+      if (!furnitureStore.containsKey(furniture.getClass().getName())) {
+        register(furniture);
+        loadConfigFrom(furniture);
+        furniture.init();
+      }
     }
   }
 
