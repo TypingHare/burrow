@@ -1,11 +1,14 @@
 package me.jameschan.burrow.client;
 
+import com.google.common.base.Strings;
+import java.util.LinkedHashMap;
 import java.util.concurrent.Callable;
-import java.util.function.Consumer;
+import me.jameschan.burrow.kernel.utility.ColorUtility;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.UserInterruptException;
 import org.jline.reader.impl.history.DefaultHistory;
+import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import picocli.CommandLine;
 
@@ -32,17 +35,6 @@ public class BurrowCli implements Callable<Integer> {
     final LineReader reader =
         LineReaderBuilder.builder().terminal(terminal).history(new DefaultHistory()).build();
 
-    final Consumer<Integer> exit =
-        (exitCode) -> {
-          try {
-            terminal.close();
-          } catch (final Throwable ignored) {
-          }
-
-          System.out.println("またね");
-          System.exit(exitCode);
-        };
-
     //noinspection InfiniteLoopStatement
     while (true) {
       try {
@@ -50,23 +42,47 @@ public class BurrowCli implements Callable<Integer> {
         final var command = reader.readLine(prompt).trim();
 
         if (command.isEmpty()) continue;
-        if (command.equals(CliCommand.$EXIT)) {
-          exit.accept(0);
-        } else if (command.startsWith("$")) {
+        if (command.equals(CliCommand.EXIT)) {
+          exit(terminal);
+        } else if (command.startsWith("/")) {
           resolveCliCommand(client, command);
         } else {
           final var response = client.sendRequestTiming(client.prepareRequest(command));
           client.printResponse(response);
         }
       } catch (final UserInterruptException ex) {
-        exit.accept(0);
+        exit(terminal);
       }
     }
   }
 
+  private void exit(final Terminal terminal) {
+    try {
+      terminal.close();
+    } catch (final Throwable ignored) {
+    }
+
+    System.out.println("またね");
+    System.exit(0);
+  }
+
   private void resolveCliCommand(final BurrowClient client, final String command) {
-    if (command.startsWith(CliCommand.$USE)) {
-      client.setCurrentChamberName(command.substring(CliCommand.$USE.length()).trim());
+    if (command.startsWith(CliCommand.USE)) {
+      final var chamberName = command.substring(CliCommand.USE.length()).trim();
+      client.setCurrentChamberName(chamberName);
+    } else if (command.startsWith(CliCommand.COMMANDS)) {
+      final var commandDescription = new LinkedHashMap<String, String>();
+      commandDescription.put(CliCommand.COMMANDS, "Display all the CLI commands.");
+      commandDescription.put(CliCommand.EXIT, "Exit Burrow CLI.");
+      commandDescription.put(CliCommand.USE, "Use a specific chamber.");
+
+      for (final var key : commandDescription.keySet()) {
+        final var coloredName =
+            Strings.padEnd(ColorUtility.render(key, ColorUtility.Type.COMMAND_NAME), 12, ' ');
+        final var coloredDescription =
+            ColorUtility.render(commandDescription.get(key), ColorUtility.Type.DESCRIPTION);
+        System.out.println(coloredName + coloredDescription);
+      }
     } else {
       System.out.println("Unknown CLI command: " + command);
     }
@@ -78,11 +94,12 @@ public class BurrowCli implements Callable<Integer> {
 
   private String getPromptString(final BurrowClient client) {
     final var chamberName = client.getCurrentChamberName();
-    return CommandLine.Help.Ansi.AUTO.string("@|blue " + chamberName + "> |@");
+    return ColorUtility.render(chamberName + "> ", ColorUtility.Type.COMMAND_NAME);
   }
 
   public static final class CliCommand {
-    public static final String $EXIT = "$exit";
-    public static final String $USE = "$use";
+    public static final String COMMANDS = "/commands";
+    public static final String EXIT = "/exit";
+    public static final String USE = "/use";
   }
 }
