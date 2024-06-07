@@ -1,6 +1,7 @@
 package me.jameschan.burrow.furniture.keyvalue;
 
 import me.jameschan.burrow.kernel.command.Command;
+import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
@@ -19,13 +20,16 @@ public class ValuesCommand extends Command {
 
   @Override
   public Integer call() throws Exception {
-    final var idSet = getFurniture(KeyValueFurniture.class).getIdSetByKey(key);
+    final var keyValueFurniture = getFurniture(KeyValueFurniture.class);
+    final var idSet = keyValueFurniture.getIdSetByKey(key);
     final var hoard = context.getHoard();
     final var valueList =
-        idSet.stream().map(id -> hoard.getById(id).get(KeyValueFurniture.EntryKey.VALUE)).toList();
+        idSet.stream()
+            .map(id -> KeyValueFurniture.getValue(hoard.getById(id), keyValueFurniture))
+            .toList();
 
     buffer.append(context.getFormatter().format(valueList));
 
-    return 0;
+    return ExitCode.SUCCESS;
   }
 }

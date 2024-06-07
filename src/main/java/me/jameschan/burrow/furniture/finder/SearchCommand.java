@@ -22,11 +22,12 @@ public class SearchCommand extends Command {
   @Override
   public Integer call() throws Exception {
     final var hoard = context.getHoard();
-    final var idList = getFurniture(KeyValueFurniture.class).getIdSetByKey(directoryName);
+    final var keyValueFurniture = getFurniture(KeyValueFurniture.class);
+    final var idList = keyValueFurniture.getIdSetByKey(directoryName);
     final var pathList =
         idList.stream()
             .map(hoard::getById)
-            .map(entry -> entry.get(KeyValueFurniture.EntryKey.VALUE))
+            .map(entry -> KeyValueFurniture.getValue(entry, keyValueFurniture))
             .toList();
 
     if (pathList.isEmpty()) {

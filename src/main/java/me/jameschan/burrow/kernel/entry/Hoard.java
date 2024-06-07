@@ -77,7 +77,7 @@ public class Hoard extends ChamberModule {
   }
 
   @NonNull
-  public Entry create(final Map<String, String> properties) {
+  public Entry create(@NonNull final Map<String, String> properties) {
     final int id = ++maxId;
     final var entry = new Entry(id);
     properties.forEach(entry::set);
@@ -88,6 +88,11 @@ public class Hoard extends ChamberModule {
     this.entryStore.set(id, entry);
 
     return entry;
+  }
+
+  @NonNull
+  public Entry create() {
+    return create(Map.of());
   }
 
   public void register(final Map<String, String> entryObject) {

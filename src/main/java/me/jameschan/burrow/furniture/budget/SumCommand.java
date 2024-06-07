@@ -48,8 +48,10 @@ public class SumCommand extends Command {
 
   public static double getSum(@NonNull final ChamberContext chamberContext, final long timestamp) {
     final var collection = CollectCommand.collectEntriesCreatedAfter(chamberContext, timestamp);
+    final var keyValueFurniture =
+        chamberContext.getRenovator().getFurniture(KeyValueFurniture.class);
     return collection.stream()
-        .map(KeyValueFurniture::getValue)
+        .map(entry -> KeyValueFurniture.getValue(entry, keyValueFurniture))
         .mapToDouble(Double::parseDouble)
         .reduce(0.0, Double::sum);
   }
@@ -58,10 +60,12 @@ public class SumCommand extends Command {
       @NonNull final ChamberContext chamberContext,
       final long timestamp,
       @NonNull final String category) {
+    final var keyValueFurniture =
+        chamberContext.getRenovator().getFurniture(KeyValueFurniture.class);
     final var collection =
         CollectCommand.collectEntriesByCategoryCreatedAfter(chamberContext, timestamp, category);
     return collection.stream()
-        .map(KeyValueFurniture::getValue)
+        .map(entry -> KeyValueFurniture.getValue(entry, keyValueFurniture))
         .mapToDouble(Double::parseDouble)
         .reduce(0.0, Double::sum);
   }

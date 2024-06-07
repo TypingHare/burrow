@@ -19,6 +19,8 @@ import org.springframework.lang.NonNull;
     simpleName = "time",
     description = "Add creation time and modification time of each entry. ")
 public class TimeFurniture extends Furniture {
+  public static final String DEFAULT_TIME_FORMAT = "MM/dd, yyyy";
+
   public TimeFurniture(final Chamber chamber) {
     super(chamber);
   }
@@ -33,7 +35,7 @@ public class TimeFurniture extends Furniture {
 
   @Override
   public void initConfig(@NonNull final Config config) {
-    config.setIfAbsent(ConfigKey.TIME_DATE_FORMAT, "MM/dd, yyyy");
+    config.setIfAbsent(ConfigKey.TIME_DATE_FORMAT, DEFAULT_TIME_FORMAT);
     config.setIfAbsent(ConfigKey.TIME_CREATED_AT_ENABLED, true);
     config.setIfAbsent(ConfigKey.TIME_UPDATED_AT_ENABLED, true);
   }
@@ -46,18 +48,20 @@ public class TimeFurniture extends Furniture {
 
   @Override
   public void toEntry(final Entry entry, final Map<String, String> entryObject) {
-    entry.set(EntryKey.CREATED_AT, entryObject.get(EntryKey.CREATED_AT));
-    entry.set(EntryKey.UPDATED_AT, entryObject.get(EntryKey.UPDATED_AT));
+    entry.set(EntryKey.CREATED_AT, entryObject.getOrDefault(EntryKey.CREATED_AT, ""));
+    entry.set(EntryKey.UPDATED_AT, entryObject.getOrDefault(EntryKey.UPDATED_AT, ""));
   }
 
   @Override
   public void toFormattedObject(final Map<String, String> printedObject, final Entry entry) {
-    final var format = getContext().getConfig().get(ConfigKey.TIME_DATE_FORMAT);
+    final var format =
+        getContext().getConfig().getOrDefault(ConfigKey.TIME_DATE_FORMAT, DEFAULT_TIME_FORMAT);
+    assert format != null;
     final var formatter = DateTimeFormatter.ofPattern(format);
     final Consumer<String> addTime =
         (final String key) -> {
           final var value = entry.get(key);
-          if (value != null) {
+          if (value != null && !value.isEmpty()) {
             final var ms = Long.parseLong(value);
             final var dateTime =
                 LocalDateTime.ofInstant(Instant.ofEpochMilli(ms), ZoneId.systemDefault());

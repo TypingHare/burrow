@@ -19,11 +19,12 @@ public class KeyCommand extends Command {
   @Override
   public Integer call() throws Exception {
     final var hoard = context.getHoard();
-    final var idList = getFurniture(KeyValueFurniture.class).getIdSetByKey(key);
+    final var keyValueFurniture = getFurniture(KeyValueFurniture.class);
+    final var idList = keyValueFurniture.getIdSetByKey(key);
     final var valueList =
         idList.stream()
             .map(hoard::getById)
-            .map(entry -> entry.get(KeyValueFurniture.EntryKey.VALUE))
+            .map(entry -> KeyValueFurniture.getKey(entry, keyValueFurniture))
             .toList();
 
     buffer.append(context.getFormatter().format(valueList));

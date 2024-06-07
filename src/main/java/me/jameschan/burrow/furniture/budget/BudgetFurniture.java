@@ -19,6 +19,7 @@ public class BudgetFurniture extends Furniture {
 
   @Override
   public void init() {
+    registerCommand(NewCommand.class);
     registerCommand(CollectCommand.class);
     registerCommand(SumCommand.class);
   }
@@ -27,18 +28,27 @@ public class BudgetFurniture extends Furniture {
   public void initConfig(@NonNull final Config config) {
     // Disable the updated_at
     config.set(TimeFurniture.ConfigKey.TIME_UPDATED_AT_ENABLED, false);
+
+    // Set the key name and value name
+    config.set(KeyValueFurniture.ConfigKey.KV_KEY_NAME, "category");
+    config.set(KeyValueFurniture.ConfigKey.KV_VALUE_NAME, "amount");
   }
 
   @Override
   public void onCreateEntry(final Entry entry) {
     // The value has to be a valid floating point number
-    final var value = entry.get(KeyValueFurniture.EntryKey.VALUE);
+    final var keyValueFurniture = use(KeyValueFurniture.class);
+    final var value = KeyValueFurniture.getValue(entry, keyValueFurniture);
     try {
-      assert value != null;
       final var amount = Float.parseFloat(value);
-      entry.set(KeyValueFurniture.EntryKey.VALUE, String.format("%.2f", amount));
+      final var amountString = String.format("%.2f", amount);
+      KeyValueFurniture.setValue(entry, amountString, keyValueFurniture);
     } catch (final NumberFormatException ex) {
       throw new RuntimeException("Invalid amount string: " + value, ex);
     }
+  }
+
+  public static final class EntryKey {
+    public static final String DESCRIPTION = "description";
   }
 }

@@ -93,8 +93,10 @@ public class CollectCommand extends Command {
       @NonNull final ChamberContext chamberContext,
       final long timestamp,
       @NonNull final String category) {
+    final var keyValueFurniture =
+        chamberContext.getRenovator().getFurniture(KeyValueFurniture.class);
     return collectEntriesCreatedAfter(chamberContext, timestamp).stream()
-        .filter(entry -> KeyValueFurniture.getKey(entry).equals(category))
+        .filter(entry -> KeyValueFurniture.getKey(entry, keyValueFurniture).equals(category))
         .toList();
   }
 
