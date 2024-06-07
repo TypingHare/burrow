@@ -19,7 +19,7 @@ public class KeyCommand extends Command {
   @Override
   public Integer call() throws Exception {
     final var hoard = context.getHoard();
-    final var idList = getFurniture(KeyValueFurniture.class).getIdListByKey(key);
+    final var idList = getFurniture(KeyValueFurniture.class).getIdSetByKey(key);
     final var valueList =
         idList.stream()
             .map(hoard::getById)

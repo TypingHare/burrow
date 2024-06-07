@@ -139,8 +139,9 @@ public class Hoard extends ChamberModule {
   public Entry delete(final int id) throws EntryNotFoundException {
     final var entry = getById(id);
     context.getRenovator().getAllFurniture().forEach(furniture -> furniture.onDeleteEntry(entry));
-    entryStore.remove(id);
+    entryStore.set(id, null);
 
+    System.out.println(entryStore.size());
     return entry;
   }
 

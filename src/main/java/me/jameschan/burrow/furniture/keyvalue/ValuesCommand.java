@@ -1,6 +1,5 @@
 package me.jameschan.burrow.furniture.keyvalue;
 
-import java.util.ArrayList;
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
@@ -20,11 +19,10 @@ public class ValuesCommand extends Command {
 
   @Override
   public Integer call() throws Exception {
-    final var idListStore = getFurniture(KeyValueFurniture.class).getIdListStore();
-    final var idList = idListStore.getOrDefault(key, new ArrayList<>());
+    final var idSet = getFurniture(KeyValueFurniture.class).getIdSetByKey(key);
     final var hoard = context.getHoard();
     final var valueList =
-        idList.stream().map(id -> hoard.getById(id).get(KeyValueFurniture.EntryKey.VALUE)).toList();
+        idSet.stream().map(id -> hoard.getById(id).get(KeyValueFurniture.EntryKey.VALUE)).toList();
 
     buffer.append(context.getFormatter().format(valueList));
 

@@ -22,7 +22,7 @@ public class SearchCommand extends Command {
   @Override
   public Integer call() throws Exception {
     final var hoard = context.getHoard();
-    final var idList = getFurniture(KeyValueFurniture.class).getIdListByKey(directoryName);
+    final var idList = getFurniture(KeyValueFurniture.class).getIdSetByKey(directoryName);
     final var pathList =
         idList.stream()
             .map(hoard::getById)

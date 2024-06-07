@@ -1,19 +1,17 @@
 package me.jameschan.burrow.furniture.keyvalue;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import me.jameschan.burrow.kernel.Chamber;
 import me.jameschan.burrow.kernel.entry.Entry;
 import me.jameschan.burrow.kernel.furniture.Furniture;
 import me.jameschan.burrow.kernel.furniture.annotation.BurrowFurniture;
+import org.springframework.lang.NonNull;
 
 @BurrowFurniture(
     simpleName = "KeyValue",
     description = "Implemented key-value pair functionalities for entries.")
 public class KeyValueFurniture extends Furniture {
-  private final Map<String, List<Integer>> idListStore = new HashMap<>();
+  private final Map<String, Set<Integer>> idSetStore = new HashMap<>();
 
   public KeyValueFurniture(final Chamber chamber) {
     super(chamber);
@@ -28,28 +26,28 @@ public class KeyValueFurniture extends Furniture {
     registerCommand(ValuesCommand.class);
   }
 
-  public Map<String, List<Integer>> getIdListStore() {
-    return idListStore;
+  public Map<String, Set<Integer>> getIdSetStore() {
+    return idSetStore;
   }
 
-  public List<Integer> getIdListByKey(final String key) {
-    return idListStore.getOrDefault(key, List.of());
+  public Set<Integer> getIdSetByKey(final String key) {
+    return idSetStore.getOrDefault(key, Set.of());
   }
 
   @Override
   public void onCreateEntry(final Entry entry) {
     final var key = entry.get(EntryKey.KEY);
-    idListStore.computeIfAbsent(key, k -> new ArrayList<>()).add(entry.getId());
+    idSetStore.computeIfAbsent(key, k -> new HashSet<>()).add(entry.getId());
   }
 
   @Override
   public void onDeleteEntry(final Entry entry) {
     final var key = entry.get(EntryKey.KEY);
-    final var idList = idListStore.get(key);
+    final var idList = idSetStore.get(key);
     if (idList != null) {
       idList.remove(entry.getId());
       if (idList.isEmpty()) {
-        idListStore.remove(key);
+        idSetStore.remove(key);
       }
     }
   }
@@ -61,7 +59,7 @@ public class KeyValueFurniture extends Furniture {
     entry.set(EntryKey.KEY, key);
     entry.set(EntryKey.VALUE, value);
 
-    idListStore.computeIfAbsent(key, k -> new ArrayList<>()).add(entry.getId());
+    idSetStore.computeIfAbsent(key, k -> new HashSet<>()).add(entry.getId());
   }
 
   @Override
@@ -73,6 +71,16 @@ public class KeyValueFurniture extends Furniture {
   @Override
   public void toFormattedObject(final Map<String, String> printedObject, final Entry entry) {
     toEntryObject(printedObject, entry);
+  }
+
+  @NonNull
+  public static String getKey(@NonNull final Entry entry) {
+    return Objects.requireNonNull(entry.get(EntryKey.KEY));
+  }
+
+  @NonNull
+  public static String getValue(@NonNull final Entry entry) {
+    return Objects.requireNonNull(entry.get(EntryKey.VALUE));
   }
 
   public static final class EntryKey {

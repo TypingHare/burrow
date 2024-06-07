@@ -15,8 +15,8 @@ public class KeysCommand extends Command {
 
   @Override
   public Integer call() throws Exception {
-    final var idListStore = getFurniture(KeyValueFurniture.class).getIdListStore();
-    final var keyList = idListStore.keySet().stream().sorted().toList();
+    final var idSetStore = getFurniture(KeyValueFurniture.class).getIdSetStore();
+    final var keyList = idSetStore.keySet().stream().sorted().toList();
     buffer.append(context.getFormatter().format(keyList));
 
     return ExitCode.SUCCESS;

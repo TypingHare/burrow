@@ -2,8 +2,10 @@ package me.jameschan.burrow.furniture.keyvalue;
 
 import me.jameschan.burrow.kernel.command.Command;
 import me.jameschan.burrow.kernel.common.ExitCode;
+import me.jameschan.burrow.kernel.context.ChamberContext;
 import me.jameschan.burrow.kernel.context.RequestContext;
 import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
+import org.springframework.lang.NonNull;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -25,10 +27,18 @@ public class KeyCountCommand extends Command {
   }
 
   @Override
-  public Integer call() throws Exception {
-    final var count = getFurniture(KeyValueFurniture.class).getIdListByKey(key).size();
-    buffer.append(count);
+  public Integer call() {
+    buffer.append(countByKey(context, key));
 
     return ExitCode.SUCCESS;
+  }
+
+  public static int countByKey(
+      @NonNull final ChamberContext chamberContext, @NonNull final String key) {
+    return chamberContext
+        .getRenovator()
+        .getFurniture(KeyValueFurniture.class)
+        .getIdSetByKey(key)
+        .size();
   }
 }

@@ -18,7 +18,14 @@ public class BudgetFurniture extends Furniture {
   }
 
   @Override
+  public void init() {
+    registerCommand(CollectCommand.class);
+    registerCommand(SumCommand.class);
+  }
+
+  @Override
   public void initConfig(@NonNull final Config config) {
+    // Disable the updated_at
     config.set(TimeFurniture.ConfigKey.TIME_UPDATED_AT_ENABLED, false);
   }
 

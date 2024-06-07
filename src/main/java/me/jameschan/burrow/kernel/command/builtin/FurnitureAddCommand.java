@@ -81,6 +81,6 @@ public class FurnitureAddCommand extends Command {
   }
 
   public static boolean checkIfFurnitureExist(@NonNull final ChamberContext context) {
-
+    return true;
   }
 }
