@@ -19,7 +19,7 @@ public class Hoard extends ChamberModule {
   public static final String HOARD_FILE_NAME = "hoard.json";
   public static final String KEY_ID = "id";
 
-  private final List<Entry> entryStore = new ArrayList<>();
+  private List<Entry> entryStore = new ArrayList<>();
   private Integer maxId = 0;
 
   public Hoard(final Chamber chamber) {
@@ -47,6 +47,12 @@ public class Hoard extends ChamberModule {
     } catch (final IOException ex) {
       throw new RuntimeException(ex);
     }
+  }
+
+  /** Clears all entries. */
+  public void clearAll() {
+    this.entryStore = new ArrayList<>();
+    maxId = 0;
   }
 
   public void saveToFile() {

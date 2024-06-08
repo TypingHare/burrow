@@ -36,6 +36,7 @@ public class Processor extends ChamberModule {
           FurnitureAddCommand.class,
           FurnitureRemoveCommand.class,
           DescriptionCommand.class,
+          HoardCommand.class,
           // Entry commands
           NewCommand.class,
           EntryCommand.class,
