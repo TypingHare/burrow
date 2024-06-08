@@ -74,8 +74,7 @@ public class Formatter extends ChamberModule {
     lines.add("[" + entry.getId() + "] {");
     for (final var objectEntry : formattedObject.entrySet()) {
       final var key = ColorUtility.render(objectEntry.getKey(), ColorUtility.Type.KEY);
-      final var value =
-          ColorUtility.render('"' + objectEntry.getValue() + '"', ColorUtility.Type.VALUE);
+      final var value = ColorUtility.render(objectEntry.getValue(), ColorUtility.Type.VALUE);
       lines.add("  " + key + ": " + value);
     }
     lines.add("}");

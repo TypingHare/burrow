@@ -13,6 +13,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication(scanBasePackages = {"me.jameschan.burrow.kernel"})
@@ -36,8 +37,17 @@ public class BurrowServer {
     chamberShepherd.init();
   }
 
+  @SuppressWarnings("UastIncorrectHttpHeaderInspection")
   @PostMapping("/")
-  public BurrowResponse receiveRequest(@RequestBody final BurrowRequest request) {
+  public BurrowResponse receiveRequest(
+      @RequestBody final String command,
+      @RequestHeader("Working-Directory") final String workingDirectory,
+      @RequestHeader("Console-Width") final String consoleWidth) {
+    final var request = new BurrowRequest();
+    request.setCommand(command);
+    request.setWorkingDirectory(workingDirectory);
+    request.setWorkingDirectory(consoleWidth);
+
     return chamberShepherd.processRequest(request);
   }
 

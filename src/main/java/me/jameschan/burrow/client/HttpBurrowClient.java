@@ -12,6 +12,7 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 public class HttpBurrowClient extends BurrowClient {
   public HttpBurrowClient() throws BurrowClientInitializationException {}
 
+  @SuppressWarnings("UastIncorrectHttpHeaderInspection")
   @Override
   protected BurrowResponse sendRequest(final BurrowRequest request) {
     try (final var httpClient = HttpClients.createDefault()) {
@@ -22,11 +23,12 @@ public class HttpBurrowClient extends BurrowClient {
         request.setCommand(currentChamberName + " " + request.getCommand());
       }
 
-      final Gson gson = new Gson();
       final HttpPost postRequest = new HttpPost(uri);
-      final var json = gson.toJson(request);
-      postRequest.setEntity(new StringEntity(json));
-      postRequest.setHeader("Content-type", "application/json");
+      postRequest.setEntity(new StringEntity(request.getCommand()));
+      postRequest.setHeader("Content-type", "text/plain");
+      postRequest.setHeader("Working-Directory", request.getWorkingDirectory());
+      postRequest.setHeader("Console-Width", request.getConsoleWidth());
+
       final String responseBody = httpClient.execute(postRequest, responseHandler);
       return new Gson().fromJson(responseBody, BurrowResponse.class);
     } catch (final HttpHostConnectException ex) {
