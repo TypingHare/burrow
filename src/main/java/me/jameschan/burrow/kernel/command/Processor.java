@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
 
@@ -51,6 +53,7 @@ public class Processor extends ChamberModule {
   private static final Logger logger = LoggerFactory.getLogger(Processor.class);
 
   private final Map<String, Class<? extends Command>> commandClassStore = new HashMap<>();
+  private final Map<String, String> aliasMap = new HashMap<>();
 
   public Processor(final Chamber chamber) {
     super(chamber);
@@ -60,7 +63,14 @@ public class Processor extends ChamberModule {
 
   public int execute(
       final String commandName, final List<String> args, final RequestContext requestContext) {
-    final var commandClass = commandClassStore.getOrDefault(commandName, UnknownCommand.class);
+    var commandClass = commandClassStore.get(commandName);
+    if (commandClass == null) {
+      final var aliasCommandName = aliasMap.get(commandName);
+      if (aliasCommandName != null) {
+        commandClass = commandClassStore.get(aliasCommandName);
+      }
+    }
+    if (commandClass == null) commandClass = UnknownCommand.class;
 
     try {
       final var constructor = commandClass.getConstructor(RequestContext.class);
@@ -97,7 +107,24 @@ public class Processor extends ChamberModule {
     return commandClassStore.values();
   }
 
-  public Class<? extends Command> getCommand(final String commandName) {
+  public void setAlias(@NonNull final String commandName, @NonNull final String alias) {
+    if (getCommand(commandName) != null) {
+      aliasMap.put(alias, commandName);
+    }
+  }
+
+  @Nullable
+  public String getCommandNameByAlias(@NonNull final String alias) {
+    return aliasMap.get(alias);
+  }
+
+  @Nullable
+  public Class<? extends Command> getCommand(@NonNull final String commandName) {
     return commandClassStore.get(commandName);
+  }
+
+  @NonNull
+  public static String getCommandName(@NonNull final Class<? extends Command> commandClass) {
+    return commandClass.getAnnotation(CommandLine.Command.class).name();
   }
 }

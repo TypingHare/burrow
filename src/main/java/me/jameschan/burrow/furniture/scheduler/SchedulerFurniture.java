@@ -1,9 +1,6 @@
 package me.jameschan.burrow.furniture.scheduler;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -49,21 +46,27 @@ public class SchedulerFurniture extends Furniture {
           }
         });
 
-    final var intervalInSeconds =
-        Integer.parseInt(getContext().getConfig().get(ConfigKey.SCHEDULE_INTERVAL_SECONDS));
-    final var thresholdSeconds =
-        Integer.parseInt(getContext().getConfig().get(ConfigKey.SCHEDULE_THRESHOLD_SECONDS));
-    final Runnable task =
-        () -> {
-          lastAccessedTime.replaceAll((k, v) -> lastAccessedTime.get(k) + intervalInSeconds);
-          for (final var entry : lastAccessedTime.entrySet()) {
-            if (entry.getValue() < thresholdSeconds) return;
-            final var chamberName = entry.getKey();
-            aspectFurniture.getChamberShepherd().terminate(chamberName);
-            lastAccessedTime.remove(chamberName);
-          }
-        };
+    final var scheduleIntervalSeconds =
+        getContext().getConfig().get(ConfigKey.SCHEDULE_INTERVAL_SECONDS);
+    final var scheduleThresholdSeconds =
+        getContext().getConfig().get(ConfigKey.SCHEDULE_THRESHOLD_SECONDS);
+    final var intervalInSeconds = Integer.parseInt(Objects.requireNonNull(scheduleIntervalSeconds));
+    final Runnable task = getRunnable(scheduleThresholdSeconds, intervalInSeconds, aspectFurniture);
     scheduler.schedule(task, intervalInSeconds, TimeUnit.SECONDS);
+  }
+
+  private Runnable getRunnable(
+      String scheduleThresholdSeconds, int intervalInSeconds, AspectCoreFurniture aspectFurniture) {
+    final var thresholdSeconds = Integer.parseInt(Objects.requireNonNull(scheduleThresholdSeconds));
+    return () -> {
+      lastAccessedTime.replaceAll((k, v) -> lastAccessedTime.get(k) + intervalInSeconds);
+      for (final var entry : lastAccessedTime.entrySet()) {
+        if (entry.getValue() < thresholdSeconds) return;
+        final var chamberName = entry.getKey();
+        aspectFurniture.getChamberShepherd().terminate(chamberName);
+        lastAccessedTime.remove(chamberName);
+      }
+    };
   }
 
   @Override

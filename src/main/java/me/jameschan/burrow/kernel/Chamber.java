@@ -66,6 +66,7 @@ public class Chamber {
 
   public void terminate() {
     context.getHoard().saveToFile();
+    context.getRenovator().terminateAllFurniture();
   }
 
   public void restart() throws ChamberInitializationException {

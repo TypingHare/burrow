@@ -43,7 +43,7 @@ public class KeyValueFurniture extends Furniture {
   }
 
   @Override
-  public void initConfig(final Config config) {
+  public void initConfig(@NonNull final Config config) {
     config.setIfAbsent(ConfigKey.KV_KEY_NAME, DEFAULT_KEY_NAME);
     config.setIfAbsent(ConfigKey.KV_VALUE_NAME, DEFAULT_VALUE_NAME);
   }

@@ -212,4 +212,8 @@ public class Renovator extends ChamberModule {
         .map(furniture -> furniture.getClass().getName())
         .toList();
   }
+
+  public void terminateAllFurniture() {
+    furnitureStore.values().forEach(Furniture::onTerminate);
+  }
 }

@@ -1,8 +1,10 @@
 package me.jameschan.burrow.furniture.budget;
 
 import me.jameschan.burrow.furniture.keyvalue.KeyValueFurniture;
+import me.jameschan.burrow.furniture.keyvalue.KeysCommand;
 import me.jameschan.burrow.furniture.time.TimeFurniture;
 import me.jameschan.burrow.kernel.Chamber;
+import me.jameschan.burrow.kernel.command.Processor;
 import me.jameschan.burrow.kernel.config.Config;
 import me.jameschan.burrow.kernel.entry.Entry;
 import me.jameschan.burrow.kernel.furniture.Furniture;
@@ -22,6 +24,8 @@ public class BudgetFurniture extends Furniture {
     registerCommand(NewCommand.class);
     registerCommand(CollectCommand.class);
     registerCommand(SumCommand.class);
+
+    context.getProcessor().setAlias(Processor.getCommandName(KeysCommand.class), "categories");
   }
 
   @Override
