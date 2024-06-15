@@ -3,6 +3,7 @@ package me.jameschan.burrow.kernel.entry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import me.jameschan.burrow.kernel.common.Values;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -63,9 +64,27 @@ public final class Entry {
    * @return The value associated with the specified key.
    * @throws KeyNotFoundException If the key does not exist in the properties map.
    */
-  @Nullable
+  @NonNull
   public String get(@NonNull final String key) {
     return Optional.ofNullable(properties.get(key))
         .orElseThrow(() -> new KeyNotFoundException(key));
+  }
+
+  @Nullable
+  public String getOrDefault(@NonNull final String key, final String defaultValue) {
+    return Optional.ofNullable(properties.get(key)).orElse(defaultValue);
+  }
+
+  public boolean isTrue(@NonNull final String key) {
+    return Values.Bool.isTrue(properties.get(key));
+  }
+
+  public boolean isFalse(@NonNull final String key) {
+    return Values.Bool.isFalse(properties.get(key));
+  }
+
+  public int getInt(@NonNull final String key, final int defaultValue) {
+    final String value = properties.get(key);
+    return value == null ? defaultValue : Integer.parseInt(value);
   }
 }

@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import me.jameschan.burrow.kernel.Chamber;
+import me.jameschan.burrow.kernel.common.Values;
 import me.jameschan.burrow.kernel.config.Config;
+import me.jameschan.burrow.kernel.context.ChamberContext;
 import me.jameschan.burrow.kernel.entry.Entry;
 import me.jameschan.burrow.kernel.furniture.Furniture;
 import me.jameschan.burrow.kernel.furniture.annotation.BurrowFurniture;
@@ -54,18 +56,12 @@ public class TimeFurniture extends Furniture {
 
   @Override
   public void toFormattedObject(final Map<String, String> printedObject, final Entry entry) {
-    final var format =
-        getContext().getConfig().getOrDefault(ConfigKey.TIME_DATE_FORMAT, DEFAULT_TIME_FORMAT);
-    assert format != null;
-    final var formatter = DateTimeFormatter.ofPattern(format);
     final Consumer<String> addTime =
         (final String key) -> {
           final var value = entry.get(key);
-          if (value != null && !value.isEmpty()) {
+          if (!value.isEmpty()) {
             final var ms = Long.parseLong(value);
-            final var dateTime =
-                LocalDateTime.ofInstant(Instant.ofEpochMilli(ms), ZoneId.systemDefault());
-            printedObject.put(key, dateTime.format(formatter));
+            printedObject.put(key, dateToString(context, ms));
           }
         };
 
@@ -76,8 +72,37 @@ public class TimeFurniture extends Furniture {
   @Override
   public void onCreateEntry(final Entry entry) {
     final var currentTimeMs = System.currentTimeMillis();
-    entry.set(EntryKey.CREATED_AT, currentTimeMs);
-    entry.set(EntryKey.UPDATED_AT, currentTimeMs);
+    if (Values.Bool.isTrue(context.getConfig().get(ConfigKey.TIME_CREATED_AT_ENABLED))) {
+      entry.set(EntryKey.CREATED_AT, currentTimeMs);
+    }
+
+    updateEntry(context, entry);
+  }
+
+  @Override
+  public void onUpdateEntry(
+      @NonNull final Entry entry, @NonNull final Map<String, String> properties) {
+    updateEntry(context, entry);
+  }
+
+  @NonNull
+  public static String dateToString(
+      @NonNull final ChamberContext chamberContext, final long timestampInMs) {
+    final var format =
+        chamberContext.getConfig().getOrDefault(ConfigKey.TIME_DATE_FORMAT, DEFAULT_TIME_FORMAT);
+    assert format != null;
+    final var formatter = DateTimeFormatter.ofPattern(format);
+    final var dateTime =
+        LocalDateTime.ofInstant(Instant.ofEpochMilli(timestampInMs), ZoneId.systemDefault());
+    return dateTime.format(formatter);
+  }
+
+  public static void updateEntry(
+      @NonNull final ChamberContext chamberContext, @NonNull final Entry entry) {
+    final var currentTimeMs = System.currentTimeMillis();
+    if (Values.Bool.isTrue(chamberContext.getConfig().get(ConfigKey.TIME_UPDATED_AT_ENABLED))) {
+      entry.set(EntryKey.UPDATED_AT, currentTimeMs);
+    }
   }
 
   public static final class EntryKey {

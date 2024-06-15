@@ -1,6 +1,7 @@
 package me.jameschan.burrow.client;
 
 import com.google.common.base.Strings;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.concurrent.Callable;
 import me.jameschan.burrow.kernel.utility.ColorUtility;
@@ -31,9 +32,16 @@ public class BurrowCli implements Callable<Integer> {
     final var client = getBurrowClient();
     client.setCurrentChamberName(DEFAULT_CHAMBER_NAME);
 
-    final var terminal = TerminalBuilder.terminal();
-    final LineReader reader =
-        LineReaderBuilder.builder().terminal(terminal).history(new DefaultHistory()).build();
+    final var terminalBuilder = TerminalBuilder.builder();
+    terminalBuilder.encoding(StandardCharsets.UTF_8);
+    final var terminal = terminalBuilder.build();
+
+    final var reader =
+        LineReaderBuilder.builder()
+            .terminal(terminal)
+            .history(new DefaultHistory())
+            .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
+            .build();
 
     //noinspection InfiniteLoopStatement
     while (true) {

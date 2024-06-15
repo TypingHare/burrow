@@ -21,6 +21,7 @@ public class Hoard extends ChamberModule {
 
   private List<Entry> entryStore = new ArrayList<>();
   private Integer maxId = 0;
+  private Integer size = 0;
 
   public Hoard(final Chamber chamber) {
     super(chamber);
@@ -53,6 +54,7 @@ public class Hoard extends ChamberModule {
   public void clearAll() {
     this.entryStore = new ArrayList<>();
     maxId = 0;
+    size = 0;
   }
 
   public void saveToFile() {
@@ -93,6 +95,8 @@ public class Hoard extends ChamberModule {
     for (int i = entryStore.size(); i <= id; ++i) entryStore.add(null);
     this.entryStore.set(id, entry);
 
+    ++size;
+
     return entry;
   }
 
@@ -121,6 +125,8 @@ public class Hoard extends ChamberModule {
         .getRenovator()
         .getAllFurniture()
         .forEach(furniture -> furniture.toEntry(entry, entryObject));
+
+    ++size;
   }
 
   @NonNull
@@ -157,7 +163,7 @@ public class Hoard extends ChamberModule {
   }
 
   @NonNull
-  public Collection<Entry> getAllEntries() {
+  public List<Entry> getAllEntries() {
     return entryStore.stream().filter(Objects::nonNull).toList();
   }
 
@@ -169,5 +175,9 @@ public class Hoard extends ChamberModule {
     renovator.getAllFurniture().forEach(furniture -> furniture.toEntryObject(entryObject, entry));
 
     return entryObject;
+  }
+
+  public Integer getSize() {
+    return size;
   }
 }

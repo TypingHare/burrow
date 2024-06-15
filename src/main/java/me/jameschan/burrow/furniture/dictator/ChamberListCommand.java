@@ -15,7 +15,7 @@ import picocli.CommandLine;
 @CommandLine.Command(
     name = "rlist",
     description = "Print the list of all chambers with descriptions.")
-@CommandType(CommandType.BUILTIN)
+@CommandType(DictatorFurniture.COMMAND_TYPE)
 public class ChamberListCommand extends Command {
   public ChamberListCommand(final RequestContext requestContext) {
     super(requestContext);

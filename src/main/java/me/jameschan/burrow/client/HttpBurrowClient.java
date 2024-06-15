@@ -1,6 +1,7 @@
 package me.jameschan.burrow.client;
 
 import com.google.gson.Gson;
+import java.nio.charset.StandardCharsets;
 import me.jameschan.burrow.kernel.common.BurrowRequest;
 import me.jameschan.burrow.kernel.common.BurrowResponse;
 import org.apache.hc.client5.http.HttpHostConnectException;
@@ -24,7 +25,7 @@ public class HttpBurrowClient extends BurrowClient {
       }
 
       final HttpPost postRequest = new HttpPost(uri);
-      postRequest.setEntity(new StringEntity(request.getCommand()));
+      postRequest.setEntity(new StringEntity(request.getCommand(), StandardCharsets.UTF_8));
       postRequest.setHeader("Content-type", "text/plain");
       postRequest.setHeader("Working-Directory", request.getWorkingDirectory());
       postRequest.setHeader("Console-Width", request.getConsoleWidth());

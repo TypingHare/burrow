@@ -11,7 +11,7 @@ import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "rnew", description = "Creates a new chamber")
-@CommandType(CommandType.BUILTIN)
+@CommandType(DictatorFurniture.COMMAND_TYPE)
 public class ChamberNewCommand extends Command {
   @CommandLine.Parameters(index = "0", description = "The name of the new chamber.")
   private String name;

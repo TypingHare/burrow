@@ -34,8 +34,8 @@ public class BudgetFurniture extends Furniture {
     config.set(TimeFurniture.ConfigKey.TIME_UPDATED_AT_ENABLED, false);
 
     // Set the key name and value name
-    config.set(KeyValueFurniture.ConfigKey.KV_KEY_NAME, "category");
-    config.set(KeyValueFurniture.ConfigKey.KV_VALUE_NAME, "amount");
+    config.set(KeyValueFurniture.ConfigKey.KV_KEY_NAME, EntryKey.CATEGORY);
+    config.set(KeyValueFurniture.ConfigKey.KV_VALUE_NAME, EntryKey.AMOUNT);
   }
 
   @Override
@@ -53,6 +53,8 @@ public class BudgetFurniture extends Furniture {
   }
 
   public static final class EntryKey {
+    public static final String CATEGORY = "category";
+    public static final String AMOUNT = "amount";
     public static final String DESCRIPTION = "description";
   }
 }

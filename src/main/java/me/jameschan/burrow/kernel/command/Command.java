@@ -6,6 +6,7 @@ import java.util.concurrent.Callable;
 import me.jameschan.burrow.kernel.ChamberModule;
 import me.jameschan.burrow.kernel.common.ExitCode;
 import me.jameschan.burrow.kernel.context.RequestContext;
+import me.jameschan.burrow.kernel.entry.Entry;
 import me.jameschan.burrow.kernel.furniture.Furniture;
 import me.jameschan.burrow.kernel.furniture.annotation.CommandType;
 import me.jameschan.burrow.kernel.utility.ErrorUtility;
@@ -109,6 +110,10 @@ public abstract class Command extends ChamberModule
 
   public void bufferAppendThrowable(final Throwable throwable) {
     bufferAppendLines(ErrorUtility.getStackTrace(throwable));
+  }
+
+  public void bufferAppendEntry(@NonNull final Entry entry) {
+    buffer.append(context.getFormatter().format(entry));
   }
 
   /**
