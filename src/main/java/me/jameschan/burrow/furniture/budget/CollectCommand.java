@@ -40,11 +40,13 @@ public class CollectCommand extends Command {
   @Override
   public Integer call() {
     final var timestamp = getTimestampDaysAgo(days);
-    var collection =
+    final var collection =
         category == null
             ? collectEntriesCreatedAfter(context, timestamp)
             : collectEntriesByCategoryCreatedAfter(context, timestamp, category);
-    buffer.append(context.getFormatter().format(collection));
+    final var formatter = context.getFormatter();
+    final var entryStringList = collection.stream().map(formatter::format).toList();
+    buffer.append(formatter.format(entryStringList));
 
     return ExitCode.SUCCESS;
   }

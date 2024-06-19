@@ -65,8 +65,13 @@ public class TimeFurniture extends Furniture {
           }
         };
 
-    addTime.accept(EntryKey.CREATED_AT);
-    addTime.accept(EntryKey.UPDATED_AT);
+    if (Values.Bool.isTrue(context.getConfig().get(ConfigKey.TIME_CREATED_AT_ENABLED))) {
+      addTime.accept(EntryKey.CREATED_AT);
+    }
+
+    if (Values.Bool.isTrue(context.getConfig().get(ConfigKey.TIME_UPDATED_AT_ENABLED))) {
+      addTime.accept(EntryKey.UPDATED_AT);
+    }
   }
 
   @Override

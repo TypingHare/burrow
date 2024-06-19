@@ -46,17 +46,19 @@ public class SumCommand extends Command {
     return ExitCode.SUCCESS;
   }
 
-  public static double getSum(@NonNull final ChamberContext chamberContext, final long timestamp) {
+  public static String getSum(@NonNull final ChamberContext chamberContext, final long timestamp) {
     final var collection = CollectCommand.collectEntriesCreatedAfter(chamberContext, timestamp);
     final var keyValueFurniture =
         chamberContext.getRenovator().getFurniture(KeyValueFurniture.class);
-    return collection.stream()
-        .map(entry -> KeyValueFurniture.getValue(entry, keyValueFurniture))
-        .mapToDouble(Double::parseDouble)
-        .reduce(0.0, Double::sum);
+    final var sum =
+        collection.stream()
+            .map(entry -> KeyValueFurniture.getValue(entry, keyValueFurniture))
+            .mapToDouble(Double::parseDouble)
+            .reduce(0.0, Double::sum);
+    return String.format("%.2f", (float) sum);
   }
 
-  public static double getSumByCategory(
+  public static String getSumByCategory(
       @NonNull final ChamberContext chamberContext,
       final long timestamp,
       @NonNull final String category) {
@@ -64,9 +66,12 @@ public class SumCommand extends Command {
         chamberContext.getRenovator().getFurniture(KeyValueFurniture.class);
     final var collection =
         CollectCommand.collectEntriesByCategoryCreatedAfter(chamberContext, timestamp, category);
-    return collection.stream()
-        .map(entry -> KeyValueFurniture.getValue(entry, keyValueFurniture))
-        .mapToDouble(Double::parseDouble)
-        .reduce(0.0, Double::sum);
+    final var sum =
+        collection.stream()
+            .map(entry -> KeyValueFurniture.getValue(entry, keyValueFurniture))
+            .mapToDouble(Double::parseDouble)
+            .reduce(0.0, Double::sum);
+
+    return String.format("%.2f", (float) sum);
   }
 }
