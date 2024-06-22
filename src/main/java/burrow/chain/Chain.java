@@ -19,7 +19,8 @@ public abstract class Chain<C extends Context, R> {
     /**
      * Map to store event listeners for different events.
      */
-    private final Map<Class<? extends Event>, List<Listener<C, ? extends Event>>> eventListenerStore = new HashMap<>();
+    private final Map<Class<? extends Event>, List<Listener<C, ? extends Event>>>
+        eventListenerStore = new HashMap<>();
 
     /**
      * Creates a context from the given request.
