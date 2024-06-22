@@ -1,15 +1,17 @@
 package burrow.chain;
 
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.function.Function;
 
 public class Hook<T> {
-    public static <T> Hook<T> of(
-        @NonNull final String key,
-        @NonNull final Class<T> clazz
-    ) {
+    public static <T> Hook<T> of(@NonNull final String key, @Nullable final Class<T> clazz) {
         return new Hook<>(key, clazz);
+    }
+
+    public static <T> Hook<T> of(@NonNull final String key) {
+        return new Hook<>(key, null);
     }
 
     private final String key;
@@ -17,7 +19,7 @@ public class Hook<T> {
 
     private Hook(
         @NonNull final String key,
-        @NonNull final Class<T> clazz
+        @Nullable final Class<T> clazz
     ) {
         this.key = key;
         this.clazz = clazz;
@@ -31,17 +33,31 @@ public class Hook<T> {
     }
 
     public T get(@NonNull final Context context) {
-        return clazz.cast(context.get(key));
+        if (clazz == null) {
+            @SuppressWarnings("unchecked") final T value = (T) context.get(key);
+            return value;
+        } else {
+            return clazz.cast(context.get(key));
+        }
     }
 
     public T getOrDefault(@NonNull final Context context, @NonNull final T defaultValue) {
-        return context.getOrDefault(key, clazz, defaultValue);
+        if (clazz == null) {
+            @SuppressWarnings("unchecked") final T value = (T) context.getOrDefault(key, defaultValue);
+            return value;
+        } else {
+            return context.getOrDefault(key, clazz, defaultValue);
+        }
     }
 
     public void compute(
         @NonNull final Context context,
         @NonNull final Function<T, T> remappingFunction
     ) {
-        context.compute(key, clazz, remappingFunction);
+        if (clazz == null) {
+            set(context, remappingFunction.apply(get(context)));
+        } else {
+            context.compute(key, clazz, remappingFunction);
+        }
     }
 }
