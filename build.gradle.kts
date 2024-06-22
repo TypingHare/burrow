@@ -36,16 +36,3 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
-
-tasks.register<JavaExec>("server") {
-    group = "application"
-    description = "Alias for bootRun"
-    dependsOn("bootRun")
-}
-
-tasks.shadowJar {
-    manifest {
-        attributes["Main-Class"] = "org.springframework.boot.loader.launch.JarLauncher"
-        attributes["Start-Class"] = "me.jameschan.burrow.BurrowServer"
-    }
-}
