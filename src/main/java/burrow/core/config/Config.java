@@ -1,10 +1,10 @@
 package burrow.core.config;
 
+import burrow.core.chamber.Chamber;
 import burrow.core.chamber.ChamberContext;
+import burrow.core.chamber.ChamberModule;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import burrow.core.chamber.Chamber;
-import burrow.core.chamber.ChamberModule;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.lang.NonNull;
@@ -76,11 +76,6 @@ public class Config extends ChamberModule {
     @Nullable
     public String get(@NonNull final String key) {
         return store.get(key);
-    }
-
-    @Nullable
-    public String getOrDefault(@NonNull final String key, final String defaultValue) {
-        return store.getOrDefault(key, defaultValue);
     }
 
     /**
