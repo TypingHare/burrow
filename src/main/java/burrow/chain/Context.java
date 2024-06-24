@@ -4,10 +4,10 @@ import burrow.chain.event.Event;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.function.Function;
 
 public class Context {
@@ -65,20 +65,20 @@ public class Context {
     }
 
     @Nullable
-    public List<Event> getEventList() {
-        @SuppressWarnings("unchecked") final List<Event> eventList =
-            (List<Event>) store.get(Key.EVENT_LIST);
+    public Queue<Event> getEventQueue() {
+        @SuppressWarnings("unchecked") final Queue<Event> eventQueue =
+            (Queue<Event>) store.get(Key.EVENT_QUEUE);
 
-        return eventList;
+        return eventQueue;
     }
 
     public void trigger(@NonNull final Event event) {
-        @SuppressWarnings("unchecked") final List<Event> eventList =
-            (List<Event>) store.computeIfAbsent(Key.EVENT_LIST, k -> new ArrayList<>());
-        eventList.add(event);
+        @SuppressWarnings("unchecked") final Queue<Event> eventQueue =
+            (Queue<Event>) store.computeIfAbsent(Key.EVENT_QUEUE, k -> new LinkedList<>());
+        eventQueue.add(event);
     }
 
     public static final class Key {
-        public static final String EVENT_LIST = "EVENT_LIST";
+        public static final String EVENT_QUEUE = "EVENT_QUEUE";
     }
 }
