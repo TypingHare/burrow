@@ -30,6 +30,20 @@ public class ChainTest {
         public String getWord() {
             return word;
         }
+
+        public static void triggerWhenAuthorDetected(@NonNull final Context ctx) {
+            final var request = ctx.get(SimpleChain.CTX_REQUEST, String.class);
+            if (request != null && request.startsWith("author:")) {
+                ctx.trigger(new SimpleEvent("James"));
+            }
+        }
+
+        public static void changeAuthorName(
+            @NonNull final Context ctx,
+            @NonNull final SimpleEvent event
+        ) {
+            ctx.set(SimpleChain.CTX_REQUEST, "author: " + event.getWord());
+        }
     }
 
     @Test
@@ -83,9 +97,9 @@ public class ChainTest {
             ctx.compute(SimpleChain.CTX_REQUEST, Integer.class, (val) -> val * 3);
 
         final var simpleChain = new SimpleChain();
-        simpleChain.use(toInteger);
-        simpleChain.use(plus2);
-        simpleChain.use(times3);
+        simpleChain.pre.use(toInteger);
+        simpleChain.pre.use(plus2);
+        simpleChain.pre.use(times3);
 
         final var context = simpleChain.apply("2");
         Assertions.assertEquals(12, context.get(SimpleChain.CTX_REQUEST, Integer.class));
@@ -100,9 +114,9 @@ public class ChainTest {
         final Middleware.Pre<Context> times3 = (ctx) -> hook.compute(ctx, val -> val * 3);
 
         final var simpleChain = new SimpleChain();
-        simpleChain.use(toInteger);
-        simpleChain.use(plus2);
-        simpleChain.use(times3);
+        simpleChain.pre.use(toInteger);
+        simpleChain.pre.use(plus2);
+        simpleChain.pre.use(times3);
 
         final var context = simpleChain.apply("2");
         Assertions.assertEquals(12, hook.get(context));
@@ -111,7 +125,7 @@ public class ChainTest {
     @Test
     public void testErrorHandle() {
         final var simpleChain = new SimpleChain();
-        simpleChain.use((Middleware.Pre<Context>) (ctx)
+        simpleChain.pre.use((ctx)
             -> ctx.compute(SimpleChain.CTX_REQUEST, val -> Integer.parseInt((String) val)));
         simpleChain.on(ThrowableEvent.class, (ctx, event) -> {
             ctx.compute(SimpleChain.CTX_REQUEST, val -> ((String) val).charAt(1));
@@ -130,19 +144,19 @@ public class ChainTest {
         final Middleware.Pre<Context> times3 = (ctx) -> hook.compute(ctx, val -> val * 3);
 
         final var simpleChain = new SimpleChain();
-        simpleChain.use(toInteger);
-        simpleChain.use(plus2);
-        simpleChain.use(times3);
+        simpleChain.pre.use(toInteger);
+        simpleChain.post.use(plus2);
+        simpleChain.pre.use(times3);
 
         final var context = simpleChain.apply("2");
         Assertions.assertEquals(8, hook.get(context));
     }
 
     @Test
-    public void triggerEvent() {
+    public void testTriggerEvent() {
         final var simpleChain = new SimpleChain();
         final var hook = Hook.of(SimpleChain.CTX_REQUEST, String.class);
-        simpleChain.use((Middleware.Pre<Context>) (ctx) -> {
+        simpleChain.pre.use((ctx) -> {
             if (hook.get(ctx).startsWith("author:")) {
                 ctx.trigger(new SimpleEvent("James"));
             }
@@ -152,10 +166,26 @@ public class ChainTest {
             hook.set(ctx, "author: " + event.getWord());
         });
 
-//        final var context1 = simpleChain.apply("age: 25");
-//        Assertions.assertEquals("age: 25", hook.get(context1));
+        final var context1 = simpleChain.apply("age: 25");
+        Assertions.assertEquals("age: 25", hook.get(context1));
 
         final var context2 = simpleChain.apply("author: Andrew");
         Assertions.assertEquals("author: James", hook.get(context2));
+    }
+
+    @Test
+    public void testSetEventHandlerUsingFunction() {
+        final var simpleChain = new SimpleChain();
+        final var hook = Hook.of(SimpleChain.CTX_REQUEST, String.class);
+        simpleChain.pre.use(SimpleEvent::triggerWhenAuthorDetected);
+        simpleChain.on(SimpleEvent.class, SimpleEvent::changeAuthorName);
+
+        final var context = simpleChain.apply("author: Andrew");
+        Assertions.assertEquals("author: James", hook.get(context));
+    }
+
+    @Test
+    public void testUseFirst() {
+
     }
 }

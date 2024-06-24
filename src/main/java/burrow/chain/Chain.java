@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class Chain<C extends Context, R> {
+    public final Pre pre = new Pre();
+    public final Post post = new Post();
+
     /**
      * List of middleware components in the chain.
      */
@@ -65,12 +68,8 @@ public abstract class Chain<C extends Context, R> {
         middlewareList.add(middleware);
     }
 
-    public void use(@NonNull final Middleware.Pre<C> middlewarePre) {
-        use(pre(middlewarePre));
-    }
-
-    public void use(@NonNull final Middleware.Post<C> middlewarePost) {
-        use(post(middlewarePost));
+    public void useFirst(@NonNull final Middleware<C> middleware) {
+        middlewareList.addFirst(middleware);
     }
 
     public <E extends Event> void on(
@@ -101,5 +100,31 @@ public abstract class Chain<C extends Context, R> {
             next.run();
             postProcessor.accept(ctx);
         });
+    }
+
+    public final class Pre {
+        private Pre() {
+        }
+
+        public void use(@NonNull final Middleware.Pre<C> middleware) {
+            Chain.this.use(pre(middleware));
+        }
+
+        public void useFirst(@NonNull final Middleware.Pre<C> middleware) {
+            Chain.this.useFirst(pre(middleware));
+        }
+    }
+
+    public final class Post {
+        private Post() {
+        }
+
+        public void use(@NonNull final Middleware.Post<C> middleware) {
+            Chain.this.use(post(middleware));
+        }
+
+        public void useFirst(@NonNull final Middleware.Post<C> middleware) {
+            Chain.this.useFirst(post(middleware));
+        }
     }
 }
