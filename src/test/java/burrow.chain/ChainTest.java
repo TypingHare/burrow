@@ -1,5 +1,6 @@
 package burrow.chain;
 
+import burrow.chain.event.Event;
 import burrow.chain.event.ThrowableEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,18 @@ public class ChainTest {
             context.set(CTX_REQUEST, request);
 
             return context;
+        }
+    }
+
+    private static final class SimpleEvent extends Event {
+        private final String word;
+
+        private SimpleEvent(final String word) {
+            this.word = word;
+        }
+
+        public String getWord() {
+            return word;
         }
     }
 
@@ -123,5 +136,26 @@ public class ChainTest {
 
         final var context = simpleChain.apply("2");
         Assertions.assertEquals(8, hook.get(context));
+    }
+
+    @Test
+    public void triggerEvent() {
+        final var simpleChain = new SimpleChain();
+        final var hook = Hook.of(SimpleChain.CTX_REQUEST, String.class);
+        simpleChain.use((Middleware.Pre<Context>) (ctx) -> {
+            if (hook.get(ctx).startsWith("author:")) {
+                ctx.trigger(new SimpleEvent("James"));
+            }
+        });
+
+        simpleChain.on(SimpleEvent.class, (ctx, event) -> {
+            hook.set(ctx, "author: " + event.getWord());
+        });
+
+//        final var context1 = simpleChain.apply("age: 25");
+//        Assertions.assertEquals("age: 25", hook.get(context1));
+
+        final var context2 = simpleChain.apply("author: Andrew");
+        Assertions.assertEquals("author: James", hook.get(context2));
     }
 }

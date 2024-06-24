@@ -1,15 +1,17 @@
 package burrow.chain;
 
+import burrow.chain.event.Event;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class Context {
-    private final Map<String, Object> store = new HashMap<>();
+    protected final Map<String, Object> store = new HashMap<>();
 
     @Nullable
     public Object get(@NonNull final String key) {
@@ -44,18 +46,39 @@ public class Context {
         store.compute(key, (k, v) -> remappingFunction.apply(v));
     }
 
-    public void computeIfAbsent(
-        @NonNull final String key,
-        @NonNull final BiFunction<String, Object, Object> remappingFunction
-    ) {
-        store.compute(key, remappingFunction);
-    }
-
     public <T> void compute(
         @NonNull final String key,
         @NonNull final Class<T> objectClass,
         @NonNull final Function<T, T> remappingFunction
     ) {
         store.compute(key, (k, v) -> remappingFunction.apply(objectClass.cast(v)));
+    }
+
+    @NonNull
+    public Context shallowCopy() {
+        final var newContext = new Context();
+        for (final var entry : store.entrySet()) {
+            newContext.set(entry.getKey(), entry.getValue());
+        }
+
+        return newContext;
+    }
+
+    @Nullable
+    public List<Event> getEventList() {
+        @SuppressWarnings("unchecked") final List<Event> eventList =
+            (List<Event>) store.get(Key.EVENT_LIST);
+
+        return eventList;
+    }
+
+    public void trigger(@NonNull final Event event) {
+        @SuppressWarnings("unchecked") final List<Event> eventList =
+            (List<Event>) store.computeIfAbsent(Key.EVENT_LIST, k -> new ArrayList<>());
+        eventList.add(event);
+    }
+
+    public static final class Key {
+        public static final String EVENT_LIST = "EVENT_LIST";
     }
 }

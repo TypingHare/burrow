@@ -41,6 +41,11 @@ public abstract class Chain<C extends Context, R> {
     }
 
     private void dispatch(@NonNull final C context, final int middlewareIndex) {
+        final var eventList = context.getEventList();
+        if (eventList != null) {
+            eventList.forEach(event -> this.trigger(event, context));
+        }
+
         if (middlewareIndex >= middlewareList.size()) {
             return;
         }
