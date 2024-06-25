@@ -3,14 +3,11 @@ package burrow.furniture.standard;
 import burrow.core.chamber.Chamber;
 import burrow.core.chamber.ChamberContext;
 import burrow.core.config.Config;
-import burrow.core.furniture.BurrowFurniture;
-import burrow.core.furniture.Furniture;
-import burrow.core.furniture.Renovator;
+import burrow.core.furniture.*;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
 @BurrowFurniture(
@@ -27,6 +24,8 @@ public class StandardFurniture extends Furniture {
     @Override
     public void init() {
         registerCommand(RootCommand.class);
+        registerCommand(ConfigCommand.class);
+        registerCommand(ConfigListCommand.class);
         registerCommand(FurnitureListCommand.class);
         registerCommand(FurnitureAddCommand.class);
         registerCommand(FurnitureRemoveCommand.class);
@@ -37,6 +36,31 @@ public class StandardFurniture extends Furniture {
         @NonNull final ChamberContext context
     ) {
         return context.getRootDir().toString();
+    }
+
+    public static void updateConfigItem(
+        @NonNull final ChamberContext context,
+        @NonNull final String key,
+        @NonNull final String value
+    ) {
+        context.getConfig().set(key, value);
+    }
+
+    @Nullable
+    public static String retrieveConfigItem(
+        @NonNull final ChamberContext context,
+        @NonNull final String key
+    ) {
+        return context.getConfig().get(key);
+    }
+
+    @NonNull
+    public static Collection<String> getConfigKeys(
+        @NonNull final ChamberContext context,
+        @NonNull final String furnitureName
+    ) throws FurnitureNotFoundException, AmbiguousSimpleNameException {
+        return Optional.ofNullable(context.getRenovator().getFurnitureByName(furnitureName)
+            .configKeys()).orElse(new ArrayList<>());
     }
 
     @NonNull
