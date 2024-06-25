@@ -58,7 +58,8 @@ public class Config extends ChamberModule {
         setIfAbsent(Key.FURNITURE_LIST, "");
     }
 
-    public static Map<String, String> loadFromConfigFile(@NonNull final Path filePath) throws IOException {
+    public static Map<String, String> loadFromConfigFile(
+        @NonNull final Path filePath) throws IOException {
         final var content = Files.readString(filePath);
         return new Gson().fromJson(content, new TypeToken<Map<String, String>>() {
         }.getType());
@@ -82,6 +83,16 @@ public class Config extends ChamberModule {
     @Nullable
     public String get(@NonNull final String key) {
         return store.get(key);
+    }
+
+    @NonNull
+    public String getRequireNotNull(@NonNull final String key) {
+        final var value = store.get(key);
+        if (value == null) {
+            throw new RuntimeException("Missing required config key: " + key);
+        }
+
+        return value;
     }
 
     /**
