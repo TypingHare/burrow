@@ -60,7 +60,8 @@ public class Renovator extends ChamberModule {
             final var furniture = loadByName(dependency);
             final var furnitureClass = furniture.getClass();
             final var nextDependencyList =
-                Arrays.stream(furnitureClass.getDeclaredAnnotation(BurrowFurniture.class).dependencies())
+                Arrays.stream(furnitureClass.getDeclaredAnnotation(BurrowFurniture.class)
+                        .dependencies())
                     .map(Class::getName)
                     .toList();
 
@@ -102,27 +103,6 @@ public class Renovator extends ChamberModule {
     }
 
     @NonNull
-    public Class<? extends Furniture> checkIfFurnitureExist(@NonNull final String name)
-        throws FurnitureNotFoundException {
-        try {
-            @SuppressWarnings("unchecked") final Class<? extends Furniture> furnitureClass =
-                (Class<? extends Furniture>) Class.forName(name);
-            return furnitureClass;
-        } catch (final ClassNotFoundException ex) {
-            throw new FurnitureNotFoundException(name);
-        }
-    }
-
-    public void testFurnitureClass(@NonNull final Class<? extends Furniture> furnitureClass)
-        throws InvalidFurnitureClassException {
-        // Check if the given class extends the Furniture class and is annotated correctly
-        if (!Furniture.class.isAssignableFrom(furnitureClass)
-            || furnitureClass.getDeclaredAnnotation(BurrowFurniture.class) == null) {
-            throw new InvalidFurnitureClassException(furnitureClass.getName());
-        }
-    }
-
-    @NonNull
     public Furniture loadByName(@NonNull final String name)
         throws FurnitureNotFoundException, InvalidFurnitureClassException {
         return loadByClass(checkIfFurnitureExist(name));
@@ -155,11 +135,6 @@ public class Renovator extends ChamberModule {
                  | IllegalAccessException ex) {
             throw new RuntimeException("Failed to instantiate furniture: " + clazz.getName(), ex);
         }
-    }
-
-    @NonNull
-    public Collection<Furniture> getAllFurniture() {
-        return furnitureStore.values();
     }
 
     @NonNull
@@ -216,5 +191,26 @@ public class Renovator extends ChamberModule {
 
     public void terminateAllFurniture() {
         furnitureStore.values().forEach(Furniture::terminate);
+    }
+
+    @NonNull
+    public static Class<? extends Furniture> checkIfFurnitureExist(@NonNull final String name)
+        throws FurnitureNotFoundException {
+        try {
+            @SuppressWarnings("unchecked") final Class<? extends Furniture> furnitureClass =
+                (Class<? extends Furniture>) Class.forName(name);
+            return furnitureClass;
+        } catch (final ClassNotFoundException ex) {
+            throw new FurnitureNotFoundException(name);
+        }
+    }
+
+    public static void testFurnitureClass(@NonNull final Class<? extends Furniture> furnitureClass)
+        throws InvalidFurnitureClassException {
+        // Check if the given class extends the Furniture class and is annotated correctly
+        if (!Furniture.class.isAssignableFrom(furnitureClass)
+            || furnitureClass.getDeclaredAnnotation(BurrowFurniture.class) == null) {
+            throw new InvalidFurnitureClassException(furnitureClass.getName());
+        }
     }
 }
