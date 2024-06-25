@@ -58,6 +58,12 @@ public class Config extends ChamberModule {
         setIfAbsent(Key.FURNITURE_LIST, "");
     }
 
+    public static Map<String, String> loadFromConfigFile(@NonNull final Path filePath) throws IOException {
+        final var content = Files.readString(filePath);
+        return new Gson().fromJson(content, new TypeToken<Map<String, String>>() {
+        }.getType());
+    }
+
     /**
      * Adds a key to the set of allowed keys for configuration. Only keys present in this set are
      * permitted, ensuring the configuration contains only predefined keys.
@@ -137,12 +143,6 @@ public class Config extends ChamberModule {
      */
     public Map<String, String> getStore() {
         return store;
-    }
-
-    public static Map<String, String> loadFromConfigFile(@NonNull final Path filePath) throws IOException {
-        final var content = Files.readString(filePath);
-        return new Gson().fromJson(content, new TypeToken<Map<String, String>>() {
-        }.getType());
     }
 
     /**
