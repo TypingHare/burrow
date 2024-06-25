@@ -1,11 +1,16 @@
 package burrow.core.common;
 
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import picocli.CommandLine;
 
 public final class ColorUtility {
     @NonNull
-    public static String render(@NonNull final String string, @NonNull final String modifier) {
+    public static String render(@NonNull final String string, @Nullable final String modifier) {
+        if (modifier == null) {
+            return string;
+        }
+
         return CommandLine.Help.Ansi.ON.string("@|" + modifier.trim() + " " + string + "|@");
     }
 
@@ -20,7 +25,7 @@ public final class ColorUtility {
         EXIT_CODE_ERROR("bold,red"),
 
         // Symbol, keyword, and null
-        SYMBOL(""),
+        SYMBOL(null),
         KEYWORD("magenta"),
         NULL("bold,magenta"),
 
