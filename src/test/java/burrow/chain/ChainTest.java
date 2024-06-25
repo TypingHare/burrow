@@ -186,6 +186,18 @@ public class ChainTest {
 
     @Test
     public void testUseFirst() {
+        final Middleware.Pre<Context> toInteger = (ctx) ->
+            ctx.compute(SimpleChain.CTX_REQUEST, val -> Integer.parseInt((String) val));
+        final var hook = Hook.of(SimpleChain.CTX_REQUEST, Integer.class);
+        final Middleware.Pre<Context> plus2 = (ctx) -> hook.compute(ctx, val -> val + 2);
+        final Middleware.Pre<Context> times3 = (ctx) -> hook.compute(ctx, val -> val * 3);
 
+        final var simpleChain = new SimpleChain();
+        simpleChain.pre.use(toInteger);
+        simpleChain.pre.use(plus2);
+        simpleChain.pre.useFirst(times3);
+
+        final var context = simpleChain.apply("5");
+        Assertions.assertEquals(17, hook.get(context));
     }
 }
