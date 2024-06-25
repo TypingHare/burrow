@@ -3,6 +3,7 @@ package burrow.server;
 import burrow.core.chamber.ChamberInitializationException;
 import burrow.core.chamber.ChamberShepherd;
 import burrow.core.common.Environment;
+import com.google.gson.Gson;
 import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +12,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication(scanBasePackages = {"burrow.core"})
 @RestController
@@ -39,8 +40,7 @@ public class BurrowServer {
 
     @SuppressWarnings("UastIncorrectHttpHeaderInspection")
     @PostMapping("/")
-    @ResponseBody
-    public Map<String, String> receiveRequest(
+    public BurrowResponse receiveRequest(
         @RequestBody final String command,
         @RequestHeader("Working-Directory") final String workingDirectory,
         @RequestHeader("Console-Width") final String consoleWidth
@@ -50,11 +50,11 @@ public class BurrowServer {
 
         final var commandContext = chamberShepherd.processCommand(command, environment);
 
-        final var map = new HashMap<String, String>();
-        map.put("message", commandContext.getBuffer().toString());
-        map.put("code", commandContext.getExitCode().toString());
+        final var response = new BurrowResponse();
+        response.setMessage(commandContext.getBuffer().toString());
+        response.setExitCode(commandContext.getExitCode());
 
-        return map;
+        return response;
     }
 
     @PreDestroy
