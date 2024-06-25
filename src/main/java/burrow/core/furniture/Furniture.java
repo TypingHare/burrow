@@ -9,11 +9,11 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public abstract class Furniture extends ChamberModule {
-    private final Set<Class<? extends Command>> commandSet = new HashSet<>();
+    private final Set<Class<? extends Command>> commandSet = new LinkedHashSet<>();
 
     public Furniture(@NonNull final Chamber chamber) {
         super(chamber);

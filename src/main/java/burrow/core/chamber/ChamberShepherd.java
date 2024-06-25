@@ -42,7 +42,8 @@ public class ChamberShepherd {
 
     @NonNull
     public Chamber initiate(
-        @NonNull final String chamberName) throws ChamberInitializationException {
+        @NonNull final String chamberName
+    ) throws ChamberInitializationException {
         final var chamber = applicationContext.getBean(Chamber.class);
         logger.info("Chamber initiating: {}", chamberName);
         final var start = Instant.now();
