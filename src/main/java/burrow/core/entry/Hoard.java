@@ -1,10 +1,10 @@
 package burrow.core.entry;
 
+import burrow.core.chamber.Chamber;
 import burrow.core.chamber.ChamberContext;
 import burrow.core.chamber.ChamberModule;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import burrow.core.chamber.Chamber;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.lang.NonNull;
