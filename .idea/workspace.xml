@@ -5,11 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ecd0fa0-16fd-48ba-aef9-eec80eadd3ed" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/chain/Chain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/chain/Chain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/chain/Context.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/chain/Context.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/Chamber.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/Chamber.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberContext.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberInitializationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberInitializationException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberShepherd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberShepherd.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/config/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/config/Config.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/entry/DuplicateIdException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/entry/DuplicateIdException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Entry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Entry.java" afterDir="false" />
@@ -17,7 +20,7 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Hoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Hoard.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/entry/HoardFileNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/entry/HoardFileNotFoundException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/entry/KeyNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/entry/KeyNotFoundException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/burrow.chain/ChainTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/burrow.chain/ChainTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/burrow/chain/ChainTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/burrow/chain/ChainTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,6 +84,8 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Gradle.Build burrow-new.executor": "Run",
     "Gradle.ChainTest.executor": "Run",
     "Gradle.ChainTest.testApplyWithMiddleware.executor": "Run",
     "Gradle.ChainTest.testApplyWithMultipleMiddlewares.executor": "Run",
@@ -89,9 +94,19 @@
     "Gradle.ChainTest.testErrorHandle.executor": "Run",
     "Gradle.ChainTest.testHook.executor": "Run",
     "Gradle.ChainTest.testMiddlewarePost.executor": "Run",
-    "Gradle.ChainTest.triggerEvent.executor": "Debug",
+    "Gradle.ChainTest.testSetEventHandlerUsingFunction.executor": "Run",
+    "Gradle.ChainTest.testUseFirst.executor": "Run",
+    "Gradle.ChainTest.triggerEvent.executor": "Run",
     "Gradle.Download Sources.executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.BurrowServer.executor": "Run",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/jameschan/Git/public/burrow-new/src/main/java/burrow/core/furniture",
@@ -114,8 +129,11 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/test/java" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="burrow.chain" />
+    </key>
   </component>
-  <component name="RunManager" selected="Gradle.ChainTest.triggerEvent">
+  <component name="RunManager" selected="Spring Boot.BurrowServer">
     <configuration name="ChainTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -140,7 +158,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="ChainTest.testErrorHandle" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="ChainTest.testSetEventHandlerUsingFunction" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -153,7 +171,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;burrow.chain.ChainTest.testErrorHandle&quot;" />
+            <option value="&quot;burrow.chain.ChainTest.testSetEventHandlerUsingFunction&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -164,7 +182,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="ChainTest.testHook" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="ChainTest.testUseFirst" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -177,31 +195,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;burrow.chain.ChainTest.testHook&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="ChainTest.testMiddlewarePost" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;burrow.chain.ChainTest.testMiddlewarePost&quot;" />
+            <option value="&quot;burrow.chain.ChainTest.testUseFirst&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -236,13 +230,26 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="BurrowServer" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="burrow.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="burrow.server.BurrowServer" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="burrow.server.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.ChainTest.triggerEvent" />
-        <item itemvalue="Gradle.ChainTest.testMiddlewarePost" />
+        <item itemvalue="Spring Boot.BurrowServer" />
         <item itemvalue="Gradle.ChainTest" />
-        <item itemvalue="Gradle.ChainTest.testErrorHandle" />
-        <item itemvalue="Gradle.ChainTest.testHook" />
+        <item itemvalue="Gradle.ChainTest.testUseFirst" />
+        <item itemvalue="Gradle.ChainTest.testSetEventHandlerUsingFunction" />
+        <item itemvalue="Gradle.ChainTest.triggerEvent" />
       </list>
     </recent_temporary>
   </component>
@@ -265,12 +272,25 @@
       <workItem from="1718913710293" duration="766000" />
       <workItem from="1719027091482" duration="16412000" />
       <workItem from="1719089092855" duration="7296000" />
-      <workItem from="1719256020894" duration="4723000" />
+      <workItem from="1719256020894" duration="9223000" />
+      <workItem from="1719273235865" duration="860000" />
+      <workItem from="1719330549364" duration="7081000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
