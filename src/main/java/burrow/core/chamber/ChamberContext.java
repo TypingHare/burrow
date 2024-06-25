@@ -6,12 +6,17 @@ import burrow.core.command.Processor;
 import burrow.core.config.Config;
 import burrow.core.entry.Hoard;
 import burrow.core.furniture.Renovator;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Objects;
 
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ChamberContext extends Context {
     @NonNull
     public Chamber getChamber() {
@@ -30,7 +35,7 @@ public class ChamberContext extends Context {
 
     @NonNull
     public Overseer getOverseer() {
-        return Objects.requireNonNull(get(Key.Overseer, Overseer.class));
+        return Objects.requireNonNull(get(Key.OVERSEER, Overseer.class));
     }
 
     @NonNull
@@ -76,7 +81,7 @@ public class ChamberContext extends Context {
 
         // Objects of builtin modules
         public static final String CONFIG = "CONFIG";
-        public static final String Overseer = "OVERSEER";
+        public static final String OVERSEER = "OVERSEER";
         public static final String HOARD = "HOARD";
         public static final String RENOVATOR = "RENOVATOR";
         public static final String PROCESSOR = "PROCESSOR";

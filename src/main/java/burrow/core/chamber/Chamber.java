@@ -1,5 +1,6 @@
 package burrow.core.chamber;
 
+import burrow.core.Overseer;
 import burrow.core.command.CommandContext;
 import burrow.core.command.Processor;
 import burrow.core.common.Environment;
@@ -41,9 +42,10 @@ public class Chamber {
         return context;
     }
 
-    public void execute(
-        @NonNull final Environment environment,
-        @NonNull final List<String> args
+    @NonNull
+    public CommandContext execute(
+        @NonNull final List<String> args,
+        @NonNull final Environment environment
     ) {
         final var hasCommand = !args.isEmpty() && !args.getFirst().startsWith("-");
         final var commandName = hasCommand ? args.getFirst() : "";
@@ -53,18 +55,21 @@ public class Chamber {
         commandContext.set(CommandContext.Key.CHAMBER_CONTEXT, context);
         commandContext.set(CommandContext.Key.COMMAND_NAME, commandName);
         commandContext.set(CommandContext.Key.COMMAND_ARGS, realArgs);
-        commandContext.set(CommandContext.Key.WORKING_DIRECTORY, environment.getWorkingDirectory());
+        commandContext.set(CommandContext.Key.ENVIRONMENT, environment);
         commandContext.set(CommandContext.Key.EXIT_CODE, CommandLine.ExitCode.SOFTWARE);
         commandContext.set(CommandContext.Key.BUFFER, new StringBuilder());
 
         final var commandProcessChain = context.getOverseer().getCommandProcessChain();
         commandProcessChain.apply(commandContext);
+
+        return commandContext;
     }
 
     public void initiate(final String name) throws ChamberInitializationException {
         context.set(ChamberContext.Key.CHAMBER, this);
         context.set(ChamberContext.Key.CHAMBER_NAME, name);
         context.set(ChamberContext.Key.CONFIG, getModuleObject(Config.class));
+        context.set(ChamberContext.Key.OVERSEER, getModuleObject(Overseer.class));
         context.set(ChamberContext.Key.HOARD, getModuleObject(Hoard.class));
         context.set(ChamberContext.Key.RENOVATOR, getModuleObject(Renovator.class));
         context.set(ChamberContext.Key.PROCESSOR, getModuleObject(Processor.class));
