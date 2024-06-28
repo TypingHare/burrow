@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ecd0fa0-16fd-48ba-aef9-eec80eadd3ed" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/CommandList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" afterDir="false" />
     </list>
@@ -262,7 +263,7 @@
       <workItem from="1719330549364" duration="11816000" />
       <workItem from="1719344857830" duration="4074000" />
       <workItem from="1719540590955" duration="5260000" />
-      <workItem from="1719613589381" duration="709000" />
+      <workItem from="1719613589381" duration="1107000" />
     </task>
     <servers />
   </component>

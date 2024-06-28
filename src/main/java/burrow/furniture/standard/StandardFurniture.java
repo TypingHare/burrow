@@ -34,41 +34,41 @@ public class StandardFurniture extends Furniture {
 
     @NonNull
     public static String getRootDirectoryAbsolutePath(
-        @NonNull final ChamberContext context
+        @NonNull final ChamberContext chamberContext
     ) {
-        return context.getRootDir().toString();
+        return chamberContext.getRootDir().toString();
     }
 
     public static void updateConfigItem(
-        @NonNull final ChamberContext context,
+        @NonNull final ChamberContext chamberContext,
         @NonNull final String key,
         @NonNull final String value
     ) {
-        context.getConfig().set(key, value);
+        chamberContext.getConfig().set(key, value);
     }
 
     @Nullable
     public static String retrieveConfigItem(
-        @NonNull final ChamberContext context,
+        @NonNull final ChamberContext chamberContext,
         @NonNull final String key
     ) {
-        return context.getConfig().get(key);
+        return chamberContext.getConfig().get(key);
     }
 
     @NonNull
     public static Collection<String> getConfigKeys(
-        @NonNull final ChamberContext context,
+        @NonNull final ChamberContext chamberContext,
         @NonNull final String furnitureName
     ) throws FurnitureNotFoundException, AmbiguousSimpleNameException {
-        return Optional.ofNullable(context.getRenovator().getFurnitureByName(furnitureName)
+        return Optional.ofNullable(chamberContext.getRenovator().getFurnitureByName(furnitureName)
             .configKeys()).orElse(new ArrayList<>());
     }
 
     @NonNull
     public static List<String> getConfigFurnitureNameList(
-        @NonNull final ChamberContext context
+        @NonNull final ChamberContext chamberContext
     ) {
-        final var furnitureListString = context.getConfig().get(Config.Key.FURNITURE_LIST);
+        final var furnitureListString = chamberContext.getConfig().get(Config.Key.FURNITURE_LIST);
         assert furnitureListString != null;
         return Arrays.stream(furnitureListString.split(Renovator.FURNITURE_NAME_SEPARATOR))
             .map(String::trim)
@@ -77,31 +77,33 @@ public class StandardFurniture extends Furniture {
     }
 
     @NonNull
-    public static List<String> getFurnitureFullNameList(@NonNull final ChamberContext context) {
-        return context.getRenovator().getAllFullNames();
+    public static List<String> getFurnitureFullNameList(
+        @NonNull final ChamberContext chamberContext) {
+        return chamberContext.getRenovator().getAllFullNames();
     }
 
     @NonNull
-    public static List<String> getFurnitureSimpleNameList(@NonNull final ChamberContext context) {
-        return context.getRenovator().getFullNameMap().keySet().stream().toList();
+    public static List<String> getFurnitureSimpleNameList(
+        @NonNull final ChamberContext chamberContext) {
+        return chamberContext.getRenovator().getFullNameMap().keySet().stream().toList();
     }
 
     @NonNull
     public static Map<String, List<String>> getFurnitureFullNameMap(
-        @NonNull final ChamberContext context
+        @NonNull final ChamberContext chamberContext
     ) {
-        return context.getRenovator().getFullNameMap();
+        return chamberContext.getRenovator().getFullNameMap();
     }
 
     @NonNull
     public static Collection<Class<? extends Command>> getCommandClassList(
-        @NonNull final ChamberContext context,
+        @NonNull final ChamberContext chamberContext,
         @Nullable final String furnitureName
     )
         throws FurnitureNotFoundException, AmbiguousSimpleNameException {
         return furnitureName == null
-            ? context.getProcessor().getAllCommands()
-            : context.getRenovator().getFurnitureByName(furnitureName).getAllCommands();
+            ? chamberContext.getProcessor().getAllCommands()
+            : chamberContext.getRenovator().getFurnitureByName(furnitureName).getAllCommands();
     }
 
     @NonNull
@@ -122,5 +124,17 @@ public class StandardFurniture extends Furniture {
         @NonNull Collection<Class<? extends Command>> commandClassList
     ) {
         return commandClassList.stream().sorted(Comparator.comparing(Command::getName)).toList();
+    }
+
+    @NonNull
+    public static String getChamberDescription(@NonNull final ChamberContext chamberContext) {
+        return chamberContext.getConfig().getRequireNotNull(Config.Key.CHAMBER_DESCRIPTION);
+    }
+
+    public static void updateChamberDescription(
+        @NonNull final ChamberContext chamberContext,
+        @NonNull final String description
+    ) {
+        chamberContext.getConfig().set(Config.Key.CHAMBER_DESCRIPTION, description);
     }
 }
