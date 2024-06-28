@@ -2,6 +2,7 @@ package burrow.furniture.standard;
 
 import burrow.core.chamber.Chamber;
 import burrow.core.chamber.ChamberContext;
+import burrow.core.command.Command;
 import burrow.core.config.Config;
 import burrow.core.furniture.*;
 import org.springframework.lang.NonNull;
@@ -90,5 +91,36 @@ public class StandardFurniture extends Furniture {
         @NonNull final ChamberContext context
     ) {
         return context.getRenovator().getFullNameMap();
+    }
+
+    @NonNull
+    public static Collection<Class<? extends Command>> getCommandClassList(
+        @NonNull final ChamberContext context,
+        @Nullable final String furnitureName
+    )
+        throws FurnitureNotFoundException, AmbiguousSimpleNameException {
+        return furnitureName == null
+            ? context.getProcessor().getAllCommands()
+            : context.getRenovator().getFurnitureByName(furnitureName).getAllCommands();
+    }
+
+    @NonNull
+    public static Map<String, Collection<Class<? extends Command>>> classifyCommandClasses(
+        @NonNull final Collection<Class<? extends Command>> commandClassList
+    ) {
+        final var map = new HashMap<String, Collection<Class<? extends Command>>>();
+        for (final var commandClass : commandClassList) {
+            final var commandType = Command.getType(commandClass);
+            map.computeIfAbsent(commandType, k -> new ArrayList<>()).add(commandClass);
+        }
+
+        return map;
+    }
+
+    @NonNull
+    public static Collection<Class<? extends Command>> sortCommandClassList(
+        @NonNull Collection<Class<? extends Command>> commandClassList
+    ) {
+        return commandClassList.stream().sorted(Comparator.comparing(Command::getName)).toList();
     }
 }

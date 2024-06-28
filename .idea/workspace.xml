@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ecd0fa0-16fd-48ba-aef9-eec80eadd3ed" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/chain/event/ThrowableEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/chain/event/ThrowableEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -264,7 +261,8 @@
       <workItem from="1719273235865" duration="860000" />
       <workItem from="1719330549364" duration="11816000" />
       <workItem from="1719344857830" duration="4074000" />
-      <workItem from="1719540590955" duration="4064000" />
+      <workItem from="1719540590955" duration="5260000" />
+      <workItem from="1719613589381" duration="709000" />
     </task>
     <servers />
   </component>
