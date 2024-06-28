@@ -39,6 +39,14 @@ public abstract class BurrowClient {
         environment.setConsoleWidth(getConsoleWidth());
     }
 
+    public Duration getLastRequestDuration() {
+        return lastRequestDuration;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
     public BurrowResponse sendRequestTiming(@NonNull final String command) {
         final var start = Instant.now();
         final var response = sendRequest(command);
