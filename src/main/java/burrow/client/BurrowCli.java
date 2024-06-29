@@ -22,14 +22,13 @@ import java.util.concurrent.Callable;
     description = "Interactive command-line tool for managing and interacting with Burrow chambers."
 )
 public final class BurrowCli implements Callable<Integer> {
+    @CommandLine.Option(names = {"-v", "--version"}, defaultValue = "false")
+    private Boolean version;
+    private String chamberName = ChamberShepherd.ROOT_CHAMBER_NAME;
+
     public static void main(final String[] args) {
         System.exit(new CommandLine(new BurrowCli()).execute(args));
     }
-
-    @CommandLine.Option(names = {"-v", "--version"}, defaultValue = "false")
-    private Boolean version;
-
-    private String chamberName = ChamberShepherd.ROOT_CHAMBER_NAME;
 
     @Override
     public Integer call() throws IOException {

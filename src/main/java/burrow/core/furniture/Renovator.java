@@ -25,6 +25,27 @@ public class Renovator extends ChamberModule {
         super(chamber);
     }
 
+    @NonNull
+    public static Class<? extends Furniture> checkIfFurnitureExist(@NonNull final String name)
+        throws FurnitureNotFoundException {
+        try {
+            @SuppressWarnings("unchecked") final Class<? extends Furniture> furnitureClass =
+                (Class<? extends Furniture>) Class.forName(name);
+            return furnitureClass;
+        } catch (final ClassNotFoundException ex) {
+            throw new FurnitureNotFoundException(name);
+        }
+    }
+
+    public static void testFurnitureClass(@NonNull final Class<? extends Furniture> furnitureClass)
+        throws InvalidFurnitureClassException {
+        // Check if the given class extends the Furniture class and is annotated correctly
+        if (!Furniture.class.isAssignableFrom(furnitureClass)
+            || furnitureClass.getDeclaredAnnotation(BurrowFurniture.class) == null) {
+            throw new InvalidFurnitureClassException(furnitureClass.getName());
+        }
+    }
+
     /**
      * Loads furniture.
      */
@@ -191,26 +212,5 @@ public class Renovator extends ChamberModule {
 
     public void terminateAllFurniture() {
         furnitureStore.values().forEach(Furniture::terminate);
-    }
-
-    @NonNull
-    public static Class<? extends Furniture> checkIfFurnitureExist(@NonNull final String name)
-        throws FurnitureNotFoundException {
-        try {
-            @SuppressWarnings("unchecked") final Class<? extends Furniture> furnitureClass =
-                (Class<? extends Furniture>) Class.forName(name);
-            return furnitureClass;
-        } catch (final ClassNotFoundException ex) {
-            throw new FurnitureNotFoundException(name);
-        }
-    }
-
-    public static void testFurnitureClass(@NonNull final Class<? extends Furniture> furnitureClass)
-        throws InvalidFurnitureClassException {
-        // Check if the given class extends the Furniture class and is annotated correctly
-        if (!Furniture.class.isAssignableFrom(furnitureClass)
-            || furnitureClass.getDeclaredAnnotation(BurrowFurniture.class) == null) {
-            throw new InvalidFurnitureClassException(furnitureClass.getName());
-        }
     }
 }

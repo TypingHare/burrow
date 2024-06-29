@@ -1,6 +1,5 @@
 package burrow.core.furniture;
 
-import burrow.core.chain.CreateEntryChain;
 import burrow.core.chamber.Chamber;
 import burrow.core.chamber.ChamberModule;
 import burrow.core.command.Command;
@@ -29,10 +28,11 @@ public abstract class Furniture extends ChamberModule {
     /**
      * Terminates this furniture. This method will be called when the chamber is terminated.
      */
+    @SuppressWarnings("EmptyMethod")
     public void terminate() {
-
     }
 
+    @SuppressWarnings("EmptyMethod")
     @Nullable
     public Collection<String> configKeys() {
         return null;
@@ -60,10 +60,5 @@ public abstract class Furniture extends ChamberModule {
     @NonNull
     public Collection<Class<? extends Command>> getAllCommands() {
         return commandSet;
-    }
-
-    @NonNull
-    public CreateEntryChain getCreateEntryChain() {
-        return context.getOverseer().getCreateEntryChain();
     }
 }

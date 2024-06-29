@@ -39,6 +39,12 @@ public abstract class BurrowClient {
         environment.setConsoleWidth(getConsoleWidth());
     }
 
+    public static int getConsoleWidth() {
+        final var commandSpec = CommandLine.Model.CommandSpec.create();
+        final var message = commandSpec.usageMessage().autoWidth(true);
+        return message.width();
+    }
+
     public Duration getLastRequestDuration() {
         return lastRequestDuration;
     }
@@ -56,10 +62,4 @@ public abstract class BurrowClient {
     }
 
     protected abstract BurrowResponse sendRequest(@NonNull final String command);
-
-    public static int getConsoleWidth() {
-        final var commandSpec = CommandLine.Model.CommandSpec.create();
-        final var message = commandSpec.usageMessage().autoWidth(true);
-        return message.width();
-    }
 }

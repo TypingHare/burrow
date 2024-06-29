@@ -25,6 +25,20 @@ public abstract class Chain<C extends Context, R> {
     private final Map<Class<? extends Event>, List<Listener<C, ? extends Event>>>
         eventListenerStore = new HashMap<>();
 
+    public static <C extends Context> Middleware<C> pre(@NonNull final Consumer<C> preProcessor) {
+        return ((ctx, next) -> {
+            preProcessor.accept(ctx);
+            next.run();
+        });
+    }
+
+    public static <C extends Context> Middleware<C> post(@NonNull final Consumer<C> postProcessor) {
+        return ((ctx, next) -> {
+            next.run();
+            postProcessor.accept(ctx);
+        });
+    }
+
     /**
      * Creates a context from the given request.
      * @param request the request to create the context from.
@@ -84,22 +98,9 @@ public abstract class Chain<C extends Context, R> {
     }
 
     @NonNull
-    private List<Listener<C, ? extends Event>> getEventListenerList(@NonNull final Class<? extends Event> eventClass) {
+    private List<Listener<C, ? extends Event>> getEventListenerList(
+        @NonNull final Class<? extends Event> eventClass) {
         return eventListenerStore.computeIfAbsent(eventClass, (k) -> new ArrayList<>());
-    }
-
-    public static <C extends Context> Middleware<C> pre(@NonNull final Consumer<C> preProcessor) {
-        return ((ctx, next) -> {
-            preProcessor.accept(ctx);
-            next.run();
-        });
-    }
-
-    public static <C extends Context> Middleware<C> post(@NonNull final Consumer<C> postProcessor) {
-        return ((ctx, next) -> {
-            next.run();
-            postProcessor.accept(ctx);
-        });
     }
 
     public final class Pre {

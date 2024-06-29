@@ -1,5 +1,6 @@
 package burrow.core.entry;
 
+import burrow.core.chain.UpdateEntryChain;
 import burrow.core.chamber.Chamber;
 import burrow.core.chamber.ChamberContext;
 import burrow.core.chamber.ChamberModule;
@@ -24,8 +25,15 @@ public class Hoard extends ChamberModule {
     private Integer maxId = 0;
     private Integer size = 0;
 
-    public Hoard(final Chamber chamber) {
+    public Hoard(@NonNull final Chamber chamber) {
         super(chamber);
+
+        final var overseer = chamber.getContext().getOverseer();
+        overseer.getCreateEntryChain().pre.use((ctx) -> {
+            final var entry = UpdateEntryChain.entryHook.get(ctx);
+            final var properties = UpdateEntryChain.propertiesHook.get(ctx);
+            properties.forEach(entry::set);
+        });
     }
 
     public void loadFromFile() {
@@ -61,6 +69,9 @@ public class Hoard extends ChamberModule {
         size = 0;
     }
 
+    /**
+     * Save all entries to a hoard file.
+     */
     public void saveToFile() {
         final var hoardFile = context.getHoardFile();
         final var objectList =
@@ -94,8 +105,10 @@ public class Hoard extends ChamberModule {
     public Entry create(@NonNull final Map<String, String> properties) {
         final int id = ++maxId;
         final var entry = new Entry(id);
-        properties.forEach(entry::set);
-//        context.getRenovator().getAllFurniture().forEach(furniture -> furniture.onCreateEntry(entry));
+
+        final var createEntryChain = context.getOverseer().getCreateEntryChain();
+        final var context = createEntryChain.createContext(entry, properties);
+        createEntryChain.apply(context);
 
         // Put the entry to the store
         for (int i = entryStore.size(); i <= id; ++i) entryStore.add(null);
@@ -127,10 +140,9 @@ public class Hoard extends ChamberModule {
         entryStore.set(id, entry);
         maxId = Math.max(maxId, id);
 
-//        context
-//            .getRenovator()
-//            .getAllFurniture()
-//            .forEach(furniture -> furniture.toEntry(entry, entryObject));
+        final var registerEntryChain = context.getOverseer().getRegisterEntryChain();
+        final var context = registerEntryChain.createContext(entry, entryObject);
+        registerEntryChain.apply(context);
 
         ++size;
     }
@@ -141,19 +153,23 @@ public class Hoard extends ChamberModule {
         final var entry = getById(id);
         entry.getProperties().putAll(properties);
 
-//        context
-//            .getRenovator()
-//            .getAllFurniture()
-//            .forEach(furniture -> furniture.onUpdateEntry(entry, properties));
+        final var updateEntryChain = context.getOverseer().getSetEntryChain();
+        final var context = updateEntryChain.createContext(entry, properties);
+        updateEntryChain.apply(context);
 
         return entry;
     }
 
+    @NonNull
     public Entry unsetProperties(final int id, final Collection<String> keys)
         throws EntryNotFoundException {
         final var entry = getById(id);
         final var properties = entry.getProperties();
         keys.forEach(properties::remove);
+
+        final var unsetEntryChain = context.getOverseer().getUnsetEntryChain();
+        final var context = unsetEntryChain.createContext(entry, keys);
+        unsetEntryChain.apply(context);
 
         return entry;
     }
@@ -161,10 +177,13 @@ public class Hoard extends ChamberModule {
     @NonNull
     public Entry delete(final int id) throws EntryNotFoundException {
         final var entry = getById(id);
-//        context.getRenovator().getAllFurniture().forEach(furniture -> furniture.onDeleteEntry(entry));
+        final var deleteEntryChain = context.getOverseer().getDeleteEntryChain();
+        final var context = deleteEntryChain.createContext(entry, Map.of());
+        deleteEntryChain.apply(context);
+
+        // Remove it
         entryStore.set(id, null);
 
-        System.out.println(entryStore.size());
         return entry;
     }
 
@@ -174,15 +193,17 @@ public class Hoard extends ChamberModule {
     }
 
     @NonNull
-    public Map<String, String> getEntryObject(final Entry entry) {
+    public Map<String, String> getEntryObject(@NonNull final Entry entry) {
         final var entryObject = new HashMap<>(entry.getProperties());
         entryObject.put(KEY_ID, String.valueOf(entry.getId()));
-//        context.getRenovator().getAllFurniture().forEach(furniture -> furniture.toEntryObject(entryObject, entry));
+        final var toEntryObjectChain = context.getOverseer().getToEntryObjectChain();
+        final var context = toEntryObjectChain.createContext(entry, entryObject);
+        toEntryObjectChain.apply(context);
 
         return entryObject;
     }
 
-    public Integer getSize() {
+    public int getSize() {
         return size;
     }
 }

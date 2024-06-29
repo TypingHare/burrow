@@ -7,6 +7,7 @@ import burrow.core.config.Config;
 import burrow.core.furniture.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import picocli.CommandLine;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -16,7 +17,7 @@ import java.util.function.Predicate;
     description = "Standard commands."
 )
 public class StandardFurniture extends Furniture {
-    public static final String COMMAND_TYPE = "standard";
+    public static final String COMMAND_TYPE = "Standard";
 
     public StandardFurniture(@NonNull final Chamber chamber) {
         super(chamber);
@@ -25,6 +26,8 @@ public class StandardFurniture extends Furniture {
     @Override
     public void init() {
         registerCommand(RootCommand.class);
+        registerCommand(HelpCommand.class);
+        registerCommand(CommandList.class);
         registerCommand(ConfigCommand.class);
         registerCommand(ConfigListCommand.class);
         registerCommand(FurnitureListCommand.class);

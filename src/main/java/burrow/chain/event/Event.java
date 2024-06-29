@@ -1,3 +1,4 @@
 package burrow.chain.event;
 
-public abstract class Event {}
+public abstract class Event {
+}

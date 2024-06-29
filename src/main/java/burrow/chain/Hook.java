@@ -6,14 +6,6 @@ import org.springframework.lang.Nullable;
 import java.util.function.Function;
 
 public class Hook<T> {
-    public static <T> Hook<T> of(@NonNull final String key, @Nullable final Class<T> clazz) {
-        return new Hook<>(key, clazz);
-    }
-
-    public static <T> Hook<T> of(@NonNull final String key) {
-        return new Hook<>(key, null);
-    }
-
     private final String key;
     private final Class<T> clazz;
 
@@ -25,9 +17,17 @@ public class Hook<T> {
         this.clazz = clazz;
     }
 
+    public static <T> Hook<T> of(@NonNull final String key, @Nullable final Class<T> clazz) {
+        return new Hook<>(key, clazz);
+    }
+
+    public static <T> Hook<T> of(@NonNull final String key) {
+        return new Hook<>(key, null);
+    }
+
     public void set(
         @NonNull final Context context,
-        @NonNull final Object value
+        @NonNull final T value
     ) {
         context.set(key, value);
     }
@@ -43,7 +43,8 @@ public class Hook<T> {
 
     public T getOrDefault(@NonNull final Context context, @NonNull final T defaultValue) {
         if (clazz == null) {
-            @SuppressWarnings("unchecked") final T value = (T) context.getOrDefault(key, defaultValue);
+            @SuppressWarnings("unchecked") final T value =
+                (T) context.getOrDefault(key, defaultValue);
             return value;
         } else {
             return context.getOrDefault(key, clazz, defaultValue);

@@ -3,7 +3,6 @@ package burrow.server;
 import burrow.core.chamber.ChamberInitializationException;
 import burrow.core.chamber.ChamberShepherd;
 import burrow.core.common.Environment;
-import com.google.gson.Gson;
 import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
