@@ -6,21 +6,22 @@
   <component name="ChangeListManager">
     <list default="true" id="9ecd0fa0-16fd-48ba-aef9-eec80eadd3ed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/chain/Chain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/chain/Chain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/chain/Hook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/chain/Hook.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/chain/Listener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/chain/Listener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/chain/event/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/chain/event/Event.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/Overseer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/Overseer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chain/CreateEntryChain.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chain/FormatEntryChain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chain/FormatEntryChain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/InvalidCommandClassException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/InvalidCommandClassException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chain/ToEntryObjectChain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chain/ToEntryObjectChain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chain/UnsetPropertiesChain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chain/UnsetPropertiesChain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chain/UpdateEntryChain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chain/UpdateEntryChain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/Command.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/CommandType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/CommandType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/Processor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/Processor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Hoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Hoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Furniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Furniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/InvalidFurnitureClassException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/InvalidFurnitureClassException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Renovator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Renovator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/entry/EntryFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/entry/EntryFurniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/HelpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/HelpCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/server/BurrowServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/server/BurrowServer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,6 +70,9 @@
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 6
@@ -277,7 +281,9 @@
       <workItem from="1719330549364" duration="11816000" />
       <workItem from="1719344857830" duration="4074000" />
       <workItem from="1719540590955" duration="5260000" />
-      <workItem from="1719613589381" duration="7579000" />
+      <workItem from="1719613589381" duration="7699000" />
+      <workItem from="1719676685319" duration="2783000" />
+      <workItem from="1719679486692" duration="7774000" />
     </task>
     <servers />
   </component>

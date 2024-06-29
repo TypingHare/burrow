@@ -9,7 +9,7 @@ import org.springframework.lang.NonNull;
 import java.util.Map;
 
 public final class UpdateEntryChain extends IdentityChain<Context> {
-    public static Hook<Entry> entryHook = Hook.of(ContextKey.ENTRY, Entry.class);
+    public static final Hook<Entry> entryHook = Hook.of(ContextKey.ENTRY, Entry.class);
     public static final Hook<Map<String, String>> propertiesHook = Hook.of(ContextKey.PROPERTIES);
 
     @NonNull

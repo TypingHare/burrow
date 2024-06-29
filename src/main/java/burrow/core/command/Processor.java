@@ -17,10 +17,14 @@ import java.util.Map;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Processor extends ChamberModule {
+    public static final String DEFAULT_COMMAND_NAME = "";
+
     private final Map<String, Class<? extends Command>> commandClassStore = new HashMap<>();
 
     public Processor(@NonNull final Chamber chamber) {
         super(chamber);
+
+        register(DefaultCommand.class);
 
         final var commandProcessChain = chamber.getContext()
             .getOverseer()

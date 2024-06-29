@@ -7,6 +7,11 @@ import java.lang.annotation.*;
 @Documented
 public @interface CommandType {
     /**
+     * This type is specified for DefaultCommand.
+     */
+    String DEFAULT = "Default";
+
+    /**
      * The default command type if the command is not annotated by CommandType.
      */
     String OTHER = "Other";

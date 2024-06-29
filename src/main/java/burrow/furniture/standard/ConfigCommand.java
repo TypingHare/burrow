@@ -5,6 +5,7 @@ import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.core.common.ColorUtility;
+import burrow.core.common.Values;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -30,7 +31,7 @@ public class ConfigCommand extends Command {
         if (value == null) {
             final var value = StandardFurniture.retrieveConfigItem(context, key);
             if (value == null) {
-                buffer.append(ColorUtility.render("null", ColorUtility.Type.NULL));
+                buffer.append(ColorUtility.render(Values.NULL, ColorUtility.Type.NULL));
             } else {
                 buffer.append(ColorUtility.render(value, ColorUtility.Type.VALUE));
             }

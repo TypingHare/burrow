@@ -2,7 +2,6 @@ package burrow.core.command;
 
 import burrow.core.chamber.ChamberModule;
 import burrow.core.common.ErrorUtility;
-import burrow.core.entry.Entry;
 import burrow.core.furniture.Furniture;
 import org.springframework.lang.NonNull;
 import picocli.CommandLine;
@@ -114,17 +113,14 @@ public abstract class Command extends ChamberModule implements Callable<Integer>
      * Appends a collection of lines to the buffer, joining them with newline characters.
      * @param lines the lines to append to the buffer
      */
-    public void bufferAppendLines(final Collection<String> lines) {
+    public void bufferAppendLines(@NonNull final Collection<String> lines) {
         if (!lines.isEmpty()) {
             buffer.append(String.join("\n", lines));
         }
     }
 
-    public void bufferAppendThrowable(final Throwable throwable) {
+    public void bufferAppendThrowable(@NonNull final Throwable throwable) {
         bufferAppendLines(ErrorUtility.getCauseStack(throwable));
-    }
-
-    public void bufferAppendEntry(@NonNull final Entry entry) {
     }
 
     /**
@@ -134,7 +130,11 @@ public abstract class Command extends ChamberModule implements Callable<Integer>
      * @param args        the arguments to pass to the command
      * @return the exit code of the executed command
      */
-    public CommandContext executeOther(final String commandName, final List<String> args) {
+    @NonNull
+    public CommandContext executeOther(
+        @NonNull final String commandName,
+        @NonNull final List<String> args
+    ) {
         final var commandProcessChain = context.getOverseer().getCommandProcessChain();
         final var newCommandContext = (CommandContext) commandContext.shallowCopy();
         newCommandContext.set(CommandContext.Key.COMMAND_NAME, commandName);

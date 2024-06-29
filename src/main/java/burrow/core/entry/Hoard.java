@@ -124,7 +124,7 @@ public class Hoard extends ChamberModule {
         return create(Map.of());
     }
 
-    public void register(final Map<String, String> entryObject) {
+    public void register(@NonNull final Map<String, String> entryObject) {
         final var id = Integer.parseInt(entryObject.get(KEY_ID));
         try {
             getById(id);
@@ -161,7 +161,7 @@ public class Hoard extends ChamberModule {
     }
 
     @NonNull
-    public Entry unsetProperties(final int id, final Collection<String> keys)
+    public Entry unsetProperties(final int id, @NonNull final Collection<String> keys)
         throws EntryNotFoundException {
         final var entry = getById(id);
         final var properties = entry.getProperties();
@@ -205,5 +205,9 @@ public class Hoard extends ChamberModule {
 
     public int getSize() {
         return size;
+    }
+
+    public boolean exist(final int id) {
+        return id > 0 && id < entryStore.size() && entryStore.get(id) != null;
     }
 }

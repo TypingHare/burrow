@@ -9,9 +9,9 @@ import org.springframework.lang.NonNull;
 import java.util.Map;
 
 public final class ToEntryObjectChain extends IdentityChain<Context> {
-    public static Hook<Entry> entryHook = Hook.of(UpdateEntryChain.ContextKey.ENTRY, Entry.class);
+    public static final Hook<Entry> entryHook = Hook.of(ContextKey.ENTRY, Entry.class);
     public static final Hook<Map<String, String>> entryObjectHook =
-        Hook.of(UpdateEntryChain.ContextKey.PROPERTIES);
+        Hook.of(ContextKey.ENTRY_OBJECT);
 
     @NonNull
     public Context createContext(

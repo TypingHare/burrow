@@ -27,7 +27,7 @@ public class Hook<T> {
 
     public void set(
         @NonNull final Context context,
-        @NonNull final T value
+        @Nullable final T value
     ) {
         context.set(key, value);
     }

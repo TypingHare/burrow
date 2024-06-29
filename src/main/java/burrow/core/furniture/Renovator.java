@@ -40,9 +40,18 @@ public class Renovator extends ChamberModule {
     public static void testFurnitureClass(@NonNull final Class<? extends Furniture> furnitureClass)
         throws InvalidFurnitureClassException {
         // Check if the given class extends the Furniture class and is annotated correctly
-        if (!Furniture.class.isAssignableFrom(furnitureClass)
-            || furnitureClass.getDeclaredAnnotation(BurrowFurniture.class) == null) {
-            throw new InvalidFurnitureClassException(furnitureClass.getName());
+        if (!Furniture.class.isAssignableFrom(furnitureClass)) {
+            throw new InvalidFurnitureClassException(
+                furnitureClass.getName(),
+                "The class does not extend " + Furniture.class.getName()
+            );
+        }
+
+        if (furnitureClass.getDeclaredAnnotation(BurrowFurniture.class) == null) {
+            throw new InvalidFurnitureClassException(
+                furnitureClass.getName(),
+                "The class is not annotated with @" + BurrowFurniture.class.getName()
+            );
         }
     }
 

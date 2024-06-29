@@ -9,8 +9,8 @@ import org.springframework.lang.NonNull;
 import java.util.Collection;
 
 public final class UnsetPropertiesChain extends IdentityChain<Context> {
-    public static Hook<Entry> entryHook = Hook.of(ContextKey.ENTRY, Entry.class);
-    public static Hook<Collection<String>> keysHook = Hook.of(ContextKey.KEYS);
+    public static final Hook<Entry> entryHook = Hook.of(ContextKey.ENTRY, Entry.class);
+    public static final Hook<Collection<String>> keysHook = Hook.of(ContextKey.KEYS);
 
     @NonNull
     public Context createContext(

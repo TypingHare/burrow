@@ -3,11 +3,11 @@ package burrow.furniture.standard;
 import burrow.core.chamber.Chamber;
 import burrow.core.chamber.ChamberContext;
 import burrow.core.command.Command;
+import burrow.core.command.DefaultCommand;
 import burrow.core.config.Config;
 import burrow.core.furniture.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import picocli.CommandLine;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -104,9 +104,12 @@ public class StandardFurniture extends Furniture {
         @Nullable final String furnitureName
     )
         throws FurnitureNotFoundException, AmbiguousSimpleNameException {
-        return furnitureName == null
+        final var list = furnitureName == null
             ? chamberContext.getProcessor().getAllCommands()
             : chamberContext.getRenovator().getFurnitureByName(furnitureName).getAllCommands();
+        list.remove(DefaultCommand.class);
+
+        return list;
     }
 
     @NonNull
