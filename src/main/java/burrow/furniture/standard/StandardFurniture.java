@@ -3,6 +3,7 @@ package burrow.furniture.standard;
 import burrow.core.chamber.Chamber;
 import burrow.core.chamber.ChamberContext;
 import burrow.core.command.Command;
+import burrow.core.command.CommandContext;
 import burrow.core.command.DefaultCommand;
 import burrow.core.config.Config;
 import burrow.core.furniture.*;
@@ -33,6 +34,7 @@ public class StandardFurniture extends Furniture {
         registerCommand(FurnitureListCommand.class);
         registerCommand(FurnitureAddCommand.class);
         registerCommand(FurnitureRemoveCommand.class);
+        registerCommand(DescriptionCommand.class);
     }
 
     @NonNull
@@ -71,7 +73,8 @@ public class StandardFurniture extends Furniture {
     public static List<String> getConfigFurnitureNameList(
         @NonNull final ChamberContext chamberContext
     ) {
-        final var furnitureListString = chamberContext.getConfig().get(Config.Key.FURNITURE_LIST);
+        final var furnitureListString =
+            chamberContext.getConfig().get(Config.Key.CHAMBER_FURNITURE_LIST);
         assert furnitureListString != null;
         return Arrays.stream(furnitureListString.split(Renovator.FURNITURE_NAME_SEPARATOR))
             .map(String::trim)
@@ -142,5 +145,34 @@ public class StandardFurniture extends Furniture {
         @NonNull final String description
     ) {
         chamberContext.getConfig().set(Config.Key.CHAMBER_DESCRIPTION, description);
+    }
+
+    @NonNull
+    public static String stringListToString(
+        @NonNull final CommandContext commandContext,
+        @NonNull final List<String> stringList,
+        final boolean useMultiLine
+    ) {
+        if (useMultiLine) {
+            final var lines = String.join("\n", stringList).split("\n");
+            final var indentedLineList = Arrays.stream(lines).map(line -> "  " + line).toList();
+            return "[\n" + String.join("\n", indentedLineList) + "\n]";
+        } else {
+            final var string = "[" + String.join(", ", stringList) + "]";
+            final var consoleWidth = commandContext.getEnvironment().getConsoleWidth();
+            if (string.length() < consoleWidth) {
+                return string;
+            } else {
+                return stringListToString(commandContext, stringList, true);
+            }
+        }
+    }
+
+    @NonNull
+    public static String stringListToString(
+        @NonNull final CommandContext commandContext,
+        @NonNull final List<String> stringList
+    ) {
+        return stringListToString(commandContext, stringList, false);
     }
 }

@@ -46,10 +46,10 @@ public class FurnitureAddCommand extends Command {
         // Add the furniture to the list and update the config file
         final var newNameList = new ArrayList<>(configNameList);
         newNameList.add(name);
-        final var furnitureListString = context.getConfig().get(Config.Key.FURNITURE_LIST);
+        final var furnitureListString = context.getConfig().get(Config.Key.CHAMBER_FURNITURE_LIST);
         final var newFurnitureListString =
             String.join(Renovator.FURNITURE_NAME_SEPARATOR, newNameList);
-        context.getConfig().set(Config.Key.FURNITURE_LIST, newFurnitureListString);
+        context.getConfig().set(Config.Key.CHAMBER_FURNITURE_LIST, newFurnitureListString);
         context.getConfig().saveToFile();
 
         // Restart the chamber
@@ -57,7 +57,7 @@ public class FurnitureAddCommand extends Command {
             context.getChamber().restart();
         } catch (final ChamberInitializationException ex) {
             // Restore to the former furniture list and update the config file
-            getContext().set(Config.Key.FURNITURE_LIST, furnitureListString);
+            getContext().set(Config.Key.CHAMBER_FURNITURE_LIST, furnitureListString);
             context.getConfig().saveToFile();
             buffer.append("Fail to add the furniture due to a failure of restarting.\n");
             bufferAppendThrowable(ex);

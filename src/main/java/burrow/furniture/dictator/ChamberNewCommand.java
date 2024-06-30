@@ -42,7 +42,7 @@ public class ChamberNewCommand extends Command {
             .getRequireNotNull(DictatorFurniture.ConfigKey.DICTATOR_DEFAULT_FURNITURE_LIST);
         newConfig.set(Config.Key.CHAMBER_NAME, name);
         newConfig.set(Config.Key.CHAMBER_DESCRIPTION, description);
-        newConfig.set(Config.Key.FURNITURE_LIST, defaultFurnitureList);
+        newConfig.set(Config.Key.CHAMBER_FURNITURE_LIST, defaultFurnitureList);
         newConfig.saveToFile();
 
         return CommandLine.ExitCode.OK;

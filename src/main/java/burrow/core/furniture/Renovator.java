@@ -59,7 +59,7 @@ public class Renovator extends ChamberModule {
      * Loads furniture.
      */
     public void loadFurniture() throws FurnitureNotFoundException, InvalidFurnitureClassException {
-        final var furnitureListString = context.getConfig().get(Config.Key.FURNITURE_LIST);
+        final var furnitureListString = context.getConfig().get(Config.Key.CHAMBER_FURNITURE_LIST);
         if (furnitureListString == null) {
             return;
         }

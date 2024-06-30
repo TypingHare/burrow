@@ -181,7 +181,7 @@ public class Hoard extends ChamberModule {
         final var context = deleteEntryChain.createContext(entry, Map.of());
         deleteEntryChain.apply(context);
 
-        // Remove it
+        // Remove the entry from the store
         entryStore.set(id, null);
 
         return entry;

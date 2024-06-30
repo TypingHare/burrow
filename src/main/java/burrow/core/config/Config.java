@@ -50,12 +50,12 @@ public class Config extends ChamberModule {
         addAllowedKey(Key.CHAMBER_NAME);
         addAllowedKey(Key.CHAMBER_VERSION);
         addAllowedKey(Key.CHAMBER_DESCRIPTION);
-        addAllowedKey(Key.FURNITURE_LIST);
+        addAllowedKey(Key.CHAMBER_FURNITURE_LIST);
 
         setIfAbsent(Key.CHAMBER_NAME, "");
         setIfAbsent(Key.CHAMBER_VERSION, "1.0.0");
         setIfAbsent(Key.CHAMBER_DESCRIPTION, "No description.");
-        setIfAbsent(Key.FURNITURE_LIST, "");
+        setIfAbsent(Key.CHAMBER_FURNITURE_LIST, "");
     }
 
     public static Map<String, String> loadFromConfigFile(
@@ -163,6 +163,6 @@ public class Config extends ChamberModule {
         public static final String CHAMBER_NAME = "chamber.name";
         public static final String CHAMBER_VERSION = "chamber.version";
         public static final String CHAMBER_DESCRIPTION = "chamber.description";
-        public static final String FURNITURE_LIST = "furniture.list";
+        public static final String CHAMBER_FURNITURE_LIST = "chamber.furniture_list";
     }
 }

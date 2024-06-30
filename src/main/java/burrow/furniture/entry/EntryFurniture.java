@@ -32,7 +32,7 @@ public class EntryFurniture extends Furniture {
     }
 
     public static int getEntryCount(@NonNull final ChamberContext chamberContext) {
-        return chamberContext.getHoard().getAllEntries().size();
+        return chamberContext.getHoard().getSize();
     }
 
     @NonNull

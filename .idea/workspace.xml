@@ -5,23 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ecd0fa0-16fd-48ba-aef9-eec80eadd3ed" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/chain/Hook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/chain/Hook.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/Overseer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/Overseer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chain/FormatEntryChain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chain/FormatEntryChain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chain/ToEntryObjectChain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chain/ToEntryObjectChain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chain/UnsetPropertiesChain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chain/UnsetPropertiesChain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chain/UpdateEntryChain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chain/UpdateEntryChain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/Command.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/CommandType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/CommandType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/Processor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/Processor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberShepherd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberShepherd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/CommandContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/CommandContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/config/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/config/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Entry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Entry.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Hoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Hoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/InvalidFurnitureClassException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/InvalidFurnitureClassException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Renovator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Renovator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberNewCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberNewCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/DictatorFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/DictatorFurniture.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/entry/EntryFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/entry/EntryFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/HelpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/HelpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureAddCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureAddCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureRemoveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureRemoveCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/server/BurrowServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/server/BurrowServer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -283,7 +281,8 @@
       <workItem from="1719540590955" duration="5260000" />
       <workItem from="1719613589381" duration="7699000" />
       <workItem from="1719676685319" duration="2783000" />
-      <workItem from="1719679486692" duration="7774000" />
+      <workItem from="1719679486692" duration="10632000" />
+      <workItem from="1719755581585" duration="20569000" />
     </task>
     <servers />
   </component>
@@ -302,6 +301,15 @@
     </option>
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/burrow/server/BurrowServer.java</url>
+          <line>46</line>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="burrow.chain.Context" memberName="store" />

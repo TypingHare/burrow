@@ -42,10 +42,11 @@ public class BurrowServer {
     public BurrowResponse receiveRequest(
         @RequestBody final String command,
         @RequestHeader("Working-Directory") final String workingDirectory,
-        @RequestHeader("Console-Width") final String consoleWidth
+        @RequestHeader("Console-Width") final Integer consoleWidth
     ) {
         final var environment = new Environment();
         environment.setWorkingDirectory(workingDirectory);
+        environment.setConsoleWidth(consoleWidth);
 
         final var commandContext = chamberShepherd.processCommand(command, environment);
 

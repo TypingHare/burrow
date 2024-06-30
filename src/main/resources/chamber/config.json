@@ -1,0 +1,6 @@
+{
+  "chamber.name": "Burrow",
+  "chamber.version": "1.0.0",
+  "chamber.description": "The root chamber of Burrow.",
+  "chamber.furniture_list": "burrow.furniture.standard.StandardFurniture:burrow.furniture.dictator.DictatorFurniture:burrow.furniture.scheduler.SchedulerFurniture"
+}

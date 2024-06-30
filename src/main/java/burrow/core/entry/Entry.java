@@ -5,6 +5,7 @@ import org.springframework.lang.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -48,6 +49,14 @@ public final class Entry {
         properties.put(key, value.toString());
     }
 
+    public void unset(@NonNull final String key) {
+        properties.remove(key);
+    }
+
+    public <T> void setIfAbsent(@NonNull final String key, @NonNull final T value) {
+        properties.putIfAbsent(key, value.toString());
+    }
+
     /**
      * Retrieves all properties associated with this entry.
      * @return A map containing all key-value pairs of properties associated with this entry.
@@ -67,6 +76,11 @@ public final class Entry {
     public String get(@NonNull final String key) {
         return Optional.ofNullable(properties.get(key))
             .orElseThrow(() -> new KeyNotFoundException(key));
+    }
+
+    @NonNull
+    public String getRequireNonNull(@NonNull final String key) {
+        return Objects.requireNonNull(properties.get(key));
     }
 
     @Nullable

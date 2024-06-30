@@ -32,7 +32,7 @@ public class CommandContext extends Context {
     }
 
     @NonNull
-    public Environment getWorkingDirectory() {
+    public Environment getEnvironment() {
         return Objects.requireNonNull(get(Key.ENVIRONMENT, Environment.class));
     }
 

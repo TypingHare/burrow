@@ -26,15 +26,15 @@ public class FurnitureRemoveCommand extends Command {
     @Override
     public Integer call() throws ChamberInitializationException {
         final var config = context.getConfig();
-        final var furnitureListString = config.getRequireNotNull(Config.Key.FURNITURE_LIST);
+        final var furnitureListString = config.getRequireNotNull(Config.Key.CHAMBER_FURNITURE_LIST);
         final var newFurnitureNameList =
-            Arrays.stream(furnitureListString.split(Renovator.FURNITURE_NAME_SEPARATOR))
+            new java.util.ArrayList<>(Arrays.stream(furnitureListString.split(Renovator.FURNITURE_NAME_SEPARATOR))
                 .map(String::trim)
-                .filter(fn -> fn.equals(name))
-                .toList();
+                .toList());
+        newFurnitureNameList.remove(name);
         final var newFurnitureListString =
             String.join(Renovator.FURNITURE_NAME_SEPARATOR, newFurnitureNameList);
-        config.set(Config.Key.FURNITURE_LIST, newFurnitureListString);
+        config.set(Config.Key.CHAMBER_FURNITURE_LIST, newFurnitureListString);
         context.getConfig().saveToFile();
 
         // Restart the chamber
