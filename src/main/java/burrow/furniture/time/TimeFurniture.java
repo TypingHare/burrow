@@ -7,6 +7,7 @@ import burrow.core.chamber.Chamber;
 import burrow.core.chamber.ChamberContext;
 import burrow.core.common.Values;
 import burrow.core.config.Config;
+import burrow.core.entry.Entry;
 import burrow.core.furniture.BurrowFurniture;
 import burrow.core.furniture.Furniture;
 import burrow.furniture.entry.EntryFurniture;
@@ -60,15 +61,8 @@ public final class TimeFurniture extends Furniture {
 
     public void createEntry(@NonNull final Context ctx) {
         final var entry = UpdateEntryChain.entryHook.get(ctx);
-        final var currentTimeMs = System.currentTimeMillis();
-
-        if (isCreatedAtEnabled(context)) {
-            entry.set(EntryKey.CREATED_AT, currentTimeMs);
-        }
-
-        if (isUpdatedAtEnabled(context)) {
-            entry.set(EntryKey.UPDATED_AT, currentTimeMs);
-        }
+        setCreateTime(context, entry);
+        setUpdateTime(context, entry);
     }
 
     public void toFormattedObject(@NonNull final Context ctx) {
@@ -90,11 +84,7 @@ public final class TimeFurniture extends Furniture {
 
     public void setEntry(@NonNull final Context ctx) {
         final var entry = UpdateEntryChain.entryHook.get(ctx);
-        final var currentTimeMs = System.currentTimeMillis();
-
-        if (isUpdatedAtEnabled(context)) {
-            entry.set(EntryKey.UPDATED_AT, currentTimeMs);
-        }
+        setUpdateTime(context, entry);
     }
 
     public static boolean isUpdatedAtEnabled(@NonNull final ChamberContext chamberContext) {
@@ -105,6 +95,24 @@ public final class TimeFurniture extends Furniture {
     public static boolean isCreatedAtEnabled(@NonNull final ChamberContext chamberContext) {
         return Values.Bool.isTrue(chamberContext.getConfig()
             .get(ConfigKey.TIME_CREATED_AT_ENABLED));
+    }
+
+    public static void setCreateTime(
+        @NonNull final ChamberContext chamberContext,
+        @NonNull final Entry entry
+    ) {
+        if (isCreatedAtEnabled(chamberContext)) {
+            entry.set(EntryKey.CREATED_AT, System.currentTimeMillis());
+        }
+    }
+
+    public static void setUpdateTime(
+        @NonNull final ChamberContext chamberContext,
+        @NonNull final Entry entry
+    ) {
+        if (isUpdatedAtEnabled(chamberContext)) {
+            entry.set(EntryKey.UPDATED_AT, System.currentTimeMillis());
+        }
     }
 
     @NonNull

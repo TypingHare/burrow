@@ -4,6 +4,7 @@ import org.springframework.lang.Nullable;
 
 public final class Values {
     public static final String NULL = "null";
+    public static final String EMPTY = "";
 
     public static final class Bool {
         public static final String TRUE = "true";
@@ -19,6 +20,14 @@ public final class Values {
 
         public static String stringify(final boolean bool) {
             return bool ? TRUE : FALSE;
+        }
+    }
+
+    public static final class Int {
+        public static final String ZERO = "0";
+
+        public static String stringify(final int value) {
+            return String.valueOf(value);
         }
     }
 }

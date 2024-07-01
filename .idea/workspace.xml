@@ -5,21 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ecd0fa0-16fd-48ba-aef9-eec80eadd3ed" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberShepherd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberShepherd.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/CommandContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/CommandContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/config/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/config/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/common/Values.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/common/Values.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Entry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Entry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Hoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Hoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Renovator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Renovator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberNewCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberNewCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/DictatorFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/DictatorFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/entry/EntryFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/entry/EntryFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureAddCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureAddCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureRemoveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureRemoveCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/server/BurrowServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/server/BurrowServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/KeyValueFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/KeyValueFurniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/NewCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/NewCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/time/TimeFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/time/TimeFurniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/wordy/WordyFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/wordy/WordyFurniture.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,45 +77,45 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Downloaded.Files.Path.Enabled": "false",
-    "Gradle.Build burrow-new.executor": "Run",
-    "Gradle.ChainTest.executor": "Run",
-    "Gradle.ChainTest.testApplyWithMiddleware.executor": "Run",
-    "Gradle.ChainTest.testApplyWithMultipleMiddlewares.executor": "Run",
-    "Gradle.ChainTest.testApplyWithPreProcessors.executor": "Run",
-    "Gradle.ChainTest.testChain.executor": "Run",
-    "Gradle.ChainTest.testErrorHandle.executor": "Run",
-    "Gradle.ChainTest.testHook.executor": "Run",
-    "Gradle.ChainTest.testMiddlewarePost.executor": "Run",
-    "Gradle.ChainTest.testSetEventHandlerUsingFunction.executor": "Run",
-    "Gradle.ChainTest.testUseFirst.executor": "Run",
-    "Gradle.ChainTest.triggerEvent.executor": "Run",
-    "Gradle.Download Sources.executor": "Run",
-    "Gradle.burrow-new [:BurrowCommand.main()].executor": "Run",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "Spring Boot.BurrowServer.executor": "Run",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/jameschan/Git/public/burrow-new/src/main/java/burrow/client",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.sourceCode.Java",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Gradle.Build burrow-new.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ChainTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ChainTest.testApplyWithMiddleware.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ChainTest.testApplyWithMultipleMiddlewares.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ChainTest.testApplyWithPreProcessors.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ChainTest.testChain.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ChainTest.testErrorHandle.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ChainTest.testHook.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ChainTest.testMiddlewarePost.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ChainTest.testSetEventHandlerUsingFunction.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ChainTest.testUseFirst.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ChainTest.triggerEvent.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.burrow-new [:BurrowCommand.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Spring Boot.BurrowServer.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jameschan/Git/public/burrow-new/src/main/java/burrow/client&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.Java&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/java/burrow/client" />
@@ -282,7 +275,8 @@
       <workItem from="1719613589381" duration="7699000" />
       <workItem from="1719676685319" duration="2783000" />
       <workItem from="1719679486692" duration="10632000" />
-      <workItem from="1719755581585" duration="20569000" />
+      <workItem from="1719755581585" duration="20793000" />
+      <workItem from="1719800106927" duration="3163000" />
     </task>
     <servers />
   </component>

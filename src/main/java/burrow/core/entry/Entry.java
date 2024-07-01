@@ -1,5 +1,6 @@
 package burrow.core.entry;
 
+import burrow.core.common.Values;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -88,13 +89,13 @@ public final class Entry {
         return Optional.ofNullable(properties.get(key)).orElse(defaultValue);
     }
 
-//    public boolean isTrue(@NonNull final String key) {
-//        return Values.Bool.isTrue(properties.get(key));
-//    }
-//
-//    public boolean isFalse(@NonNull final String key) {
-//        return Values.Bool.isFalse(properties.get(key));
-//    }
+    public boolean isTrue(@NonNull final String key) {
+        return Values.Bool.isTrue(properties.get(key));
+    }
+
+    public boolean isFalse(@NonNull final String key) {
+        return Values.Bool.isFalse(properties.get(key));
+    }
 
     public int getInt(@NonNull final String key, final int defaultValue) {
         final String value = properties.get(key);

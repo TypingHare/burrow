@@ -112,7 +112,7 @@ public final class BurrowCli implements Callable<Integer> {
     }
 
     private String getPromptString() {
-        return ColorUtility.render(chamberName + "> ", ColorUtility.Type.NAME_CHAMBER);
+        return ColorUtility.render(chamberName + "> ", "fg(134)");
     }
 
     private String getColoredCodeString(int code) {

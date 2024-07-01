@@ -136,7 +136,7 @@ public final class KeyValueFurniture extends Furniture {
         entry.set(keyValueFurniture.getValueName(), value);
     }
 
-    public static Entry createEntry(
+    public static Entry createEntryWithKeyValue(
         @NonNull final ChamberContext chamberContext,
         @NonNull final String key,
         @NonNull final String value
