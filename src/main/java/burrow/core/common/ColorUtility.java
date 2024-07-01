@@ -34,7 +34,7 @@ public final class ColorUtility {
         VALUE("green"),
 
         // Names
-        NAME_CHAMBER("bold,fg(134)"),
+        NAME_CHAMBER("fg(134)"),
         NAME_COMMAND("cyan"),
         NAME_COMMAND_TYPE("bg(21),fg(208)"),
 

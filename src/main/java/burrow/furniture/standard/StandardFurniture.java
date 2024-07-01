@@ -28,7 +28,7 @@ public class StandardFurniture extends Furniture {
     public void init() {
         registerCommand(RootCommand.class);
         registerCommand(HelpCommand.class);
-        registerCommand(CommandList.class);
+        registerCommand(CommandListComand.class);
         registerCommand(ConfigCommand.class);
         registerCommand(ConfigListCommand.class);
         registerCommand(FurnitureListCommand.class);

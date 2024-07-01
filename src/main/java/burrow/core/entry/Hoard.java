@@ -184,6 +184,8 @@ public class Hoard extends ChamberModule {
         // Remove the entry from the store
         entryStore.set(id, null);
 
+        --size;
+
         return entry;
     }
 

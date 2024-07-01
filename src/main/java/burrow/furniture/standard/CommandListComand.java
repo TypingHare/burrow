@@ -16,7 +16,7 @@ import java.util.ArrayList;
     description = "Display a list of all available commands along with their descriptions."
 )
 @CommandType(StandardFurniture.COMMAND_TYPE)
-public class CommandList extends Command {
+public class CommandListComand extends Command {
     @CommandLine.Parameters(
         index = "0",
         paramLabel = "<furniture-name>",
@@ -25,7 +25,7 @@ public class CommandList extends Command {
     )
     private String furnitureName;
 
-    public CommandList(@NonNull final CommandContext commandContext) {
+    public CommandListComand(@NonNull final CommandContext commandContext) {
         super(commandContext);
     }
 
