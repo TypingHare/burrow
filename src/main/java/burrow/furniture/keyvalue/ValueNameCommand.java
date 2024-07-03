@@ -3,6 +3,7 @@ package burrow.furniture.keyvalue;
 import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
+import burrow.furniture.entry.EntryFurniture;
 import org.springframework.lang.NonNull;
 import picocli.CommandLine;
 
@@ -33,7 +34,7 @@ public class ValueNameCommand extends Command {
             return CommandLine.ExitCode.OK;
         }
 
-        KeyValueFurniture.changePropertyKey(context, originalValueName, valueName);
+        EntryFurniture.changePropertyName(context, originalValueName, valueName);
 
         return CommandLine.ExitCode.OK;
     }

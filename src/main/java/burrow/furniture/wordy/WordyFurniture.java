@@ -74,13 +74,12 @@ public class WordyFurniture extends Furniture {
     }
 
     @NonNull
-    public static Entry createEntry(
-        @NonNull final ChamberContext chamberContext,
+    public Entry createEntry(
         @NonNull final String word,
         @NonNull final String translation
     ) {
-        final var entry =
-            KeyValueFurniture.createEntryWithKeyValue(chamberContext, word, translation);
+        final var keyValueFurniture = use(KeyValueFurniture.class);
+        final var entry = keyValueFurniture.createEntryWithKeyValue(word, translation);
         entry.set(WordyFurniture.EntryKey.EXAMPLE, Values.EMPTY);
         entry.set(WordyFurniture.EntryKey.IS_ARCHIVED, Values.Bool.FALSE);
         entry.set(WordyFurniture.EntryKey.REVIEWS, Values.Int.ZERO);

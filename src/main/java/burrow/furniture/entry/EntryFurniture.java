@@ -52,4 +52,20 @@ public class EntryFurniture extends Furniture {
 
         return FormatEntryChain.resultHook.get(formatEntryContext);
     }
+
+    public static void changePropertyName(
+        @NonNull final ChamberContext chamberContext,
+        @NonNull final String originalPropertyName,
+        @NonNull final String newPropertyName
+    ) {
+        chamberContext.getHoard().getAllEntries().forEach(entry -> {
+            final var value = entry.getOrDefault(originalPropertyName, null);
+            if (value == null) {
+                return;
+            }
+
+            entry.set(newPropertyName, value);
+            entry.unset(originalPropertyName);
+        });
+    }
 }

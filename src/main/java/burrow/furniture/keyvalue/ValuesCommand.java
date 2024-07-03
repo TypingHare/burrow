@@ -19,7 +19,7 @@ public class ValuesCommand extends Command {
 
     @Override
     public Integer call() {
-        final var valueList = KeyValueFurniture.getValueListByKey(context, key);
+        final var valueList = useFurniture(KeyValueFurniture.class).getValueListByKey(key);
         buffer.append(StandardFurniture.stringListToString(commandContext, valueList));
 
         return CommandLine.ExitCode.OK;

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@CommandLine.Command(name = "clist", description = "Display a list of all configuration items.")
+@CommandLine.Command(name = "cls", description = "Display a list of all configuration items.")
 @CommandType(StandardFurniture.COMMAND_TYPE)
 public class ConfigListCommand extends Command {
     public static final String KEY_VALUE_SEPARATOR = " -> ";

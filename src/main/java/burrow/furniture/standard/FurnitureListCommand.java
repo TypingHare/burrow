@@ -7,7 +7,7 @@ import picocli.CommandLine;
 
 import java.util.ArrayList;
 
-@CommandLine.Command(name = "flist", description = "Prints the list of furniture of this chamber.")
+@CommandLine.Command(name = "fls", description = "Prints the list of furniture of this chamber.")
 @CommandType(StandardFurniture.COMMAND_TYPE)
 public class FurnitureListCommand extends Command {
     @CommandLine.Option(

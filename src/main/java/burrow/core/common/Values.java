@@ -18,6 +18,10 @@ public final class Values {
             return FALSE.equalsIgnoreCase(string);
         }
 
+        public static boolean parse(@Nullable final String string) {
+            return Boolean.parseBoolean(string);
+        }
+
         public static String stringify(final boolean bool) {
             return bool ? TRUE : FALSE;
         }

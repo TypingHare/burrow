@@ -22,7 +22,8 @@ public class NewCommand extends Command {
 
     @Override
     public Integer call() {
-        final var entry = KeyValueFurniture.createEntryWithKeyValue(context, key, value);
+        final var keyValueFurniture = useFurniture(KeyValueFurniture.class);
+        final var entry = keyValueFurniture.createEntryWithKeyValue(key, value);
         EntryFurniture.entryToString(context, entry);
         buffer.append(EntryFurniture.entryToString(context, entry));
 

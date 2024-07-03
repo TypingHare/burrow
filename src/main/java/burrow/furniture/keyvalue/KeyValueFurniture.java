@@ -4,6 +4,7 @@ import burrow.chain.Context;
 import burrow.core.chain.UpdateEntryChain;
 import burrow.core.chamber.Chamber;
 import burrow.core.chamber.ChamberContext;
+import burrow.core.common.Values;
 import burrow.core.config.Config;
 import burrow.core.entry.Entry;
 import burrow.core.furniture.BurrowFurniture;
@@ -59,11 +60,12 @@ public final class KeyValueFurniture extends Furniture {
     public void initConfig(@NonNull final Config config) {
         config.setIfAbsent(ConfigKey.KV_KEY_NAME, DEFAULT_KEY_NAME);
         config.setIfAbsent(ConfigKey.KV_VALUE_NAME, DEFAULT_VALUE_NAME);
+        config.setIfAbsent(ConfigKey.KV_ALLOW_DUPLICATE, true);
     }
 
     @Override
     public Collection<String> configKeys() {
-        return List.of(ConfigKey.KV_KEY_NAME, ConfigKey.KV_VALUE_NAME);
+        return List.of(ConfigKey.KV_KEY_NAME, ConfigKey.KV_VALUE_NAME, ConfigKey.KV_ALLOW_DUPLICATE);
     }
 
     @NonNull
@@ -73,7 +75,6 @@ public final class KeyValueFurniture extends Furniture {
 
     @NonNull
     public Set<Integer> getIdSetByKey(@NonNull final String key) {
-
         return idSetStore.getOrDefault(key, Set.of());
     }
 
@@ -112,55 +113,57 @@ public final class KeyValueFurniture extends Furniture {
     }
 
     @NonNull
-    public static String getValue(
-        @NonNull final KeyValueFurniture keyValueFurniture,
-        @NonNull final Entry entry
-    ) {
-        return entry.getRequireNonNull(keyValueFurniture.getValueName());
+    public String getValue(@NonNull final Entry entry) {
+        return entry.getRequireNonNull(getValueName());
     }
 
-    public static void setKey(
-        @NonNull final KeyValueFurniture keyValueFurniture,
+    public void setKey(
         @NonNull final Entry entry,
         @NonNull final String key
     ) {
-        entry.set(keyValueFurniture.getKeyName(), key);
+        entry.set(getKeyName(), key);
     }
 
-    public static void setValue(
-        @NonNull final KeyValueFurniture keyValueFurniture,
+    public void setValue(
         @NonNull final Entry entry,
         @NonNull final String value
 
     ) {
-        entry.set(keyValueFurniture.getValueName(), value);
+        entry.set(getValueName(), value);
     }
 
-    public static Entry createEntryWithKeyValue(
-        @NonNull final ChamberContext chamberContext,
+    public Entry createEntryWithKeyValue(
         @NonNull final String key,
         @NonNull final String value
     ) {
-        final var keyValueFurniture =
-            chamberContext.getRenovator().getFurniture(KeyValueFurniture.class);
+        final var keyValueFurniture = context.getRenovator().getFurniture(KeyValueFurniture.class);
+        final var allowDuplicate = keyValueFurniture.isAllowsDuplicate();
+        if (!allowDuplicate && keyValueFurniture.idSetStore.containsKey(key)) {
+            throw new RuntimeException(
+                "Fail to create a new entry because duplicate key is now allowed: " + key);
+        }
+
         final var properties = new HashMap<String, String>();
         properties.put(keyValueFurniture.getKeyName(), key);
         properties.put(keyValueFurniture.getValueName(), value);
 
-        return chamberContext.getHoard().create(properties);
+        return context.getHoard().create(properties);
     }
 
-    public static List<String> getValueListByKey(
-        @NonNull final ChamberContext chamberContext,
-        @NonNull final String key
-    ) {
-        final var hoard = chamberContext.getHoard();
-        final var keyValueFurniture =
-            chamberContext.getRenovator().getFurniture(KeyValueFurniture.class);
+    public boolean isAllowsDuplicate() {
+        return Values.Bool.parse(context.getConfig()
+            .getRequireNotNull(ConfigKey.KV_ALLOW_DUPLICATE));
+    }
+
+    @NonNull
+    public List<String> getValueListByKey(@NonNull final String key) {
+        final var hoard = context.getHoard();
+        final var keyValueFurniture = use(KeyValueFurniture.class);
         final var idList = keyValueFurniture.getIdSetByKey(key);
+        final var valueName = getValueName();
         return idList.stream()
             .map(hoard::getById)
-            .map(entry -> KeyValueFurniture.getValue(keyValueFurniture, entry))
+            .map(entry -> entry.get(valueName))
             .toList();
     }
 
@@ -175,19 +178,9 @@ public final class KeyValueFurniture extends Furniture {
             .size();
     }
 
-    public static void changePropertyKey(
-        @NonNull final ChamberContext chamberContext,
-        @NonNull final String originalKeyName,
-        @NonNull final String newKeyName
-    ) {
-        chamberContext.getHoard().getAllEntries().forEach(entry -> {
-            entry.set(newKeyName, entry.get(originalKeyName));
-            entry.unset(originalKeyName);
-        });
-    }
-
     public @interface ConfigKey {
         String KV_KEY_NAME = "kv.key";
         String KV_VALUE_NAME = "kv.value";
+        String KV_ALLOW_DUPLICATE = "kv.allow_duplicate";
     }
 }

@@ -35,6 +35,11 @@ public abstract class Command extends ChamberModule implements Callable<Integer>
     }
 
     @NonNull
+    public <T extends Furniture> T useFurniture(@NonNull final Class<T> furnitureClass) {
+        return context.getRenovator().getFurniture(furnitureClass);
+    }
+
+    @NonNull
     public static CommandLine.Command getCommandAnnotation(
         @NonNull final Class<? extends Command> commandClass) {
         final var commandAnnotation = commandClass.getAnnotation(CommandLine.Command.class);

@@ -28,7 +28,7 @@ public class NewCommand extends Command {
 
     @Override
     public Integer call() {
-        final var entry = WordyFurniture.createEntry(context, word, translation);
+        final var entry = useFurniture(WordyFurniture.class).createEntry(word, translation);
         if (!example.isEmpty()) {
             WordyFurniture.setExample(entry, example);
         }

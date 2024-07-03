@@ -6,12 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="9ecd0fa0-16fd-48ba-aef9-eec80eadd3ed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/common/ColorUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/common/ColorUtility.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Hoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/entry/Hoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/CommandList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/CommandListComand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/HelpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/HelpCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/Command.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/common/Values.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/common/Values.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/entry/EntryFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/entry/EntryFurniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/KeyNameCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/KeyNameCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/KeyValueFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/KeyValueFurniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/NewCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/NewCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/ValueNameCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/ValueNameCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/ValuesCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/keyvalue/ValuesCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/CommandListComand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/CommandListComand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigListCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureAddCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureAddCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureListCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/wordy/NewCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/wordy/NewCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/wordy/WordyFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/wordy/WordyFurniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/bin/burrow-cli" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/bin/burrow-cli" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,45 +85,46 @@
     <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Gradle.Build burrow-new.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ChainTest.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ChainTest.testApplyWithMiddleware.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ChainTest.testApplyWithMultipleMiddlewares.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ChainTest.testApplyWithPreProcessors.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ChainTest.testChain.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ChainTest.testErrorHandle.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ChainTest.testHook.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ChainTest.testMiddlewarePost.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ChainTest.testSetEventHandlerUsingFunction.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ChainTest.testUseFirst.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ChainTest.triggerEvent.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.burrow-new [:BurrowCommand.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;Spring Boot.BurrowServer.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/jameschan/Git/public/burrow-new/src/main/java/burrow/client&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.Java&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Gradle.Build burrow-new.executor": "Run",
+    "Gradle.ChainTest.executor": "Run",
+    "Gradle.ChainTest.testApplyWithMiddleware.executor": "Run",
+    "Gradle.ChainTest.testApplyWithMultipleMiddlewares.executor": "Run",
+    "Gradle.ChainTest.testApplyWithPreProcessors.executor": "Run",
+    "Gradle.ChainTest.testChain.executor": "Run",
+    "Gradle.ChainTest.testErrorHandle.executor": "Run",
+    "Gradle.ChainTest.testHook.executor": "Run",
+    "Gradle.ChainTest.testMiddlewarePost.executor": "Run",
+    "Gradle.ChainTest.testSetEventHandlerUsingFunction.executor": "Run",
+    "Gradle.ChainTest.testUseFirst.executor": "Run",
+    "Gradle.ChainTest.triggerEvent.executor": "Run",
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.burrow-new [:BurrowCommand.main()].executor": "Run",
+    "Gradle.burrow-new [:ExecuteCommand.main()].executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.BurrowServer.executor": "Run",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/jameschan/Git/public/burrow-new/src/main/java/burrow/client",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.sourceCode.Java",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/java/burrow/client" />
@@ -145,6 +155,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ExecuteCommand" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ExecuteCommand" />
+      <module name="burrow.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ChainTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -159,30 +176,6 @@
             <option value=":test" />
             <option value="--tests" />
             <option value="&quot;burrow.chain.ChainTest&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="ChainTest.testSetEventHandlerUsingFunction" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;burrow.chain.ChainTest.testSetEventHandlerUsingFunction&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -231,19 +224,19 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.ExecuteCommand" />
       <item itemvalue="Application.BurrowCommand" />
       <item itemvalue="Gradle.ChainTest" />
-      <item itemvalue="Gradle.ChainTest.testSetEventHandlerUsingFunction" />
       <item itemvalue="Gradle.ChainTest.testUseFirst" />
       <item itemvalue="Spring Boot.BurrowServer" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Spring Boot.BurrowServer" />
+        <item itemvalue="Application.ExecuteCommand" />
         <item itemvalue="Application.BurrowCommand" />
         <item itemvalue="Gradle.ChainTest" />
         <item itemvalue="Gradle.ChainTest.testUseFirst" />
-        <item itemvalue="Gradle.ChainTest.testSetEventHandlerUsingFunction" />
       </list>
     </recent_temporary>
   </component>
@@ -276,7 +269,9 @@
       <workItem from="1719679486692" duration="10632000" />
       <workItem from="1719755581585" duration="20793000" />
       <workItem from="1719800106927" duration="8541000" />
-      <workItem from="1719849320603" duration="3919000" />
+      <workItem from="1719849320603" duration="4567000" />
+      <workItem from="1720012636381" duration="31000" />
+      <workItem from="1720012675217" duration="12080000" />
     </task>
     <servers />
   </component>

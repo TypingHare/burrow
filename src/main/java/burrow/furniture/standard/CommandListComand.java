@@ -12,7 +12,7 @@ import picocli.CommandLine;
 import java.util.ArrayList;
 
 @CommandLine.Command(
-    name = "mlist",
+    name = "mls",
     description = "Display a list of all available commands along with their descriptions."
 )
 @CommandType(StandardFurniture.COMMAND_TYPE)

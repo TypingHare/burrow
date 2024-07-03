@@ -8,6 +8,7 @@ import burrow.core.config.Config;
 import burrow.core.furniture.FurnitureNotFoundException;
 import burrow.core.furniture.InvalidFurnitureClassException;
 import burrow.core.furniture.Renovator;
+import burrow.furniture.entry.EntryFurniture;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
@@ -55,12 +56,13 @@ public class FurnitureAddCommand extends Command {
         // Restart the chamber
         try {
             context.getChamber().restart();
-        } catch (final ChamberInitializationException ex) {
+        } catch (final Throwable ex) {
+            buffer.append("Fail to add the furniture due to a failure of restarting.\n");
+            bufferAppendThrowable(ex);
+
             // Restore to the former furniture list and update the config file
             getContext().set(Config.Key.CHAMBER_FURNITURE_LIST, furnitureListString);
             context.getConfig().saveToFile();
-            buffer.append("Fail to add the furniture due to a failure of restarting.\n");
-            bufferAppendThrowable(ex);
 
             return CommandLine.ExitCode.SOFTWARE;
         }
