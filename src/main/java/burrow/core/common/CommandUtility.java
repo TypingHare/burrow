@@ -27,9 +27,17 @@ public final class CommandUtility {
      */
     public static List<String> splitArguments(String input) {
         final List<String> arguments = new ArrayList<>();
-        final Matcher matcher = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(input);
+        final Matcher matcher =
+            Pattern.compile("(?<=\\s|^)(\"(?:\\\\\"|[^\"])*\"|\\S+)(?=\\s|$)").matcher(input);
         while (matcher.find()) {
-            arguments.add(matcher.group(1).replace("\"", ""));
+            String argument = matcher.group(1);
+            // Remove surrounding quotes if present
+            if (argument.startsWith("\"") && argument.endsWith("\"")) {
+                argument = argument.substring(1, argument.length() - 1);
+            }
+            // Replace escaped quotes with a plain quote
+            argument = argument.replace("\\\"", "\"");
+            arguments.add(argument);
         }
 
         return arguments;

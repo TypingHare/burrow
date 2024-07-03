@@ -164,9 +164,13 @@ public final class BurrowCli implements Callable<Integer> {
             argList.add(arg);
         }
 
-        final var realCommand =
-            command + " " +
-                argList.stream().map(BurrowCli::wrapDoubleQuotes).collect(Collectors.joining(" "));
+        final var joinedArgs =
+            argList.stream()
+                .map(String::trim)
+                .map(BurrowCli::wrapDoubleQuotes)
+                .collect(Collectors.joining(" "));
+
+        final var realCommand = command + " " + joinedArgs;
         execute(realCommand);
     }
 
@@ -245,7 +249,7 @@ public final class BurrowCli implements Callable<Integer> {
     }
 
     private static String wrapDoubleQuotes(@NonNull final String input) {
-        return '"' + input + '"';
+        return '"' + input.replace("\"", "\\\"") + '"';
     }
 
     private @interface CliCommand {
