@@ -5,6 +5,7 @@ import burrow.core.Burrow;
 import burrow.core.command.CommandContext;
 import burrow.core.common.CommandUtility;
 import burrow.core.common.Environment;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
@@ -82,7 +83,6 @@ public final class ChamberShepherd {
     public void initialize(@NonNull final String chamberName) throws
         ChamberInitializationException {
         final var start = Instant.now();
-        logger.info("Initiating chamber <{}>", chamberName);
         final var chamber = new Chamber(this, chamberName);
 
         try {
@@ -91,12 +91,12 @@ public final class ChamberShepherd {
             chamberStore.put(chamberName, chamber);
             chamberLifeCycleContextStore.put(chamberName, context);
         } catch (final Throwable ex) {
-            logger.error("Fail to initialize chamber <{}>", chamberName, ex);
+            logger.error("Fail to start chamber <{}>", chamberName, ex);
             throw new ChamberInitializationException(ex);
         }
 
         final var duration = Duration.between(start, Instant.now());
-        logger.info("Completed chamber <{}> initiation in {} ms", chamberName, duration.toMillis());
+        logger.info("Started chamber <{}> in {} ms", chamberName, duration.toMillis());
     }
 
     public boolean isChamberRunning(@NonNull final String chamberName) {
@@ -120,8 +120,10 @@ public final class ChamberShepherd {
         if (chamber == null || context == null) {
             logger.warn("Stop terminating chamber <{}>, as it is not running", chamberName);
         } else {
+            final var start = Instant.now();
             terminateChamberChain.apply(context);
-            logger.info("Completed Terminating chamber <{}>", chamberName);
+            final var duration = Duration.between(start, Instant.now());
+            logger.info("Terminated chamber <{}> in {} ms", chamberName, duration.toMillis());
         }
 
         chamberStore.remove(chamberName);

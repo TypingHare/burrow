@@ -80,7 +80,7 @@ public class ModCoreFurniture extends Furniture {
 
         try {
             final var registrar = getRenovator().getRegistrar();
-            registrar.rescanPackage();
+            registrar.scanPackages();
         } catch (final InvalidFurnitureClassException ex) {
             throw new RuntimeException(ex);
         }

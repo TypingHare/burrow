@@ -59,7 +59,7 @@ public final class FurnitureRegistrar {
         packageSet.add(packageName);
     }
 
-    public void rescanPackage() throws InvalidFurnitureClassException {
+    public void scanPackages() throws InvalidFurnitureClassException {
         for (final var packageName : packageSet) {
             scanPackage(packageName);
         }
