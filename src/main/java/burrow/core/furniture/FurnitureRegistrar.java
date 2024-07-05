@@ -31,6 +31,11 @@ public final class FurnitureRegistrar {
     }
 
     @NonNull
+    public Map<ClassLoader, Set<Class<? extends Furniture>>> getFurnitureMap() {
+        return furnitureMap;
+    }
+
+    @NonNull
     public Set<Class<? extends Furniture>> getFurnitureClassSet() {
         return furnitureClassSet;
     }

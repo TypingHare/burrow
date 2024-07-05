@@ -6,7 +6,7 @@ import burrow.core.config.Config;
 import burrow.core.furniture.BurrowFurniture;
 import burrow.core.furniture.Furniture;
 import burrow.core.furniture.InvalidFurnitureClassException;
-import burrow.furniture.aspectcore.AspectCoreFurniture;
+import burrow.furniture.standard.StandardFurniture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
@@ -23,7 +23,7 @@ import java.util.*;
     simpleName = "Mod Core",
     description = "Mod Core allows developer to load mods (JAR files) into Burrow.",
     dependencies = {
-        AspectCoreFurniture.class
+        StandardFurniture.class
     }
 )
 public class ModCoreFurniture extends Furniture {
@@ -59,6 +59,7 @@ public class ModCoreFurniture extends Furniture {
     @Override
     public void beforeInitialization() {
         registerCommand(ModListCommand.class);
+        registerCommand(ModFurnitureCommand.class);
 
         final var modsDir = new File(getConfig().getNonNull(ConfigKey.MODS_DIR));
         final var jarFileList = new ArrayList<File>();
@@ -113,6 +114,11 @@ public class ModCoreFurniture extends Furniture {
         } catch (final IOException ex) {
             logger.error("Fail to load jar: {}", jarPath.toAbsolutePath(), ex);
         }
+    }
+
+    @NonNull
+    public List<Path> getModPathList() {
+        return use(ModCoreFurniture.class).getPathClassLoaderMap().keySet().stream().toList();
     }
 
     public @interface ConfigKey {
