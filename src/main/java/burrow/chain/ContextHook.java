@@ -4,11 +4,12 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
-public class Hook<T> {
+public class ContextHook<T> {
     private final String key;
 
-    Hook(@NonNull final String key) {
+    ContextHook(@NonNull final String key) {
         this.key = key;
     }
 
@@ -19,6 +20,16 @@ public class Hook<T> {
     @Nullable
     public T get(@NonNull final Context context) {
         @SuppressWarnings("unchecked") final T value = (T) context.get(key);
+        return value;
+    }
+
+    @NonNull
+    public T getNonNull(@NonNull final Context context) {
+        final T value = get(context);
+        if (value == null) {
+            throw new RuntimeException("Null context required NonNull: " + key);
+        }
+
         return value;
     }
 
@@ -34,5 +45,12 @@ public class Hook<T> {
         @NonNull final Function<T, T> remappingFunction
     ) {
         set(context, remappingFunction.apply(get(context)));
+    }
+
+    public T computeIfAbsent(
+        @NonNull final Context context,
+        @NonNull final Supplier<T> supplier
+    ) {
+        return context.computeIfAbsent(key, supplier);
     }
 }

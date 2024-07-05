@@ -28,6 +28,8 @@ dependencies {
     // Utility
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.google.guava:guava:33.2.0-jre")
+    implementation("org.reflections:reflections:0.10.2")
+    implementation("commons-io:commons-io:2.11.0")
 
     // Testing
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")

@@ -9,18 +9,26 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Context {
+    protected static <T> ContextHook<T> hook(@NonNull final String key) {
+        return new ContextHook<>(key);
+    }
+
     protected final Map<String, Object> store = new HashMap<>();
+
+    public void set(@NonNull final String key, @Nullable final Object value) {
+        if (value == null) {
+            store.remove(key);
+        } else {
+            store.put(key, value);
+        }
+    }
 
     @Nullable
     public Object get(@NonNull final String key) {
         return store.get(key);
-    }
-
-    @Nullable
-    public <T> T get(@NonNull final String key, @NonNull final Class<T> clazz) {
-        return clazz.cast(get(key));
     }
 
     @NonNull
@@ -28,57 +36,37 @@ public class Context {
         return store.getOrDefault(key, defaultValue);
     }
 
-    @NonNull
-    public <T> T getOrDefault(
-        @NonNull final String key, @NonNull final Class<T> clazz, @NonNull final T defaultValue) {
-        final T value = get(key, clazz);
-        return value == null ? defaultValue : value;
-    }
-
-    public void set(@NonNull final String key, @Nullable final Object value) {
-        store.put(key, value);
-    }
-
     public <R> void compute(
         @NonNull final String key,
-        @NonNull final Function<Object, R> remappingFunction
+        @NonNull final Function<R, R> function
     ) {
-        store.compute(key, (k, v) -> remappingFunction.apply(v));
+        @SuppressWarnings("unchecked") final R value = (R) store.get(key);
+        store.put(key, function.apply(value));
     }
 
-    public <T> void compute(
+    public <R> R computeIfAbsent(
         @NonNull final String key,
-        @NonNull final Class<T> objectClass,
-        @NonNull final Function<T, T> remappingFunction
+        @NonNull final Supplier<R> supplier
     ) {
-        store.compute(key, (k, v) -> remappingFunction.apply(objectClass.cast(v)));
+        @SuppressWarnings("unchecked") final R value =
+            (R) store.computeIfAbsent(key, (k) -> supplier.get());
+        return value;
+    }
+
+    public void trigger(@NonNull final Event event) {
+        final var eventQueue = Hook.eventQueue.computeIfAbsent(this, LinkedList::new);
+        eventQueue.add(event);
     }
 
     @NonNull
     public Context shallowCopy() {
         final var newContext = new Context();
-        for (final var entry : store.entrySet()) {
-            newContext.set(entry.getKey(), entry.getValue());
-        }
-
+        newContext.store.putAll(store);
         return newContext;
     }
 
-    @Nullable
-    public Queue<Event> getEventQueue() {
-        @SuppressWarnings("unchecked") final Queue<Event> eventQueue =
-            (Queue<Event>) store.get(Key.EVENT_QUEUE);
-
-        return eventQueue;
-    }
-
-    public void trigger(@NonNull final Event event) {
-        @SuppressWarnings("unchecked") final Queue<Event> eventQueue =
-            (Queue<Event>) store.computeIfAbsent(Key.EVENT_QUEUE, k -> new LinkedList<>());
-        eventQueue.add(event);
-    }
-
-    public static final class Key {
-        public static final String EVENT_QUEUE = "EVENT_QUEUE";
+    public @interface Hook {
+        ContextHook<Queue<Event>> eventQueue = hook("EVENT_QUEUE");
+        ContextHook<Boolean> termination = hook("TERMINATION");
     }
 }

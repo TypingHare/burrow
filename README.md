@@ -1,5 +1,7 @@
 # Burrow
 
+[Burrow-old](/Users/jameschan/Git/public/burrow-new/src/main/java/burrow/core)
+
 ## Philosophy
 
 Often, the desire to create a console application for a specific purpose is hindered by the need to develop nearly everything from the ground up. The repetitive tasks involved in building, such as command parsing, data management, and recurring business logic, can quickly drain one's patience. To eliminate these cumbersome obstacles, it's high time to introduce a command application platform that streamlines the process, enabling rapid development of console applications.

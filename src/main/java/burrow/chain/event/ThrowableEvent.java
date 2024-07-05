@@ -1,5 +1,6 @@
 package burrow.chain.event;
 
+import burrow.chain.Context;
 import org.springframework.lang.NonNull;
 
 public final class ThrowableEvent extends Event {
@@ -12,5 +13,13 @@ public final class ThrowableEvent extends Event {
     @NonNull
     public Throwable getThrowable() {
         return throwable;
+    }
+
+    public static void handler(
+        @NonNull final Context context,
+        @NonNull final ThrowableEvent event
+    ) {
+        Context.Hook.termination.set(context, true);
+        System.out.println(event.getThrowable().getLocalizedMessage());
     }
 }
