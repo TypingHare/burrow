@@ -1,7 +1,6 @@
 package burrow.furniture.standard;
 
 import burrow.core.chamber.Chamber;
-import burrow.core.chamber.ChamberContext;
 import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.DefaultCommand;
@@ -45,8 +44,7 @@ public class StandardFurniture extends Furniture {
 
     @NonNull
     public Path getRootAbsolutePath() {
-        return ChamberContext.Hook.rootPath.getNonNull(getChamberContext())
-            .toAbsolutePath().normalize();
+        return getChamberContext().getRootPath().toAbsolutePath().normalize();
     }
 
     public void updateConfigItem(@NonNull final String key, @NonNull final String value) {
@@ -144,7 +142,7 @@ public class StandardFurniture extends Furniture {
             return "[\n" + String.join("\n", indentedLineList) + "\n]";
         } else {
             final var string = "[" + String.join(", ", stringList) + "]";
-            final var environment = CommandContext.Hook.environment.getNonNull(commandContext);
+            final var environment = commandContext.getEnvironment();
             final var consoleWidth = Objects.requireNonNull(environment.getConsoleWidth());
             if (string.length() < consoleWidth) {
                 return string;

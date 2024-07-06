@@ -2,9 +2,7 @@ package burrow.furniture.dictator;
 
 import burrow.core.Burrow;
 import burrow.core.chamber.Chamber;
-import burrow.core.chamber.ChamberContext;
 import burrow.core.chamber.ChamberInitializationException;
-import burrow.core.command.CommandContext;
 import burrow.core.config.Config;
 import burrow.core.furniture.BurrowFurniture;
 import burrow.core.furniture.Furniture;
@@ -55,9 +53,7 @@ public class DictatorFurniture extends Furniture {
     public void initialize() {
         final var aspectFurniture = use(AspectCoreFurniture.class);
         aspectFurniture.beforeProcessCommand((context) -> {
-            final var chamberContext = CommandContext.Hook.chamberContext.getNonNull(context);
-            final var chamber = ChamberContext.Hook.chamber.getNonNull(chamberContext);
-            final var chamberName = chamber.getName();
+            final var chamberName = context.getChamberContext().getChamber().getName();
             if (!chamberInfoMap.containsKey(chamberName)) {
                 final var chamberInfo = new ChamberInfo();
                 chamberInfo.setStartTimestampMs(System.currentTimeMillis());

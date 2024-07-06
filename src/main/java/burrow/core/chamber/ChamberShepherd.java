@@ -5,10 +5,10 @@ import burrow.core.Burrow;
 import burrow.core.command.CommandContext;
 import burrow.core.common.CommandUtility;
 import burrow.core.common.Environment;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import picocli.CommandLine;
 
 import java.time.Duration;
@@ -33,21 +33,8 @@ public final class ChamberShepherd {
     public ChamberShepherd(@NonNull final Burrow burrow) {
         this.burrow = burrow;
 
-        processCommandChain.use((context, next) -> {
-            final var chamberContext = CommandContext.Hook.chamberContext.getNonNull(context);
-            final var chamber = ChamberContext.Hook.chamber.getNonNull(chamberContext);
-            chamber.prepare(context);
-
-            Chain.runIfNotNull(next);
-        });
-
-        processCommandChain.use((context, next) -> {
-            Chain.runIfNotNull(next);
-
-            final var chamberContext = CommandContext.Hook.chamberContext.getNonNull(context);
-            final var chamber = ChamberContext.Hook.chamber.getNonNull(chamberContext);
-            chamber.execute(context);
-        });
+        processCommandChain.use(this::prepareCommand);
+        processCommandChain.use(this::executeCommand);
     }
 
     @NonNull
@@ -152,12 +139,38 @@ public final class ChamberShepherd {
             final var buffer = new StringBuilder();
             buffer.append("Fail to initialize chamber: ").append(chamberName);
 
-            CommandContext.Hook.buffer.set(commandContext, buffer);
-            CommandContext.Hook.exitCode.set(commandContext, CommandLine.ExitCode.SOFTWARE);
+            commandContext.setBuffer(buffer);
+            commandContext.setExitCode(CommandLine.ExitCode.SOFTWARE);
 
             return commandContext;
         }
 
         return processCommandChain.apply(chamber.getChamberContext(), realArgs, environment);
+    }
+
+    public void prepareCommand(
+        @NonNull final CommandContext context,
+        @Nullable final Runnable next
+    ) {
+        final var args = context.getCommandArgs();
+        final var hasCommand = !args.isEmpty() && !args.getFirst().startsWith("-");
+        final var commandName = hasCommand ? args.getFirst() : "";
+        final var realArgs = hasCommand ? args.subList(1, args.size()) : args;
+
+        context.setCommandName(commandName);
+        context.setCommandArgs(realArgs);
+        context.setExitCode(CommandLine.ExitCode.SOFTWARE);
+        context.setBuffer(new StringBuilder());
+
+        Chain.runIfNotNull(next);
+    }
+
+    public void executeCommand(
+        @NonNull final CommandContext context,
+        @Nullable final Runnable next
+    ) {
+        Chain.runIfNotNull(next);
+
+        context.getChamberContext().getChamber().getExecuteCommandChain().apply(context);
     }
 }

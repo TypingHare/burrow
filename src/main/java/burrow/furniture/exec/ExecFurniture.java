@@ -48,7 +48,7 @@ public class ExecFurniture extends Furniture {
         final var processBuilder = new ProcessBuilder(shell, "-c", '"' + command + '"');
 
         // Set the working directory
-        final var environment = CommandContext.Hook.environment.getNonNull(commandContext);
+        final var environment = commandContext.getEnvironment();
         final var workingDirectory = environment.getWorkingDirectory();
         processBuilder.directory(new File(workingDirectory));
 
@@ -76,9 +76,9 @@ public class ExecFurniture extends Furniture {
 
         // Wait for the process to complete
         final var exitCode = process.waitFor();
-        final var buffer = CommandContext.Hook.buffer.getNonNull(commandContext);
+        final var buffer = commandContext.getBuffer();
         buffer.append(exitCode == 0 ? stringBuilder : errorOutput);
-        CommandContext.Hook.exitCode.set(commandContext, exitCode);
+        commandContext.setExitCode(exitCode);
     }
 
     public @interface ConfigKey {

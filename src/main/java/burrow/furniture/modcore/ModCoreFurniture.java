@@ -76,6 +76,7 @@ public class ModCoreFurniture extends Furniture {
 
         for (final var jarFile : jarFileList) {
             addMod(jarFile.toPath());
+            logger.info("Loaded Mod JAR: {}", jarFile);
         }
 
         try {
@@ -95,7 +96,8 @@ public class ModCoreFurniture extends Furniture {
             final var classLoader = new URLClassLoader(urlArray, Burrow.DEFAULT_CLASS_LOADER);
             final var resourceUrl = classLoader.getResource(BURROW_JAR_PROPERTIES_FILE);
             if (resourceUrl == null) {
-                logger.error("Could not find properties file in JAR: {}", jarPath.toAbsolutePath());
+                logger.error("Could not find {} in Mod JAR: {}",
+                    BURROW_JAR_PROPERTIES_FILE, jarPath.toAbsolutePath());
                 return;
             }
 
@@ -112,7 +114,7 @@ public class ModCoreFurniture extends Furniture {
 
             pathClassLoaderMap.put(jarPath, classLoader);
         } catch (final IOException ex) {
-            logger.error("Fail to load jar: {}", jarPath.toAbsolutePath(), ex);
+            logger.error("Fail to load Mod JAR: {}", jarPath.toAbsolutePath(), ex);
         }
     }
 

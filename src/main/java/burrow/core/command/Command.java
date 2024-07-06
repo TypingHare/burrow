@@ -1,6 +1,5 @@
 package burrow.core.command;
 
-import burrow.core.chamber.ChamberContext;
 import burrow.core.chamber.ChamberModule;
 import burrow.core.common.ErrorUtility;
 import burrow.core.furniture.Furniture;
@@ -30,9 +29,9 @@ public abstract class Command extends ChamberModule implements Callable<Integer>
      * @param commandContext the RequestContext in which this command operates
      */
     public Command(@NonNull final CommandContext commandContext) {
-        super(ChamberContext.Hook.chamber.getNonNull(CommandContext.Hook.chamberContext.getNonNull(commandContext)));
+        super(commandContext.getChamberContext().getChamber());
         this.commandContext = commandContext;
-        this.buffer = CommandContext.Hook.buffer.get(commandContext);
+        this.buffer = commandContext.getBuffer();
     }
 
     @NonNull

@@ -2,7 +2,6 @@ package burrow.furniture.dictator;
 
 import burrow.core.Burrow;
 import burrow.core.chamber.Chamber;
-import burrow.core.chamber.ChamberContext;
 import burrow.core.chamber.ChamberInitializationException;
 import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
@@ -55,8 +54,8 @@ public class ChamberNewCommand extends Command {
             newConfig.set(Config.Key.CHAMBER_FURNITURE_LIST, defaultFurnitureList);
 
             final var newChamberContext = chamber.getChamberContext();
-            ChamberContext.Hook.config.set(newChamberContext, newConfig);
-            ChamberContext.Hook.configPath.set(newChamberContext, newConfigPath);
+            newChamberContext.setConfigPath(newConfigPath);
+            newChamberContext.setConfig(newConfig);
             newConfig.saveToFile();
         } catch (final Throwable ex) {
             buffer.append("Fail to create a new chamber.");

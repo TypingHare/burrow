@@ -24,16 +24,16 @@ public abstract class ChamberModule {
 
     @NonNull
     public Config getConfig() {
-        return ChamberContext.Hook.config.getNonNull(getChamberContext());
+        return getChamberContext().getConfig();
     }
 
     @NonNull
     public Renovator getRenovator() {
-        return ChamberContext.Hook.renovator.getNonNull(getChamberContext());
+        return getChamberContext().getRenovator();
     }
 
     @NonNull
     public Processor getProcessor() {
-        return ChamberContext.Hook.processor.getNonNull(getChamberContext());
+        return getChamberContext().getProcessor();
     }
 }

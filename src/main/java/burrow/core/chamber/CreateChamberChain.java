@@ -12,8 +12,8 @@ public class CreateChamberChain extends Chain<ChamberLifeCycleContext> {
         @NonNull final Instant creationTime
     ) {
         final var context = new ChamberLifeCycleContext();
-        ChamberLifeCycleContext.Hook.chamber.set(context, chamber);
-        ChamberLifeCycleContext.Hook.creationTime.set(context, creationTime);
+        context.setChamber(chamber);
+        context.setCreationTime(creationTime);
 
         return super.apply(context);
     }

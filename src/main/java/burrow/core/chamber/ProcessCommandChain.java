@@ -14,9 +14,9 @@ public final class ProcessCommandChain extends Chain<CommandContext> {
         @NonNull final Environment environment
     ) {
         final var context = new CommandContext();
-        CommandContext.Hook.chamberContext.set(context, chamberContext);
-        CommandContext.Hook.commandArgs.set(context, args);
-        CommandContext.Hook.environment.set(context, environment);
+        context.setChamberContext(chamberContext);
+        context.setCommandArgs(args);
+        context.setEnvironment(environment);
 
         return super.apply(context);
     }
