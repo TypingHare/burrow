@@ -10,16 +10,16 @@ public final class ThrowableEvent extends Event {
         this.throwable = throwable;
     }
 
-    @NonNull
-    public Throwable getThrowable() {
-        return throwable;
-    }
-
     public static void handler(
         @NonNull final Context context,
         @NonNull final ThrowableEvent event
     ) {
         Context.Hook.termination.set(context, true);
         System.out.println(event.getThrowable().getLocalizedMessage());
+    }
+
+    @NonNull
+    public Throwable getThrowable() {
+        return throwable;
     }
 }

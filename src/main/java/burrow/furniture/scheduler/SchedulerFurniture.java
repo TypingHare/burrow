@@ -9,7 +9,6 @@ import burrow.furniture.aspectcore.AspectCoreFurniture;
 import burrow.furniture.dictator.DictatorFurniture;
 import org.springframework.lang.NonNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Executors;

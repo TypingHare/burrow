@@ -9,13 +9,6 @@ import org.springframework.lang.Nullable;
 import java.util.Map;
 
 public class FormattedObjectToStringContext extends Context {
-    public @interface Hook {
-        ContextHook<Integer> id = hook("id");
-        ContextHook<Map<String, String>> formattedObject = hook("formattedObject");
-        ContextHook<Environment> environment = hook("environment");
-        ContextHook<String> result = hook("result");
-    }
-
     @NonNull
     public Integer getId() {
         return Hook.id.getNonNull(this);
@@ -50,5 +43,12 @@ public class FormattedObjectToStringContext extends Context {
 
     public void setResult(@NonNull final String result) {
         Hook.result.set(this, result);
+    }
+
+    public @interface Hook {
+        ContextHook<Integer> id = hook("id");
+        ContextHook<Map<String, String>> formattedObject = hook("formattedObject");
+        ContextHook<Environment> environment = hook("environment");
+        ContextHook<String> result = hook("result");
     }
 }

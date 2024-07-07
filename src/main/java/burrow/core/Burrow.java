@@ -2,7 +2,6 @@ package burrow.core;
 
 import burrow.core.chamber.ChamberShepherd;
 import burrow.core.furniture.FurnitureRegistrar;
-import burrow.core.furniture.InvalidFurnitureClassException;
 import ch.qos.logback.classic.Level;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -12,31 +11,46 @@ import org.springframework.lang.NonNull;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 
 public class Burrow {
-    private static final Logger logger = LoggerFactory.getLogger(Burrow.class);
-
     public static final Path ROOT_DIR = Path.of("/opt/burrow/");
     public static final Path CHAMBERS_ROOT_DIR = ROOT_DIR.resolve("chambers");
+    public static final Path LOGS_ROOT_DIR = ROOT_DIR.resolve("logs");
     public static final ClassLoader DEFAULT_CLASS_LOADER = Burrow.class.getClassLoader();
     public static final String DEFAULT_FURNITURE_PACKAGE = "burrow.furniture";
-
+    private static final Logger logger = LoggerFactory.getLogger(Burrow.class);
     private final ChamberShepherd chamberShepherd;
     private final FurnitureRegistrar furnitureRegistrar;
 
-    public Burrow() throws InvalidFurnitureClassException {
+    public Burrow() {
         changeLoggersLevel();
 
         final var start = Instant.now();
 
-        chamberShepherd = new ChamberShepherd(this);
-        furnitureRegistrar = new FurnitureRegistrar(this);
-        furnitureRegistrar.addClassLoader(DEFAULT_CLASS_LOADER);
-        furnitureRegistrar.addPackage(DEFAULT_FURNITURE_PACKAGE);
-        furnitureRegistrar.scanPackages();
+        try {
+            chamberShepherd = new ChamberShepherd(this);
+            furnitureRegistrar = new FurnitureRegistrar();
+            furnitureRegistrar.scanPackage(DEFAULT_CLASS_LOADER, List.of(DEFAULT_FURNITURE_PACKAGE));
+
+            // Initialize root chamber
+            getChamberShepherd().initializeRootChamber();
+        } catch (final Throwable ex) {
+            logger.error("Failed to start Burrow", ex);
+            throw new RuntimeException(ex);
+        }
 
         final var durationMs = Duration.between(start, Instant.now()).toMillis();
         logger.info("Started Burrow in {} ms", durationMs);
+    }
+
+    /**
+     * Change the level of some unimportant loggers.
+     */
+    private static void changeLoggersLevel() {
+        final var reflectionsLogger =
+            (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Reflections.class);
+        reflectionsLogger.setLevel(Level.WARN);
     }
 
     @NonNull
@@ -49,9 +63,11 @@ public class Burrow {
         return furnitureRegistrar;
     }
 
-    private static void changeLoggersLevel() {
-        final var reflectionsLogger =
-            (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Reflections.class);
-        reflectionsLogger.setLevel(Level.WARN);
+    @NonNull
+    public void shutdown() {
+        logger.info("Shutting down Burrow...");
+        getChamberShepherd().terminateAll();
+
+        logger.info("Successfully shut down Burrow.");
     }
 }

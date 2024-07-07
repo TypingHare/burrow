@@ -18,9 +18,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class ChamberShepherd {
-    private static final Logger logger = LoggerFactory.getLogger(ChamberShepherd.class);
     public static final String ROOT_CHAMBER_NAME = ".";
-
+    private static final Logger logger = LoggerFactory.getLogger(ChamberShepherd.class);
     private final Burrow burrow;
     private final Map<String, Chamber> chamberStore = new HashMap<>();
     private final Map<String, ChamberLifeCycleContext> chamberLifeCycleContextStore =

@@ -21,19 +21,17 @@ public final class ModFurnitureCommand extends Command {
 
     @Override
     public Integer call() {
-        final var registrar = getRenovator().getRegistrar();
-        final var furnitureMap = registrar.getFurnitureMap();
         final var modCoreFurniture = use(ModCoreFurniture.class);
         final var modPathList = modCoreFurniture.getModPathList();
 
         var i = 0;
         final var lines = new ArrayList<String>();
         for (final var modPath : modPathList) {
+            final var mod = modCoreFurniture.getMod(modPath);
             lines.add(String.format("[%d] %s", i++, ModListCommand.getModPathLine(modPath)));
 
-            final var classLoader = modCoreFurniture.getPathClassLoaderMap().get(modPath);
             var j = 0;
-            for (final var furniture : furnitureMap.get(classLoader)) {
+            for (final var furniture : mod.getInfo().getFurnitureClassList()) {
                 lines.add(String.format("    [%d] %s (%s)", j++,
                     Furniture.getSimpleName(furniture), furniture.getName()));
             }

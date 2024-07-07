@@ -1,4 +1,4 @@
-package burrow.server;
+package burrow.client;
 
 import java.beans.JavaBean;
 

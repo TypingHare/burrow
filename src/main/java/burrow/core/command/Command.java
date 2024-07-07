@@ -35,16 +35,6 @@ public abstract class Command extends ChamberModule implements Callable<Integer>
     }
 
     @NonNull
-    public <T extends Furniture> T use(@NonNull final Class<T> furnitureClass) {
-        final T furniture = getRenovator().getFurniture(furnitureClass.getName());
-        if (furniture == null) {
-            throw new FurnitureNotFoundException(furnitureClass.getName());
-        }
-
-        return furniture;
-    }
-
-    @NonNull
     public static CommandLine.Command getCommandAnnotation(
         @NonNull final Class<? extends Command> commandClass) {
         final var commandAnnotation = commandClass.getAnnotation(CommandLine.Command.class);
@@ -69,6 +59,16 @@ public abstract class Command extends ChamberModule implements Callable<Integer>
     public static String getType(@NonNull final Class<? extends Command> commandClass) {
         final var commandType = commandClass.getAnnotation(CommandType.class);
         return commandType == null ? CommandType.OTHER : commandType.value();
+    }
+
+    @NonNull
+    public <T extends Furniture> T use(@NonNull final Class<T> furnitureClass) {
+        final T furniture = getRenovator().getFurniture(furnitureClass.getName());
+        if (furniture == null) {
+            throw new FurnitureNotFoundException(furnitureClass.getName());
+        }
+
+        return furniture;
     }
 
     /**

@@ -1,17 +1,12 @@
 package burrow.server;
 
+import burrow.client.BurrowResponse;
 import burrow.core.Burrow;
-import burrow.core.chamber.ChamberInitializationException;
 import burrow.core.command.CommandContext;
 import burrow.core.common.Environment;
-import burrow.core.furniture.InvalidFurnitureClassException;
 import jakarta.annotation.PreDestroy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -20,21 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication(scanBasePackages = {"burrow.core"})
 @RestController
 public class BurrowServer {
-    private static final Logger logger = LoggerFactory.getLogger(BurrowServer.class);
-
-    private final Burrow burrow;
-
-    public BurrowServer() throws InvalidFurnitureClassException {
-        burrow = new Burrow();
-    }
+    private final Burrow burrow = new Burrow();
 
     public static void main(final String[] args) {
         SpringApplication.run(BurrowServer.class, args);
-    }
-
-    @EventListener(ContextRefreshedEvent.class)
-    public void onStart() throws ChamberInitializationException {
-        burrow.getChamberShepherd().initializeRootChamber();
     }
 
     @SuppressWarnings("UastIncorrectHttpHeaderInspection")
@@ -59,9 +43,6 @@ public class BurrowServer {
 
     @PreDestroy
     public void onShutdown() {
-        logger.info("Shutting down Burrow...");
-        burrow.getChamberShepherd().terminateAll();
-
-        logger.info("Successfully shut down Burrow.");
+        burrow.shutdown();
     }
 }

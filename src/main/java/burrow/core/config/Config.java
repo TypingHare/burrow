@@ -1,8 +1,8 @@
 package burrow.core.config;
 
 import burrow.core.chamber.Chamber;
-import burrow.core.chamber.ChamberModule;
 import burrow.core.chamber.ChamberContext;
+import burrow.core.chamber.ChamberModule;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.lang.NonNull;
@@ -53,6 +53,14 @@ public class Config extends ChamberModule {
         setIfAbsent(Key.CHAMBER_VERSION, "1.0.0");
         setIfAbsent(Key.CHAMBER_DESCRIPTION, "No description.");
         setIfAbsent(Key.CHAMBER_FURNITURE_LIST, "");
+    }
+
+    @NonNull
+    public static Map<String, String> loadFromConfigFile(
+        @NonNull final Path filePath) throws IOException {
+        final var content = Files.readString(filePath);
+        return new Gson().fromJson(content, new TypeToken<Map<String, String>>() {
+        }.getType());
     }
 
     /**
@@ -158,14 +166,6 @@ public class Config extends ChamberModule {
         } catch (final IOException ex) {
             throw new RuntimeException("Fail to save config", ex);
         }
-    }
-
-    @NonNull
-    public static Map<String, String> loadFromConfigFile(
-        @NonNull final Path filePath) throws IOException {
-        final var content = Files.readString(filePath);
-        return new Gson().fromJson(content, new TypeToken<Map<String, String>>() {
-        }.getType());
     }
 
     /**

@@ -1,10 +1,10 @@
 package burrow.client;
 
 import burrow.core.common.Environment;
-import burrow.server.BurrowResponse;
 import org.springframework.lang.NonNull;
 import picocli.CommandLine;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -12,12 +12,11 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Properties;
 
-public abstract class BurrowClient {
+public abstract class BurrowClient implements Closeable {
     public static final String APPLICATION_PROPERTIES_FILE = "application.properties";
 
     protected final Properties properties = new Properties();
     protected final URI uri;
-    protected final Environment environment = new Environment();
     protected Duration lastRequestDuration;
 
     public BurrowClient() throws BurrowClientInitializationException {
@@ -33,10 +32,6 @@ public abstract class BurrowClient {
         // Get the URL of the server to send requests
         final var uriString = properties.getProperty("burrow.client.url");
         this.uri = URI.create(uriString);
-
-        // Environment
-        environment.setWorkingDirectory(System.getProperty("user.dir"));
-        environment.setConsoleWidth(getConsoleWidth());
     }
 
     public static int getConsoleWidth() {
@@ -45,14 +40,21 @@ public abstract class BurrowClient {
         return message.width();
     }
 
+    @NonNull
     public Duration getLastRequestDuration() {
         return lastRequestDuration;
     }
 
+    @NonNull
     public Environment getEnvironment() {
+        final var environment = new Environment();
+        environment.setWorkingDirectory(System.getProperty("user.dir"));
+        environment.setConsoleWidth(getConsoleWidth());
+
         return environment;
     }
 
+    @NonNull
     public BurrowResponse sendRequestTiming(@NonNull final String command) {
         final var start = Instant.now();
         final var response = sendRequest(command);
@@ -62,4 +64,7 @@ public abstract class BurrowClient {
     }
 
     protected abstract BurrowResponse sendRequest(@NonNull final String command);
+
+    @Override
+    public void close() {}
 }

@@ -8,11 +8,6 @@ import org.springframework.lang.NonNull;
 import java.util.Collection;
 
 public class UnsetEntryContext extends Context {
-    public @interface Hook {
-        ContextHook<Entry> entry = hook("entry");
-        ContextHook<Collection<String>> keys = hook("keys");
-    }
-
     @NonNull
     public Entry getEntry() {
         return Hook.entry.getNonNull(this);
@@ -29,5 +24,10 @@ public class UnsetEntryContext extends Context {
 
     public void setKeys(@NonNull final Collection<String> keys) {
         Hook.keys.set(this, keys);
+    }
+
+    public @interface Hook {
+        ContextHook<Entry> entry = hook("entry");
+        ContextHook<Collection<String>> keys = hook("keys");
     }
 }

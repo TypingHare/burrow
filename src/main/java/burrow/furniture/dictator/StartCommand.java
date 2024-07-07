@@ -7,6 +7,8 @@ import burrow.core.command.CommandType;
 import org.springframework.lang.NonNull;
 import picocli.CommandLine;
 
+import java.io.IOException;
+
 @CommandLine.Command(name = "start", description = "Start a chamber.")
 @CommandType(DictatorFurniture.COMMAND_TYPE)
 public class StartCommand extends Command {
@@ -18,8 +20,15 @@ public class StartCommand extends Command {
     }
 
     @Override
-    public Integer call() throws ChamberInitializationException {
-        use(DictatorFurniture.class).start(name);
+    public Integer call() throws ChamberInitializationException, IOException {
+        final var dictatorFurniture = use(DictatorFurniture.class);
+        final var chamberNameList = dictatorFurniture.getAvailableChamberList();
+        if (!chamberNameList.contains(name)) {
+            buffer.append("Chamber directory not found: ").append(name);
+            return CommandLine.ExitCode.USAGE;
+        }
+
+        dictatorFurniture.start(name);
 
         return CommandLine.ExitCode.OK;
     }

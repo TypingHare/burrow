@@ -30,22 +30,6 @@ public class ChamberInfoCommand extends Command {
         super(commandContext);
     }
 
-    @Override
-    public Integer call() {
-        final var chamberInfoMap = use(DictatorFurniture.class).getChamberInfoMap();
-        final var lines = new ArrayList<String>();
-        int i = 0;
-        for (final var entry : chamberInfoMap.entrySet()) {
-            final var chamberName = entry.getKey();
-            final var chamberInfo = entry.getValue();
-            lines.add(String.format("[%d] %s", i++, getChamberInfoString(chamberName, chamberInfo)));
-        }
-
-        bufferAppendLines(lines);
-
-        return CommandLine.ExitCode.OK;
-    }
-
     @NonNull
     public static String getChamberInfoString(
         @NonNull final String chamberName,
@@ -66,5 +50,21 @@ public class ChamberInfoCommand extends Command {
         final var dateTime
             = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestampMs), ZoneId.systemDefault());
         return dateTime.format(formatter);
+    }
+
+    @Override
+    public Integer call() {
+        final var chamberInfoMap = use(DictatorFurniture.class).getChamberInfoMap();
+        final var lines = new ArrayList<String>();
+        int i = 0;
+        for (final var entry : chamberInfoMap.entrySet()) {
+            final var chamberName = entry.getKey();
+            final var chamberInfo = entry.getValue();
+            lines.add(String.format("[%d] %s", i++, getChamberInfoString(chamberName, chamberInfo)));
+        }
+
+        bufferAppendLines(lines);
+
+        return CommandLine.ExitCode.OK;
     }
 }

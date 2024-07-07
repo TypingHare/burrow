@@ -25,14 +25,19 @@ import java.util.*;
     }
 )
 public class DictatorFurniture extends Furniture {
+    public static final String COMMAND_TYPE = "Dictator";
     private static final List<String> DEFAULT_FURNITURE_LIST = List.of(
         StandardFurniture.class.getName()
     );
-    public static final String COMMAND_TYPE = "Dictator";
     private final Map<String, ChamberInfo> chamberInfoMap = new HashMap<>();
 
     public DictatorFurniture(@NonNull final Chamber chamber) {
         super(chamber);
+    }
+
+    @NonNull
+    public static DirectoryStream<Path> getChamberDirectoryStream() throws IOException {
+        return Files.newDirectoryStream(Burrow.CHAMBERS_ROOT_DIR, Files::isDirectory);
     }
 
     @Override
@@ -81,22 +86,17 @@ public class DictatorFurniture extends Furniture {
     }
 
     @NonNull
-    public static List<String> getAllChambers() throws IOException {
-        final List<String> chamberList = new ArrayList<>();
+    public List<String> getAvailableChamberList() throws IOException {
+        final List<String> chamberNameList = new ArrayList<>();
         final var chamberRootDirString = Burrow.CHAMBERS_ROOT_DIR.toString();
         final var prefixLength = 1 + chamberRootDirString.length();
         try (final var stream = getChamberDirectoryStream()) {
             for (final var path : stream) {
-                chamberList.add(path.toString().substring(prefixLength));
+                chamberNameList.add(path.toString().substring(prefixLength));
             }
         }
 
-        return chamberList;
-    }
-
-    @NonNull
-    public static DirectoryStream<Path> getChamberDirectoryStream() throws IOException {
-        return Files.newDirectoryStream(Burrow.CHAMBERS_ROOT_DIR, Files::isDirectory);
+        return chamberNameList;
     }
 
     public void start(@NonNull final String chamberName) throws ChamberInitializationException {

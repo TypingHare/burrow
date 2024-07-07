@@ -61,6 +61,7 @@ public class HelpCommand extends Command {
         return CommandLine.ExitCode.OK;
     }
 
+    @NonNull
     public CommandInfo getCommandInfo(@NonNull final String commandName) {
         final var commandClass = getProcessor().getCommand(commandName);
         final var commandInfo = new CommandInfo();

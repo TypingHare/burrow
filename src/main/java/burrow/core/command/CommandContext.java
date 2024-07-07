@@ -9,15 +9,6 @@ import org.springframework.lang.NonNull;
 import java.util.List;
 
 public final class CommandContext extends Context {
-    public @interface Hook {
-        ContextHook<ChamberContext> chamberContext = hook("chamberContext");
-        ContextHook<String> commandName = hook("commandName");
-        ContextHook<List<String>> commandArgs = hook("commandArgs");
-        ContextHook<Environment> environment = hook("environment");
-        ContextHook<Integer> exitCode = hook("exitCode");
-        ContextHook<StringBuilder> buffer = hook("buffer");
-    }
-
     @NonNull
     public ChamberContext getChamberContext() {
         return Hook.chamberContext.getNonNull(this);
@@ -70,5 +61,14 @@ public final class CommandContext extends Context {
 
     public void setBuffer(@NonNull final StringBuilder buffer) {
         Hook.buffer.set(this, buffer);
+    }
+
+    public @interface Hook {
+        ContextHook<ChamberContext> chamberContext = hook("chamberContext");
+        ContextHook<String> commandName = hook("commandName");
+        ContextHook<List<String>> commandArgs = hook("commandArgs");
+        ContextHook<Environment> environment = hook("environment");
+        ContextHook<Integer> exitCode = hook("exitCode");
+        ContextHook<StringBuilder> buffer = hook("buffer");
     }
 }

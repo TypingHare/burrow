@@ -28,61 +28,6 @@ public class HoardFurniture extends Furniture {
         super(chamber);
     }
 
-    @Override
-    public void beforeInitialization() {
-        registerCommand(EntryCommand.class);
-        registerCommand(NewCommand.class);
-        registerCommand(DeleteCommand.class);
-        registerCommand(ExistCommand.class);
-        registerCommand(CountCommand.class);
-        registerCommand(EntriesCommand.class);
-        registerCommand(PropCommand.class);
-        registerCommand(SetCommand.class);
-        registerCommand(UnsetCommand.class);
-
-        hoard.getToFormattedObjectChain().use(HoardFurniture::toFormattedObject);
-        hoard.getFormattedObjectToStringChain().use(HoardFurniture::formattedObjectToString);
-    }
-
-    @NonNull
-    public Hoard getHoard() {
-        return hoard;
-    }
-
-    @Override
-    public void afterInitialization() {
-        hoard.loadFromFile(hoard.getHoardFilePath());
-    }
-
-    @Override
-    public void terminate() {
-        hoard.saveToFile(hoard.getHoardFilePath());
-    }
-
-    public void changePropertyName(
-        @NonNull final String originalPropertyName,
-        @NonNull final String newPropertyName
-    ) {
-        hoard.getAllEntries().forEach(entry -> {
-            final var value = entry.getOrDefault(originalPropertyName, null);
-            if (value == null) {
-                return;
-            }
-
-            entry.set(newPropertyName, value);
-            entry.unset(originalPropertyName);
-        });
-    }
-
-    @NonNull
-    public String entryToString(
-        @NonNull final Entry entry,
-        @NonNull final CommandContext commandContext
-    ) {
-        final var environment = CommandContext.Hook.environment.getNonNull(commandContext);
-        return getHoard().entryToString(entry, environment);
-    }
-
     public static void toFormattedObject(
         @NonNull final ToFormattedObjectContext context,
         @Nullable final Runnable next
@@ -142,5 +87,60 @@ public class HoardFurniture extends Furniture {
         }
 
         Chain.runIfNotNull(next);
+    }
+
+    @Override
+    public void beforeInitialization() {
+        registerCommand(EntryCommand.class);
+        registerCommand(NewCommand.class);
+        registerCommand(DeleteCommand.class);
+        registerCommand(ExistCommand.class);
+        registerCommand(CountCommand.class);
+        registerCommand(EntriesCommand.class);
+        registerCommand(PropCommand.class);
+        registerCommand(SetCommand.class);
+        registerCommand(UnsetCommand.class);
+
+        hoard.getToFormattedObjectChain().use(HoardFurniture::toFormattedObject);
+        hoard.getFormattedObjectToStringChain().use(HoardFurniture::formattedObjectToString);
+    }
+
+    @NonNull
+    public Hoard getHoard() {
+        return hoard;
+    }
+
+    @Override
+    public void afterInitialization() {
+        hoard.loadFromFile(hoard.getHoardFilePath());
+    }
+
+    @Override
+    public void terminate() {
+        hoard.saveToFile(hoard.getHoardFilePath());
+    }
+
+    public void changePropertyName(
+        @NonNull final String originalPropertyName,
+        @NonNull final String newPropertyName
+    ) {
+        hoard.getAllEntries().forEach(entry -> {
+            final var value = entry.getOrDefault(originalPropertyName, null);
+            if (value == null) {
+                return;
+            }
+
+            entry.set(newPropertyName, value);
+            entry.unset(originalPropertyName);
+        });
+    }
+
+    @NonNull
+    public String entryToString(
+        @NonNull final Entry entry,
+        @NonNull final CommandContext commandContext
+    ) {
+        final var environment = CommandContext.Hook.environment.getNonNull(commandContext);
+        return getHoard().entryToString(entry, environment);
     }
 }

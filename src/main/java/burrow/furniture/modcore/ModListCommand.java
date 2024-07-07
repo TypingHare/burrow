@@ -20,6 +20,12 @@ public final class ModListCommand extends Command {
         super(commandContext);
     }
 
+    @NonNull
+    public static String getModPathLine(@NonNull final Path modPath) {
+        final var modName = Files.getNameWithoutExtension(modPath.getFileName().toString());
+        return String.format("%s (%s)", modName, modPath);
+    }
+
     @Override
     public Integer call() {
         final var modPathList = use(ModCoreFurniture.class).getModPathList();
@@ -32,11 +38,5 @@ public final class ModListCommand extends Command {
         bufferAppendLines(lines);
 
         return CommandLine.ExitCode.OK;
-    }
-
-    @NonNull
-    public static String getModPathLine(@NonNull final Path modPath) {
-        final var modName = Files.getNameWithoutExtension(modPath.getFileName().toString());
-        return String.format("%s (%s)", modName, modPath);
     }
 }

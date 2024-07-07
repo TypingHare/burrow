@@ -29,7 +29,7 @@ public class ChamberNewCommand extends Command {
 
     @Override
     public Integer call() throws IOException, ChamberInitializationException {
-        final var chamberList = DictatorFurniture.getAllChambers();
+        final var chamberList = use(DictatorFurniture.class).getAvailableChamberList();
         if (chamberList.contains(name)) {
             buffer.append("Chamber already exists.");
             return CommandLine.ExitCode.USAGE;

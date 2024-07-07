@@ -10,6 +10,12 @@ import java.util.List;
 public abstract class Chain<C extends Context> extends Reactor<C> {
     private final List<Middleware<C>> middlewareList = new ArrayList<>();
 
+    public static void runIfNotNull(@Nullable final Runnable runnable) {
+        if (runnable != null) {
+            runnable.run();
+        }
+    }
+
     @NonNull
     public C apply(@NonNull final C context) {
         final var middleware = compose(middlewareList);
@@ -77,11 +83,5 @@ public abstract class Chain<C extends Context> extends Reactor<C> {
             runIfNotNull(next);
             postMiddleware.accept(context);
         });
-    }
-
-    public static void runIfNotNull(@Nullable final Runnable runnable) {
-        if (runnable != null) {
-            runnable.run();
-        }
     }
 }

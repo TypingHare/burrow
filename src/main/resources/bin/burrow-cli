@@ -3,4 +3,4 @@
 SCRIPT_DIR=$(dirname "$0")
 JAR_NAME="burrow-1.0.0-all.jar"
 BURROW_CLI_CLASS="burrow.client.BurrowCli"
-java -cp "$SCRIPT_DIR/../../../../build/libs/$JAR_NAME" "$BURROW_CLI_CLASS"
+java -cp "$SCRIPT_DIR/../../../../build/libs/$JAR_NAME" "$BURROW_CLI_CLASS" "$@"

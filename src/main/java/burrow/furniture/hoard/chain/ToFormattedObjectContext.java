@@ -8,11 +8,6 @@ import org.springframework.lang.NonNull;
 import java.util.Map;
 
 public class ToFormattedObjectContext extends Context {
-    public @interface Hook {
-        ContextHook<Entry> entry = hook("entry");
-        ContextHook<Map<String, String>> formattedObject = hook("formattedObject");
-    }
-
     @NonNull
     public Entry getEntry() {
         return Hook.entry.getNonNull(this);
@@ -29,5 +24,10 @@ public class ToFormattedObjectContext extends Context {
 
     public void setFormattedObject(@NonNull final Map<String, String> formattedObject) {
         Hook.formattedObject.set(this, formattedObject);
+    }
+
+    public @interface Hook {
+        ContextHook<Entry> entry = hook("entry");
+        ContextHook<Map<String, String>> formattedObject = hook("formattedObject");
     }
 }

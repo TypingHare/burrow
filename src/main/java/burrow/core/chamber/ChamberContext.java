@@ -10,15 +10,6 @@ import org.springframework.lang.NonNull;
 import java.nio.file.Path;
 
 public final class ChamberContext extends Context {
-    public @interface Hook {
-        ContextHook<Chamber> chamber = hook("chamber");
-        ContextHook<Path> rootPath = hook("rootPath");
-        ContextHook<Path> configPath = hook("configPath");
-        ContextHook<Config> config = hook("config");
-        ContextHook<Renovator> renovator = hook("renovator");
-        ContextHook<Processor> processor = hook("processor");
-    }
-
     @NonNull
     public Chamber getChamber() {
         return Hook.chamber.getNonNull(this);
@@ -71,5 +62,14 @@ public final class ChamberContext extends Context {
 
     public void setProcessor(@NonNull final Processor processor) {
         Hook.processor.set(this, processor);
+    }
+
+    public @interface Hook {
+        ContextHook<Chamber> chamber = hook("chamber");
+        ContextHook<Path> rootPath = hook("rootPath");
+        ContextHook<Path> configPath = hook("configPath");
+        ContextHook<Config> config = hook("config");
+        ContextHook<Renovator> renovator = hook("renovator");
+        ContextHook<Processor> processor = hook("processor");
     }
 }

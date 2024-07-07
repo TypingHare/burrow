@@ -2,7 +2,6 @@ package burrow.core.common;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ErrorUtility {
     public static List<String> getCauseStack(final Throwable throwable) {

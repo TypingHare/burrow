@@ -27,6 +27,56 @@ public class StandardFurniture extends Furniture {
         super(chamber);
     }
 
+    @NonNull
+    public static Map<String, Collection<Class<? extends Command>>> classifyCommandClasses(
+        @NonNull final Collection<Class<? extends Command>> commandClassList
+    ) {
+        final var map = new HashMap<String, Collection<Class<? extends Command>>>();
+        for (final var commandClass : commandClassList) {
+            final var commandType = Command.getType(commandClass);
+            map.computeIfAbsent(commandType, k -> new ArrayList<>()).add(commandClass);
+        }
+
+        return map;
+    }
+
+    @NonNull
+    public static Collection<Class<? extends Command>> sortCommandClassList(
+        @NonNull Collection<Class<? extends Command>> commandClassList
+    ) {
+        return commandClassList.stream().sorted(Comparator.comparing(Command::getName)).toList();
+    }
+
+    @NonNull
+    public static String stringListToString(
+        @NonNull final CommandContext commandContext,
+        @NonNull final List<String> stringList,
+        final boolean useMultiLine
+    ) {
+        if (useMultiLine) {
+            final var lines = String.join("\n", stringList).split("\n");
+            final var indentedLineList = Arrays.stream(lines).map(line -> "  " + line).toList();
+            return "[\n" + String.join("\n", indentedLineList) + "\n]";
+        } else {
+            final var string = "[" + String.join(", ", stringList) + "]";
+            final var environment = commandContext.getEnvironment();
+            final var consoleWidth = Objects.requireNonNull(environment.getConsoleWidth());
+            if (string.length() < consoleWidth) {
+                return string;
+            } else {
+                return stringListToString(commandContext, stringList, true);
+            }
+        }
+    }
+
+    @NonNull
+    public static String stringListToString(
+        @NonNull final CommandContext commandContext,
+        @NonNull final List<String> stringList
+    ) {
+        return stringListToString(commandContext, stringList, false);
+    }
+
     @Override
     public void beforeInitialization() {
         registerCommand(RootCommand.class);
@@ -100,26 +150,6 @@ public class StandardFurniture extends Furniture {
     }
 
     @NonNull
-    public static Map<String, Collection<Class<? extends Command>>> classifyCommandClasses(
-        @NonNull final Collection<Class<? extends Command>> commandClassList
-    ) {
-        final var map = new HashMap<String, Collection<Class<? extends Command>>>();
-        for (final var commandClass : commandClassList) {
-            final var commandType = Command.getType(commandClass);
-            map.computeIfAbsent(commandType, k -> new ArrayList<>()).add(commandClass);
-        }
-
-        return map;
-    }
-
-    @NonNull
-    public static Collection<Class<? extends Command>> sortCommandClassList(
-        @NonNull Collection<Class<? extends Command>> commandClassList
-    ) {
-        return commandClassList.stream().sorted(Comparator.comparing(Command::getName)).toList();
-    }
-
-    @NonNull
     public String getChamberDescription() {
         return getConfig().getNonNull(Config.Key.CHAMBER_DESCRIPTION);
     }
@@ -128,35 +158,5 @@ public class StandardFurniture extends Furniture {
         @NonNull final String description
     ) {
         getConfig().set(Config.Key.CHAMBER_DESCRIPTION, description);
-    }
-
-    @NonNull
-    public static String stringListToString(
-        @NonNull final CommandContext commandContext,
-        @NonNull final List<String> stringList,
-        final boolean useMultiLine
-    ) {
-        if (useMultiLine) {
-            final var lines = String.join("\n", stringList).split("\n");
-            final var indentedLineList = Arrays.stream(lines).map(line -> "  " + line).toList();
-            return "[\n" + String.join("\n", indentedLineList) + "\n]";
-        } else {
-            final var string = "[" + String.join(", ", stringList) + "]";
-            final var environment = commandContext.getEnvironment();
-            final var consoleWidth = Objects.requireNonNull(environment.getConsoleWidth());
-            if (string.length() < consoleWidth) {
-                return string;
-            } else {
-                return stringListToString(commandContext, stringList, true);
-            }
-        }
-    }
-
-    @NonNull
-    public static String stringListToString(
-        @NonNull final CommandContext commandContext,
-        @NonNull final List<String> stringList
-    ) {
-        return stringListToString(commandContext, stringList, false);
     }
 }

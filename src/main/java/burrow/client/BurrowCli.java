@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
@@ -25,32 +26,81 @@ import java.util.stream.Collectors;
     name = "Burrow CLI",
     version = "1.0.0",
     mixinStandardHelpOptions = true,
-    description = "Interactive command-line tool for managing and interacting with Burrow chambers."
+    description = "Interactive command-line tool for interacting with Burrow chambers."
 )
 public final class BurrowCli implements Callable<Integer> {
+    @CommandLine.Parameters(
+        index = "0",
+        paramLabel = "<initial-chamber>",
+        description = "The initial chamber.",
+        defaultValue = ChamberShepherd.ROOT_CHAMBER_NAME
+    )
+    private String initialChamber;
+
     @CommandLine.Option(
         names = {"-v", "--version"},
-        description = "Display the version of Burrow CLI.s",
+        description = "Display the version of Burrow CLI.",
         defaultValue = "false"
     )
     private Boolean version;
 
     @CommandLine.Option(
+        names = {"-h", "--help"},
+        description = "Display the usage and help info of Burrow CLI.",
+        defaultValue = "false"
+    )
+    private Boolean help;
+
+    @CommandLine.Option(
         names = {"-s", "--split"},
-        description = "Apply split mode.",
+        paramLabel = "<use-split-mode>",
+        description = "Apply split mode by default.",
         defaultValue = "false"
     )
     private Boolean useSplitMode;
 
+    @CommandLine.Option(
+        names = {"-r", "--server"},
+        paramLabel = "<use-server>",
+        description = "Use server.",
+        defaultValue = "false"
+    )
+    private Boolean useServer;
+
     private String chamberName = ChamberShepherd.ROOT_CHAMBER_NAME;
-    private final Terminal terminal;
-    private final LineReader reader;
+    private Terminal terminal;
+    private LineReader reader;
+    private BurrowClient burrowClient;
 
     public static void main(final String[] args) throws IOException {
         System.exit(new CommandLine(new BurrowCli()).execute(args));
     }
 
-    public BurrowCli() throws IOException {
+    private static String wrapDoubleQuotes(@NonNull final String input) {
+        return '"' + input.replace("\"", "\\\"") + '"';
+    }
+
+    @Override
+    public Integer call() throws BurrowClientInitializationException, IOException {
+        if (version) {
+            final var annotation = getClass().getAnnotation(CommandLine.Command.class);
+            final var name = annotation.name();
+            final var version = annotation.version();
+            System.out.println(name + " v" + version[0]);
+            return CommandLine.ExitCode.OK;
+        } else if (help) {
+            System.out.println(new CommandLine(this.getClass()).getUsageMessage());
+            return CommandLine.ExitCode.OK;
+        }
+
+        // Initialize burrow client
+        if (useServer) {
+            burrowClient = new HttpBurrowClient();
+        } else {
+            burrowClient = new LocalBurrowClient();
+        }
+
+        // Initialize JLine
         final var terminalBuilder = TerminalBuilder.builder();
         terminalBuilder.encoding(StandardCharsets.UTF_8);
         terminal = terminalBuilder.build();
@@ -59,16 +109,9 @@ public final class BurrowCli implements Callable<Integer> {
             .history(new DefaultHistory())
             .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
             .build();
-    }
 
-    @Override
-    public Integer call() {
-        if (version) {
-            final var annotation = getClass().getAnnotation(CommandLine.Command.class);
-            final var name = annotation.name();
-            final var version = annotation.version();
-            System.out.println(name + " v" + version[0]);
-            return CommandLine.ExitCode.OK;
+        if (!Objects.equals(initialChamber, ChamberShepherd.ROOT_CHAMBER_NAME)) {
+            useChamber(initialChamber);
         }
 
         //noinspection InfiniteLoopStatement
@@ -99,8 +142,7 @@ public final class BurrowCli implements Callable<Integer> {
         }
     }
 
-    private void execute(@NonNull final String command) throws BurrowClientInitializationException {
-        final var burrowClient = new HttpBurrowClient();
+    private void execute(@NonNull final String command) {
         final var response =
             burrowClient.sendRequestTiming(chamberName + " " + command);
         final var lastRequestDuration = burrowClient.getLastRequestDuration();
@@ -131,9 +173,8 @@ public final class BurrowCli implements Callable<Integer> {
 
     private void executeSplit(
         @NonNull final String command
-    ) throws BurrowClientInitializationException {
+    ) {
         final var commandName = command.split(" ")[0];
-        final var burrowClient = new HttpBurrowClient();
         final var response = burrowClient.sendRequest(chamberName + " help --json " + commandName);
         final var json = response.getMessage();
 
@@ -176,6 +217,7 @@ public final class BurrowCli implements Callable<Integer> {
 
     private void exit() {
         try {
+            burrowClient.close();
             terminal.close();
         } catch (final Throwable ignored) {
         }
@@ -198,19 +240,10 @@ public final class BurrowCli implements Callable<Integer> {
         return CommandLine.Help.Ansi.AUTO.string("@|yellow " + durationString + "|@");
     }
 
-    private void resolveCliCommand(final String command) throws
-        BurrowClientInitializationException {
+    private void resolveCliCommand(final String command) {
         if (command.startsWith(CliCommand.USE)) {
             final var chamberName = command.substring(CliCommand.USE.length()).trim();
-            if (!checkChamberExist(chamberName)) {
-                System.out.format("Chamber <%s> does not exist.\n", chamberName);
-                final var tempChamberName = this.chamberName;
-                this.chamberName = ".";
-                execute("rlist");
-                this.chamberName = tempChamberName;
-            } else {
-                this.chamberName = chamberName;
-            }
+            useChamber(chamberName);
         } else if (command.startsWith(CliCommand.COMMANDS)) {
             final var commandDescription = new LinkedHashMap<String, String>();
             commandDescription.put(CliCommand.COMMANDS, "Display all the CLI commands.");
@@ -242,18 +275,25 @@ public final class BurrowCli implements Callable<Integer> {
         }
     }
 
+    private void useChamber(@NonNull final String chamberName) {
+        if (!checkChamberExist(chamberName)) {
+            System.out.format("Chamber <%s> does not exist.\n", chamberName);
+            final var tempChamberName = this.chamberName;
+            this.chamberName = ".";
+            execute("rlist");
+            this.chamberName = tempChamberName;
+        } else {
+            this.chamberName = chamberName;
+        }
+    }
+
     private boolean checkChamberExist(@NonNull final String chamberName) {
         try {
-            final var burrowClient = new HttpBurrowClient();
             final var response = burrowClient.sendRequest(chamberName + " root");
             return response.getExitCode() == CommandLine.ExitCode.OK;
         } catch (final Exception ex) {
             return false;
         }
-    }
-
-    private static String wrapDoubleQuotes(@NonNull final String input) {
-        return '"' + input.replace("\"", "\\\"") + '"';
     }
 
     private @interface CliCommand {

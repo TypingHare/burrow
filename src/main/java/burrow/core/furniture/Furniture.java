@@ -17,6 +17,14 @@ public abstract class Furniture extends ChamberModule {
         super(chamber);
     }
 
+    @NonNull
+    public static String getSimpleName(@NonNull final Class<? extends Furniture> furnitureClass) {
+        final var annotation = furnitureClass.getAnnotation(BurrowFurniture.class);
+        assert annotation != null;
+
+        return annotation.simpleName();
+    }
+
     public void setInitialized(final boolean initialized) {
         isInitialized = initialized;
     }
@@ -86,13 +94,5 @@ public abstract class Furniture extends ChamberModule {
     @NonNull
     public List<Class<? extends Command>> getAllCommands() {
         return new ArrayList<>(commandSet);
-    }
-
-    @NonNull
-    public static String getSimpleName(@NonNull final Class<? extends Furniture> furnitureClass) {
-        final var annotation = furnitureClass.getAnnotation(BurrowFurniture.class);
-        assert annotation != null;
-
-        return annotation.simpleName();
     }
 }

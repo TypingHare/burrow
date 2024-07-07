@@ -12,11 +12,11 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Context {
+    protected final Map<String, Object> store = new HashMap<>();
+
     protected static <T> ContextHook<T> hook(@NonNull final String key) {
         return new ContextHook<>(key);
     }
-
-    protected final Map<String, Object> store = new HashMap<>();
 
     public void set(@NonNull final String key, @Nullable final Object value) {
         if (value == null) {

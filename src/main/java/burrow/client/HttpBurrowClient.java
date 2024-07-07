@@ -1,6 +1,6 @@
 package burrow.client;
 
-import burrow.server.BurrowResponse;
+import burrow.core.common.Environment;
 import com.google.gson.Gson;
 import org.apache.hc.client5.http.HttpHostConnectException;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -25,6 +25,7 @@ public final class HttpBurrowClient extends BurrowClient {
                 response -> new String(response.getEntity().getContent().readAllBytes());
 
             final HttpPost postRequest = new HttpPost(uri);
+            final Environment environment = getEnvironment();
             postRequest.setEntity(new StringEntity(command, StandardCharsets.UTF_8));
             postRequest.setHeader("Content-type", "text/plain");
             postRequest.setHeader("Working-Directory", environment.getWorkingDirectory());

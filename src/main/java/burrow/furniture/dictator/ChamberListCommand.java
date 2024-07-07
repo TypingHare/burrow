@@ -24,7 +24,7 @@ public class ChamberListCommand extends Command {
 
     @Override
     public Integer call() throws IOException {
-        final var chamberNameList = DictatorFurniture.getAllChambers();
+        final var chamberNameList = use(DictatorFurniture.class).getAvailableChamberList();
         final var lines = new ArrayList<String>();
         for (final var chamberName : chamberNameList) {
             final var configFile = Burrow.CHAMBERS_ROOT_DIR

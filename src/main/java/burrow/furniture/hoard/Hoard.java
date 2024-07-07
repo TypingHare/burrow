@@ -26,10 +26,6 @@ public class Hoard extends ChamberModule {
     public static final String KEY_ID = "id";
 
     private final Path hoardFilePath;
-    private List<Entry> entryStore = new ArrayList<>();
-    private Integer maxId = 0;
-    private Integer size = 0;
-
     private final CreateEntryChain createEntryChain = new CreateEntryChain();
     private final RegisterEntryChain registerEntryChain = new RegisterEntryChain();
     private final DeleteEntryChain deleteEntryChain = new DeleteEntryChain();
@@ -39,6 +35,9 @@ public class Hoard extends ChamberModule {
     private final ToFormattedObjectChain toFormattedObjectChain = new ToFormattedObjectChain();
     private final FormattedObjectToStringChain formattedObjectToStringChain =
         new FormattedObjectToStringChain();
+    private List<Entry> entryStore = new ArrayList<>();
+    private Integer maxId = 0;
+    private Integer size = 0;
 
     public Hoard(@NonNull final Chamber chamber) {
         super(chamber);

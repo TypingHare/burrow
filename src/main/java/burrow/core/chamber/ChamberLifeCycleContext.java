@@ -7,11 +7,6 @@ import org.springframework.lang.NonNull;
 import java.time.Instant;
 
 public final class ChamberLifeCycleContext extends Context {
-    public @interface Hook {
-        ContextHook<Chamber> chamber = hook("chamber");
-        ContextHook<Instant> creationTime = hook("creationTime");
-    }
-
     @NonNull
     public Chamber getChamber() {
         return Hook.chamber.getNonNull(this);
@@ -28,5 +23,10 @@ public final class ChamberLifeCycleContext extends Context {
 
     public void setCreationTime(@NonNull final Instant creationTime) {
         Hook.creationTime.set(this, creationTime);
+    }
+
+    public @interface Hook {
+        ContextHook<Chamber> chamber = hook("chamber");
+        ContextHook<Instant> creationTime = hook("creationTime");
     }
 }
