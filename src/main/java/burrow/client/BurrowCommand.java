@@ -24,13 +24,7 @@ public final class BurrowCommand implements Callable<Integer> {
             System.out.println(response.getMessage());
         }
 
-//        final var immediateCommand = response.getImmediateCommand();
-//        if (!immediateCommand.isEmpty()) {
-//            // TODO: EXECUTE THE COMMAND
-//            final List<String> commandTokens = Arrays.asList("sh", "-c", command);
-//            final var processBuilder = new ProcessBuilder(commandTokens);
-//            processBuilder.start();
-//        }
+        client.close();
 
         return response.getExitCode();
     }

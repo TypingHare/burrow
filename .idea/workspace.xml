@@ -5,22 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="55d3258e-f4d8-4532-b2d2-02fcd7c7d717" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/HttpBurrowClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/HttpBurrowClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/Burrow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/Burrow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/FurnitureRegistrar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/FurnitureRegistrar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberListCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberNewCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberNewCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/DictatorFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/DictatorFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/StartCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/StartCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModCoreFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModCoreFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModFurnitureCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModFurnitureCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/HelpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/HelpCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/server/BurrowResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/server/BurrowServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/server/BurrowServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/bin/burrow-cli" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/bin/burrow-cli" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/DefaultCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/DefaultCommand.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,6 +70,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler",
     "vue.rearranger.settings.migration": "true"
   }
@@ -128,7 +115,7 @@
       <workItem from="1720217800199" duration="5136000" />
       <workItem from="1720232433380" duration="48000" />
       <workItem from="1720296535326" duration="2760000" />
-      <workItem from="1720324444381" duration="11355000" />
+      <workItem from="1720324444381" duration="11799000" />
     </task>
     <servers />
   </component>

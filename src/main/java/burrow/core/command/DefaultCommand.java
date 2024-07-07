@@ -13,13 +13,17 @@ import java.util.ArrayList;
 public final class DefaultCommand extends Command {
     @CommandLine.Option(
         names = {"-v", "--version"},
-        description = "Display the name and version of the current chamber.")
-    private boolean version = false;
+        description = "Display the name and version of the current chamber.",
+        defaultValue = "false"
+    )
+    private boolean version;
 
     @CommandLine.Option(
         names = {"-h", "--help"},
-        description = "Display the help information.")
-    private boolean help = false;
+        description = "Display the help information.",
+        defaultValue = "false"
+    )
+    private boolean help;
 
     public DefaultCommand(@NonNull final CommandContext commandContext) {
         super(commandContext);
