@@ -66,7 +66,7 @@ public final class TimeFurniture extends Furniture {
         @NonNull final CreateEntryContext context,
         @Nullable final Runnable next
     ) {
-        final var entry = CreateEntryContext.Hook.entry.getNonNull(context);
+        final var entry = context.getEntry();
         setCreateTime(entry);
         setUpdateTime(entry);
     }
@@ -75,9 +75,8 @@ public final class TimeFurniture extends Furniture {
         @NonNull final ToFormattedObjectContext context,
         @Nullable final Runnable next
     ) {
-        final var entry = ToFormattedObjectContext.Hook.entry.getNonNull(context);
-        final var formattedObject =
-            ToFormattedObjectContext.Hook.formattedObject.getNonNull(context);
+        final var entry = context.getEntry();
+        final var formattedObject = context.getFormattedObject();
         if (isCreatedAtEnabled()) {
             final var dateString = getDateString(entry.getNonNull(EntryKey.CREATED_AT));
             formattedObject.put(EntryKey.CREATED_AT, dateString);
@@ -90,16 +89,14 @@ public final class TimeFurniture extends Furniture {
     }
 
     public void setEntry(@NonNull final SetEntryContext context, @Nullable final Runnable next) {
-        final var entry = SetEntryContext.Hook.entry.getNonNull(context);
-        setUpdateTime(entry);
+        setUpdateTime(context.getEntry());
     }
 
     public void unsetEntry(
         @NonNull final UnsetEntryContext context,
         @Nullable final Runnable next
     ) {
-        final var entry = UnsetEntryContext.Hook.entry.getNonNull(context);
-        setUpdateTime(entry);
+        setUpdateTime(context.getEntry());
     }
 
     public boolean isUpdatedAtEnabled() {

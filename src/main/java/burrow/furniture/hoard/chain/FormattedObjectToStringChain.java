@@ -11,11 +11,11 @@ public class FormattedObjectToStringChain extends Chain<FormattedObjectToStringC
         final int id,
         @NonNull final Map<String, String> formattedObject,
         @NonNull final Environment environment
-        ) {
+    ) {
         final var context = new FormattedObjectToStringContext();
-        FormattedObjectToStringContext.Hook.id.set(context, id);
-        FormattedObjectToStringContext.Hook.formattedObject.set(context, formattedObject);
-        FormattedObjectToStringContext.Hook.environment.set(context, environment);
+        context.setId(id);
+        context.setFormattedObject(formattedObject);
+        context.setEnvironment(environment);
 
         return apply(context);
     }

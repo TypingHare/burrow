@@ -10,11 +10,11 @@ public class RegisterEntryChain extends Chain<RegisterEntryContext> {
     @NonNull
     public RegisterEntryContext apply(
         @NonNull final Entry entry,
-        @NonNull final Map<String, String>entryObject
+        @NonNull final Map<String, String> entryObject
     ) {
         final var context = new RegisterEntryContext();
-        RegisterEntryContext.Hook.entry.set(context, entry);
-        RegisterEntryContext.Hook.entryObject.set(context, entryObject);
+        context.setEntry(entry);
+        context.setEntryObject(entryObject);
 
         return apply(context);
     }

@@ -13,8 +13,8 @@ public class SetEntryChain extends Chain<SetEntryContext> {
         @NonNull final Map<String, String> properties
     ) {
         final var context = new SetEntryContext();
-        SetEntryContext.Hook.entry.set(context, entry);
-        SetEntryContext.Hook.properties.set(context, properties);
+        context.setEntry(entry);
+        context.setProperties(properties);
 
         return apply(context);
     }

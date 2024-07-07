@@ -8,7 +8,7 @@ public class DeleteEntryChain extends Chain<DeleteEntryContext> {
     @NonNull
     public DeleteEntryContext apply(@NonNull final Entry entry) {
         final var context = new DeleteEntryContext();
-        DeleteEntryContext.Hook.entry.set(context, entry);
+        context.setEntry(entry);
 
         return apply(context);
     }

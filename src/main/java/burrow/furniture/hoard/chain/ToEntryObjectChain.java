@@ -13,8 +13,8 @@ public class ToEntryObjectChain extends Chain<ToEntryObjectContext> {
         @NonNull final Map<String, String> entryObject
     ) {
         final var context = new ToEntryObjectContext();
-        ToEntryObjectContext.Hook.entry.set(context, entry);
-        ToEntryObjectContext.Hook.entryObject.set(context, entryObject);
+        context.setEntry(entry);
+        context.setEntryObject(entryObject);
 
         return apply(context);
     }

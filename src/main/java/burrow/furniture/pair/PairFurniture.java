@@ -27,6 +27,8 @@ public final class PairFurniture extends Furniture {
     public static final String COMMAND_TYPE = "Pair";
 
     private final Map<String, Set<Integer>> idSetStore = new HashMap<>();
+    private String keyName = EntryKey.KEY;
+    private String valueName = EntryKey.VALUE;
 
     public PairFurniture(@NonNull final Chamber chamber) {
         super(chamber);
@@ -43,12 +45,18 @@ public final class PairFurniture extends Furniture {
 
     @Override
     public Collection<String> configKeys() {
-        return List.of(ConfigKey.PAIR_ALLOW_DUPLICATE);
+        return List.of(
+            ConfigKey.PAIR_ALLOW_DUPLICATE,
+            ConfigKey.PAIR_KEY_NAME,
+            ConfigKey.PAIR_VALUE_NAME
+        );
     }
 
     @Override
     public void initializeConfig(@NonNull final Config config) {
         config.setIfAbsent(ConfigKey.PAIR_ALLOW_DUPLICATE, true);
+        config.setIfAbsent(ConfigKey.PAIR_KEY_NAME, EntryKey.KEY);
+        config.setIfAbsent(ConfigKey.PAIR_VALUE_NAME, EntryKey.VALUE);
     }
 
     @Override
@@ -57,14 +65,18 @@ public final class PairFurniture extends Furniture {
         registerCommand(KeysCommand.class);
         registerCommand(KeyCountCommand.class);
         registerCommand(ValuesCommand.class);
+
+        keyName = getConfig().getNonNull(ConfigKey.PAIR_KEY_NAME);
+        valueName = getConfig().getNonNull(ConfigKey.PAIR_VALUE_NAME);
     }
 
     @Override
     public void initialize() {
         final var hoardFurniture = use(HoardFurniture.class);
-        hoardFurniture.getHoard().getCreateEntryChain().use(this::createEntry);
-        hoardFurniture.getHoard().getRegisterEntryChain().use(this::registerEntry);
-        hoardFurniture.getHoard().getDeleteEntryChain().use(this::deleteEntry);
+        final var hoard = hoardFurniture.getHoard();
+        hoard.getCreateEntryChain().use(this::createEntry);
+        hoard.getRegisterEntryChain().use(this::registerEntry);
+        hoard.getDeleteEntryChain().use(this::deleteEntry);
     }
 
     @NonNull
@@ -76,8 +88,8 @@ public final class PairFurniture extends Furniture {
         @NonNull final CreateEntryContext context,
         @Nullable final Runnable next
     ) {
-        final var entry = CreateEntryContext.Hook.entry.getNonNull(context);
-        final var key = entry.get(EntryKey.KEY);
+        final var entry = context.getEntry();
+        final var key = entry.get(keyName);
         final var id = entry.getId();
         idSetStore.computeIfAbsent(key, k -> new HashSet<>()).add(id);
 
@@ -88,8 +100,8 @@ public final class PairFurniture extends Furniture {
         @NonNull final DeleteEntryContext context,
         @Nullable final Runnable next
     ) {
-        final var entry = DeleteEntryContext.Hook.entry.getNonNull(context);
-        final var key = entry.get(EntryKey.KEY);
+        final var entry = context.getEntry();
+        final var key = entry.get(keyName);
         final var idSet = idSetStore.get(key);
         if (idSet != null) {
             idSet.remove(entry.getId());
@@ -105,8 +117,8 @@ public final class PairFurniture extends Furniture {
         @NonNull final RegisterEntryContext context,
         @Nullable final Runnable next
     ) {
-        final var entry = RegisterEntryContext.Hook.entry.getNonNull(context);
-        final var key = entry.get(EntryKey.KEY);
+        final var entry = context.getEntry();
+        final var key = entry.get(keyName);
         final var idSet = idSetStore.computeIfAbsent(key, k -> new HashSet<>());
         idSet.add(entry.getId());
 
@@ -115,20 +127,20 @@ public final class PairFurniture extends Furniture {
 
     @NonNull
     public String getKey(@NonNull final Entry entry) {
-        return entry.getNonNull(EntryKey.KEY);
+        return entry.getNonNull(keyName);
     }
 
     @NonNull
     public String getValue(@NonNull final Entry entry) {
-        return entry.getNonNull(EntryKey.VALUE);
+        return entry.getNonNull(valueName);
     }
 
     public void setKey(@NonNull final Entry entry, @NonNull final String key) {
-        entry.set(EntryKey.KEY, key);
+        entry.set(keyName, key);
     }
 
     public void setValue(@NonNull final Entry entry, @NonNull final String value) {
-        entry.set(EntryKey.VALUE, value);
+        entry.set(valueName, value);
     }
 
     @NonNull
@@ -143,21 +155,19 @@ public final class PairFurniture extends Furniture {
         }
 
         final var properties = new HashMap<String, String>();
-        properties.put(EntryKey.KEY, key);
-        properties.put(EntryKey.VALUE, value);
+        properties.put(keyName, key);
+        properties.put(valueName, value);
 
-        final var hoardFurniture = use(HoardFurniture.class);
-        return hoardFurniture.getHoard().create(properties);
+        return use(HoardFurniture.class).getHoard().create(properties);
     }
 
     @NonNull
     public List<String> getValueListByKey(@NonNull final String key) {
         final var hoard = use(HoardFurniture.class).getHoard();
-        final var keyValueFurniture = use(PairFurniture.class);
-        final var idList = keyValueFurniture.getIdSetByKey(key);
+        final var idList = getIdSetByKey(key);
         return idList.stream()
             .map(hoard::get)
-            .map(entry -> entry.get(EntryKey.VALUE))
+            .map(entry -> entry.get(valueName))
             .toList();
     }
 
@@ -167,6 +177,8 @@ public final class PairFurniture extends Furniture {
 
     public @interface ConfigKey {
         String PAIR_ALLOW_DUPLICATE = "pair.allow_duplicate";
+        String PAIR_KEY_NAME = "pair.key_name";
+        String PAIR_VALUE_NAME = "pair.value_name";
     }
 
     public @interface EntryKey {

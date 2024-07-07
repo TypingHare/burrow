@@ -260,7 +260,7 @@ public class Hoard extends ChamberModule {
         final var context =
             formattedObjectToStringChain.apply(id, formattedObject, environment);
 
-        return FormattedObjectToStringContext.Hook.result.getNonNull(context);
+        return Optional.ofNullable(context.getResult()).orElse("");
     }
 
     @NonNull
@@ -268,9 +268,8 @@ public class Hoard extends ChamberModule {
         @NonNull final Entry entry,
         @NonNull final Environment environment
     ) {
-        final var toFormattedObjectContext = toFormattedObjectChain.apply(entry);
-        final var formattedObject =
-            ToFormattedObjectContext.Hook.formattedObject.getNonNull(toFormattedObjectContext);
+        final var context = toFormattedObjectChain.apply(entry);
+        final var formattedObject = context.getFormattedObject();
         return format(entry.getId(), formattedObject, environment);
     }
 }

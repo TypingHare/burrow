@@ -12,8 +12,8 @@ public class UnsetEntryChain extends Chain<UnsetEntryContext> {
         @NonNull final Collection<String> keys
     ) {
         final var context = new UnsetEntryContext();
-        UnsetEntryContext.Hook.entry.set(context, entry);
-        UnsetEntryContext.Hook.keys.set(context, keys);
+        context.setEntry(entry);
+        context.setKeys(keys);
 
         return apply(context);
     }
