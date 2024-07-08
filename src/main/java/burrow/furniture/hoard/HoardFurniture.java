@@ -100,6 +100,7 @@ public class HoardFurniture extends Furniture {
         registerCommand(PropCommand.class);
         registerCommand(SetCommand.class);
         registerCommand(UnsetCommand.class);
+        registerCommand(UpdatePropCommand.class);
 
         hoard.getToFormattedObjectChain().use(HoardFurniture::toFormattedObject);
         hoard.getFormattedObjectToStringChain().use(HoardFurniture::formattedObjectToString);
@@ -124,7 +125,7 @@ public class HoardFurniture extends Furniture {
         @NonNull final String originalPropertyName,
         @NonNull final String newPropertyName
     ) {
-        hoard.getAllEntries().forEach(entry -> {
+        hoard.getEntryList().forEach(entry -> {
             final var value = entry.getOrDefault(originalPropertyName, null);
             if (value == null) {
                 return;

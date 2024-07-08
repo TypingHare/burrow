@@ -8,6 +8,7 @@ import org.springframework.lang.NonNull;
 import picocli.CommandLine;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 public abstract class Command extends ChamberModule implements Callable<Integer>,
@@ -120,5 +121,19 @@ public abstract class Command extends ChamberModule implements Callable<Integer>
 
     public void bufferAppendThrowable(@NonNull final Throwable throwable) {
         bufferAppendLines(ErrorUtility.getCauseStack(throwable));
+    }
+
+    @NonNull
+    public Integer dispatch(
+        @NonNull final Class<? extends Command> commandClass,
+        @NonNull final List<String> commandArgs
+    ) {
+        final String commandName = getName(commandClass);
+        commandContext.setCommandName(commandName);
+        commandContext.setCommandArgs(commandArgs);
+
+        getChamber().getExecuteCommandChain().apply(commandContext);
+
+        return commandContext.getExitCode();
     }
 }

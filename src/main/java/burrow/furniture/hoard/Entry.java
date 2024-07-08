@@ -7,7 +7,6 @@ import org.springframework.lang.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -68,21 +67,15 @@ public final class Entry {
         return properties;
     }
 
-    /**
-     * Retrieves the value of a property by its key.
-     * @param key The key of the property to retrieve.
-     * @return The value associated with the specified key.
-     * @throws KeyNotFoundException If the key does not exist in the properties map.
-     */
-    @NonNull
+    @Nullable
     public String get(@NonNull final String key) {
-        return Optional.ofNullable(properties.get(key))
-            .orElseThrow(() -> new KeyNotFoundException(key));
+        return properties.get(key);
     }
 
     @NonNull
     public String getNonNull(@NonNull final String key) {
-        return Objects.requireNonNull(properties.get(key));
+        return Optional.ofNullable(properties.get(key))
+            .orElseThrow(() -> new KeyNotFoundException(key));
     }
 
     @Nullable

@@ -99,8 +99,12 @@ public class Hoard extends ChamberModule {
         return id > 0 && id < entryStore.size() && entryStore.get(id) != null;
     }
 
+    /**
+     * Returns a list of all entries in the hoard.
+     * @return a list of all entries in the hoard.
+     */
     @NonNull
-    public List<Entry> getAllEntries() {
+    public List<Entry> getEntryList() {
         return entryStore.stream().filter(Objects::nonNull).toList();
     }
 
@@ -148,7 +152,7 @@ public class Hoard extends ChamberModule {
      * Save all entries to a hoard file.
      */
     public void saveToFile(@NonNull final Path hoardFilePath) {
-        final var objectList = getAllEntries().stream()
+        final var objectList = getEntryList().stream()
             .filter(Objects::nonNull)
             .map(this::getEntryObject).toList();
         final var json = new Gson().toJson(objectList, new TypeToken<List<Map<String, String>>>() {
