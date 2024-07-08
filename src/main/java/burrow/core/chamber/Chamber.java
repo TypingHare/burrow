@@ -78,6 +78,6 @@ public final class Chamber {
         terminate();
 
         final var chamberShepherd = getChamberShepherd();
-        chamberShepherd.initialize(name);
+        chamberShepherd.start(name);
     }
 }

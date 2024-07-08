@@ -56,8 +56,8 @@ public class DictatorFurniture extends Furniture {
 
     @Override
     public void initialize() {
-        final var aspectFurniture = use(AspectCoreFurniture.class);
-        aspectFurniture.beforeProcessCommand((context) -> {
+        final var aspectCoreFurniture = use(AspectCoreFurniture.class);
+        aspectCoreFurniture.beforeProcessCommand((context) -> {
             final var chamberName = context.getChamberContext().getChamber().getName();
             if (!chamberInfoMap.containsKey(chamberName)) {
                 final var chamberInfo = new ChamberInfo();
@@ -67,6 +67,11 @@ public class DictatorFurniture extends Furniture {
 
             final var chamberInfo = chamberInfoMap.get(chamberName);
             chamberInfo.setLastRequestTimestampMs(System.currentTimeMillis());
+        });
+
+        aspectCoreFurniture.afterTerminateChamber((context) -> {
+            final var chamberName = context.getChamber().getName();
+            chamberInfoMap.remove(chamberName);
         });
 
         super.initialize();

@@ -6,10 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="55d3258e-f4d8-4532-b2d2-02fcd7c7d717" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/Command.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/Entry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/Entry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/Hoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/Hoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/HoardFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/HoardFurniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/Burrow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/Burrow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/Chamber.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/Chamber.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberShepherd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberShepherd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/DictatorFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/DictatorFurniture.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +123,8 @@
       <workItem from="1720296535326" duration="2760000" />
       <workItem from="1720324444381" duration="11909000" />
       <workItem from="1720371018402" duration="479000" />
-      <workItem from="1720412211628" duration="625000" />
+      <workItem from="1720412211628" duration="900000" />
+      <workItem from="1720450202541" duration="3262000" />
     </task>
     <servers />
   </component>

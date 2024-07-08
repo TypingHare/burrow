@@ -61,12 +61,12 @@ public final class ChamberShepherd {
         return processCommandChain;
     }
 
-    public void initializeRootChamber() throws ChamberInitializationException {
-        initialize(ROOT_CHAMBER_NAME);
+    public void startRootChamber() throws ChamberInitializationException {
+        start(ROOT_CHAMBER_NAME);
     }
 
     @NonNull
-    public void initialize(@NonNull final String chamberName) throws
+    public void start(@NonNull final String chamberName) throws
         ChamberInitializationException {
         final var start = Instant.now();
         final var chamber = new Chamber(this, chamberName);
@@ -93,7 +93,7 @@ public final class ChamberShepherd {
     public Chamber getOrStartChamber(@NonNull final String chamberName) throws
         ChamberInitializationException {
         if (!isChamberRunning(chamberName)) {
-            initialize(chamberName);
+            start(chamberName);
         }
 
         return Objects.requireNonNull(chamberStore.get(chamberName));
