@@ -7,7 +7,7 @@ import burrow.core.command.DefaultCommand;
 import burrow.core.config.Config;
 import burrow.core.furniture.BurrowFurniture;
 import burrow.core.furniture.Furniture;
-import burrow.core.furniture.FurnitureNotFoundException;
+import burrow.core.furniture.exception.FurnitureNotFoundException;
 import burrow.core.furniture.Renovator;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -134,7 +134,7 @@ public class StandardFurniture extends Furniture {
     ) throws FurnitureNotFoundException {
         final var list = new ArrayList<Class<? extends Command>>();
         for (final var furnitureName : furnitureNameList) {
-            list.addAll(use(furnitureName).getAllCommands());
+            list.addAll(use(furnitureName).getCommandList());
         }
         list.remove(DefaultCommand.class);
 

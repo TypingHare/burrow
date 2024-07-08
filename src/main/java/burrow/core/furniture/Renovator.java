@@ -3,6 +3,9 @@ package burrow.core.furniture;
 import burrow.core.chamber.Chamber;
 import burrow.core.chamber.ChamberModule;
 import burrow.core.config.Config;
+import burrow.core.furniture.exception.CircularDependencyException;
+import burrow.core.furniture.exception.FurnitureNotFoundException;
+import burrow.core.furniture.exception.InvalidFurnitureClassException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

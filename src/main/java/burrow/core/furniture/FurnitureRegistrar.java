@@ -1,5 +1,6 @@
 package burrow.core.furniture;
 
+import burrow.core.furniture.exception.InvalidFurnitureClassException;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;

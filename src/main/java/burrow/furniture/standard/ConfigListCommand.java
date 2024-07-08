@@ -4,8 +4,8 @@ import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.core.common.ColorUtility;
-import burrow.core.furniture.AmbiguousSimpleNameException;
-import burrow.core.furniture.FurnitureNotFoundException;
+import burrow.core.furniture.exception.AmbiguousSimpleNameException;
+import burrow.core.furniture.exception.FurnitureNotFoundException;
 import org.springframework.lang.NonNull;
 import picocli.CommandLine;
 

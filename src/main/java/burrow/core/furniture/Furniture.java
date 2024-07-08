@@ -4,6 +4,7 @@ import burrow.core.chamber.Chamber;
 import burrow.core.chamber.ChamberModule;
 import burrow.core.command.Command;
 import burrow.core.config.Config;
+import burrow.core.furniture.exception.FurnitureNotFoundException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -68,7 +69,7 @@ public abstract class Furniture extends ChamberModule {
     }
 
     @NonNull
-    public <T extends Furniture> T use(@NonNull final String furnitureName) {
+    protected <T extends Furniture> T use(@NonNull final String furnitureName) {
         if (!isInitialized) {
             throw new RuntimeException("The use() method is not allowed to be called before the initialization.");
         }
@@ -82,17 +83,21 @@ public abstract class Furniture extends ChamberModule {
     }
 
     @NonNull
-    public <T extends Furniture> T use(@NonNull final Class<T> furnitureClass) {
+    protected <T extends Furniture> T use(@NonNull final Class<T> furnitureClass) {
         return use(furnitureClass.getName());
     }
 
-    public void registerCommand(@NonNull final Class<? extends Command> commandClass) {
+    protected void registerCommand(@NonNull final Class<? extends Command> commandClass) {
         commandSet.add(commandClass);
         getProcessor().register(commandClass);
     }
 
     @NonNull
-    public List<Class<? extends Command>> getAllCommands() {
+    public List<Class<? extends Command>> getCommandList() {
         return new ArrayList<>(commandSet);
+    }
+
+    public static String getType(@NonNull final Class<? extends Furniture> furnitureClass) {
+        return furnitureClass.getAnnotation(BurrowFurniture.class).type();
     }
 }

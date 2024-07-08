@@ -4,19 +4,29 @@ import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.core.common.ColorUtility;
+import burrow.core.furniture.BurrowFurniture;
 import burrow.core.furniture.Furniture;
 import org.springframework.lang.NonNull;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.function.Predicate;
 
 @CommandLine.Command(
     name = "fall",
-    description = "List all available furniture."
+    description = "Display all available furniture."
 )
 @CommandType(StandardFurniture.COMMAND_TYPE)
 public class FurnitureAllCommand extends Command {
+    @CommandLine.Option(
+        names = {"--root", "-r"},
+        paramLabel = "<root>",
+        description = "Display root furniture instead of main and component furniture.",
+        defaultValue = "false"
+    )
+    private Boolean root;
+
     public FurnitureAllCommand(@NonNull final CommandContext commandContext) {
         super(commandContext);
     }
@@ -24,8 +34,14 @@ public class FurnitureAllCommand extends Command {
     @Override
     public Integer call() {
         final var furnitureRegistrar = getRenovator().getRegistrar();
+        final Predicate<Class<? extends Furniture>> filterPredicate = root ?
+            (furnitureClass) -> Furniture.getType(furnitureClass)
+                .equals(BurrowFurniture.Type.ROOT) :
+            (furnitureClass) -> !Furniture.getType(furnitureClass)
+                .equals(BurrowFurniture.Type.ROOT);
         final var allFurnitureClassList =
             furnitureRegistrar.getFurnitureClassSet().stream()
+                .filter(filterPredicate)
                 .sorted(Comparator.comparing(Class::getName))
                 .toList();
         final var furnitureClassList = use(StandardFurniture.class).getFurnitureClassList();
@@ -37,9 +53,7 @@ public class FurnitureAllCommand extends Command {
             final var coloredSimpleName = furnitureClassList.contains(furnitureClass) ?
                 ColorUtility.render(simpleName, ColorUtility.Type.NAME_FURNITURE) :
                 simpleName;
-            lines.add(String.format("[%s] %s (%s)",
-                i++,
-                coloredSimpleName,
+            lines.add(String.format("[%s] %s (%s)", i++, coloredSimpleName,
                 furnitureClass.getName())
             );
         }

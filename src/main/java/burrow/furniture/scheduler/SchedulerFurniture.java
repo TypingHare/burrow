@@ -17,7 +17,8 @@ import java.util.concurrent.TimeUnit;
 
 @BurrowFurniture(
     simpleName = "Scheduler",
-    description = "Scheduler terminates unused chambers automatically."
+    description = "Scheduler terminates unused chambers automatically.",
+    type = BurrowFurniture.Type.ROOT
 )
 public class SchedulerFurniture extends Furniture {
     public static final long DEFAULT_INTERVAL_MS = 3000;

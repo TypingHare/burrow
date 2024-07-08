@@ -5,11 +5,13 @@ import burrow.core.chamber.Chamber;
 import burrow.core.config.Config;
 import burrow.core.furniture.BurrowFurniture;
 import burrow.core.furniture.Furniture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Collection;
 import java.util.List;
@@ -19,6 +21,8 @@ import java.util.List;
     description = "Bin Core allows developers to create shell files."
 )
 public class BinCoreFurniture extends Furniture {
+    private static final Logger logger = LoggerFactory.getLogger(BinCoreFurniture.class);
+
     public static final String COMMAND_TYPE = "Bin Core";
     public static final String DEFAULT_BIN_SHELL = "/bin/zsh";
     public static final String BIN_NAME_PREFIX = "b";
@@ -40,31 +44,50 @@ public class BinCoreFurniture extends Furniture {
 
     @Override
     public void beforeInitialization() {
-        registerCommand(CreateBinCommand.class);
+        registerCommand(CreateShellCommand.class);
     }
 
-    public void createBinFile(
+    /**
+     * Creates a shell file in the bin directory.
+     * @param fileName The file name of the shell file.
+     * @param content  The content of the shell file.
+     */
+    public void createShellFile(
         @NonNull final String fileName,
         @NonNull final String content
-    ) throws IOException {
-        final var filePath = Burrow.BIN_ROOT.resolve(fileName);
-        Files.write(filePath, content.getBytes());
+    ) {
+        try {
+            final var filePath = Burrow.BIN_ROOT.resolve(fileName);
+            Files.write(filePath, content.getBytes());
 
-        // Change the permission of the bin file to 744x
-        final var permissions = PosixFilePermissions.fromString("rwxr--r--");
-        Files.setPosixFilePermissions(filePath, permissions);
+            // Change the permission of the bin file to 744
+            final var permissions = PosixFilePermissions.fromString("rwxr--r--");
+            Files.setPosixFilePermissions(filePath, permissions);
+        } catch (final IOException ex) {
+            logger.error("Fail to create a shell file for chamber <{}>", chamber.getName(), ex);
+        }
     }
 
-    public void createBinFile(@NonNull final String content) throws IOException {
-        final var binFileName = getConfig().getNonNull(ConfigKey.BIN_NAME);
-        createBinFile(binFileName, content);
+    public void createShellFile(@NonNull final String content) {
+        final var shellFileName = getConfig().getNonNull(ConfigKey.BIN_NAME);
+        createShellFile(shellFileName, content);
     }
 
-    public void createBinFile() throws IOException {
+    public boolean createShellFileIfAbsent(@NonNull final String content) {
+        final var shellFileName = getConfig().getNonNull(ConfigKey.BIN_NAME);
+        final var file = new File(shellFileName);
+        if (!file.exists()) {
+            createShellFile(content);
+            return true;
+        }
+
+        return false;
+    }
+
+    public String getDefaultShellContent() {
         final var shell = getConfig().getNonNull(ConfigKey.BIN_SHELL);
         final var chamberName = chamber.getName();
-        final var content = "#! " + shell + "\n\nburrow " + chamberName + " \"$@\"";
-        createBinFile(content);
+        return "#! " + shell + "\n\nburrow " + chamberName + " \"$@\"";
     }
 
     public @interface ConfigKey {

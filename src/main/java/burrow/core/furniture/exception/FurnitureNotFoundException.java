@@ -1,4 +1,4 @@
-package burrow.core.furniture;
+package burrow.core.furniture.exception;
 
 import org.springframework.lang.NonNull;
 

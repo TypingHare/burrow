@@ -22,7 +22,8 @@ import java.util.*;
     description = "Allows users to create, delete, and monitor chambers.",
     dependencies = {
         AspectCoreFurniture.class
-    }
+    },
+    type = BurrowFurniture.Type.ROOT
 )
 public class DictatorFurniture extends Furniture {
     public static final String COMMAND_TYPE = "Dictator";

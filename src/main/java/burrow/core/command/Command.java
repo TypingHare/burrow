@@ -3,7 +3,7 @@ package burrow.core.command;
 import burrow.core.chamber.ChamberModule;
 import burrow.core.common.ErrorUtility;
 import burrow.core.furniture.Furniture;
-import burrow.core.furniture.FurnitureNotFoundException;
+import burrow.core.furniture.exception.FurnitureNotFoundException;
 import org.springframework.lang.NonNull;
 import picocli.CommandLine;
 
