@@ -31,6 +31,9 @@ dependencies {
     implementation("org.reflections:reflections:0.10.2")
     implementation("commons-io:commons-io:2.11.0")
 
+    // Annotation
+    implementation("org.jetbrains:annotations:24.1.0")
+
     // Testing
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))

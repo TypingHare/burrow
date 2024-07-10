@@ -19,12 +19,17 @@ public final class BurrowCommand implements Callable<Integer> {
     public Integer call() throws BurrowClientInitializationException {
         final var client = new HttpBurrowClient();
         final var response = client.sendRequest(command);
+        client.close();
+
         final var message = response.getMessage();
         if (message != null && !message.isEmpty()) {
             System.out.println(response.getMessage());
         }
 
-        client.close();
+        final var immediateCommand = response.getImmediateCommand();
+        if (immediateCommand != null) {
+            // Execute the command
+        }
 
         return response.getExitCode();
     }

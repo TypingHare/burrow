@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootApplication(scanBasePackages = {"burrow.core"})
+@SpringBootApplication
 @RestController
 public class BurrowServer {
     private final Burrow burrow = new Burrow();

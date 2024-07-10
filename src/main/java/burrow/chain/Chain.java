@@ -44,7 +44,7 @@ public abstract class Chain<C extends Context> extends Reactor<C> {
             return;
         }
 
-        if (Boolean.TRUE.equals(Context.Hook.termination.get(context))) {
+        if (Boolean.TRUE.equals(context.getTerminationFlag())) {
             return;
         }
 
@@ -59,7 +59,7 @@ public abstract class Chain<C extends Context> extends Reactor<C> {
     }
 
     private void resolveQueue(@NonNull final C context) {
-        final var eventQueue = Context.Hook.eventQueue.get(context);
+        final var eventQueue = context.getEventQueue();
         if (eventQueue != null) {
             while (!eventQueue.isEmpty()) {
                 trigger(eventQueue.poll(), context);
@@ -72,14 +72,32 @@ public abstract class Chain<C extends Context> extends Reactor<C> {
     }
 
     public void use(@NonNull final Middleware.Pre<C> preMiddleware) {
-        middlewareList.add((context, next) -> {
+        use((context, next) -> {
             preMiddleware.accept(context);
             runIfNotNull(next);
         });
     }
 
     public void use(@NonNull final Middleware.Post<C> postMiddleware) {
-        middlewareList.add((context, next) -> {
+        use((context, next) -> {
+            runIfNotNull(next);
+            postMiddleware.accept(context);
+        });
+    }
+
+    public void useFirst(@NonNull final Middleware<C> middleware) {
+        middlewareList.addFirst(middleware);
+    }
+
+    public void useFirst(@NonNull final Middleware.Pre<C> preMiddleware) {
+        useFirst((context, next) -> {
+            preMiddleware.accept(context);
+            runIfNotNull(next);
+        });
+    }
+
+    public void useFirst(@NonNull final Middleware.Post<C> postMiddleware) {
+        useFirst((context, next) -> {
             runIfNotNull(next);
             postMiddleware.accept(context);
         });

@@ -5,6 +5,7 @@ import burrow.chain.ContextHook;
 import burrow.core.chamber.ChamberContext;
 import burrow.core.common.Environment;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 
@@ -63,6 +64,15 @@ public final class CommandContext extends Context {
         Hook.buffer.set(this, buffer);
     }
 
+    @Nullable
+    public String getImmediateCommand() {
+        return Hook.immediateCommand.get(this);
+    }
+
+    public void setImmediateCommand(@NonNull final String immediateCommand) {
+        Hook.immediateCommand.set(this, immediateCommand);
+    }
+
     public @interface Hook {
         ContextHook<ChamberContext> chamberContext = hook("chamberContext");
         ContextHook<String> commandName = hook("commandName");
@@ -70,5 +80,6 @@ public final class CommandContext extends Context {
         ContextHook<Environment> environment = hook("environment");
         ContextHook<Integer> exitCode = hook("exitCode");
         ContextHook<StringBuilder> buffer = hook("buffer");
+        ContextHook<String> immediateCommand = hook("immediateCommand");
     }
 }

@@ -14,7 +14,7 @@ public final class ThrowableEvent extends Event {
         @NonNull final Context context,
         @NonNull final ThrowableEvent event
     ) {
-        Context.Hook.termination.set(context, true);
+        context.setTerminationFlag(true);
         System.out.println(event.getThrowable().getLocalizedMessage());
     }
 
