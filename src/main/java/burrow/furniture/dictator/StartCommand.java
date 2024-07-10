@@ -4,7 +4,7 @@ import burrow.core.chamber.ChamberInitializationException;
 import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ public class StartCommand extends Command {
     @CommandLine.Parameters(index = "0", description = "The name of the chamber to start.")
     private String name;
 
-    public StartCommand(@NonNull final CommandContext commandContext) {
+    public StartCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

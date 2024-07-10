@@ -7,7 +7,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.FileAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public final class LocalBurrowClient extends BurrowClient {
     private final Burrow burrow;
@@ -18,7 +18,7 @@ public final class LocalBurrowClient extends BurrowClient {
     }
 
     @Override
-    protected BurrowResponse sendRequest(@NonNull final String command) {
+    protected BurrowResponse sendRequest(@NotNull final String command) {
         final var commandContext = burrow.getChamberShepherd().process(command, getEnvironment());
         final var burrowResponse = new BurrowResponse();
         burrowResponse.setMessage(commandContext.getBuffer().toString());

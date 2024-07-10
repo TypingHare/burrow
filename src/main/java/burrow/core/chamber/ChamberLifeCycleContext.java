@@ -2,26 +2,26 @@ package burrow.core.chamber;
 
 import burrow.chain.Context;
 import burrow.chain.ContextHook;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 
 public final class ChamberLifeCycleContext extends Context {
-    @NonNull
+    @NotNull
     public Chamber getChamber() {
         return Hook.chamber.getNonNull(this);
     }
 
-    public void setChamber(@NonNull final Chamber chamber) {
+    public void setChamber(@NotNull final Chamber chamber) {
         Hook.chamber.set(this, chamber);
     }
 
-    @NonNull
+    @NotNull
     public Instant getCreationTime() {
         return Hook.creationTime.getNonNull(this);
     }
 
-    public void setCreationTime(@NonNull final Instant creationTime) {
+    public void setCreationTime(@NotNull final Instant creationTime) {
         Hook.creationTime.set(this, creationTime);
     }
 

@@ -3,7 +3,7 @@ package burrow.furniture.pair;
 import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -15,7 +15,7 @@ public class KeyCountCommand extends Command {
     @CommandLine.Parameters(index = "0", description = "The key.")
     private String key;
 
-    public KeyCountCommand(@NonNull final CommandContext commandContext) {
+    public KeyCountCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

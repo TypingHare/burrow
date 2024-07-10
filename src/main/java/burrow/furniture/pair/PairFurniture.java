@@ -11,8 +11,8 @@ import burrow.furniture.hoard.HoardFurniture;
 import burrow.furniture.hoard.chain.CreateEntryContext;
 import burrow.furniture.hoard.chain.DeleteEntryContext;
 import burrow.furniture.hoard.chain.RegisterEntryContext;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -30,7 +30,7 @@ public final class PairFurniture extends Furniture {
     private String keyName = EntryKey.KEY;
     private String valueName = EntryKey.VALUE;
 
-    public PairFurniture(@NonNull final Chamber chamber) {
+    public PairFurniture(@NotNull final Chamber chamber) {
         super(chamber);
     }
 
@@ -38,7 +38,7 @@ public final class PairFurniture extends Furniture {
         return Values.Bool.parse(getConfig().getNonNull(ConfigKey.PAIR_ALLOW_DUPLICATE));
     }
 
-    @NonNull
+    @NotNull
     public Map<String, Set<Integer>> getIdSetStore() {
         return idSetStore;
     }
@@ -53,7 +53,7 @@ public final class PairFurniture extends Furniture {
     }
 
     @Override
-    public void initializeConfig(@NonNull final Config config) {
+    public void initializeConfig(@NotNull final Config config) {
         config.setIfAbsent(ConfigKey.PAIR_ALLOW_DUPLICATE, true);
         config.setIfAbsent(ConfigKey.PAIR_KEY_NAME, EntryKey.KEY);
         config.setIfAbsent(ConfigKey.PAIR_VALUE_NAME, EntryKey.VALUE);
@@ -79,13 +79,13 @@ public final class PairFurniture extends Furniture {
         hoard.getDeleteEntryChain().use(this::deleteEntry);
     }
 
-    @NonNull
-    public Set<Integer> getIdSetByKey(@NonNull final String key) {
+    @NotNull
+    public Set<Integer> getIdSetByKey(@NotNull final String key) {
         return idSetStore.getOrDefault(key, Set.of());
     }
 
     public void createEntry(
-        @NonNull final CreateEntryContext context,
+        @NotNull final CreateEntryContext context,
         @Nullable final Runnable next
     ) {
         final var entry = context.getEntry();
@@ -97,7 +97,7 @@ public final class PairFurniture extends Furniture {
     }
 
     public void deleteEntry(
-        @NonNull final DeleteEntryContext context,
+        @NotNull final DeleteEntryContext context,
         @Nullable final Runnable next
     ) {
         final var entry = context.getEntry();
@@ -114,7 +114,7 @@ public final class PairFurniture extends Furniture {
     }
 
     public void registerEntry(
-        @NonNull final RegisterEntryContext context,
+        @NotNull final RegisterEntryContext context,
         @Nullable final Runnable next
     ) {
         final var entry = context.getEntry();
@@ -125,28 +125,28 @@ public final class PairFurniture extends Furniture {
         Chain.runIfNotNull(next);
     }
 
-    @NonNull
-    public String getKey(@NonNull final Entry entry) {
+    @NotNull
+    public String getKey(@NotNull final Entry entry) {
         return entry.getNonNull(keyName);
     }
 
-    @NonNull
-    public String getValue(@NonNull final Entry entry) {
+    @NotNull
+    public String getValue(@NotNull final Entry entry) {
         return entry.getNonNull(valueName);
     }
 
-    public void setKey(@NonNull final Entry entry, @NonNull final String key) {
+    public void setKey(@NotNull final Entry entry, @NotNull final String key) {
         entry.set(keyName, key);
     }
 
-    public void setValue(@NonNull final Entry entry, @NonNull final String value) {
+    public void setValue(@NotNull final Entry entry, @NotNull final String value) {
         entry.set(valueName, value);
     }
 
-    @NonNull
+    @NotNull
     public Entry createEntryWithKeyValue(
-        @NonNull final String key,
-        @NonNull final String value
+        @NotNull final String key,
+        @NotNull final String value
     ) {
         final var allowDuplicate = isAllowsDuplicate();
         if (!allowDuplicate && idSetStore.containsKey(key)) {
@@ -161,8 +161,8 @@ public final class PairFurniture extends Furniture {
         return use(HoardFurniture.class).getHoard().create(properties);
     }
 
-    @NonNull
-    public List<String> getValueListByKey(@NonNull final String key) {
+    @NotNull
+    public List<String> getValueListByKey(@NotNull final String key) {
         final var hoard = use(HoardFurniture.class).getHoard();
         final var idList = getIdSetByKey(key);
         return idList.stream()
@@ -171,7 +171,7 @@ public final class PairFurniture extends Furniture {
             .toList();
     }
 
-    public int countByKey(@NonNull final String key) {
+    public int countByKey(@NotNull final String key) {
         return getIdSetByKey(key).size();
     }
 

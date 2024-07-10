@@ -4,7 +4,7 @@ import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.furniture.hoard.HoardFurniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -13,7 +13,7 @@ import picocli.CommandLine;
 )
 @CommandType(HoardFurniture.COMMAND_TYPE)
 public class CountCommand extends Command {
-    public CountCommand(@NonNull final CommandContext commandContext) {
+    public CountCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

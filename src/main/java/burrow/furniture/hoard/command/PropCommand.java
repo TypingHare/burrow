@@ -6,7 +6,7 @@ import burrow.core.command.CommandType;
 import burrow.core.common.ColorUtility;
 import burrow.core.common.Values;
 import burrow.furniture.hoard.HoardFurniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -21,7 +21,7 @@ public class PropCommand extends Command {
     @CommandLine.Parameters(index = "1", description = "The key to retrieve.")
     private String key;
 
-    public PropCommand(@NonNull final CommandContext commandContext) {
+    public PropCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

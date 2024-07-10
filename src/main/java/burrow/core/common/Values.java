@@ -1,6 +1,6 @@
 package burrow.core.common;
 
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public final class Values {
     public static final String NULL = "null";

@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -39,14 +39,14 @@ public class Hoard extends ChamberModule {
     private Integer maxId = 0;
     private Integer size = 0;
 
-    public Hoard(@NonNull final Chamber chamber) {
+    public Hoard(@NotNull final Chamber chamber) {
         super(chamber);
 
         final var rootPath = ChamberContext.Hook.rootPath.getNonNull(getChamberContext());
         hoardFilePath = rootPath.resolve(HOARD_FILE_NAME);
     }
 
-    @NonNull
+    @NotNull
     public Path getHoardFilePath() {
         return hoardFilePath;
     }
@@ -55,42 +55,42 @@ public class Hoard extends ChamberModule {
         return size;
     }
 
-    @NonNull
+    @NotNull
     public CreateEntryChain getCreateEntryChain() {
         return createEntryChain;
     }
 
-    @NonNull
+    @NotNull
     public RegisterEntryChain getRegisterEntryChain() {
         return registerEntryChain;
     }
 
-    @NonNull
+    @NotNull
     public DeleteEntryChain getDeleteEntryChain() {
         return deleteEntryChain;
     }
 
-    @NonNull
+    @NotNull
     public SetEntryChain getSetEntryChain() {
         return setEntryChain;
     }
 
-    @NonNull
+    @NotNull
     public UnsetEntryChain getUnsetEntryChain() {
         return unsetEntryChain;
     }
 
-    @NonNull
+    @NotNull
     public ToEntryObjectChain getToEntryObjectChain() {
         return toEntryObjectChain;
     }
 
-    @NonNull
+    @NotNull
     public ToFormattedObjectChain getToFormattedObjectChain() {
         return toFormattedObjectChain;
     }
 
-    @NonNull
+    @NotNull
     public FormattedObjectToStringChain getFormattedObjectToStringChain() {
         return formattedObjectToStringChain;
     }
@@ -103,13 +103,13 @@ public class Hoard extends ChamberModule {
      * Returns a list of all entries in the hoard.
      * @return a list of all entries in the hoard.
      */
-    @NonNull
+    @NotNull
     public List<Entry> getEntryList() {
         return entryStore.stream().filter(Objects::nonNull).toList();
     }
 
-    @NonNull
-    public Map<String, String> getEntryObject(@NonNull final Entry entry) {
+    @NotNull
+    public Map<String, String> getEntryObject(@NotNull final Entry entry) {
         final var entryObject = new HashMap<>(entry.getProperties());
         entryObject.put(KEY_ID, String.valueOf(entry.getId()));
         toEntryObjectChain.apply(entry, entryObject);
@@ -117,7 +117,7 @@ public class Hoard extends ChamberModule {
         return entryObject;
     }
 
-    public void loadFromFile(@NonNull final Path hoardFilePath) {
+    public void loadFromFile(@NotNull final Path hoardFilePath) {
         if (!hoardFilePath.toFile().exists()) {
             // Create a database file and write "[]"
             try {
@@ -151,7 +151,7 @@ public class Hoard extends ChamberModule {
     /**
      * Save all entries to a hoard file.
      */
-    public void saveToFile(@NonNull final Path hoardFilePath) {
+    public void saveToFile(@NotNull final Path hoardFilePath) {
         final var objectList = getEntryList().stream()
             .filter(Objects::nonNull)
             .map(this::getEntryObject).toList();
@@ -165,8 +165,8 @@ public class Hoard extends ChamberModule {
         }
     }
 
-    @NonNull
-    public Entry create(@NonNull final Map<String, String> properties) {
+    @NotNull
+    public Entry create(@NotNull final Map<String, String> properties) {
         final int id = ++maxId;
         final var entry = new Entry(id);
         properties.forEach(entry::set);
@@ -181,7 +181,7 @@ public class Hoard extends ChamberModule {
         return entry;
     }
 
-    public void register(@NonNull final Map<String, String> entryObject) {
+    public void register(@NotNull final Map<String, String> entryObject) {
         final var id = Integer.parseInt(entryObject.get(KEY_ID));
         try {
             get(id);
@@ -203,7 +203,7 @@ public class Hoard extends ChamberModule {
         ++size;
     }
 
-    @NonNull
+    @NotNull
     public Entry get(final int id) throws EntryNotFoundException {
         try {
             final var entry = entryStore.get(id);
@@ -217,7 +217,7 @@ public class Hoard extends ChamberModule {
         }
     }
 
-    @NonNull
+    @NotNull
     public Entry delete(final int id) throws EntryNotFoundException {
         final var entry = get(id);
         deleteEntryChain.apply(entry);
@@ -230,8 +230,8 @@ public class Hoard extends ChamberModule {
         return entry;
     }
 
-    @NonNull
-    public Entry setProperties(final int id, @NonNull final Map<String, String> properties)
+    @NotNull
+    public Entry setProperties(final int id, @NotNull final Map<String, String> properties)
         throws EntryNotFoundException {
         final var entry = get(id);
         entry.getProperties().putAll(properties);
@@ -241,8 +241,8 @@ public class Hoard extends ChamberModule {
         return entry;
     }
 
-    @NonNull
-    public Entry unsetProperties(final int id, @NonNull final Collection<String> keys)
+    @NotNull
+    public Entry unsetProperties(final int id, @NotNull final Collection<String> keys)
         throws EntryNotFoundException {
         final var entry = get(id);
         final var properties = entry.getProperties();
@@ -254,11 +254,11 @@ public class Hoard extends ChamberModule {
         return entry;
     }
 
-    @NonNull
+    @NotNull
     public String format(
         final int id,
-        @NonNull final Map<String, String> formattedObject,
-        @NonNull final Environment environment
+        @NotNull final Map<String, String> formattedObject,
+        @NotNull final Environment environment
     ) {
         final var context =
             formattedObjectToStringChain.apply(id, formattedObject, environment);
@@ -266,10 +266,10 @@ public class Hoard extends ChamberModule {
         return Optional.ofNullable(context.getResult()).orElse("");
     }
 
-    @NonNull
+    @NotNull
     public String entryToString(
-        @NonNull final Entry entry,
-        @NonNull final Environment environment
+        @NotNull final Entry entry,
+        @NotNull final Environment environment
     ) {
         final var context = toFormattedObjectChain.apply(entry);
         final var formattedObject = context.getFormattedObject();

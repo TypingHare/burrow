@@ -7,8 +7,8 @@ import burrow.core.common.CommandUtility;
 import burrow.core.common.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import picocli.CommandLine;
 
 import java.time.Duration;
@@ -29,34 +29,34 @@ public final class ChamberShepherd {
     private final TerminateChamberChain terminateChamberChain = new TerminateChamberChain();
     private final ProcessCommandChain processCommandChain = new ProcessCommandChain();
 
-    public ChamberShepherd(@NonNull final Burrow burrow) {
+    public ChamberShepherd(@NotNull final Burrow burrow) {
         this.burrow = burrow;
 
         processCommandChain.use(this::prepareCommand);
         processCommandChain.use(this::executeCommand);
     }
 
-    @NonNull
+    @NotNull
     public Burrow getBurrow() {
         return burrow;
     }
 
-    @NonNull
+    @NotNull
     public Map<String, Chamber> getChamberStore() {
         return chamberStore;
     }
 
-    @NonNull
+    @NotNull
     public CreateChamberChain getCreateChamberChain() {
         return createChamberChain;
     }
 
-    @NonNull
+    @NotNull
     public TerminateChamberChain getTerminateChamberChain() {
         return terminateChamberChain;
     }
 
-    @NonNull
+    @NotNull
     public ProcessCommandChain getProcessCommandChain() {
         return processCommandChain;
     }
@@ -65,8 +65,8 @@ public final class ChamberShepherd {
         start(ROOT_CHAMBER_NAME);
     }
 
-    @NonNull
-    public void start(@NonNull final String chamberName) throws
+    @NotNull
+    public void start(@NotNull final String chamberName) throws
         ChamberInitializationException {
         final var start = Instant.now();
         final var chamber = new Chamber(this, chamberName);
@@ -85,12 +85,12 @@ public final class ChamberShepherd {
         logger.info("Started chamber <{}> in {} ms", chamberName, duration.toMillis());
     }
 
-    public boolean isChamberRunning(@NonNull final String chamberName) {
+    public boolean isChamberRunning(@NotNull final String chamberName) {
         return chamberStore.containsKey(chamberName);
     }
 
-    @NonNull
-    public Chamber getOrStartChamber(@NonNull final String chamberName) throws
+    @NotNull
+    public Chamber getOrStartChamber(@NotNull final String chamberName) throws
         ChamberInitializationException {
         if (!isChamberRunning(chamberName)) {
             start(chamberName);
@@ -99,7 +99,7 @@ public final class ChamberShepherd {
         return Objects.requireNonNull(chamberStore.get(chamberName));
     }
 
-    public void terminate(@NonNull final String chamberName) {
+    public void terminate(@NotNull final String chamberName) {
         final var chamber = chamberStore.get(chamberName);
         final var context = chamberLifeCycleContextStore.get(chamberName);
 
@@ -120,10 +120,10 @@ public final class ChamberShepherd {
         chamberStore.values().forEach(Chamber::terminate);
     }
 
-    @NonNull
+    @NotNull
     public CommandContext process(
-        @NonNull final String command,
-        @NonNull final Environment environment
+        @NotNull final String command,
+        @NotNull final Environment environment
     ) {
         final var args = CommandUtility.splitArguments(command);
         final var hasChamber = !args.isEmpty() && !args.getFirst().startsWith("-");
@@ -148,7 +148,7 @@ public final class ChamberShepherd {
     }
 
     public void prepareCommand(
-        @NonNull final CommandContext context,
+        @NotNull final CommandContext context,
         @Nullable final Runnable next
     ) {
         final var args = context.getCommandArgs();
@@ -165,7 +165,7 @@ public final class ChamberShepherd {
     }
 
     public void executeCommand(
-        @NonNull final CommandContext context,
+        @NotNull final CommandContext context,
         @Nullable final Runnable next
     ) {
         Chain.runIfNotNull(next);

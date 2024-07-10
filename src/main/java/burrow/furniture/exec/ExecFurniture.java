@@ -5,7 +5,7 @@ import burrow.core.command.CommandContext;
 import burrow.core.config.Config;
 import burrow.core.furniture.BurrowFurniture;
 import burrow.core.furniture.Furniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,7 +21,7 @@ import java.util.List;
 public class ExecFurniture extends Furniture {
     public static final String COMMAND_TYPE = "Exec";
 
-    public ExecFurniture(@NonNull final Chamber chamber) {
+    public ExecFurniture(@NotNull final Chamber chamber) {
         super(chamber);
     }
 
@@ -36,13 +36,13 @@ public class ExecFurniture extends Furniture {
     }
 
     @Override
-    public void initializeConfig(@NonNull final Config config) {
+    public void initializeConfig(@NotNull final Config config) {
         config.setIfAbsent(ConfigKey.EXEC_SHELL, "bash");
     }
 
     public void execute(
-        @NonNull final CommandContext commandContext,
-        @NonNull final String command
+        @NotNull final CommandContext commandContext,
+        @NotNull final String command
     ) throws IOException, InterruptedException {
         final var shell = getConfig().get(ConfigKey.EXEC_SHELL);
         final var processBuilder = new ProcessBuilder(shell, "-c", '"' + command + '"');

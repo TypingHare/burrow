@@ -10,8 +10,8 @@ import burrow.core.furniture.Furniture;
 import burrow.furniture.hoard.chain.FormattedObjectToStringContext;
 import burrow.furniture.hoard.chain.ToFormattedObjectContext;
 import burrow.furniture.hoard.command.*;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -24,12 +24,12 @@ public class HoardFurniture extends Furniture {
 
     private final Hoard hoard = new Hoard(chamber);
 
-    public HoardFurniture(@NonNull final Chamber chamber) {
+    public HoardFurniture(@NotNull final Chamber chamber) {
         super(chamber);
     }
 
     public static void toFormattedObject(
-        @NonNull final ToFormattedObjectContext context,
+        @NotNull final ToFormattedObjectContext context,
         @Nullable final Runnable next
     ) {
         final var entry = ToFormattedObjectContext.Hook.entry.getNonNull(context);
@@ -41,7 +41,7 @@ public class HoardFurniture extends Furniture {
     }
 
     public static void formattedObjectToString(
-        @NonNull final FormattedObjectToStringContext context,
+        @NotNull final FormattedObjectToStringContext context,
         @Nullable final Runnable next
     ) {
         final var id = FormattedObjectToStringContext.Hook.id.get(context);
@@ -106,7 +106,7 @@ public class HoardFurniture extends Furniture {
         hoard.getFormattedObjectToStringChain().use(HoardFurniture::formattedObjectToString);
     }
 
-    @NonNull
+    @NotNull
     public Hoard getHoard() {
         return hoard;
     }
@@ -122,8 +122,8 @@ public class HoardFurniture extends Furniture {
     }
 
     public void changePropertyName(
-        @NonNull final String originalPropertyName,
-        @NonNull final String newPropertyName
+        @NotNull final String originalPropertyName,
+        @NotNull final String newPropertyName
     ) {
         hoard.getEntryList().forEach(entry -> {
             final var value = entry.getOrDefault(originalPropertyName, null);
@@ -136,10 +136,10 @@ public class HoardFurniture extends Furniture {
         });
     }
 
-    @NonNull
+    @NotNull
     public String entryToString(
-        @NonNull final Entry entry,
-        @NonNull final CommandContext commandContext
+        @NotNull final Entry entry,
+        @NotNull final CommandContext commandContext
     ) {
         final var environment = CommandContext.Hook.environment.getNonNull(commandContext);
         return getHoard().entryToString(entry, environment);

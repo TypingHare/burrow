@@ -4,7 +4,7 @@ import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import com.google.common.io.Files;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.nio.file.Path;
@@ -16,12 +16,12 @@ import java.util.ArrayList;
 )
 @CommandType(ModCoreFurniture.COMMAND_TYPE)
 public final class ModListCommand extends Command {
-    public ModListCommand(@NonNull final CommandContext commandContext) {
+    public ModListCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 
-    @NonNull
-    public static String getModPathLine(@NonNull final Path modPath) {
+    @NotNull
+    public static String getModPathLine(@NotNull final Path modPath) {
         final var modName = Files.getNameWithoutExtension(modPath.getFileName().toString());
         return String.format("%s (%s)", modName, modPath);
     }

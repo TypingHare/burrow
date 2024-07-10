@@ -4,7 +4,7 @@ import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.furniture.hoard.HoardFurniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -26,7 +26,7 @@ public class UpdatePropCommand extends Command {
     )
     private String newProp;
 
-    public UpdatePropCommand(@NonNull final CommandContext commandContext) {
+    public UpdatePropCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

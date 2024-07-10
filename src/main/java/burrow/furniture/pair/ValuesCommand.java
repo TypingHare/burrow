@@ -4,7 +4,7 @@ import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.furniture.standard.StandardFurniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "values", description = "Retrieve values of a specified key.")
@@ -13,7 +13,7 @@ public class ValuesCommand extends Command {
     @CommandLine.Parameters(index = "0", description = "The key of the entry.")
     private String key;
 
-    public ValuesCommand(@NonNull final CommandContext commandContext) {
+    public ValuesCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

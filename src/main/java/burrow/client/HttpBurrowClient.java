@@ -7,7 +7,7 @@ import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.nio.charset.StandardCharsets;
@@ -19,7 +19,7 @@ public final class HttpBurrowClient extends BurrowClient {
 
     @SuppressWarnings("UastIncorrectHttpHeaderInspection")
     @Override
-    protected BurrowResponse sendRequest(@NonNull final String command) {
+    protected BurrowResponse sendRequest(@NotNull final String command) {
         try (final var httpClient = HttpClients.createDefault()) {
             final HttpClientResponseHandler<String> responseHandler =
                 response -> new String(response.getEntity().getContent().readAllBytes());

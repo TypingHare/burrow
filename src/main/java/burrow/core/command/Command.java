@@ -4,7 +4,7 @@ import burrow.core.chamber.ChamberModule;
 import burrow.core.common.ErrorUtility;
 import burrow.core.furniture.Furniture;
 import burrow.core.furniture.exception.FurnitureNotFoundException;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.util.Collection;
@@ -29,15 +29,15 @@ public abstract class Command extends ChamberModule implements Callable<Integer>
      * context.
      * @param commandContext the RequestContext in which this command operates
      */
-    public Command(@NonNull final CommandContext commandContext) {
+    public Command(@NotNull final CommandContext commandContext) {
         super(commandContext.getChamberContext().getChamber());
         this.commandContext = commandContext;
         this.buffer = commandContext.getBuffer();
     }
 
-    @NonNull
+    @NotNull
     public static CommandLine.Command getCommandAnnotation(
-        @NonNull final Class<? extends Command> commandClass) {
+        @NotNull final Class<? extends Command> commandClass) {
         final var commandAnnotation = commandClass.getAnnotation(CommandLine.Command.class);
         if (commandAnnotation == null) {
             throw new InvalidCommandClassException(commandClass.getName());
@@ -46,24 +46,24 @@ public abstract class Command extends ChamberModule implements Callable<Integer>
         return commandAnnotation;
     }
 
-    @NonNull
-    public static String getName(@NonNull final Class<? extends Command> commandClass) {
+    @NotNull
+    public static String getName(@NotNull final Class<? extends Command> commandClass) {
         return getCommandAnnotation(commandClass).name();
     }
 
-    @NonNull
-    public static String[] getDescription(@NonNull final Class<? extends Command> commandClass) {
+    @NotNull
+    public static String[] getDescription(@NotNull final Class<? extends Command> commandClass) {
         return getCommandAnnotation(commandClass).description();
     }
 
-    @NonNull
-    public static String getType(@NonNull final Class<? extends Command> commandClass) {
+    @NotNull
+    public static String getType(@NotNull final Class<? extends Command> commandClass) {
         final var commandType = commandClass.getAnnotation(CommandType.class);
         return commandType == null ? CommandType.OTHER : commandType.value();
     }
 
-    @NonNull
-    public <T extends Furniture> T use(@NonNull final Class<T> furnitureClass) {
+    @NotNull
+    public <T extends Furniture> T use(@NotNull final Class<T> furnitureClass) {
         final T furniture = getRenovator().getFurniture(furnitureClass.getName());
         if (furniture == null) {
             throw new FurnitureNotFoundException(furnitureClass.getName());
@@ -113,20 +113,20 @@ public abstract class Command extends ChamberModule implements Callable<Integer>
      * Appends a collection of lines to the buffer, joining them with newline characters.
      * @param lines the lines to append to the buffer
      */
-    public void bufferAppendLines(@NonNull final Collection<String> lines) {
+    public void bufferAppendLines(@NotNull final Collection<String> lines) {
         if (!lines.isEmpty()) {
             buffer.append(String.join("\n", lines));
         }
     }
 
-    public void bufferAppendThrowable(@NonNull final Throwable throwable) {
+    public void bufferAppendThrowable(@NotNull final Throwable throwable) {
         bufferAppendLines(ErrorUtility.getCauseStack(throwable));
     }
 
-    @NonNull
+    @NotNull
     public Integer dispatch(
-        @NonNull final Class<? extends Command> commandClass,
-        @NonNull final List<String> commandArgs
+        @NotNull final Class<? extends Command> commandClass,
+        @NotNull final List<String> commandArgs
     ) {
         final String commandName = getName(commandClass);
         commandContext.setCommandName(commandName);

@@ -4,63 +4,63 @@ import burrow.chain.Context;
 import burrow.chain.ContextHook;
 import burrow.core.chamber.ChamberContext;
 import burrow.core.common.Environment;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public final class CommandContext extends Context {
-    @NonNull
+    @NotNull
     public ChamberContext getChamberContext() {
         return Hook.chamberContext.getNonNull(this);
     }
 
-    public void setChamberContext(@NonNull final ChamberContext chamberContext) {
+    public void setChamberContext(@NotNull final ChamberContext chamberContext) {
         Hook.chamberContext.set(this, chamberContext);
     }
 
-    @NonNull
+    @NotNull
     public String getCommandName() {
         return Hook.commandName.getNonNull(this);
     }
 
-    public void setCommandName(@NonNull final String commandName) {
+    public void setCommandName(@NotNull final String commandName) {
         Hook.commandName.set(this, commandName);
     }
 
-    @NonNull
+    @NotNull
     public List<String> getCommandArgs() {
         return Hook.commandArgs.getNonNull(this);
     }
 
-    public void setCommandArgs(@NonNull final List<String> commandArgs) {
+    public void setCommandArgs(@NotNull final List<String> commandArgs) {
         Hook.commandArgs.set(this, commandArgs);
     }
 
-    @NonNull
+    @NotNull
     public Environment getEnvironment() {
         return Hook.environment.getNonNull(this);
     }
 
-    public void setEnvironment(@NonNull final Environment environment) {
+    public void setEnvironment(@NotNull final Environment environment) {
         Hook.environment.set(this, environment);
     }
 
-    @NonNull
+    @NotNull
     public Integer getExitCode() {
         return Hook.exitCode.getNonNull(this);
     }
 
-    public void setExitCode(@NonNull final Integer exitCode) {
+    public void setExitCode(@NotNull final Integer exitCode) {
         Hook.exitCode.set(this, exitCode);
     }
 
-    @NonNull
+    @NotNull
     public StringBuilder getBuffer() {
         return Hook.buffer.getNonNull(this);
     }
 
-    public void setBuffer(@NonNull final StringBuilder buffer) {
+    public void setBuffer(@NotNull final StringBuilder buffer) {
         Hook.buffer.set(this, buffer);
     }
 
@@ -69,7 +69,7 @@ public final class CommandContext extends Context {
         return Hook.immediateCommand.get(this);
     }
 
-    public void setImmediateCommand(@NonNull final String immediateCommand) {
+    public void setImmediateCommand(@NotNull final String immediateCommand) {
         Hook.immediateCommand.set(this, immediateCommand);
     }
 

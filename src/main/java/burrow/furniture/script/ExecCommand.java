@@ -6,7 +6,7 @@ import burrow.core.command.CommandType;
 import burrow.core.common.ColorUtility;
 import burrow.furniture.exec.ExecFurniture;
 import burrow.furniture.pair.PairFurniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class ExecCommand extends Command {
     )
     private String label;
 
-    public ExecCommand(@NonNull final CommandContext commandContext) {
+    public ExecCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

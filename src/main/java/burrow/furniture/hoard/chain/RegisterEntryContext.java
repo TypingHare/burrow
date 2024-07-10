@@ -3,26 +3,26 @@ package burrow.furniture.hoard.chain;
 import burrow.chain.Context;
 import burrow.chain.ContextHook;
 import burrow.furniture.hoard.Entry;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 public class RegisterEntryContext extends Context {
-    @NonNull
+    @NotNull
     public Entry getEntry() {
         return Hook.entry.getNonNull(this);
     }
 
-    public void setEntry(@NonNull final Entry entry) {
+    public void setEntry(@NotNull final Entry entry) {
         Hook.entry.set(this, entry);
     }
 
-    @NonNull
+    @NotNull
     public Map<String, String> getEntryObject() {
         return Hook.entryObject.getNonNull(this);
     }
 
-    public void setEntryObject(@NonNull final Map<String, String> entryObject) {
+    public void setEntryObject(@NotNull final Map<String, String> entryObject) {
         Hook.entryObject.set(this, entryObject);
     }
 

@@ -5,62 +5,62 @@ import burrow.chain.ContextHook;
 import burrow.core.command.Processor;
 import burrow.core.config.Config;
 import burrow.core.furniture.Renovator;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 
 public final class ChamberContext extends Context {
-    @NonNull
+    @NotNull
     public Chamber getChamber() {
         return Hook.chamber.getNonNull(this);
     }
 
-    public void setChamber(@NonNull final Chamber chamber) {
+    public void setChamber(@NotNull final Chamber chamber) {
         Hook.chamber.set(this, chamber);
     }
 
-    @NonNull
+    @NotNull
     public Path getRootPath() {
         return Hook.rootPath.getNonNull(this);
     }
 
-    public void setRootPath(@NonNull final Path rootPath) {
+    public void setRootPath(@NotNull final Path rootPath) {
         Hook.rootPath.set(this, rootPath);
     }
 
-    @NonNull
+    @NotNull
     public Path getConfigPath() {
         return Hook.configPath.getNonNull(this);
     }
 
-    public void setConfigPath(@NonNull final Path configPath) {
+    public void setConfigPath(@NotNull final Path configPath) {
         Hook.configPath.set(this, configPath);
     }
 
-    @NonNull
+    @NotNull
     public Config getConfig() {
         return Hook.config.getNonNull(this);
     }
 
-    public void setConfig(@NonNull final Config config) {
+    public void setConfig(@NotNull final Config config) {
         Hook.config.set(this, config);
     }
 
-    @NonNull
+    @NotNull
     public Renovator getRenovator() {
         return Hook.renovator.getNonNull(this);
     }
 
-    public void setRenovator(@NonNull final Renovator renovator) {
+    public void setRenovator(@NotNull final Renovator renovator) {
         Hook.renovator.set(this, renovator);
     }
 
-    @NonNull
+    @NotNull
     public Processor getProcessor() {
         return Hook.processor.getNonNull(this);
     }
 
-    public void setProcessor(@NonNull final Processor processor) {
+    public void setProcessor(@NotNull final Processor processor) {
         Hook.processor.set(this, processor);
     }
 

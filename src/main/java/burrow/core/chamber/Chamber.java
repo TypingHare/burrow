@@ -5,7 +5,7 @@ import burrow.core.command.ExecuteCommandChain;
 import burrow.core.command.Processor;
 import burrow.core.config.Config;
 import burrow.core.furniture.Renovator;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public final class Chamber {
     private final ChamberShepherd chamberShepherd;
@@ -14,8 +14,8 @@ public final class Chamber {
     private final ExecuteCommandChain executeCommandChain;
 
     public Chamber(
-        @NonNull final ChamberShepherd chamberShepherd,
-        @NonNull final String name
+        @NotNull final ChamberShepherd chamberShepherd,
+        @NotNull final String name
     ) {
         this.chamberShepherd = chamberShepherd;
         this.name = name;
@@ -23,22 +23,22 @@ public final class Chamber {
         this.executeCommandChain = new ExecuteCommandChain();
     }
 
-    @NonNull
+    @NotNull
     public ChamberShepherd getChamberShepherd() {
         return chamberShepherd;
     }
 
-    @NonNull
+    @NotNull
     public String getName() {
         return name;
     }
 
-    @NonNull
+    @NotNull
     public ChamberContext getChamberContext() {
         return chamberContext;
     }
 
-    @NonNull
+    @NotNull
     public ExecuteCommandChain getExecuteCommandChain() {
         return executeCommandChain;
     }

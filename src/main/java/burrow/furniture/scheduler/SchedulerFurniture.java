@@ -7,7 +7,7 @@ import burrow.core.furniture.BurrowFurniture;
 import burrow.core.furniture.Furniture;
 import burrow.furniture.aspectcore.AspectCoreFurniture;
 import burrow.furniture.dictator.DictatorFurniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,7 +27,7 @@ public class SchedulerFurniture extends Furniture {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     public Long thresholdMs = DEFAULT_THRESHOLD_MS;
 
-    public SchedulerFurniture(@NonNull final Chamber chamber) {
+    public SchedulerFurniture(@NotNull final Chamber chamber) {
         super(chamber);
     }
 
@@ -37,7 +37,7 @@ public class SchedulerFurniture extends Furniture {
     }
 
     @Override
-    public void initializeConfig(@NonNull final Config config) {
+    public void initializeConfig(@NotNull final Config config) {
         config.setIfAbsent(ConfigKey.SCHEDULE_INTERVAL_MS, DEFAULT_INTERVAL_MS);
         config.setIfAbsent(ConfigKey.SCHEDULE_THRESHOLD_MS, DEFAULT_THRESHOLD_MS);
     }

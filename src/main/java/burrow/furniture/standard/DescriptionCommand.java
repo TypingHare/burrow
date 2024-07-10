@@ -4,7 +4,7 @@ import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.core.common.ColorUtility;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -21,7 +21,7 @@ public class DescriptionCommand extends Command {
     )
     private String newDescription;
 
-    public DescriptionCommand(@NonNull final CommandContext commandContext) {
+    public DescriptionCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

@@ -9,7 +9,7 @@ import burrow.core.furniture.Furniture;
 import burrow.core.furniture.Renovator;
 import burrow.furniture.aspectcore.AspectCoreFurniture;
 import burrow.furniture.standard.StandardFurniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -32,11 +32,11 @@ public class DictatorFurniture extends Furniture {
     );
     private final Map<String, ChamberInfo> chamberInfoMap = new HashMap<>();
 
-    public DictatorFurniture(@NonNull final Chamber chamber) {
+    public DictatorFurniture(@NotNull final Chamber chamber) {
         super(chamber);
     }
 
-    @NonNull
+    @NotNull
     public static DirectoryStream<Path> getChamberDirectoryStream() throws IOException {
         return Files.newDirectoryStream(Burrow.CHAMBERS_ROOT_DIR, Files::isDirectory);
     }
@@ -50,7 +50,7 @@ public class DictatorFurniture extends Furniture {
         registerCommand(ChamberInfoCommand.class);
     }
 
-    @NonNull
+    @NotNull
     public Map<String, ChamberInfo> getChamberInfoMap() {
         return chamberInfoMap;
     }
@@ -84,14 +84,14 @@ public class DictatorFurniture extends Furniture {
     }
 
     @Override
-    public void initializeConfig(@NonNull final Config config) {
+    public void initializeConfig(@NotNull final Config config) {
         config.setIfAbsent(
             ConfigKey.DICTATOR_DEFAULT_FURNITURE_LIST,
             String.join(Renovator.FURNITURE_NAME_SEPARATOR, DEFAULT_FURNITURE_LIST)
         );
     }
 
-    @NonNull
+    @NotNull
     public List<String> getAvailableChamberList() throws IOException {
         final List<String> chamberNameList = new ArrayList<>();
         final var chamberRootDirString = Burrow.CHAMBERS_ROOT_DIR.toString();
@@ -105,12 +105,12 @@ public class DictatorFurniture extends Furniture {
         return chamberNameList;
     }
 
-    public void start(@NonNull final String chamberName) throws ChamberInitializationException {
+    public void start(@NotNull final String chamberName) throws ChamberInitializationException {
         final var aspectCoreFurniture = use(AspectCoreFurniture.class);
         aspectCoreFurniture.getChamberShepherd().getOrStartChamber(chamberName);
     }
 
-    public void terminate(@NonNull final String chamberName) {
+    public void terminate(@NotNull final String chamberName) {
         final var aspectCoreFurniture = use(AspectCoreFurniture.class);
         aspectCoreFurniture.getChamberShepherd().terminate(chamberName);
     }

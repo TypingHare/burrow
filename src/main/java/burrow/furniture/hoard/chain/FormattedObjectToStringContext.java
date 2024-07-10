@@ -3,36 +3,36 @@ package burrow.furniture.hoard.chain;
 import burrow.chain.Context;
 import burrow.chain.ContextHook;
 import burrow.core.common.Environment;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
 public class FormattedObjectToStringContext extends Context {
-    @NonNull
+    @NotNull
     public Integer getId() {
         return Hook.id.getNonNull(this);
     }
 
-    public void setId(@NonNull final Integer id) {
+    public void setId(@NotNull final Integer id) {
         Hook.id.set(this, id);
     }
 
-    @NonNull
+    @NotNull
     public Map<String, String> getFormattedObject() {
         return Hook.formattedObject.getNonNull(this);
     }
 
-    public void setFormattedObject(@NonNull final Map<String, String> formattedObject) {
+    public void setFormattedObject(@NotNull final Map<String, String> formattedObject) {
         Hook.formattedObject.set(this, formattedObject);
     }
 
-    @NonNull
+    @NotNull
     public Environment getEnvironment() {
         return Hook.environment.getNonNull(this);
     }
 
-    public void setEnvironment(@NonNull final Environment environment) {
+    public void setEnvironment(@NotNull final Environment environment) {
         Hook.environment.set(this, environment);
     }
 
@@ -41,7 +41,7 @@ public class FormattedObjectToStringContext extends Context {
         return Hook.result.get(this);
     }
 
-    public void setResult(@NonNull final String result) {
+    public void setResult(@NotNull final String result) {
         Hook.result.set(this, result);
     }
 

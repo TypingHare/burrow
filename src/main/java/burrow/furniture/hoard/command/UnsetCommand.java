@@ -5,7 +5,7 @@ import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.furniture.hoard.Hoard;
 import burrow.furniture.hoard.HoardFurniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class UnsetCommand extends Command {
     @CommandLine.Parameters(index = "1", description = "The key to unset.")
     private String key;
 
-    public UnsetCommand(@NonNull final CommandContext commandContext) {
+    public UnsetCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

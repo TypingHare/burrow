@@ -1,11 +1,11 @@
 package burrow.furniture.hoard.exception;
 
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.FileNotFoundException;
 
 public final class HoardFileNotFoundException extends FileNotFoundException {
-    public HoardFileNotFoundException(@NonNull final String hoardFilePath) {
+    public HoardFileNotFoundException(@NotNull final String hoardFilePath) {
         super("Hoard file not found: " + hoardFilePath);
     }
 }

@@ -4,13 +4,13 @@ import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.furniture.standard.StandardFurniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "keys", description = "Display all keys.")
 @CommandType(PairFurniture.COMMAND_TYPE)
 public class KeysCommand extends Command {
-    public KeysCommand(@NonNull final CommandContext commandContext) {
+    public KeysCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

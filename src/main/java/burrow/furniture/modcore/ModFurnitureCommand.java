@@ -4,7 +4,7 @@ import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.core.furniture.Furniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 )
 @CommandType(ModCoreFurniture.COMMAND_TYPE)
 public final class ModFurnitureCommand extends Command {
-    public ModFurnitureCommand(@NonNull final CommandContext commandContext) {
+    public ModFurnitureCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

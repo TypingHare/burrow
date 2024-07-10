@@ -5,8 +5,8 @@ import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.beans.JavaBean;
 import java.net.URL;
@@ -22,7 +22,7 @@ public final class FurnitureRegistrar {
     }
 
     public static void checkFurnitureClass(
-        @NonNull final Class<? extends Furniture> furnitureClass) throws
+        @NotNull final Class<? extends Furniture> furnitureClass) throws
         InvalidFurnitureClassException {
         final var annotation = furnitureClass.getAnnotation(BurrowFurniture.class);
         if (annotation == null) {
@@ -31,18 +31,18 @@ public final class FurnitureRegistrar {
         }
     }
 
-    @NonNull
+    @NotNull
     public Map<ClassLoader, Info> getClassLoaderInfoMap() {
         return classLoaderInfoMap;
     }
 
-    @NonNull
+    @NotNull
     public Set<Class<? extends Furniture>> getFurnitureClassSet() {
         return furnitureClassSet;
     }
 
     @Nullable
-    public Class<? extends Furniture> getByName(@NonNull final String name) {
+    public Class<? extends Furniture> getByName(@NotNull final String name) {
         for (final var furnitureClass : furnitureClassSet) {
             if (furnitureClass.getName().equals(name)) {
                 return furnitureClass;
@@ -52,10 +52,10 @@ public final class FurnitureRegistrar {
         return null;
     }
 
-    @NonNull
+    @NotNull
     public Info scanPackage(
-        @NonNull ClassLoader classLoader,
-        @NonNull final Collection<String> packageNames
+        @NotNull ClassLoader classLoader,
+        @NotNull final Collection<String> packageNames
     ) throws InvalidFurnitureClassException {
         final var filterBuilder = new FilterBuilder();
         for (final var packageName : packageNames) {

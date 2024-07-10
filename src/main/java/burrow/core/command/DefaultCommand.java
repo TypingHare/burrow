@@ -1,7 +1,7 @@
 package burrow.core.command;
 
 import burrow.core.config.Config;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public final class DefaultCommand extends Command {
     )
     private boolean help;
 
-    public DefaultCommand(@NonNull final CommandContext commandContext) {
+    public DefaultCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

@@ -7,7 +7,7 @@ import burrow.core.furniture.Furniture;
 import burrow.furniture.exec.ExecFurniture;
 import burrow.furniture.hoard.Entry;
 import burrow.furniture.pair.PairFurniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 @BurrowFurniture(
     simpleName = "Script",
@@ -18,7 +18,7 @@ import org.springframework.lang.NonNull;
     }
 )
 public class ScriptFurniture extends Furniture {
-    public ScriptFurniture(@NonNull final Chamber chamber) {
+    public ScriptFurniture(@NotNull final Chamber chamber) {
         super(chamber);
     }
 
@@ -29,23 +29,23 @@ public class ScriptFurniture extends Furniture {
     }
 
     @Override
-    public void initializeConfig(@NonNull final Config config) {
+    public void initializeConfig(@NotNull final Config config) {
         config.set(PairFurniture.ConfigKey.PAIR_ALLOW_DUPLICATE, false);
         config.set(PairFurniture.ConfigKey.PAIR_KEY_NAME, EntryKey.LABEL);
         config.set(PairFurniture.ConfigKey.PAIR_VALUE_NAME, EntryKey.COMMAND);
     }
 
-    @NonNull
+    @NotNull
     public Entry createEntry(
-        @NonNull final String label,
-        @NonNull final String command
+        @NotNull final String label,
+        @NotNull final String command
     ) {
         return use(PairFurniture.class).createEntryWithKeyValue(label, command);
     }
 
     public void setWorkingDirectory(
-        @NonNull final Entry entry,
-        @NonNull final String workingDirectory
+        @NotNull final Entry entry,
+        @NotNull final String workingDirectory
     ) {
         entry.set(EntryKey.WORKING_DIRECTORY, workingDirectory);
     }

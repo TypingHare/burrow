@@ -2,15 +2,15 @@ package burrow.furniture.hoard.chain;
 
 import burrow.chain.Chain;
 import burrow.furniture.hoard.Entry;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 public class RegisterEntryChain extends Chain<RegisterEntryContext> {
-    @NonNull
+    @NotNull
     public RegisterEntryContext apply(
-        @NonNull final Entry entry,
-        @NonNull final Map<String, String> entryObject
+        @NotNull final Entry entry,
+        @NotNull final Map<String, String> entryObject
     ) {
         final var context = new RegisterEntryContext();
         context.setEntry(entry);

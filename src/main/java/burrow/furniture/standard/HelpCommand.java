@@ -4,7 +4,7 @@ import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import com.google.gson.Gson;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.beans.JavaBean;
@@ -29,7 +29,7 @@ public class HelpCommand extends Command {
     )
     private Boolean useJson;
 
-    public HelpCommand(@NonNull final CommandContext context) {
+    public HelpCommand(@NotNull final CommandContext context) {
         super(context);
     }
 
@@ -61,8 +61,8 @@ public class HelpCommand extends Command {
         return CommandLine.ExitCode.OK;
     }
 
-    @NonNull
-    public CommandInfo getCommandInfo(@NonNull final String commandName) {
+    @NotNull
+    public CommandInfo getCommandInfo(@NotNull final String commandName) {
         final var commandClass = getProcessor().getCommand(commandName);
         final var commandInfo = new CommandInfo();
 

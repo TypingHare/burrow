@@ -1,7 +1,7 @@
 package burrow.client;
 
 import burrow.core.common.Environment;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.io.Closeable;
@@ -40,12 +40,12 @@ public abstract class BurrowClient implements Closeable {
         return message.width();
     }
 
-    @NonNull
+    @NotNull
     public Duration getLastRequestDuration() {
         return lastRequestDuration;
     }
 
-    @NonNull
+    @NotNull
     public Environment getEnvironment() {
         final var environment = new Environment();
         environment.setWorkingDirectory(System.getProperty("user.dir"));
@@ -54,8 +54,8 @@ public abstract class BurrowClient implements Closeable {
         return environment;
     }
 
-    @NonNull
-    public BurrowResponse sendRequestTiming(@NonNull final String command) {
+    @NotNull
+    public BurrowResponse sendRequestTiming(@NotNull final String command) {
         final var start = Instant.now();
         final var response = sendRequest(command);
         lastRequestDuration = Duration.between(start, Instant.now());
@@ -63,7 +63,7 @@ public abstract class BurrowClient implements Closeable {
         return response;
     }
 
-    protected abstract BurrowResponse sendRequest(@NonNull final String command);
+    protected abstract BurrowResponse sendRequest(@NotNull final String command);
 
     @Override
     public void close() {}

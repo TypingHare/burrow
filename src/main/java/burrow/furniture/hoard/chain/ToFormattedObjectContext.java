@@ -3,26 +3,26 @@ package burrow.furniture.hoard.chain;
 import burrow.chain.Context;
 import burrow.chain.ContextHook;
 import burrow.furniture.hoard.Entry;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 public class ToFormattedObjectContext extends Context {
-    @NonNull
+    @NotNull
     public Entry getEntry() {
         return Hook.entry.getNonNull(this);
     }
 
-    public void setEntry(@NonNull final Entry entry) {
+    public void setEntry(@NotNull final Entry entry) {
         Hook.entry.set(this, entry);
     }
 
-    @NonNull
+    @NotNull
     public Map<String, String> getFormattedObject() {
         return Hook.formattedObject.getNonNull(this);
     }
 
-    public void setFormattedObject(@NonNull final Map<String, String> formattedObject) {
+    public void setFormattedObject(@NotNull final Map<String, String> formattedObject) {
         Hook.formattedObject.set(this, formattedObject);
     }
 

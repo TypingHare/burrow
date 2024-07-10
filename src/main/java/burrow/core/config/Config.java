@@ -5,8 +5,8 @@ import burrow.core.chamber.ChamberContext;
 import burrow.core.chamber.ChamberModule;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -55,9 +55,9 @@ public class Config extends ChamberModule {
         setIfAbsent(Key.CHAMBER_FURNITURE_LIST, "");
     }
 
-    @NonNull
+    @NotNull
     public static Map<String, String> loadFromConfigFile(
-        @NonNull final Path filePath) throws IOException {
+        @NotNull final Path filePath) throws IOException {
         final var content = Files.readString(filePath);
         return new Gson().fromJson(content, new TypeToken<Map<String, String>>() {
         }.getType());
@@ -88,12 +88,12 @@ public class Config extends ChamberModule {
      * the key.
      */
     @Nullable
-    public String get(@NonNull final String key) {
+    public String get(@NotNull final String key) {
         return store.get(key);
     }
 
-    @NonNull
-    public String getNonNull(@NonNull final String key) {
+    @NotNull
+    public String getNonNull(@NotNull final String key) {
         final var value = store.get(key);
         if (value == null) {
             throw new RuntimeException("Missing required config key: " + key);
@@ -110,7 +110,7 @@ public class Config extends ChamberModule {
      * @param value The value to be associated with the specified key.
      * @throws IllegalKeyException If the key is not present in the predefined set of allowed keys.
      */
-    public <T> void set(@NonNull final String key, @NonNull final T value) {
+    public <T> void set(@NotNull final String key, @NotNull final T value) {
         if (!allowedKeySet.contains(key)) {
             throw new IllegalKeyException(key);
         }
@@ -124,7 +124,7 @@ public class Config extends ChamberModule {
         store.put(key, newValue);
     }
 
-    public <T> void setIfAbsent(@NonNull final String key, @NonNull final T value) {
+    public <T> void setIfAbsent(@NotNull final String key, @NotNull final T value) {
         if (!allowedKeySet.contains(key)) {
             throw new IllegalKeyException(key);
         }

@@ -7,10 +7,10 @@ import burrow.core.command.DefaultCommand;
 import burrow.core.config.Config;
 import burrow.core.furniture.BurrowFurniture;
 import burrow.core.furniture.Furniture;
-import burrow.core.furniture.exception.FurnitureNotFoundException;
 import burrow.core.furniture.Renovator;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import burrow.core.furniture.exception.FurnitureNotFoundException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -23,13 +23,13 @@ import java.util.function.Predicate;
 public class StandardFurniture extends Furniture {
     public static final String COMMAND_TYPE = "Standard";
 
-    public StandardFurniture(@NonNull final Chamber chamber) {
+    public StandardFurniture(@NotNull final Chamber chamber) {
         super(chamber);
     }
 
-    @NonNull
+    @NotNull
     public static Map<String, Collection<Class<? extends Command>>> classifyCommandClasses(
-        @NonNull final Collection<Class<? extends Command>> commandClassList
+        @NotNull final Collection<Class<? extends Command>> commandClassList
     ) {
         final var map = new HashMap<String, Collection<Class<? extends Command>>>();
         for (final var commandClass : commandClassList) {
@@ -40,17 +40,17 @@ public class StandardFurniture extends Furniture {
         return map;
     }
 
-    @NonNull
+    @NotNull
     public static Collection<Class<? extends Command>> sortCommandClassList(
-        @NonNull Collection<Class<? extends Command>> commandClassList
+        @NotNull Collection<Class<? extends Command>> commandClassList
     ) {
         return commandClassList.stream().sorted(Comparator.comparing(Command::getName)).toList();
     }
 
-    @NonNull
+    @NotNull
     public static String stringListToString(
-        @NonNull final CommandContext commandContext,
-        @NonNull final List<String> stringList,
+        @NotNull final CommandContext commandContext,
+        @NotNull final List<String> stringList,
         final boolean useMultiLine
     ) {
         if (useMultiLine) {
@@ -69,10 +69,10 @@ public class StandardFurniture extends Furniture {
         }
     }
 
-    @NonNull
+    @NotNull
     public static String stringListToString(
-        @NonNull final CommandContext commandContext,
-        @NonNull final List<String> stringList
+        @NotNull final CommandContext commandContext,
+        @NotNull final List<String> stringList
     ) {
         return stringListToString(commandContext, stringList, false);
     }
@@ -92,28 +92,28 @@ public class StandardFurniture extends Furniture {
         registerCommand(CommandListCommand.class);
     }
 
-    @NonNull
+    @NotNull
     public Path getRootAbsolutePath() {
         return getChamberContext().getRootPath().toAbsolutePath().normalize();
     }
 
-    public void updateConfigItem(@NonNull final String key, @NonNull final String value) {
+    public void updateConfigItem(@NotNull final String key, @NotNull final String value) {
         getConfig().set(key, value);
     }
 
     @Nullable
-    public String retrieveConfigItem(@NonNull final String key) {
+    public String retrieveConfigItem(@NotNull final String key) {
         return getConfig().get(key);
     }
 
-    @NonNull
-    public Collection<String> getConfigKeys(@NonNull final String furnitureName) throws
+    @NotNull
+    public Collection<String> getConfigKeys(@NotNull final String furnitureName) throws
         FurnitureNotFoundException {
         final var configKeys = use(furnitureName).configKeys();
         return Optional.ofNullable(configKeys).orElse(new ArrayList<>());
     }
 
-    @NonNull
+    @NotNull
     public List<String> getConfigFurnitureNameList() {
         final var furnitureListString =
             getConfig().getNonNull(Config.Key.CHAMBER_FURNITURE_LIST);
@@ -128,9 +128,9 @@ public class StandardFurniture extends Furniture {
             .map(Furniture::getClass).toList();
     }
 
-    @NonNull
+    @NotNull
     public Collection<Class<? extends Command>> getCommandClassList(
-        @NonNull final List<String> furnitureNameList
+        @NotNull final List<String> furnitureNameList
     ) throws FurnitureNotFoundException {
         final var list = new ArrayList<Class<? extends Command>>();
         for (final var furnitureName : furnitureNameList) {
@@ -141,7 +141,7 @@ public class StandardFurniture extends Furniture {
         return list;
     }
 
-    @NonNull
+    @NotNull
     public Collection<Class<? extends Command>> getCommandClassList() {
         final var list = new ArrayList<>(getProcessor().getCommandClassStore().values());
         list.remove(DefaultCommand.class);
@@ -149,13 +149,13 @@ public class StandardFurniture extends Furniture {
         return list;
     }
 
-    @NonNull
+    @NotNull
     public String getChamberDescription() {
         return getConfig().getNonNull(Config.Key.CHAMBER_DESCRIPTION);
     }
 
     public void updateChamberDescription(
-        @NonNull final String description
+        @NotNull final String description
     ) {
         getConfig().set(Config.Key.CHAMBER_DESCRIPTION, description);
     }

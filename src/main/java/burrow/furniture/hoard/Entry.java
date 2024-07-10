@@ -2,8 +2,8 @@ package burrow.furniture.hoard;
 
 import burrow.core.common.Values;
 import burrow.furniture.hoard.exception.KeyNotFoundException;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,15 +46,15 @@ public final class Entry {
      * @param key   The key of the property to set.
      * @param value The value to associate with the key.
      */
-    public <T> void set(@NonNull final String key, @NonNull final T value) {
+    public <T> void set(@NotNull final String key, @NotNull final T value) {
         properties.put(key, value.toString());
     }
 
-    public void unset(@NonNull final String key) {
+    public void unset(@NotNull final String key) {
         properties.remove(key);
     }
 
-    public <T> void setIfAbsent(@NonNull final String key, @NonNull final T value) {
+    public <T> void setIfAbsent(@NotNull final String key, @NotNull final T value) {
         properties.putIfAbsent(key, value.toString());
     }
 
@@ -62,36 +62,36 @@ public final class Entry {
      * Retrieves all properties associated with this entry.
      * @return A map containing all key-value pairs of properties associated with this entry.
      */
-    @NonNull
+    @NotNull
     public Map<String, String> getProperties() {
         return properties;
     }
 
     @Nullable
-    public String get(@NonNull final String key) {
+    public String get(@NotNull final String key) {
         return properties.get(key);
     }
 
-    @NonNull
-    public String getNonNull(@NonNull final String key) {
+    @NotNull
+    public String getNonNull(@NotNull final String key) {
         return Optional.ofNullable(properties.get(key))
             .orElseThrow(() -> new KeyNotFoundException(key));
     }
 
     @Nullable
-    public String getOrDefault(@NonNull final String key, final String defaultValue) {
+    public String getOrDefault(@NotNull final String key, final String defaultValue) {
         return Optional.ofNullable(properties.get(key)).orElse(defaultValue);
     }
 
-    public boolean isTrue(@NonNull final String key) {
+    public boolean isTrue(@NotNull final String key) {
         return Values.Bool.isTrue(properties.get(key));
     }
 
-    public boolean isFalse(@NonNull final String key) {
+    public boolean isFalse(@NotNull final String key) {
         return Values.Bool.isFalse(properties.get(key));
     }
 
-    public int getInt(@NonNull final String key, final int defaultValue) {
+    public int getInt(@NotNull final String key, final int defaultValue) {
         final String value = properties.get(key);
         return value == null ? defaultValue : Integer.parseInt(value);
     }

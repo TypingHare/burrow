@@ -1,12 +1,12 @@
 package burrow.core.common;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import picocli.CommandLine;
 
 public final class ColorUtility {
-    @NonNull
-    public static String render(@NonNull final String string, @Nullable final String modifier) {
+    @NotNull
+    public static String render(@NotNull final String string, @Nullable final String modifier) {
         if (modifier == null) {
             return string;
         }
@@ -14,8 +14,8 @@ public final class ColorUtility {
         return CommandLine.Help.Ansi.ON.string("@|" + modifier.trim() + " " + string + "|@");
     }
 
-    @NonNull
-    public static String render(@NonNull final String string, @NonNull final Type type) {
+    @NotNull
+    public static String render(@NotNull final String string, @NotNull final Type type) {
         return render(string, type.getModifier());
     }
 
@@ -49,7 +49,7 @@ public final class ColorUtility {
             this.modifier = modifier;
         }
 
-        @NonNull
+        @NotNull
         public String getModifier() {
             return modifier;
         }

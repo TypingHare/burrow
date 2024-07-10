@@ -6,7 +6,7 @@ import burrow.core.command.CommandType;
 import burrow.core.common.ColorUtility;
 import burrow.core.furniture.exception.AmbiguousSimpleNameException;
 import burrow.core.furniture.exception.FurnitureNotFoundException;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
@@ -53,8 +53,8 @@ public class ConfigListCommand extends Command {
         return CommandLine.ExitCode.OK;
     }
 
-    @NonNull
-    private String getColoredLine(@NonNull final String key, @NonNull final String value) {
+    @NotNull
+    private String getColoredLine(@NotNull final String key, @NotNull final String value) {
         return ColorUtility.render(key, ColorUtility.Type.KEY)
             + ColorUtility.render(KEY_VALUE_SEPARATOR, ColorUtility.Type.SYMBOL)
             + ColorUtility.render("\"" + value + "\"", ColorUtility.Type.VALUE);

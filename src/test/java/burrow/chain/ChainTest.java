@@ -4,20 +4,20 @@ import burrow.chain.event.Event;
 import burrow.chain.event.ThrowableEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ChainTest {
     private static final class SimpleChain extends Chain<Context> {
-        @NonNull
-        public Context apply(@NonNull final String message) {
+        @NotNull
+        public Context apply(@NotNull final String message) {
             final var context = new Context();
             Hook.message.set(context, message);
 
             return apply(context);
         }
 
-        @NonNull
+        @NotNull
         public Context apply(final int integer) {
             final var context = new Context();
             Hook.integer.set(context, integer);
@@ -43,7 +43,7 @@ public class ChainTest {
         }
 
         public static void triggerWhenAuthorDetected(
-            @NonNull final Context context,
+            @NotNull final Context context,
             @Nullable final Runnable next
         ) {
             final var message = SimpleChain.Hook.message.getNonNull(context);
@@ -55,8 +55,8 @@ public class ChainTest {
         }
 
         public static void changeAuthorName(
-            @NonNull final Context context,
-            @NonNull final SimpleEvent event
+            @NotNull final Context context,
+            @NotNull final SimpleEvent event
         ) {
             SimpleChain.Hook.message.set(context, "author: " + event.getWord());
         }
@@ -183,20 +183,17 @@ public class ChainTest {
         Assertions.assertEquals("author: James", SimpleChain.Hook.message.get(context));
     }
 
-//    @Test
-//    public void testUseFirst() {
-//        final Middleware.Pre<Context> toInteger = (ctx) ->
-//            ctx.compute(SimpleChain.CTX_REQUEST, val -> Integer.parseInt((String) val));
-//        final var hook = ContextHook.of(SimpleChain.CTX_REQUEST, Integer.class);
-//        final Middleware.Pre<Context> plus2 = (ctx) -> hook.compute(ctx, val -> val + 2);
-//        final Middleware.Pre<Context> times3 = (ctx) -> hook.compute(ctx, val -> val * 3);
-//
-//        final var simpleChain = new SimpleChain();
-//        simpleChain.pre.use(toInteger);
-//        simpleChain.pre.use(plus2);
-//        simpleChain.pre.useFirst(times3);
-//
-//        final var context = simpleChain.apply("5");
-//        Assertions.assertEquals(17, hook.get(context));
-//    }
+    @Test
+    public void testUseFirst() {
+        final var hook = SimpleChain.Hook.integer;
+        final Middleware.Pre<Context> plus2 = (ctx) -> hook.compute(ctx, val -> val + 2);
+        final Middleware.Pre<Context> times3 = (ctx) -> hook.compute(ctx, val -> val * 3);
+
+        final var simpleChain = new SimpleChain();
+        simpleChain.use(plus2);
+        simpleChain.useFirst(times3);
+
+        final var context = simpleChain.apply(5);
+        Assertions.assertEquals(17, hook.get(context));
+    }
 }

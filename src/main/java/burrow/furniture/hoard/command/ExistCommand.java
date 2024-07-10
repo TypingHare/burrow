@@ -6,7 +6,7 @@ import burrow.core.command.CommandType;
 import burrow.core.common.ColorUtility;
 import burrow.core.common.Values;
 import burrow.furniture.hoard.HoardFurniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -18,7 +18,7 @@ public class ExistCommand extends Command {
     @CommandLine.Parameters(index = "0", description = "The id of the entry.")
     private Integer id;
 
-    public ExistCommand(@NonNull final CommandContext commandContext) {
+    public ExistCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

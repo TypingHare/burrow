@@ -1,15 +1,15 @@
 package burrow.core.chamber;
 
 import burrow.chain.Chain;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 
 public class CreateChamberChain extends Chain<ChamberLifeCycleContext> {
-    @NonNull
+    @NotNull
     public ChamberLifeCycleContext apply(
-        @NonNull final Chamber chamber,
-        @NonNull final Instant creationTime
+        @NotNull final Chamber chamber,
+        @NotNull final Instant creationTime
     ) {
         final var context = new ChamberLifeCycleContext();
         context.setChamber(chamber);

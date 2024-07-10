@@ -5,7 +5,7 @@ import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.core.common.ColorUtility;
 import com.google.common.base.Strings;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class CommandListCommand extends Command {
     )
     private Boolean all;
 
-    public CommandListCommand(@NonNull final CommandContext commandContext) {
+    public CommandListCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

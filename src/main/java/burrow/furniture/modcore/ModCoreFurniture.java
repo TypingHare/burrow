@@ -11,7 +11,7 @@ import burrow.furniture.modcore.exception.BurrowPropertiesNotFoundException;
 import burrow.furniture.standard.StandardFurniture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.beans.JavaBean;
 import java.io.File;
@@ -40,11 +40,11 @@ public class ModCoreFurniture extends Furniture {
      */
     private final Map<Path, Mod> pathModHashMap = new HashMap<>();
 
-    public ModCoreFurniture(@NonNull final Chamber chamber) {
+    public ModCoreFurniture(@NotNull final Chamber chamber) {
         super(chamber);
     }
 
-    @NonNull
+    @NotNull
     public Map<Path, Mod> getPathModHashMap() {
         return pathModHashMap;
     }
@@ -55,7 +55,7 @@ public class ModCoreFurniture extends Furniture {
     }
 
     @Override
-    public void initializeConfig(@NonNull final Config config) {
+    public void initializeConfig(@NotNull final Config config) {
         config.setIfAbsent(ConfigKey.MODS_DIR, DEFAULT_MODS_DIR.toString());
     }
 
@@ -97,7 +97,7 @@ public class ModCoreFurniture extends Furniture {
      * Loads a mod, which is a JAR file, by scanning it properties and furniture.
      * @param jarPath The path to the JAR file to load.
      */
-    public Mod loadMod(@NonNull final Path jarPath) throws
+    public Mod loadMod(@NotNull final Path jarPath) throws
         IOException,
         InvalidFurnitureClassException, BurrowPropertiesNotFoundException {
         final var jarFileUri = URI.create("file://" + jarPath);
@@ -131,13 +131,13 @@ public class ModCoreFurniture extends Furniture {
         return mod;
     }
 
-    @NonNull
+    @NotNull
     public List<Path> getModPathList() {
         return pathModHashMap.keySet().stream().toList();
     }
 
-    @NonNull
-    public Mod getMod(@NonNull final Path modPath) {
+    @NotNull
+    public Mod getMod(@NotNull final Path modPath) {
         return Objects.requireNonNull(pathModHashMap.get(modPath));
     }
 

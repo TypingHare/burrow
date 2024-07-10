@@ -1,9 +1,9 @@
 package burrow.core.furniture.exception;
 
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public final class AmbiguousSimpleNameException extends Exception {
-    public AmbiguousSimpleNameException(@NonNull final String simpleName) {
+    public AmbiguousSimpleNameException(@NotNull final String simpleName) {
         super("Ambiguous furniture simple name: " + simpleName);
     }
 }

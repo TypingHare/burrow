@@ -3,7 +3,7 @@ package burrow.chain;
 import burrow.chain.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -31,7 +31,7 @@ public class Context extends AbstractContext {
         Hook.terminationFlag.set(this, terminationFlag);
     }
 
-    public void trigger(@NonNull final Event event) {
+    public void trigger(@NotNull final Event event) {
         final var eventQueue = Context.Hook.eventQueue.computeIfAbsent(this, LinkedList::new);
         eventQueue.add(event);
     }

@@ -3,36 +3,36 @@ package burrow.core.chamber;
 import burrow.core.command.Processor;
 import burrow.core.config.Config;
 import burrow.core.furniture.Renovator;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class ChamberModule {
     protected final Chamber chamber;
 
-    public ChamberModule(@NonNull final Chamber chamber) {
+    public ChamberModule(@NotNull final Chamber chamber) {
         this.chamber = chamber;
     }
 
-    @NonNull
+    @NotNull
     public Chamber getChamber() {
         return chamber;
     }
 
-    @NonNull
+    @NotNull
     public ChamberContext getChamberContext() {
         return chamber.getChamberContext();
     }
 
-    @NonNull
+    @NotNull
     public Config getConfig() {
         return getChamberContext().getConfig();
     }
 
-    @NonNull
+    @NotNull
     public Renovator getRenovator() {
         return getChamberContext().getRenovator();
     }
 
-    @NonNull
+    @NotNull
     public Processor getProcessor() {
         return getChamberContext().getProcessor();
     }

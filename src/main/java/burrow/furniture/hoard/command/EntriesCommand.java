@@ -5,7 +5,7 @@ import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.furniture.hoard.HoardFurniture;
 import burrow.furniture.standard.StandardFurniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.util.Arrays;
@@ -17,7 +17,7 @@ public class EntriesCommand extends Command {
     @CommandLine.Parameters(index = "0", description = "A list of IDs to retrieve.")
     private String idList;
 
-    public EntriesCommand(@NonNull final CommandContext commandContext) {
+    public EntriesCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

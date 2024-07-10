@@ -1,7 +1,7 @@
 package burrow.chain;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 @FunctionalInterface
 public interface Middleware<C extends Context> extends BiConsumer<C, Runnable> {
     @Override
-    void accept(@NonNull final C ctx, @Nullable final Runnable next);
+    void accept(@NotNull final C ctx, @Nullable final Runnable next);
 
     interface Pre<C extends Context> extends Consumer<C> {
     }

@@ -6,8 +6,8 @@ import burrow.core.config.Config;
 import burrow.core.furniture.exception.CircularDependencyException;
 import burrow.core.furniture.exception.FurnitureNotFoundException;
 import burrow.core.furniture.exception.InvalidFurnitureClassException;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -18,16 +18,16 @@ public final class Renovator extends ChamberModule {
     private final Map<String, Furniture> furnitureStore = new LinkedHashMap<>();
     private final DependencyTree dependencyTree = new DependencyTree();
 
-    public Renovator(@NonNull final Chamber chamber) {
+    public Renovator(@NotNull final Chamber chamber) {
         super(chamber);
     }
 
-    @NonNull
+    @NotNull
     public Map<String, Furniture> getFurnitureStore() {
         return furnitureStore;
     }
 
-    @NonNull
+    @NotNull
     public FurnitureRegistrar getRegistrar() {
         return chamber.getChamberShepherd().getBurrow().getFurnitureRegistrar();
     }
@@ -68,9 +68,9 @@ public final class Renovator extends ChamberModule {
     }
 
     private void resolveDependencies(
-        @NonNull final List<String> dependencyPath,
-        @NonNull final List<String> dependencyList,
-        @NonNull final DependencyTree.Node dependencyNode
+        @NotNull final List<String> dependencyPath,
+        @NotNull final List<String> dependencyList,
+        @NotNull final DependencyTree.Node dependencyNode
     ) throws InvalidFurnitureClassException {
         final var registrar = getRegistrar();
 
@@ -103,9 +103,9 @@ public final class Renovator extends ChamberModule {
         }
     }
 
-    @NonNull
+    @NotNull
     private Furniture instantiateFurniture(
-        @NonNull final Class<? extends Furniture> furnitureClass) throws
+        @NotNull final Class<? extends Furniture> furnitureClass) throws
         InvalidFurnitureClassException {
         try {
             final var constructor = furnitureClass.getConstructor(Chamber.class);
@@ -117,7 +117,7 @@ public final class Renovator extends ChamberModule {
     }
 
     @Nullable
-    public <T extends Furniture> T getFurniture(@NonNull final String furnitureName) {
+    public <T extends Furniture> T getFurniture(@NotNull final String furnitureName) {
         @SuppressWarnings("unchecked") final T furniture =
             (T) furnitureStore.get(furnitureName);
         return furniture;

@@ -7,7 +7,7 @@ import burrow.core.command.CommandType;
 import burrow.core.common.ColorUtility;
 import burrow.core.config.Config;
 import com.google.common.base.Strings;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
     description = "Display all chambers' names and descriptions.")
 @CommandType(DictatorFurniture.COMMAND_TYPE)
 public class ChamberListCommand extends Command {
-    public ChamberListCommand(@NonNull final CommandContext commandContext) {
+    public ChamberListCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

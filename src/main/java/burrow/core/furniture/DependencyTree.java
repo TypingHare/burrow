@@ -1,6 +1,6 @@
 package burrow.core.furniture;
 
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,17 +11,17 @@ import java.util.function.Consumer;
 public final class DependencyTree {
     private final Node root = new Node(null);
 
-    @NonNull
+    @NotNull
     public Node getRoot() {
         return root;
     }
 
-    public void resolve(@NonNull final Consumer<Furniture> consumer) {
+    public void resolve(@NotNull final Consumer<Furniture> consumer) {
         new ResolveRoutine().resolveNode(root, consumer);
     }
 
-    @NonNull
-    public Node createNode(@NonNull final Furniture furniture) {
+    @NotNull
+    public Node createNode(@NotNull final Furniture furniture) {
         return new Node(furniture);
     }
 
@@ -31,7 +31,7 @@ public final class DependencyTree {
 
         public Node(Furniture furniture) {this.furniture = furniture;}
 
-        public void add(@NonNull final Node child) {
+        public void add(@NotNull final Node child) {
             children.add(child);
         }
     }
@@ -44,8 +44,8 @@ public final class DependencyTree {
         }
 
         private void resolveNode(
-            @NonNull final Node node,
-            @NonNull final Consumer<Furniture> consumer
+            @NotNull final Node node,
+            @NotNull final Consumer<Furniture> consumer
         ) {
             if (resolvedNode.contains(node)) {
                 return;

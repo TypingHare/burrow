@@ -1,7 +1,7 @@
 package burrow.chain;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -9,22 +9,22 @@ import java.util.function.Supplier;
 public class ContextHook<T> {
     private final String key;
 
-    ContextHook(@NonNull final String key) {
+    ContextHook(@NotNull final String key) {
         this.key = key;
     }
 
-    public void set(@NonNull final Context context, @Nullable final T value) {
+    public void set(@NotNull final Context context, @Nullable final T value) {
         context.set(key, value);
     }
 
     @Nullable
-    public T get(@NonNull final Context context) {
+    public T get(@NotNull final Context context) {
         @SuppressWarnings("unchecked") final T value = (T) context.get(key);
         return value;
     }
 
-    @NonNull
-    public T getNonNull(@NonNull final Context context) {
+    @NotNull
+    public T getNonNull(@NotNull final Context context) {
         final T value = get(context);
         if (value == null) {
             throw new RuntimeException("Null context required NonNull: " + key);
@@ -34,22 +34,22 @@ public class ContextHook<T> {
     }
 
     @Nullable
-    public T getOrDefault(@NonNull final Context context, @NonNull final T defaultValue) {
+    public T getOrDefault(@NotNull final Context context, @NotNull final T defaultValue) {
         @SuppressWarnings("unchecked") final T value =
             (T) context.getOrDefault(key, defaultValue);
         return value;
     }
 
     public void compute(
-        @NonNull final Context context,
-        @NonNull final Function<T, T> remappingFunction
+        @NotNull final Context context,
+        @NotNull final Function<T, T> remappingFunction
     ) {
         set(context, remappingFunction.apply(get(context)));
     }
 
     public T computeIfAbsent(
-        @NonNull final Context context,
-        @NonNull final Supplier<T> supplier
+        @NotNull final Context context,
+        @NotNull final Supplier<T> supplier
     ) {
         return context.computeIfAbsent(key, supplier);
     }

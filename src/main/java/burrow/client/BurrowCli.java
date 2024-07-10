@@ -11,7 +11,7 @@ import org.jline.reader.UserInterruptException;
 import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -76,7 +76,7 @@ public final class BurrowCli implements Callable<Integer> {
         System.exit(new CommandLine(new BurrowCli()).execute(args));
     }
 
-    private static String wrapDoubleQuotes(@NonNull final String input) {
+    private static String wrapDoubleQuotes(@NotNull final String input) {
         return '"' + input.replace("\"", "\\\"") + '"';
     }
 
@@ -128,7 +128,7 @@ public final class BurrowCli implements Callable<Integer> {
     }
 
     private void processCommand(
-        @NonNull final String command) throws BurrowClientInitializationException {
+        @NotNull final String command) throws BurrowClientInitializationException {
         if (command.equals(CliCommand.EXIT)) {
             exit();
         } else if (command.startsWith("/")) {
@@ -142,7 +142,7 @@ public final class BurrowCli implements Callable<Integer> {
         }
     }
 
-    private void execute(@NonNull final String command) {
+    private void execute(@NotNull final String command) {
         final var response =
             burrowClient.sendRequestTiming(chamberName + " " + command);
         final var lastRequestDuration = burrowClient.getLastRequestDuration();
@@ -172,7 +172,7 @@ public final class BurrowCli implements Callable<Integer> {
     }
 
     private void executeSplit(
-        @NonNull final String command
+        @NotNull final String command
     ) {
         final var commandName = command.split(" ")[0];
         final var response = burrowClient.sendRequest(chamberName + " help --json " + commandName);
@@ -275,7 +275,7 @@ public final class BurrowCli implements Callable<Integer> {
         }
     }
 
-    private void useChamber(@NonNull final String chamberName) {
+    private void useChamber(@NotNull final String chamberName) {
         if (!checkChamberExist(chamberName)) {
             System.out.format("Chamber <%s> does not exist.\n", chamberName);
             final var tempChamberName = this.chamberName;
@@ -287,7 +287,7 @@ public final class BurrowCli implements Callable<Integer> {
         }
     }
 
-    private boolean checkChamberExist(@NonNull final String chamberName) {
+    private boolean checkChamberExist(@NotNull final String chamberName) {
         try {
             final var response = burrowClient.sendRequest(chamberName + " root");
             return response.getExitCode() == CommandLine.ExitCode.OK;

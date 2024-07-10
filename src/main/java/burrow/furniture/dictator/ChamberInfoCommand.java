@@ -4,7 +4,7 @@ import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.core.common.ColorUtility;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.time.Instant;
@@ -26,14 +26,14 @@ public class ChamberInfoCommand extends Command {
     )
     private String name;
 
-    public ChamberInfoCommand(@NonNull final CommandContext commandContext) {
+    public ChamberInfoCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 
-    @NonNull
+    @NotNull
     public static String getChamberInfoString(
-        @NonNull final String chamberName,
-        @NonNull final ChamberInfo chamberInfo
+        @NotNull final String chamberName,
+        @NotNull final ChamberInfo chamberInfo
     ) {
         final var startTimestampMs = chamberInfo.getStartTimestampMs();
         final var lastRequestTimestampMs = chamberInfo.getLastRequestTimestampMs();
@@ -45,7 +45,7 @@ public class ChamberInfoCommand extends Command {
         );
     }
 
-    public static String timestempToString(@NonNull final Long timestampMs) {
+    public static String timestempToString(@NotNull final Long timestampMs) {
         final var formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         final var dateTime
             = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestampMs), ZoneId.systemDefault());

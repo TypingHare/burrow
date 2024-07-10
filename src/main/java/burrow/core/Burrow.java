@@ -6,7 +6,7 @@ import ch.qos.logback.classic.Level;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -51,6 +51,15 @@ public class Burrow {
         logger.info("Started Burrow in {} ms", durationMs);
     }
 
+    /**
+     * Change the level of some unimportant loggers.
+     */
+    private static void changeLoggersLevel() {
+        final var reflectionsLogger =
+            (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Reflections.class);
+        reflectionsLogger.setLevel(Level.WARN);
+    }
+
     private void initializeApp() throws IOException {
         // Check bin directory
         if (!BIN_ROOT.toFile().exists()) {
@@ -61,26 +70,17 @@ public class Burrow {
         }
     }
 
-    /**
-     * Change the level of some unimportant loggers.
-     */
-    private static void changeLoggersLevel() {
-        final var reflectionsLogger =
-            (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Reflections.class);
-        reflectionsLogger.setLevel(Level.WARN);
-    }
-
-    @NonNull
+    @NotNull
     public ChamberShepherd getChamberShepherd() {
         return chamberShepherd;
     }
 
-    @NonNull
+    @NotNull
     public FurnitureRegistrar getFurnitureRegistrar() {
         return furnitureRegistrar;
     }
 
-    @NonNull
+    @NotNull
     public void shutdown() {
         logger.info("Shutting down Burrow...");
         getChamberShepherd().terminateAll();

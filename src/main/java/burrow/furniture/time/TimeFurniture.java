@@ -11,8 +11,8 @@ import burrow.furniture.hoard.chain.CreateEntryContext;
 import burrow.furniture.hoard.chain.SetEntryContext;
 import burrow.furniture.hoard.chain.ToFormattedObjectContext;
 import burrow.furniture.hoard.chain.UnsetEntryContext;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -31,7 +31,7 @@ import java.util.List;
 public final class TimeFurniture extends Furniture {
     public static final String DEFAULT_TIME_FORMAT = "MM/dd, yyyy";
 
-    public TimeFurniture(@NonNull final Chamber chamber) {
+    public TimeFurniture(@NotNull final Chamber chamber) {
         super(chamber);
     }
 
@@ -46,7 +46,7 @@ public final class TimeFurniture extends Furniture {
     }
 
     @Override
-    public void initializeConfig(@NonNull final Config config) {
+    public void initializeConfig(@NotNull final Config config) {
         config.setIfAbsent(ConfigKey.TIME_CREATED_AT_ENABLED, Values.Bool.TRUE);
         config.setIfAbsent(ConfigKey.TIME_UPDATED_AT_ENABLED, Values.Bool.TRUE);
         config.setIfAbsent(ConfigKey.TIME_CREATED_AT_FORMAT, DEFAULT_TIME_FORMAT);
@@ -63,7 +63,7 @@ public final class TimeFurniture extends Furniture {
     }
 
     public void createEntry(
-        @NonNull final CreateEntryContext context,
+        @NotNull final CreateEntryContext context,
         @Nullable final Runnable next
     ) {
         final var entry = context.getEntry();
@@ -72,7 +72,7 @@ public final class TimeFurniture extends Furniture {
     }
 
     public void toFormattedObject(
-        @NonNull final ToFormattedObjectContext context,
+        @NotNull final ToFormattedObjectContext context,
         @Nullable final Runnable next
     ) {
         final var entry = context.getEntry();
@@ -88,12 +88,12 @@ public final class TimeFurniture extends Furniture {
         }
     }
 
-    public void setEntry(@NonNull final SetEntryContext context, @Nullable final Runnable next) {
+    public void setEntry(@NotNull final SetEntryContext context, @Nullable final Runnable next) {
         setUpdateTime(context.getEntry());
     }
 
     public void unsetEntry(
-        @NonNull final UnsetEntryContext context,
+        @NotNull final UnsetEntryContext context,
         @Nullable final Runnable next
     ) {
         setUpdateTime(context.getEntry());
@@ -107,19 +107,19 @@ public final class TimeFurniture extends Furniture {
         return Values.Bool.isTrue(getConfig().get(ConfigKey.TIME_CREATED_AT_ENABLED));
     }
 
-    public void setCreateTime(@NonNull final Entry entry) {
+    public void setCreateTime(@NotNull final Entry entry) {
         if (isCreatedAtEnabled()) {
             entry.set(EntryKey.CREATED_AT, System.currentTimeMillis());
         }
     }
 
-    public void setUpdateTime(@NonNull final Entry entry) {
+    public void setUpdateTime(@NotNull final Entry entry) {
         if (isUpdatedAtEnabled()) {
             entry.set(EntryKey.UPDATED_AT, System.currentTimeMillis());
         }
     }
 
-    @NonNull
+    @NotNull
     public String dateToString(final long timestampMs) {
         final var format = getConfig().getNonNull(ConfigKey.TIME_CREATED_AT_FORMAT);
         final var formatter = DateTimeFormatter.ofPattern(format);
@@ -129,7 +129,7 @@ public final class TimeFurniture extends Furniture {
         return dateTime.format(formatter);
     }
 
-    public String getDateString(@NonNull final String value) {
+    public String getDateString(@NotNull final String value) {
         final var timestampMs = Long.parseLong(value);
         return dateToString(timestampMs);
     }

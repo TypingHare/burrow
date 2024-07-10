@@ -3,7 +3,7 @@ package burrow.furniture.bincore;
 import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class CreateShellCommand extends Command {
     )
     public Boolean isForce;
 
-    public CreateShellCommand(@NonNull final CommandContext commandContext) {
+    public CreateShellCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

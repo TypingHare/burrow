@@ -1,9 +1,9 @@
 package burrow.core.furniture.exception;
 
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public final class FurnitureNotFoundException extends RuntimeException {
-    public FurnitureNotFoundException(@NonNull final String furnitureFullName) {
+    public FurnitureNotFoundException(@NotNull final String furnitureFullName) {
         super("Furniture not found: " + furnitureFullName);
     }
 }

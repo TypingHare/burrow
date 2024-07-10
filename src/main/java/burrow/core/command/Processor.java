@@ -4,8 +4,8 @@ import burrow.chain.event.Event;
 import burrow.core.chamber.Chamber;
 import burrow.core.chamber.ChamberModule;
 import burrow.core.common.ColorUtility;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import picocli.CommandLine;
 
 import java.util.HashMap;
@@ -16,7 +16,7 @@ public final class Processor extends ChamberModule {
 
     private final Map<String, Class<? extends Command>> commandClassStore = new HashMap<>();
 
-    public Processor(@NonNull final Chamber chamber) {
+    public Processor(@NotNull final Chamber chamber) {
         super(chamber);
 
         register(DefaultCommand.class);
@@ -26,17 +26,17 @@ public final class Processor extends ChamberModule {
         executeCommandChain.on(CommandNotFoundEvent.class, CommandNotFoundEvent::handler);
     }
 
-    @NonNull
+    @NotNull
     public Map<String, Class<? extends Command>> getCommandClassStore() {
         return commandClassStore;
     }
 
     @Nullable
-    public Class<? extends Command> getCommand(@NonNull final String commandName) {
+    public Class<? extends Command> getCommand(@NotNull final String commandName) {
         return commandClassStore.get(commandName);
     }
 
-    public void execute(@NonNull final CommandContext context, @Nullable final Runnable next) {
+    public void execute(@NotNull final CommandContext context, @Nullable final Runnable next) {
         final var commandName = CommandContext.Hook.commandName.getNonNull(context);
         final var commandArgs = CommandContext.Hook.commandArgs.getNonNull(context);
 
@@ -59,19 +59,19 @@ public final class Processor extends ChamberModule {
         }
     }
 
-    public void register(@NonNull final Class<? extends Command> commandClass) {
+    public void register(@NotNull final Class<? extends Command> commandClass) {
         var commandAnnotation = Command.getCommandAnnotation(commandClass);
         commandClassStore.put(commandAnnotation.name(), commandClass);
     }
 
-    public void disable(@NonNull final Class<? extends Command> commandClass) {
+    public void disable(@NotNull final Class<? extends Command> commandClass) {
         commandClassStore.entrySet().removeIf(entry -> entry.getValue() == commandClass);
     }
 
     public final static class CommandNotFoundEvent extends Event {
         public static void handler(
-            @NonNull final CommandContext context,
-            @NonNull final CommandNotFoundEvent event
+            @NotNull final CommandContext context,
+            @NotNull final CommandNotFoundEvent event
         ) {
             final var buffer = CommandContext.Hook.buffer.getNonNull(context);
             final var commandName = CommandContext.Hook.commandName.getNonNull(context);

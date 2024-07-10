@@ -6,7 +6,7 @@ import burrow.core.command.CommandType;
 import burrow.core.common.ColorUtility;
 import burrow.core.furniture.BurrowFurniture;
 import burrow.core.furniture.Furniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class FurnitureAllCommand extends Command {
     )
     private Boolean root;
 
-    public FurnitureAllCommand(@NonNull final CommandContext commandContext) {
+    public FurnitureAllCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

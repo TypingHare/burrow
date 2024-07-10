@@ -1,8 +1,8 @@
 package burrow.chain;
 
 import burrow.chain.event.ThrowableEvent;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +16,8 @@ public abstract class Chain<C extends Context> extends Reactor<C> {
         }
     }
 
-    @NonNull
-    public C apply(@NonNull final C context) {
+    @NotNull
+    public C apply(@NotNull final C context) {
         final var middleware = compose(middlewareList);
         middleware.accept(context, null);
         resolveQueue(context);
@@ -25,8 +25,8 @@ public abstract class Chain<C extends Context> extends Reactor<C> {
         return context;
     }
 
-    @NonNull
-    public Middleware<C> compose(@NonNull final List<Middleware<C>> middlewareList) {
+    @NotNull
+    public Middleware<C> compose(@NotNull final List<Middleware<C>> middlewareList) {
         return (ctx, next) -> {
             dispatch(ctx, middlewareList, 0);
             runIfNotNull(next);
@@ -34,8 +34,8 @@ public abstract class Chain<C extends Context> extends Reactor<C> {
     }
 
     private void dispatch(
-        @NonNull final C context,
-        @NonNull final List<Middleware<C>> middlewareList,
+        @NotNull final C context,
+        @NotNull final List<Middleware<C>> middlewareList,
         final int middlewareIndex
     ) {
         resolveQueue(context);
@@ -58,7 +58,7 @@ public abstract class Chain<C extends Context> extends Reactor<C> {
         }
     }
 
-    private void resolveQueue(@NonNull final C context) {
+    private void resolveQueue(@NotNull final C context) {
         final var eventQueue = context.getEventQueue();
         if (eventQueue != null) {
             while (!eventQueue.isEmpty()) {
@@ -67,36 +67,36 @@ public abstract class Chain<C extends Context> extends Reactor<C> {
         }
     }
 
-    public void use(@NonNull final Middleware<C> middleware) {
+    public void use(@NotNull final Middleware<C> middleware) {
         middlewareList.add(middleware);
     }
 
-    public void use(@NonNull final Middleware.Pre<C> preMiddleware) {
+    public void use(@NotNull final Middleware.Pre<C> preMiddleware) {
         use((context, next) -> {
             preMiddleware.accept(context);
             runIfNotNull(next);
         });
     }
 
-    public void use(@NonNull final Middleware.Post<C> postMiddleware) {
+    public void use(@NotNull final Middleware.Post<C> postMiddleware) {
         use((context, next) -> {
             runIfNotNull(next);
             postMiddleware.accept(context);
         });
     }
 
-    public void useFirst(@NonNull final Middleware<C> middleware) {
+    public void useFirst(@NotNull final Middleware<C> middleware) {
         middlewareList.addFirst(middleware);
     }
 
-    public void useFirst(@NonNull final Middleware.Pre<C> preMiddleware) {
+    public void useFirst(@NotNull final Middleware.Pre<C> preMiddleware) {
         useFirst((context, next) -> {
             preMiddleware.accept(context);
             runIfNotNull(next);
         });
     }
 
-    public void useFirst(@NonNull final Middleware.Post<C> postMiddleware) {
+    public void useFirst(@NotNull final Middleware.Post<C> postMiddleware) {
         useFirst((context, next) -> {
             runIfNotNull(next);
             postMiddleware.accept(context);

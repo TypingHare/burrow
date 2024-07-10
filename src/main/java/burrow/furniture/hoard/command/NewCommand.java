@@ -4,7 +4,7 @@ import burrow.core.command.Command;
 import burrow.core.command.CommandContext;
 import burrow.core.command.CommandType;
 import burrow.furniture.hoard.HoardFurniture;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.util.HashMap;
@@ -15,7 +15,7 @@ public class NewCommand extends Command {
     @CommandLine.Parameters(arity = "0..*")
     private String[] params;
 
-    public NewCommand(@NonNull final CommandContext commandContext) {
+    public NewCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

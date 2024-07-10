@@ -9,7 +9,7 @@ import burrow.core.command.CommandType;
 import burrow.core.config.Config;
 import burrow.furniture.aspectcore.AspectCoreFurniture;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class ChamberNewCommand extends Command {
     @CommandLine.Parameters(index = "1", description = "The description of the new chamber.")
     private String description;
 
-    public ChamberNewCommand(@NonNull final CommandContext commandContext) {
+    public ChamberNewCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

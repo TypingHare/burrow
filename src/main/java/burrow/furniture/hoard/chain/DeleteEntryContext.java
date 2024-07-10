@@ -3,15 +3,15 @@ package burrow.furniture.hoard.chain;
 import burrow.chain.Context;
 import burrow.chain.ContextHook;
 import burrow.furniture.hoard.Entry;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class DeleteEntryContext extends Context {
-    @NonNull
+    @NotNull
     public Entry getEntry() {
         return Hook.entry.getNonNull(this);
     }
 
-    public void setEntry(@NonNull final Entry entry) {
+    public void setEntry(@NotNull final Entry entry) {
         Hook.entry.set(this, entry);
     }
 
