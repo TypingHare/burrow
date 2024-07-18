@@ -6,11 +6,11 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface BurrowFurniture {
-    String simpleName() default "";
+    String simpleName();
 
-    String description() default "";
+    String description();
 
-    String type() default Type.COMPONENT;
+    String type();
 
     Class<? extends Furniture>[] dependencies() default {};
 

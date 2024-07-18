@@ -23,6 +23,7 @@ public final class LocalBurrowClient extends BurrowClient {
         final var burrowResponse = new BurrowResponse();
         burrowResponse.setMessage(commandContext.getBuffer().toString());
         burrowResponse.setExitCode(commandContext.getExitCode());
+        burrowResponse.setPostCommand(commandContext.getPostCommand());
 
         return burrowResponse;
     }

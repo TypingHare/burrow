@@ -2,7 +2,6 @@ package burrow.server;
 
 import burrow.client.BurrowResponse;
 import burrow.core.Burrow;
-import burrow.core.command.CommandContext;
 import burrow.core.common.Environment;
 import jakarta.annotation.PreDestroy;
 import org.springframework.boot.SpringApplication;
@@ -35,8 +34,9 @@ public class BurrowServer {
         final var commandContext = burrow.getChamberShepherd().process(command, environment);
 
         final var response = new BurrowResponse();
-        response.setMessage(CommandContext.Hook.buffer.getNonNull(commandContext).toString());
-        response.setExitCode(CommandContext.Hook.exitCode.getNonNull(commandContext));
+        response.setMessage(commandContext.getBuffer().toString());
+        response.setExitCode(commandContext.getExitCode());
+        response.setPostCommand(commandContext.getPostCommand());
 
         return response;
     }

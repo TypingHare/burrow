@@ -6,7 +6,7 @@ import java.beans.JavaBean;
 public final class BurrowResponse {
     private String message;
     private Integer exitCode;
-    private String immediateCommand;
+    private String postCommand;
 
     public String getMessage() {
         return message;
@@ -24,11 +24,11 @@ public final class BurrowResponse {
         this.exitCode = exitCode;
     }
 
-    public String getImmediateCommand() {
-        return immediateCommand;
+    public String getPostCommand() {
+        return postCommand;
     }
 
-    public void setImmediateCommand(String immediateCommand) {
-        this.immediateCommand = immediateCommand;
+    public void setPostCommand(final String postCommand) {
+        this.postCommand = postCommand;
     }
 }

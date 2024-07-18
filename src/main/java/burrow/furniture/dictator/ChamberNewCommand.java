@@ -14,7 +14,7 @@ import picocli.CommandLine;
 
 import java.io.IOException;
 
-@CommandLine.Command(name = "rnew", description = "Create a new chamber.")
+@CommandLine.Command(name = "r.new", description = "Create a new chamber.")
 @CommandType(DictatorFurniture.COMMAND_TYPE)
 public class ChamberNewCommand extends Command {
     @CommandLine.Parameters(index = "0", description = "The name of the new chamber.")

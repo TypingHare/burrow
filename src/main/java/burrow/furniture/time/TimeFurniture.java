@@ -24,6 +24,7 @@ import java.util.List;
 @BurrowFurniture(
     simpleName = "time",
     description = "Add creation time and modification time of each entry.",
+    type = BurrowFurniture.Type.COMPONENT,
     dependencies = {
         HoardFurniture.class
     }

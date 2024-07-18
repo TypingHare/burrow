@@ -9,9 +9,9 @@ import burrow.core.furniture.FurnitureRegistrar;
 import burrow.core.furniture.exception.InvalidFurnitureClassException;
 import burrow.furniture.modcore.exception.BurrowPropertiesNotFoundException;
 import burrow.furniture.standard.StandardFurniture;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jetbrains.annotations.NotNull;
 
 import java.beans.JavaBean;
 import java.io.File;
@@ -25,10 +25,10 @@ import java.util.*;
 @BurrowFurniture(
     simpleName = "Mod Core",
     description = "Mod Core allows developer to load mods (JAR files) into Burrow.",
+    type = BurrowFurniture.Type.ROOT,
     dependencies = {
         StandardFurniture.class
-    },
-    type = BurrowFurniture.Type.ROOT
+    }
 )
 public class ModCoreFurniture extends Furniture {
     public static final Path DEFAULT_MODS_DIR = Burrow.ROOT_DIR.resolve("mods");

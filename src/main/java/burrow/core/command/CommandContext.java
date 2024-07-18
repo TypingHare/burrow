@@ -65,12 +65,12 @@ public final class CommandContext extends Context {
     }
 
     @Nullable
-    public String getImmediateCommand() {
-        return Hook.immediateCommand.get(this);
+    public String getPostCommand() {
+        return Hook.postCommand.get(this);
     }
 
-    public void setImmediateCommand(@NotNull final String immediateCommand) {
-        Hook.immediateCommand.set(this, immediateCommand);
+    public void setPostCommand(@NotNull final String immediateCommand) {
+        Hook.postCommand.set(this, immediateCommand);
     }
 
     public @interface Hook {
@@ -80,6 +80,6 @@ public final class CommandContext extends Context {
         ContextHook<Environment> environment = hook("environment");
         ContextHook<Integer> exitCode = hook("exitCode");
         ContextHook<StringBuilder> buffer = hook("buffer");
-        ContextHook<String> immediateCommand = hook("immediateCommand");
+        ContextHook<String> postCommand = hook("postCommand");
     }
 }

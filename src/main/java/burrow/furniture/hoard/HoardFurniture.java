@@ -17,7 +17,8 @@ import java.util.ArrayList;
 
 @BurrowFurniture(
     simpleName = "Hoard",
-    description = "Entries."
+    description = "Simple local storage support.",
+    type = BurrowFurniture.Type.COMPONENT
 )
 public class HoardFurniture extends Furniture {
     public static final String COMMAND_TYPE = "Hoard";

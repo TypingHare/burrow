@@ -63,8 +63,7 @@ public abstract class Furniture extends ChamberModule {
     public void terminate() {
     }
 
-    @Nullable
-    public Collection<String> configKeys() {
+    public @Nullable Collection<String> configKeys() {
         return null;
     }
 
@@ -72,8 +71,7 @@ public abstract class Furniture extends ChamberModule {
     public void initializeConfig(@NotNull final Config config) {
     }
 
-    @NotNull
-    protected <T extends Furniture> T use(@NotNull final String furnitureName) {
+    protected @NotNull <T extends Furniture> T use(@NotNull final String furnitureName) {
         if (!isInitialized) {
             throw new RuntimeException("The use() method is not allowed to be called before the initialization.");
         }

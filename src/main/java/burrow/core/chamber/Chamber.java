@@ -63,7 +63,7 @@ public final class Chamber {
             config.loadFromFile();
             renovator.loadFurniture();
         } catch (final Throwable ex) {
-            throw new ChamberInitializationException(ex);
+            throw new ChamberInitializationException(chamberContext.getChamber().getName(), ex);
         }
     }
 

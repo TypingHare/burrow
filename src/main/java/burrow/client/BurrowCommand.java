@@ -26,9 +26,9 @@ public final class BurrowCommand implements Callable<Integer> {
             System.out.println(response.getMessage());
         }
 
-        final var immediateCommand = response.getImmediateCommand();
-        if (immediateCommand != null) {
-            // Execute the command
+        final var postCommand = response.getPostCommand();
+        if (postCommand != null) {
+            System.out.println("\nPOST_COMMAND=" + postCommand);
         }
 
         return response.getExitCode();

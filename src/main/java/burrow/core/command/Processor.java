@@ -73,8 +73,8 @@ public final class Processor extends ChamberModule {
             @NotNull final CommandContext context,
             @NotNull final CommandNotFoundEvent event
         ) {
-            final var buffer = CommandContext.Hook.buffer.getNonNull(context);
-            final var commandName = CommandContext.Hook.commandName.getNonNull(context);
+            final var buffer = context.getBuffer();
+            final var commandName = context.getCommandName();
 
             buffer.append("Command not found: ")
                 .append(ColorUtility.render(commandName, ColorUtility.Type.NAME_COMMAND));

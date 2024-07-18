@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 @CommandLine.Command(
-    name = "rinfo",
+    name = "r.info",
     description = "Display chamber info of a specific chamber."
 )
 @CommandType(DictatorFurniture.COMMAND_TYPE)

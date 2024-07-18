@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 @CommandLine.Command(
-    name = "modlist",
+    name = "mod.ls",
     description = "Display the mod list."
 )
 @CommandType(ModCoreFurniture.COMMAND_TYPE)

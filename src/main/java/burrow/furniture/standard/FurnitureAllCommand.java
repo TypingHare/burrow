@@ -14,7 +14,7 @@ import java.util.Comparator;
 import java.util.function.Predicate;
 
 @CommandLine.Command(
-    name = "fall",
+    name = "f.all",
     description = "Display all available furniture."
 )
 @CommandType(StandardFurniture.COMMAND_TYPE)

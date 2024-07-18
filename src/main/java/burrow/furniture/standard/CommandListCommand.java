@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.Map;
 
 @CommandLine.Command(
-    name = "mlist",
+    name = "m.ls",
     description = "Display a list of available commands along with their descriptions."
 )
 @CommandType(StandardFurniture.COMMAND_TYPE)

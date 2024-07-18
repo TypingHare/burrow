@@ -18,7 +18,8 @@ import java.util.List;
 
 @BurrowFurniture(
     simpleName = "Bin Core",
-    description = "Bin Core allows developers to create shell files."
+    description = "Bin Core allows developers to create shell files.",
+    type = BurrowFurniture.Type.COMPONENT
 )
 public class BinCoreFurniture extends Furniture {
     public static final String COMMAND_TYPE = "Bin Core";
@@ -83,7 +84,7 @@ public class BinCoreFurniture extends Furniture {
         return false;
     }
 
-    public String getDefaultShellContent() {
+    public @NotNull String getDefaultShellContent() {
         final var shell = getConfig().getNonNull(ConfigKey.BIN_SHELL);
         final var chamberName = chamber.getName();
         return "#! " + shell + "\n\nburrow " + chamberName + " \"$@\"";

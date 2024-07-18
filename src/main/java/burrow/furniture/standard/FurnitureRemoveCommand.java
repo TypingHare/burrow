@@ -10,7 +10,7 @@ import picocli.CommandLine;
 
 import java.util.Arrays;
 
-@CommandLine.Command(name = "frm", description = "Remove a furniture from the current chamber.")
+@CommandLine.Command(name = "f.rm", description = "Remove a furniture from the current chamber.")
 @CommandType(StandardFurniture.COMMAND_TYPE)
 public class FurnitureRemoveCommand extends Command {
     @CommandLine.Parameters(

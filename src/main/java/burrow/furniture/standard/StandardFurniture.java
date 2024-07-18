@@ -18,7 +18,8 @@ import java.util.function.Predicate;
 
 @BurrowFurniture(
     simpleName = "Standard",
-    description = "Standard commands."
+    description = "Standard commands.",
+    type = BurrowFurniture.Type.COMPONENT
 )
 public class StandardFurniture extends Furniture {
     public static final String COMMAND_TYPE = "Standard";
@@ -82,11 +83,11 @@ public class StandardFurniture extends Furniture {
         registerCommand(RootCommand.class);
         registerCommand(HelpCommand.class);
         registerCommand(ConfigListCommand.class);
-        registerCommand(ConfigCommand.class);
-        registerCommand(ConfigListCommand.class);
+        registerCommand(ConfigGetCommand.class);
+        registerCommand(ConfigSetCommand.class);
         registerCommand(FurnitureListCommand.class);
-        registerCommand(FurnitureAddCommand.class);
         registerCommand(FurnitureAllCommand.class);
+        registerCommand(FurnitureAddCommand.class);
         registerCommand(FurnitureRemoveCommand.class);
         registerCommand(DescriptionCommand.class);
         registerCommand(CommandListCommand.class);

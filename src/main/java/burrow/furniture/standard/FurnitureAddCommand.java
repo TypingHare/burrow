@@ -9,7 +9,7 @@ import picocli.CommandLine;
 
 import java.util.ArrayList;
 
-@CommandLine.Command(name = "fadd", description = "Add a furniture for the current chamber.")
+@CommandLine.Command(name = "f.add", description = "Add a furniture for the current chamber.")
 @CommandType(StandardFurniture.COMMAND_TYPE)
 public class FurnitureAddCommand extends Command {
     @CommandLine.Parameters(

@@ -20,10 +20,10 @@ import java.util.*;
 @BurrowFurniture(
     simpleName = "Dictator",
     description = "Allows users to create, delete, and monitor chambers.",
+    type = BurrowFurniture.Type.ROOT,
     dependencies = {
         AspectCoreFurniture.class
-    },
-    type = BurrowFurniture.Type.ROOT
+    }
 )
 public class DictatorFurniture extends Furniture {
     public static final String COMMAND_TYPE = "Dictator";

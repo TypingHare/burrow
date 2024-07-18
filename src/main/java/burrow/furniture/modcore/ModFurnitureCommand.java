@@ -10,7 +10,7 @@ import picocli.CommandLine;
 import java.util.ArrayList;
 
 @CommandLine.Command(
-    name = "modf",
+    name = "mod.f",
     description = "Display all furniture each mod has."
 )
 @CommandType(ModCoreFurniture.COMMAND_TYPE)

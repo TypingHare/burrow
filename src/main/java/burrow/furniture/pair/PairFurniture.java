@@ -19,6 +19,7 @@ import java.util.*;
 @BurrowFurniture(
     simpleName = "Pair",
     description = "Implemented key-value pair functionalities for entries.",
+    type = BurrowFurniture.Type.COMPONENT,
     dependencies = {
         HoardFurniture.class
     }

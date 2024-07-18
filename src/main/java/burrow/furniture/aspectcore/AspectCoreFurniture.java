@@ -15,7 +15,8 @@ import java.util.List;
 
 @BurrowFurniture(
     simpleName = "Aspect Core",
-    description = "Aspect Core allows developers to manage scopes out of chamber easily."
+    description = "Aspect Core allows developers to manage scopes out of chamber easily.",
+    type = BurrowFurniture.Type.COMPONENT
 )
 public class AspectCoreFurniture extends Furniture {
     public AspectCoreFurniture(@NotNull final Chamber chamber) {

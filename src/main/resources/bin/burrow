@@ -1,6 +1,16 @@
 #! /bin/zsh
 
 SCRIPT_DIR=$(dirname "$0")
-JAR_NAME="burrow-1.0.0-all.jar"
-BURROW_CLI_CLASS="burrow.client.BurrowCommand"
-java -cp "$SCRIPT_DIR/../../../../build/libs/$JAR_NAME" "$BURROW_CLI_CLASS" "$@"
+JAR_PATH="$SCRIPT_DIR/../../../../build/libs/burrow-1.0.0-all.jar"
+BURROW_CLASS="burrow.client.BurrowCommand"
+
+output=$(java -cp "$JAR_PATH" "$BURROW_CLASS" "$@")
+
+# Print the output
+echo "$output"
+
+# Extract and execute the immediate command if it exists
+post_command=$(echo "$output" | awk -F'POST_COMMAND=' '/POST_COMMAND=/{print $2}')
+if [ -n "$post_command" ]; then
+    eval "$post_command"
+fi

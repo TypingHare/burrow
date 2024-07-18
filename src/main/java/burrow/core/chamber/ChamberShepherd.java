@@ -5,10 +5,10 @@ import burrow.core.Burrow;
 import burrow.core.command.CommandContext;
 import burrow.core.common.CommandUtility;
 import burrow.core.common.Environment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
 import java.time.Duration;
@@ -34,6 +34,8 @@ public final class ChamberShepherd {
 
         processCommandChain.use(this::prepareCommand);
         processCommandChain.use(this::executeCommand);
+
+        terminateChamberChain.use(this::terminateChamber);
     }
 
     @NotNull
@@ -65,7 +67,6 @@ public final class ChamberShepherd {
         start(ROOT_CHAMBER_NAME);
     }
 
-    @NotNull
     public void start(@NotNull final String chamberName) throws
         ChamberInitializationException {
         final var start = Instant.now();
@@ -78,7 +79,7 @@ public final class ChamberShepherd {
             chamberLifeCycleContextStore.put(chamberName, context);
         } catch (final Throwable ex) {
             logger.error("Fail to start chamber <{}>", chamberName, ex);
-            throw new ChamberInitializationException(ex);
+            throw new ChamberInitializationException(chamberName, ex);
         }
 
         final var duration = Duration.between(start, Instant.now());
@@ -117,7 +118,14 @@ public final class ChamberShepherd {
     }
 
     public void terminateAll() {
-        chamberStore.values().forEach(Chamber::terminate);
+        chamberStore.keySet().forEach(this::terminate);
+    }
+
+    public void terminateChamber(
+        @NotNull final ChamberLifeCycleContext context,
+        @Nullable final Runnable next
+    ) {
+        context.getChamber().terminate();
     }
 
     @NotNull
