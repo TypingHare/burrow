@@ -24,10 +24,10 @@ public class ContextHook<T> {
     }
 
     @NotNull
-    public T getNonNull(@NotNull final Context context) {
+    public T getNotNull(@NotNull final Context context) {
         final T value = get(context);
         if (value == null) {
-            throw new RuntimeException("Null context required NonNull: " + key);
+            throw new RuntimeException("Null context required not null: " + key);
         }
 
         return value;

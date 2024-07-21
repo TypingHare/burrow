@@ -10,7 +10,7 @@ import java.util.Map;
 public class ToFormattedObjectContext extends Context {
     @NotNull
     public Entry getEntry() {
-        return Hook.entry.getNonNull(this);
+        return Hook.entry.getNotNull(this);
     }
 
     public void setEntry(@NotNull final Entry entry) {
@@ -19,7 +19,7 @@ public class ToFormattedObjectContext extends Context {
 
     @NotNull
     public Map<String, String> getFormattedObject() {
-        return Hook.formattedObject.getNonNull(this);
+        return Hook.formattedObject.getNotNull(this);
     }
 
     public void setFormattedObject(@NotNull final Map<String, String> formattedObject) {

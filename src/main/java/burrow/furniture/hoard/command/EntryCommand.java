@@ -35,7 +35,7 @@ public class EntryCommand extends Command {
         if (asObject) {
             final var hoard = hoardFurniture.getHoard();
             final var entryObject = hoard.getEntryObject(entry);
-            final var environment = CommandContext.Hook.environment.getNonNull(commandContext);
+            final var environment = CommandContext.Hook.environment.getNotNull(commandContext);
             final var string = hoard.format(id, entryObject, environment);
             buffer.append(string);
         } else {

@@ -37,8 +37,8 @@ public final class Processor extends ChamberModule {
     }
 
     public void execute(@NotNull final CommandContext context, @Nullable final Runnable next) {
-        final var commandName = CommandContext.Hook.commandName.getNonNull(context);
-        final var commandArgs = CommandContext.Hook.commandArgs.getNonNull(context);
+        final var commandName = CommandContext.Hook.commandName.getNotNull(context);
+        final var commandArgs = CommandContext.Hook.commandArgs.getNotNull(context);
 
         if (!commandClassStore.containsKey(commandName)) {
             context.trigger(new CommandNotFoundEvent());

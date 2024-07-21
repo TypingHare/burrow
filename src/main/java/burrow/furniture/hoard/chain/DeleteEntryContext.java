@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class DeleteEntryContext extends Context {
     @NotNull
     public Entry getEntry() {
-        return Hook.entry.getNonNull(this);
+        return Hook.entry.getNotNull(this);
     }
 
     public void setEntry(@NotNull final Entry entry) {

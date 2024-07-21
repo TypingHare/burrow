@@ -14,7 +14,7 @@ import picocli.CommandLine;
 
 import java.io.IOException;
 
-@CommandLine.Command(name = "r.new", description = "Create a new chamber.")
+@CommandLine.Command(name = "chamber.new", description = "Create a new chamber.")
 @CommandType(DictatorFurniture.COMMAND_TYPE)
 public class ChamberNewCommand extends Command {
     @CommandLine.Parameters(index = "0", description = "The name of the new chamber.")
@@ -48,7 +48,7 @@ public class ChamberNewCommand extends Command {
             final var newConfigPath = Burrow.CHAMBERS_ROOT_DIR
                 .resolve(name).resolve(Config.CONFIG_FILE_NAME);
             final var defaultFurnitureList = getConfig()
-                .getNonNull(DictatorFurniture.ConfigKey.DICTATOR_DEFAULT_FURNITURE_LIST);
+                .getNotNull(DictatorFurniture.ConfigKey.DICTATOR_DEFAULT_FURNITURE_LIST);
             newConfig.set(Config.Key.CHAMBER_NAME, name);
             newConfig.set(Config.Key.CHAMBER_DESCRIPTION, description);
             newConfig.set(Config.Key.CHAMBER_FURNITURE_LIST, defaultFurnitureList);

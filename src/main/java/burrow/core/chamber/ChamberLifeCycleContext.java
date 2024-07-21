@@ -9,7 +9,7 @@ import java.time.Instant;
 public final class ChamberLifeCycleContext extends Context {
     @NotNull
     public Chamber getChamber() {
-        return Hook.chamber.getNonNull(this);
+        return Hook.chamber.getNotNull(this);
     }
 
     public void setChamber(@NotNull final Chamber chamber) {
@@ -18,7 +18,7 @@ public final class ChamberLifeCycleContext extends Context {
 
     @NotNull
     public Instant getCreationTime() {
-        return Hook.creationTime.getNonNull(this);
+        return Hook.creationTime.getNotNull(this);
     }
 
     public void setCreationTime(@NotNull final Instant creationTime) {

@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 
 @BurrowFurniture(
     simpleName = "Standard",
-    description = "Standard commands.",
+    description = "A collection of standard commands.",
     type = BurrowFurniture.Type.COMPONENT
 )
 public class StandardFurniture extends Furniture {
@@ -83,7 +83,7 @@ public class StandardFurniture extends Furniture {
         registerCommand(RootCommand.class);
         registerCommand(HelpCommand.class);
         registerCommand(ConfigListCommand.class);
-        registerCommand(ConfigGetCommand.class);
+        registerCommand(ConfigValueCommand.class);
         registerCommand(ConfigSetCommand.class);
         registerCommand(FurnitureListCommand.class);
         registerCommand(FurnitureAllCommand.class);
@@ -117,7 +117,7 @@ public class StandardFurniture extends Furniture {
     @NotNull
     public List<String> getConfigFurnitureNameList() {
         final var furnitureListString =
-            getConfig().getNonNull(Config.Key.CHAMBER_FURNITURE_LIST);
+            getConfig().getNotNull(Config.Key.CHAMBER_FURNITURE_LIST);
         return Arrays.stream(furnitureListString.split(Renovator.FURNITURE_NAME_SEPARATOR))
             .map(String::trim)
             .filter(Predicate.not(String::isEmpty))
@@ -152,7 +152,7 @@ public class StandardFurniture extends Furniture {
 
     @NotNull
     public String getChamberDescription() {
-        return getConfig().getNonNull(Config.Key.CHAMBER_DESCRIPTION);
+        return getConfig().getNotNull(Config.Key.CHAMBER_DESCRIPTION);
     }
 
     public void updateChamberDescription(

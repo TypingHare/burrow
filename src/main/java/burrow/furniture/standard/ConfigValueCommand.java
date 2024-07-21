@@ -9,14 +9,14 @@ import burrow.core.common.Values;
 import picocli.CommandLine;
 
 @CommandLine.Command(
-    name = "c.get",
+    name = "c.value",
     description = "Retrieve the value of a configuration entry.")
 @CommandType(StandardFurniture.COMMAND_TYPE)
-public class ConfigGetCommand extends Command {
+public class ConfigValueCommand extends Command {
     @CommandLine.Parameters(index = "0", description = "The key of the entry to retrieve.")
     private String key;
 
-    public ConfigGetCommand(final CommandContext commandContext) {
+    public ConfigValueCommand(final CommandContext commandContext) {
         super(commandContext);
     }
 

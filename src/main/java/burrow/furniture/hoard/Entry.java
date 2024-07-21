@@ -73,7 +73,7 @@ public final class Entry {
     }
 
     @NotNull
-    public String getNonNull(@NotNull final String key) {
+    public String getNotNull(@NotNull final String key) {
         return Optional.ofNullable(properties.get(key))
             .orElseThrow(() -> new KeyNotFoundException(key));
     }

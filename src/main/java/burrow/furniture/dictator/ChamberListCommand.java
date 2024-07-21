@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 @CommandLine.Command(
-    name = "r.ls",
+    name = "chamber.list",
     description = "Display all chambers' names and descriptions.")
 @CommandType(DictatorFurniture.COMMAND_TYPE)
 public class ChamberListCommand extends Command {

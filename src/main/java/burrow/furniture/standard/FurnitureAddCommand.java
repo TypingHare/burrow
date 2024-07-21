@@ -36,7 +36,7 @@ public class FurnitureAddCommand extends Command {
         final var config = getConfig();
         final var newNameList = new ArrayList<>(configNameList);
         newNameList.add(name);
-        final var furnitureListString = config.getNonNull(Config.Key.CHAMBER_FURNITURE_LIST);
+        final var furnitureListString = config.getNotNull(Config.Key.CHAMBER_FURNITURE_LIST);
         final var newFurnitureListString =
             String.join(Renovator.FURNITURE_NAME_SEPARATOR, newNameList);
         config.set(Config.Key.CHAMBER_FURNITURE_LIST, newFurnitureListString);

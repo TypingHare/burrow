@@ -13,6 +13,11 @@ import burrow.furniture.hoard.command.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 
 @BurrowFurniture(
@@ -24,24 +29,29 @@ public class HoardFurniture extends Furniture {
     public static final String COMMAND_TYPE = "Hoard";
 
     private final Hoard hoard = new Hoard(chamber);
+    private boolean saveHoardWhenTerminate = true;
 
     public HoardFurniture(@NotNull final Chamber chamber) {
         super(chamber);
     }
 
-    public static void toFormattedObject(
+    public void setSaveHoardWhenTerminate(final boolean saveHoardWhenTerminate) {
+        this.saveHoardWhenTerminate = saveHoardWhenTerminate;
+    }
+
+    public void toFormattedObject(
         @NotNull final ToFormattedObjectContext context,
         @Nullable final Runnable next
     ) {
-        final var entry = ToFormattedObjectContext.Hook.entry.getNonNull(context);
+        final var entry = ToFormattedObjectContext.Hook.entry.getNotNull(context);
         final var formattedObject =
-            ToFormattedObjectContext.Hook.formattedObject.getNonNull(context);
+            ToFormattedObjectContext.Hook.formattedObject.getNotNull(context);
         formattedObject.putAll(entry.getProperties());
 
         Chain.runIfNotNull(next);
     }
 
-    public static void formattedObjectToString(
+    public void formattedObjectToString(
         @NotNull final FormattedObjectToStringContext context,
         @Nullable final Runnable next
     ) {
@@ -61,7 +71,7 @@ public class HoardFurniture extends Furniture {
             }
 
             final var environment =
-                FormattedObjectToStringContext.Hook.environment.getNonNull(context);
+                FormattedObjectToStringContext.Hook.environment.getNotNull(context);
             final var getConsoleWidth = environment.getConsoleWidth();
 
             final var itemList = new ArrayList<String>();
@@ -102,9 +112,12 @@ public class HoardFurniture extends Furniture {
         registerCommand(SetCommand.class);
         registerCommand(UnsetCommand.class);
         registerCommand(UpdatePropCommand.class);
+        registerCommand(BackCommand.class);
+        registerCommand(BackListCommand.class);
+        registerCommand(BackRestoreCommand.class);
 
-        hoard.getToFormattedObjectChain().use(HoardFurniture::toFormattedObject);
-        hoard.getFormattedObjectToStringChain().use(HoardFurniture::formattedObjectToString);
+        hoard.getToFormattedObjectChain().use(this::toFormattedObject);
+        hoard.getFormattedObjectToStringChain().use(this::formattedObjectToString);
     }
 
     @NotNull
@@ -119,7 +132,9 @@ public class HoardFurniture extends Furniture {
 
     @Override
     public void terminate() {
-        hoard.saveToFile(hoard.getHoardFilePath());
+        if (saveHoardWhenTerminate) {
+            hoard.saveToFile(hoard.getHoardFilePath());
+        }
     }
 
     public void changePropertyName(
@@ -142,7 +157,57 @@ public class HoardFurniture extends Furniture {
         @NotNull final Entry entry,
         @NotNull final CommandContext commandContext
     ) {
-        final var environment = CommandContext.Hook.environment.getNonNull(commandContext);
+        final var environment = CommandContext.Hook.environment.getNotNull(commandContext);
         return getHoard().entryToString(entry, environment);
+    }
+
+    public static @NotNull String getInstantDateString() {
+        final var now = Instant.now();
+        final var zonedDateTime = now.atZone(ZoneId.systemDefault());
+        final var year = zonedDateTime.getYear();
+        final var month = zonedDateTime.getMonthValue();
+        final var day = zonedDateTime.getDayOfMonth();
+        final var hour = zonedDateTime.getHour();
+        final var minute = zonedDateTime.getMinute();
+        final var second = zonedDateTime.getSecond();
+
+        final var yearStr = String.valueOf(year);
+        final var monthStr = month >= 10 ? String.valueOf(month) : "0" + month;
+        final var dayStr = day >= 10 ? String.valueOf(day) : "0" + day;
+        final var hourStr = hour >= 10 ? String.valueOf(hour) : "0" + hour;
+        final var minuteStr = minute >= 10 ? String.valueOf(minute) : "0" + minute;
+        final var secondStr = second >= 10 ? String.valueOf(second) : "0" + second;
+
+        return yearStr + monthStr + dayStr + hourStr + minuteStr + secondStr;
+    }
+
+    public @NotNull String backup(@NotNull final String name) {
+        final var dateString = getInstantDateString();
+        final var fileName = String.format("hoard.%s.%s.backup.json", name, dateString);
+        final var filePath = getChamberContext().getRootPath().resolve(fileName);
+        hoard.saveToFile(filePath);
+
+        return fileName;
+    }
+
+    public boolean restore(@NotNull final Path filePath) throws IOException {
+        if (!filePath.toFile().exists()) {
+            return false;
+        }
+
+        final var hoardFilePath = hoard.getHoardFilePath();
+        Files.delete(hoardFilePath);
+        Files.copy(filePath, hoardFilePath);
+
+        return true;
+    }
+
+    public boolean deleteBackup(@NotNull final Path filePath) throws IOException {
+        if (!filePath.toFile().exists()) {
+            return false;
+        }
+        Files.delete(filePath);
+
+        return true;
     }
 }

@@ -79,12 +79,12 @@ public final class TimeFurniture extends Furniture {
         final var entry = context.getEntry();
         final var formattedObject = context.getFormattedObject();
         if (isCreatedAtEnabled()) {
-            final var dateString = getDateString(entry.getNonNull(EntryKey.CREATED_AT));
+            final var dateString = getDateString(entry.getNotNull(EntryKey.CREATED_AT));
             formattedObject.put(EntryKey.CREATED_AT, dateString);
         }
 
         if (isUpdatedAtEnabled()) {
-            final var dateString = getDateString(entry.getNonNull(EntryKey.UPDATED_AT));
+            final var dateString = getDateString(entry.getNotNull(EntryKey.UPDATED_AT));
             formattedObject.put(EntryKey.UPDATED_AT, dateString);
         }
     }
@@ -122,7 +122,7 @@ public final class TimeFurniture extends Furniture {
 
     @NotNull
     public String dateToString(final long timestampMs) {
-        final var format = getConfig().getNonNull(ConfigKey.TIME_CREATED_AT_FORMAT);
+        final var format = getConfig().getNotNull(ConfigKey.TIME_CREATED_AT_FORMAT);
         final var formatter = DateTimeFormatter.ofPattern(format);
         final var dateTime
             = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestampMs), ZoneId.systemDefault());

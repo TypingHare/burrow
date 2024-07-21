@@ -12,7 +12,7 @@ import java.nio.file.Path;
 public final class ChamberContext extends Context {
     @NotNull
     public Chamber getChamber() {
-        return Hook.chamber.getNonNull(this);
+        return Hook.chamber.getNotNull(this);
     }
 
     public void setChamber(@NotNull final Chamber chamber) {
@@ -21,7 +21,7 @@ public final class ChamberContext extends Context {
 
     @NotNull
     public Path getRootPath() {
-        return Hook.rootPath.getNonNull(this);
+        return Hook.rootPath.getNotNull(this);
     }
 
     public void setRootPath(@NotNull final Path rootPath) {
@@ -30,7 +30,7 @@ public final class ChamberContext extends Context {
 
     @NotNull
     public Path getConfigPath() {
-        return Hook.configPath.getNonNull(this);
+        return Hook.configPath.getNotNull(this);
     }
 
     public void setConfigPath(@NotNull final Path configPath) {
@@ -39,7 +39,7 @@ public final class ChamberContext extends Context {
 
     @NotNull
     public Config getConfig() {
-        return Hook.config.getNonNull(this);
+        return Hook.config.getNotNull(this);
     }
 
     public void setConfig(@NotNull final Config config) {
@@ -48,7 +48,7 @@ public final class ChamberContext extends Context {
 
     @NotNull
     public Renovator getRenovator() {
-        return Hook.renovator.getNonNull(this);
+        return Hook.renovator.getNotNull(this);
     }
 
     public void setRenovator(@NotNull final Renovator renovator) {
@@ -57,7 +57,7 @@ public final class ChamberContext extends Context {
 
     @NotNull
     public Processor getProcessor() {
-        return Hook.processor.getNonNull(this);
+        return Hook.processor.getNotNull(this);
     }
 
     public void setProcessor(@NotNull final Processor processor) {

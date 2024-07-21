@@ -29,7 +29,7 @@ public class EntriesCommand extends Command {
             return CommandLine.ExitCode.USAGE;
         }
 
-        final var environment = CommandContext.Hook.environment.getNonNull(commandContext);
+        final var environment = CommandContext.Hook.environment.getNotNull(commandContext);
         final var hoard = use(HoardFurniture.class).getHoard();
         final var idList = idListString.substring(1, idListString.length() - 1).split(",");
         final List<String> entryStringList =

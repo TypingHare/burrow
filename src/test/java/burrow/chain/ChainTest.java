@@ -46,7 +46,7 @@ public class ChainTest {
             @NotNull final Context context,
             @Nullable final Runnable next
         ) {
-            final var message = SimpleChain.Hook.message.getNonNull(context);
+            final var message = SimpleChain.Hook.message.getNotNull(context);
             if (message.startsWith("author:")) {
                 context.trigger(new SimpleEvent("James"));
             }
@@ -157,7 +157,7 @@ public class ChainTest {
         final var simpleChain = new SimpleChain();
         final var messageHook = SimpleChain.Hook.message;
         simpleChain.use((Middleware.Pre<Context>) (context) -> {
-            if (messageHook.getNonNull(context).startsWith("author:")) {
+            if (messageHook.getNotNull(context).startsWith("author:")) {
                 context.trigger(new SimpleEvent("James"));
             }
         });

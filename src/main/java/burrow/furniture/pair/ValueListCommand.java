@@ -7,13 +7,13 @@ import burrow.furniture.standard.StandardFurniture;
 import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "values", description = "Retrieve values of a specified key.")
+@CommandLine.Command(name = "value.list", description = "Retrieve values of a specified key.")
 @CommandType(PairFurniture.COMMAND_TYPE)
-public class ValuesCommand extends Command {
+public class ValueListCommand extends Command {
     @CommandLine.Parameters(index = "0", description = "The key of the entry.")
     private String key;
 
-    public ValuesCommand(@NotNull final CommandContext commandContext) {
+    public ValueListCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

@@ -12,7 +12,7 @@ import java.util.List;
 public final class CommandContext extends Context {
     @NotNull
     public ChamberContext getChamberContext() {
-        return Hook.chamberContext.getNonNull(this);
+        return Hook.chamberContext.getNotNull(this);
     }
 
     public void setChamberContext(@NotNull final ChamberContext chamberContext) {
@@ -21,7 +21,7 @@ public final class CommandContext extends Context {
 
     @NotNull
     public String getCommandName() {
-        return Hook.commandName.getNonNull(this);
+        return Hook.commandName.getNotNull(this);
     }
 
     public void setCommandName(@NotNull final String commandName) {
@@ -30,7 +30,7 @@ public final class CommandContext extends Context {
 
     @NotNull
     public List<String> getCommandArgs() {
-        return Hook.commandArgs.getNonNull(this);
+        return Hook.commandArgs.getNotNull(this);
     }
 
     public void setCommandArgs(@NotNull final List<String> commandArgs) {
@@ -39,7 +39,7 @@ public final class CommandContext extends Context {
 
     @NotNull
     public Environment getEnvironment() {
-        return Hook.environment.getNonNull(this);
+        return Hook.environment.getNotNull(this);
     }
 
     public void setEnvironment(@NotNull final Environment environment) {
@@ -48,7 +48,7 @@ public final class CommandContext extends Context {
 
     @NotNull
     public Integer getExitCode() {
-        return Hook.exitCode.getNonNull(this);
+        return Hook.exitCode.getNotNull(this);
     }
 
     public void setExitCode(@NotNull final Integer exitCode) {
@@ -57,7 +57,7 @@ public final class CommandContext extends Context {
 
     @NotNull
     public StringBuilder getBuffer() {
-        return Hook.buffer.getNonNull(this);
+        return Hook.buffer.getNotNull(this);
     }
 
     public void setBuffer(@NotNull final StringBuilder buffer) {

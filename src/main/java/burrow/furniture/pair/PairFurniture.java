@@ -36,7 +36,7 @@ public final class PairFurniture extends Furniture {
     }
 
     public boolean isAllowsDuplicate() {
-        return Values.Bool.parse(getConfig().getNonNull(ConfigKey.PAIR_ALLOW_DUPLICATE));
+        return Values.Bool.parse(getConfig().getNotNull(ConfigKey.PAIR_ALLOW_DUPLICATE));
     }
 
     @NotNull
@@ -63,12 +63,12 @@ public final class PairFurniture extends Furniture {
     @Override
     public void beforeInitialization() {
         registerCommand(NewCommand.class);
-        registerCommand(KeysCommand.class);
+        registerCommand(KeyListCommand.class);
         registerCommand(KeyCountCommand.class);
-        registerCommand(ValuesCommand.class);
+        registerCommand(ValueListCommand.class);
 
-        keyName = getConfig().getNonNull(ConfigKey.PAIR_KEY_NAME);
-        valueName = getConfig().getNonNull(ConfigKey.PAIR_VALUE_NAME);
+        keyName = getConfig().getNotNull(ConfigKey.PAIR_KEY_NAME);
+        valueName = getConfig().getNotNull(ConfigKey.PAIR_VALUE_NAME);
     }
 
     @Override
@@ -128,12 +128,12 @@ public final class PairFurniture extends Furniture {
 
     @NotNull
     public String getKey(@NotNull final Entry entry) {
-        return entry.getNonNull(keyName);
+        return entry.getNotNull(keyName);
     }
 
     @NotNull
     public String getValue(@NotNull final Entry entry) {
-        return entry.getNonNull(valueName);
+        return entry.getNotNull(valueName);
     }
 
     public void setKey(@NotNull final Entry entry, @NotNull final String key) {

@@ -67,11 +67,11 @@ public class SchedulerFurniture extends Furniture {
     }
 
     public long getIntervalMs() {
-        return Long.parseLong(getConfig().getNonNull(ConfigKey.SCHEDULE_INTERVAL_MS));
+        return Long.parseLong(getConfig().getNotNull(ConfigKey.SCHEDULE_INTERVAL_MS));
     }
 
     public long getThresholdMs() {
-        return Long.parseLong(getConfig().getNonNull(ConfigKey.SCHEDULE_THRESHOLD_MS));
+        return Long.parseLong(getConfig().getNotNull(ConfigKey.SCHEDULE_THRESHOLD_MS));
     }
 
     @Override

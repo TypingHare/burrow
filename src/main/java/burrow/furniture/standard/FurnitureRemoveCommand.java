@@ -26,7 +26,7 @@ public class FurnitureRemoveCommand extends Command {
     @Override
     public Integer call() throws ChamberInitializationException {
         final var config = getConfig();
-        final var furnitureListString = config.getNonNull(Config.Key.CHAMBER_FURNITURE_LIST);
+        final var furnitureListString = config.getNotNull(Config.Key.CHAMBER_FURNITURE_LIST);
         final var newFurnitureNameList =
             new java.util.ArrayList<>(Arrays.stream(furnitureListString.split(Renovator.FURNITURE_NAME_SEPARATOR))
                 .map(String::trim)

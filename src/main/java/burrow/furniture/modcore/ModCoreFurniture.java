@@ -64,7 +64,7 @@ public class ModCoreFurniture extends Furniture {
         registerCommand(ModListCommand.class);
         registerCommand(ModFurnitureCommand.class);
 
-        final var modsDir = new File(getConfig().getNonNull(ConfigKey.MODS_DIR));
+        final var modsDir = new File(getConfig().getNotNull(ConfigKey.MODS_DIR));
         final var jarFileList = new ArrayList<File>();
 
         // Collect all jar files

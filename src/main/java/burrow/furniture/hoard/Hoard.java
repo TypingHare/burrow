@@ -42,7 +42,7 @@ public class Hoard extends ChamberModule {
     public Hoard(@NotNull final Chamber chamber) {
         super(chamber);
 
-        final var rootPath = ChamberContext.Hook.rootPath.getNonNull(getChamberContext());
+        final var rootPath = ChamberContext.Hook.rootPath.getNotNull(getChamberContext());
         hoardFilePath = rootPath.resolve(HOARD_FILE_NAME);
     }
 

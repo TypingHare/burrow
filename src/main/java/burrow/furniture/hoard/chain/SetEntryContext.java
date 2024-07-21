@@ -10,7 +10,7 @@ import java.util.Map;
 public class SetEntryContext extends Context {
     @NotNull
     public Entry getEntry() {
-        return Hook.entry.getNonNull(this);
+        return Hook.entry.getNotNull(this);
     }
 
     public void setEntry(@NotNull final Entry entry) {
@@ -19,7 +19,7 @@ public class SetEntryContext extends Context {
 
     @NotNull
     public Map<String, String> getProperties() {
-        return Hook.properties.getNonNull(this);
+        return Hook.properties.getNotNull(this);
     }
 
     public void setProperties(@NotNull final Map<String, String> properties) {

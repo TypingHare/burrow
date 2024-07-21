@@ -5,43 +5,50 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="55d3258e-f4d8-4532-b2d2-02fcd7c7d717" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/LocalBurrowClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/LocalBurrowClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/chain/ContextHook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/chain/ContextHook.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/Chamber.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/Chamber.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberInitializationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberInitializationException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberShepherd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberShepherd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberLifeCycleContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberLifeCycleContext.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/CommandContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/CommandContext.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/Processor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/Processor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/BurrowFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/BurrowFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Furniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Furniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/aspectcore/AspectCoreFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/aspectcore/AspectCoreFurniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/config/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/config/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Renovator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Renovator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/bincore/BinCoreFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/bincore/BinCoreFurniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/bincore/CreateShellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/bincore/ShellNewCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberInfoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberInfoCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberListCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberNewCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberNewCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/DictatorFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/DictatorFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/exec/ExecCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/exec/ExecFurniture.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/Entry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/Entry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/Hoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/Hoard.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/HoardFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/HoardFurniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/CreateEntryContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/CreateEntryContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/DeleteEntryContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/DeleteEntryContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/FormattedObjectToStringContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/FormattedObjectToStringContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/RegisterEntryContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/RegisterEntryContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/SetEntryContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/SetEntryContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/ToEntryObjectContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/ToEntryObjectContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/ToFormattedObjectContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/ToFormattedObjectContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/UnsetEntryContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/UnsetEntryContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/command/EntriesCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/command/EntriesCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/command/EntryCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/command/EntryCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModCoreFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModCoreFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModFurnitureCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModFurnitureCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModListCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/KeyCountCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/KeyCountCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/KeysCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/KeyListCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/PairFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/PairFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/script/ExecCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/script/ExecCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/script/ScriptFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/script/ScriptFurniture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/ValuesCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/ValueListCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/scheduler/SchedulerFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/scheduler/SchedulerFurniture.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/CommandListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/CommandListCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigGetCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigListCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigGetCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigValueCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureAddCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureAddCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureAllCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureAllCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureListCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureRemoveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureRemoveCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/time/TimeFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/time/TimeFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/server/BurrowServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/server/BurrowServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/bin/burrow" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/bin/burrow" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/burrow/chain/ChainTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/burrow/chain/ChainTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +123,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -230,26 +237,13 @@
       <workItem from="1720792772736" duration="4267000" />
       <workItem from="1720923086964" duration="24000" />
       <workItem from="1721163726811" duration="5745000" />
-      <workItem from="1721312281029" duration="906000" />
+      <workItem from="1721312281029" duration="1204000" />
+      <workItem from="1721314087169" duration="99000" />
+      <workItem from="1721574094539" duration="5131000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/Hoard.java</url>
-          <line>153</line>
-          <properties class="burrow.furniture.hoard.Hoard" method="saveToFile">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

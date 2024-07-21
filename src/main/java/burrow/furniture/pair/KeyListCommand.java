@@ -7,10 +7,10 @@ import burrow.furniture.standard.StandardFurniture;
 import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "keys", description = "Display all keys.")
+@CommandLine.Command(name = "key.list", description = "Display all keys.")
 @CommandType(PairFurniture.COMMAND_TYPE)
-public class KeysCommand extends Command {
-    public KeysCommand(@NotNull final CommandContext commandContext) {
+public class KeyListCommand extends Command {
+    public KeyListCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

@@ -93,7 +93,7 @@ public class Config extends ChamberModule {
     }
 
     @NotNull
-    public String getNonNull(@NotNull final String key) {
+    public String getNotNull(@NotNull final String key) {
         final var value = store.get(key);
         if (value == null) {
             throw new RuntimeException("Missing required config key: " + key);
@@ -134,7 +134,7 @@ public class Config extends ChamberModule {
 
     public void loadFromFile() throws ConfigFileNotFoundException {
         final var context = getChamberContext();
-        final var rootPath = ChamberContext.Hook.rootPath.getNonNull(context);
+        final var rootPath = ChamberContext.Hook.rootPath.getNotNull(context);
         final var filePath = rootPath.resolve(CONFIG_FILE_NAME).normalize();
         ChamberContext.Hook.configPath.set(context, filePath);
 
@@ -159,7 +159,7 @@ public class Config extends ChamberModule {
         }
 
         final var content = new Gson().toJson(getStore());
-        final var configPath = ChamberContext.Hook.configPath.getNonNull(getChamberContext());
+        final var configPath = ChamberContext.Hook.configPath.getNotNull(getChamberContext());
 
         try {
             Files.write(configPath, content.getBytes());

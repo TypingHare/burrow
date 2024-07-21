@@ -10,7 +10,7 @@ import java.util.Collection;
 public class UnsetEntryContext extends Context {
     @NotNull
     public Entry getEntry() {
-        return Hook.entry.getNonNull(this);
+        return Hook.entry.getNotNull(this);
     }
 
     public void setEntry(@NotNull final Entry entry) {
@@ -19,7 +19,7 @@ public class UnsetEntryContext extends Context {
 
     @NotNull
     public Collection<String> getKeys() {
-        return Hook.keys.getNonNull(this);
+        return Hook.keys.getNotNull(this);
     }
 
     public void setKeys(@NotNull final Collection<String> keys) {

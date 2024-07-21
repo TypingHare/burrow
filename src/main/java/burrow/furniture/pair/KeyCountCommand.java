@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 @CommandLine.Command(
-    name = "key-count",
+    name = "key.count",
     description = "Get the count of entries associated with a specified key."
 )
 @CommandType(PairFurniture.COMMAND_TYPE)

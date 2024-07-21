@@ -11,7 +11,7 @@ import java.util.Map;
 public class FormattedObjectToStringContext extends Context {
     @NotNull
     public Integer getId() {
-        return Hook.id.getNonNull(this);
+        return Hook.id.getNotNull(this);
     }
 
     public void setId(@NotNull final Integer id) {
@@ -20,7 +20,7 @@ public class FormattedObjectToStringContext extends Context {
 
     @NotNull
     public Map<String, String> getFormattedObject() {
-        return Hook.formattedObject.getNonNull(this);
+        return Hook.formattedObject.getNotNull(this);
     }
 
     public void setFormattedObject(@NotNull final Map<String, String> formattedObject) {
@@ -29,7 +29,7 @@ public class FormattedObjectToStringContext extends Context {
 
     @NotNull
     public Environment getEnvironment() {
-        return Hook.environment.getNonNull(this);
+        return Hook.environment.getNotNull(this);
     }
 
     public void setEnvironment(@NotNull final Environment environment) {

@@ -8,9 +8,9 @@ import picocli.CommandLine;
 
 import java.io.IOException;
 
-@CommandLine.Command(name = "create-shell", description = "Create a shell file.")
+@CommandLine.Command(name = "shell.new", description = "Create a shell file.")
 @CommandType(BinCoreFurniture.COMMAND_TYPE)
-public class CreateShellCommand extends Command {
+public class ShellNewCommand extends Command {
     @CommandLine.Option(
         names = {"--force", "-f"},
         paramLabel = "is-force",
@@ -19,7 +19,7 @@ public class CreateShellCommand extends Command {
     )
     public Boolean isForce;
 
-    public CreateShellCommand(@NotNull final CommandContext commandContext) {
+    public ShellNewCommand(@NotNull final CommandContext commandContext) {
         super(commandContext);
     }
 

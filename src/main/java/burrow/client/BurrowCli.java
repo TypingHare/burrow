@@ -280,7 +280,7 @@ public final class BurrowCli implements Callable<Integer> {
             System.out.format("Chamber <%s> does not exist.\n", chamberName);
             final var tempChamberName = this.chamberName;
             this.chamberName = ".";
-            execute("rlist");
+            execute("chamber.list");
             this.chamberName = tempChamberName;
         } else {
             this.chamberName = chamberName;

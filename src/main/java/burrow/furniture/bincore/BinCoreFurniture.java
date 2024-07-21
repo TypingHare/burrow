@@ -44,7 +44,7 @@ public class BinCoreFurniture extends Furniture {
 
     @Override
     public void beforeInitialization() {
-        registerCommand(CreateShellCommand.class);
+        registerCommand(ShellNewCommand.class);
     }
 
     /**
@@ -69,12 +69,12 @@ public class BinCoreFurniture extends Furniture {
     }
 
     public void createShellFile(@NotNull final String content) {
-        final var shellFileName = getConfig().getNonNull(ConfigKey.BIN_NAME);
+        final var shellFileName = getConfig().getNotNull(ConfigKey.BIN_NAME);
         createShellFile(shellFileName, content);
     }
 
     public boolean createShellFileIfAbsent(@NotNull final String content) {
-        final var shellFileName = getConfig().getNonNull(ConfigKey.BIN_NAME);
+        final var shellFileName = getConfig().getNotNull(ConfigKey.BIN_NAME);
         final var file = new File(shellFileName);
         if (!file.exists()) {
             createShellFile(content);
@@ -85,7 +85,7 @@ public class BinCoreFurniture extends Furniture {
     }
 
     public @NotNull String getDefaultShellContent() {
-        final var shell = getConfig().getNonNull(ConfigKey.BIN_SHELL);
+        final var shell = getConfig().getNotNull(ConfigKey.BIN_SHELL);
         final var chamberName = chamber.getName();
         return "#! " + shell + "\n\nburrow " + chamberName + " \"$@\"";
     }

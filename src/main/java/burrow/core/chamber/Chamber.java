@@ -68,9 +68,9 @@ public final class Chamber {
     }
 
     public void terminate() {
-        ChamberContext.Hook.config.getNonNull(chamberContext).saveToFile();
+        ChamberContext.Hook.config.getNotNull(chamberContext).saveToFile();
 
-        final var renovator = ChamberContext.Hook.renovator.getNonNull(chamberContext);
+        final var renovator = ChamberContext.Hook.renovator.getNotNull(chamberContext);
         renovator.terminateAllFurniture();
     }
 
