@@ -8,8 +8,8 @@ fun main() {
     burrow.chamberShepherd["default"]
 
     val environment = Environment(System.out, "~", 80)
-    burrow.parse(listOf(".", "--help"), environment)
-    burrow.parse("default trump won", environment)
+//    burrow.parse(listOf(".", "--help"), environment)
+    burrow.parse(". furnishings --all", environment)
 
     burrow.destroy()
 }

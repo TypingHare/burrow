@@ -24,7 +24,7 @@ class Scheduler(chamber: Chamber) : Furnishing(chamber) {
     }
 
     private val taskScheduler: ScheduledExecutorService =
-        Executors.newScheduledThreadPool(1);
+        Executors.newScheduledThreadPool(1)
     private val preBuildInstantMap = mutableMapOf<String, Instant>()
     private val postBuildInstantMap = mutableMapOf<String, Instant>()
 
@@ -101,8 +101,8 @@ class Scheduler(chamber: Chamber) : Furnishing(chamber) {
     private fun getThresholdMs() = config.get<Long>(ConfigKey.THRESHOLD_MS)!!
 
     object Default {
-        const val INTERVAL_MS = 3000L;
-        const val THRESHOLD_MS = 600000L;
+        const val INTERVAL_MS = 3000L
+        const val THRESHOLD_MS = 600000L
     }
 
     object ConfigKey {

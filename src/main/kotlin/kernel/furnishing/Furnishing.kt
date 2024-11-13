@@ -8,23 +8,30 @@ import kotlin.reflect.KClass
 
 abstract class Furnishing(chamber: Chamber) : ChamberModule(chamber),
     ConfigSupport {
+    companion object {
+        fun extractId(furnishingClass: FurnishingClass): String =
+            furnishingClass.java.name
+
+        fun extractLabel(furnishingClass: FurnishingClass): String {
+            val furnitureAnnotation =
+                furnishingClass.java.getAnnotation(Furniture::class.java)
+
+            return furnitureAnnotation?.label.takeIf { !it.isNullOrBlank() }
+                ?: furnishingClass.java.simpleName
+        }
+    }
+
     private val commands = mutableSetOf<CommandClass>()
 
-    fun getId(): String = this::javaClass.name
+    fun getId(): String = extractId(this::class)
 
-    fun getLabel(): String {
-        val furnitureAnnotation =
-            this::class.java.getAnnotation(Furniture::class.java)
-
-        return furnitureAnnotation?.label.takeIf { !it.isNullOrBlank() }
-            ?: this::class.java.simpleName
-    }
+    fun getLabel(): String = extractLabel(this::class)
 
     fun getDependencies(): List<String> {
         val dependsOnAnnotation =
             this::class.java.getAnnotation(DependsOn::class.java)
 
-        return dependsOnAnnotation?.dependencies?.map { it.javaClass.name }
+        return dependsOnAnnotation?.dependencies?.map { it.java.name }
             .orEmpty()
     }
 

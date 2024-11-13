@@ -1,6 +1,5 @@
 package burrow.kernel.command
 
-import burrow.kernel.chamber.Chamber
 import picocli.CommandLine
 
 @CommandLine.Command(
@@ -26,9 +25,8 @@ class DefaultCommand(data: CommandData) : Command(data) {
 
     override fun call(): Int {
         if (showName || showHelp) {
-            val name = config.get<String>(Chamber.ConfigKey.ALIAS)
-            val description = config.get<String>(Chamber.ConfigKey.DESCRIPTION)
-            stdout.println("$name    $description")
+            val name = chamber.name
+            stdout.println(name)
         }
 
         return CommandLine.ExitCode.OK

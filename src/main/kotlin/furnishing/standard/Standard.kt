@@ -1,7 +1,6 @@
 package burrow.furnishing.standard
 
 import burrow.kernel.chamber.Chamber
-import burrow.kernel.chamber.Chamber.ConfigKey
 import burrow.kernel.config.Config
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.Furniture
@@ -11,15 +10,22 @@ import burrow.kernel.furnishing.Furniture
     type = Furniture.Type.COMPONENT
 )
 class Standard(chamber: Chamber) : Furnishing(chamber) {
+    override fun assemble() {
+        registerCommand(FurnishingsCommand::class)
+    }
+
     override fun prepareConfig(config: Config) {
         config.addKey(ConfigKey.ALIAS)
         config.addKey(ConfigKey.DESCRIPTION)
-        renovator.prepareConfig(config)
     }
 
     override fun modifyConfig(config: Config) {
         config.setIfAbsent(ConfigKey.ALIAS, chamber.name)
         config.setIfAbsent(ConfigKey.DESCRIPTION, "")
-        renovator.prepareConfig(config)
+    }
+
+    object ConfigKey {
+        const val ALIAS = "alias"
+        const val DESCRIPTION = "description"
     }
 }

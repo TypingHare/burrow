@@ -46,8 +46,10 @@ class Chamber(val burrow: Burrow, val name: String) {
         config.importRawEntries(
             mapOf(Pair(Renovator.ConfigKey.FURNISHING_LIST, furnishingList))
         )
+        renovator.prepareConfig(config)
         renovator.loadFurnishings()
         config.importRawEntries(configRawEntries)
+        renovator.modifyConfig(config)
         renovator.initializeFurnishings()
 
         config.importRawEntries(loadConfigRawEntries(configFilePath))
@@ -75,11 +77,6 @@ class Chamber(val burrow: Burrow, val name: String) {
         val content = Files.readString(filePath)
         val type = object : TypeToken<Map<String, String>>() {}.type
         return Gson().fromJson(content, type)
-    }
-
-    object ConfigKey {
-        const val ALIAS = "alias"
-        const val DESCRIPTION = "description"
     }
 }
 
