@@ -3,6 +3,7 @@ package burrow.furnishing.standard
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
 import burrow.kernel.furnishing.Furnishing
+import burrow.kernel.furnishing.FurnishingDependencyTree
 import picocli.CommandLine
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -25,7 +26,32 @@ class FurnishingsCommand(data: CommandData) : Command(data) {
     }
 
     private fun displayFurnishingDependencyTree() {
-        val dependencyTree = 0;
+        val index = AtomicInteger(0)
+        renovator.dependencyTree.root.children.onEach {
+            printTree(it, index.getAndIncrement(), 0, 2)
+        }
+    }
+
+    private fun printTree(
+        node: FurnishingDependencyTree.Node,
+        index: Int,
+        indentation: Int,
+        indentationIncrement: Int
+    ) {
+        val furnishing = node.furnishing ?: return
+        val id = furnishing.getId()
+        val label = furnishing.getLabel()
+        stdout.println(" ".repeat(indentation) + "[$index] $label ($id)")
+
+        val childIndex = AtomicInteger(0)
+        node.children.onEach {
+            printTree(
+                it,
+                childIndex.getAndIncrement(),
+                indentation + indentationIncrement,
+                indentationIncrement
+            )
+        }
     }
 
     private fun displayFurnishingList() {

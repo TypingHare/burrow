@@ -19,6 +19,14 @@ abstract class Command(data: CommandData) : ChamberModule(data.chamber),
 
             return commandAnnotation.name
         }
+
+        fun extractDescription(commandClass: CommandClass): String {
+            val commandAnnotation =
+                commandClass.java.getAnnotation(CommandLine.Command::class.java)
+                    ?: throw NotACommandException(commandClass.java.name)
+
+            return commandAnnotation.description[0]
+        }
     }
 
     protected val name = data.commandName

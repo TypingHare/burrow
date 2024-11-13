@@ -21,7 +21,7 @@ abstract class Furnishing(chamber: Chamber) : ChamberModule(chamber),
         }
     }
 
-    private val commands = mutableSetOf<CommandClass>()
+    val commands = mutableSetOf<CommandClass>()
 
     fun getId(): String = extractId(this::class)
 

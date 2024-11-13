@@ -12,6 +12,8 @@ import burrow.kernel.furnishing.Furniture
 class Standard(chamber: Chamber) : Furnishing(chamber) {
     override fun assemble() {
         registerCommand(FurnishingsCommand::class)
+        registerCommand(CommandsCommand::class)
+        registerCommand(HelpCommand::class)
     }
 
     override fun prepareConfig(config: Config) {

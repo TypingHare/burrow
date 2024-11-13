@@ -20,7 +20,9 @@ class Chamber(val burrow: Burrow, val name: String) {
     fun build() {
         try {
             checkChamberRootDirectory()
+            loadFurnishings()
             loadConfig()
+            renovator.initializeFurnishings()
         } catch (throwable: Throwable) {
             throw BuildChamberException(name, throwable)
         }
@@ -32,25 +34,21 @@ class Chamber(val burrow: Burrow, val name: String) {
         }
     }
 
+    private fun loadFurnishings() {
+        val furnishingsFilePath = getFurnishingsFilePath()
+        if (!furnishingsFilePath.exists()) {
+            throw FurnishingsFileNotFoundException(furnishingsFilePath)
+        }
+
+        val furnishingIds = loadFurnishingIds(furnishingsFilePath)
+        renovator.loadFurnishings(furnishingIds)
+    }
+
     private fun loadConfig() {
         val configFilePath = getConfigFilePath()
         if (!configFilePath.exists()) {
             throw ConfigFileNotFoundException(configFilePath)
         }
-
-        val configRawEntries = loadConfigRawEntries(configFilePath)
-        renovator.prepareConfig(config)
-        val furnishingList =
-            configRawEntries[Renovator.ConfigKey.FURNISHING_LIST]
-                ?: Renovator.STANDARD_FURNISHING_ID
-        config.importRawEntries(
-            mapOf(Pair(Renovator.ConfigKey.FURNISHING_LIST, furnishingList))
-        )
-        renovator.prepareConfig(config)
-        renovator.loadFurnishings()
-        config.importRawEntries(configRawEntries)
-        renovator.modifyConfig(config)
-        renovator.initializeFurnishings()
 
         config.importRawEntries(loadConfigRawEntries(configFilePath))
         config.isModified.set(false)
@@ -70,11 +68,20 @@ class Chamber(val burrow: Burrow, val name: String) {
         saveConfig()
     }
 
+    private fun getFurnishingsFilePath(): Path =
+        rootPath.resolve(Burrow.Standard.FURNISHINGS_FILE_NAME)
+
     private fun getConfigFilePath(): Path =
         rootPath.resolve(Burrow.Standard.CONFIG_FILE_NAME)
 
-    private fun loadConfigRawEntries(filePath: Path): Map<String, String> {
-        val content = Files.readString(filePath)
+    private fun loadFurnishingIds(furnishingsFilePath: Path): List<String> {
+        val content = Files.readString(furnishingsFilePath)
+        val type = object : TypeToken<List<String>>() {}.type
+        return Gson().fromJson(content, type)
+    }
+
+    private fun loadConfigRawEntries(configFilePath: Path): Map<String, String> {
+        val content = Files.readString(configFilePath)
         val type = object : TypeToken<Map<String, String>>() {}.type
         return Gson().fromJson(content, type)
     }
@@ -83,6 +90,11 @@ class Chamber(val burrow: Burrow, val name: String) {
 class ChamberNotFoundException(private val name: String) :
     RuntimeException("Chamber not found: $name") {
     fun getName(): String = name
+}
+
+class FurnishingsFileNotFoundException(private val path: Path) :
+    RuntimeException("Furnishings file not found: $path") {
+    fun getPath(): Path = path
 }
 
 class ConfigFileNotFoundException(private val path: Path) :

@@ -150,8 +150,8 @@ class Burrow {
 
     object Standard {
         const val ROOT_CHAMBER_NAME = "."
+        const val FURNISHINGS_FILE_NAME = "furnishings.json"
         const val CONFIG_FILE_NAME = "config.json"
-        const val FURNISHING_NAME_SEPARATOR = ":"
         const val CARTON_PACKAGE = "burrow.furnishing"
     }
 }
