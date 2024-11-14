@@ -69,7 +69,11 @@ class Scheduler(chamber: Chamber) : Furnishing(chamber) {
             val now = Instant.now()
             postBuildInstantMap[chamberName] = now
 
-            val startInstant = preBuildInstantMap[chamberName]!!
+            if (!preBuildInstantMap.containsKey(chamberName)) {
+                return@subscribe
+            }
+
+            val startInstant = preBuildInstantMap[chamberName]
             val duration = Duration.between(startInstant, now).toMillis()
             logger.info("Started chamber $chamberName in $duration ms")
         }

@@ -3,7 +3,7 @@ package burrow.kernel.command
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
 import burrow.kernel.event.Event
-import burrow.kernel.stream.BurrowPrintWriter
+import burrow.kernel.stream.BurrowPrintWriters
 import picocli.CommandLine
 
 class Processor(chamber: Chamber) : ChamberModule(chamber) {
@@ -41,9 +41,9 @@ class Processor(chamber: Chamber) : ChamberModule(chamber) {
             val commandArgs = commandData.commandArgs
             val exitCode =
                 CommandLine(command).execute(*commandArgs.toTypedArray())
-            BurrowPrintWriter.exitCode(outputStream).println(exitCode)
+            BurrowPrintWriters.exitCode(outputStream).println(exitCode)
         } catch (ex: Throwable) {
-            BurrowPrintWriter.stdout(outputStream).println(ex.message)
+            BurrowPrintWriters.stdout(outputStream).println(ex.message)
         }
     }
 
@@ -51,9 +51,9 @@ class Processor(chamber: Chamber) : ChamberModule(chamber) {
         fun commandNotFoundEventHandler(event: CommandNotFoundEvent) {
             val commandName = event.commandData.commandName
             val outputStream = event.commandData.environment.outputStream
-            BurrowPrintWriter.stderr(outputStream)
+            BurrowPrintWriters.stderr(outputStream)
                 .println("Command not found: $commandName")
-            BurrowPrintWriter.exitCode(outputStream)
+            BurrowPrintWriters.exitCode(outputStream)
                 .println(CommandLine.ExitCode.USAGE)
         }
     }

@@ -17,6 +17,7 @@ class Chamber(val burrow: Burrow, val name: String) {
     val renovator = Renovator(this)
     val processor = Processor(this)
 
+    @Throws(BuildChamberException::class)
     fun build() {
         try {
             checkChamberRootDirectory()
@@ -29,7 +30,7 @@ class Chamber(val burrow: Burrow, val name: String) {
     }
 
     private fun checkChamberRootDirectory() {
-        if (!rootPath.isDirectory()) {
+        if (name.isEmpty() || !rootPath.isDirectory()) {
             throw ChamberNotFoundException(name)
         }
     }

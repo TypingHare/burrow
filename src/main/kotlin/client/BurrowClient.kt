@@ -1,28 +1,12 @@
 package burrow.client
 
-import burrow.kernel.stream.BurrowPrintWriter
+import burrow.kernel.stream.BurrowPrintWriters
 import burrow.server.BurrowServer
 import picocli.CommandLine
 import java.io.*
 import java.net.Socket
 
-class BurrowClient(host: String, port: Int) :
-    Closeable {
-    private enum class ResponseType {
-        NONE,
-        STDOUT,
-        STDERR,
-        EXIT_CODE
-    }
-
-    companion object {
-        private val responseTypeMap = mapOf(
-            BurrowPrintWriter.Prefix.STDOUT.trim() to ResponseType.STDOUT,
-            BurrowPrintWriter.Prefix.STDERR.trim() to ResponseType.STDERR,
-            BurrowPrintWriter.Prefix.EXIT_CODE.trim() to ResponseType.EXIT_CODE
-        )
-    }
-
+class BurrowClient(host: String, port: Int) : Closeable {
     private val clientSocket = Socket(host, port)
     private var currentResponseType = ResponseType.NONE
     private var stdoutOutputStream: OutputStream = System.out
@@ -36,13 +20,15 @@ class BurrowClient(host: String, port: Int) :
         this.stderrOutputStream = stderrOutputStream
     }
 
-    fun send(command: String): Int {
+    fun send(args: Array<String>): Int {
+        val commandString = getOriginalCommand(args)
+
         try {
             val reader =
                 BufferedReader(InputStreamReader(clientSocket.getInputStream()))
             val writer = PrintWriter(clientSocket.getOutputStream(), true)
 
-            writer.println(command)
+            writer.println(commandString)
 
             var line: String?
             while (reader.readLine().also { line = it } != null) {
@@ -83,12 +69,41 @@ class BurrowClient(host: String, port: Int) :
             stderrOutputStream.write("\n".toByteArray())
         }
     }
-}
 
-fun main() {
-    BurrowClient("localhost", BurrowServer.Standard.PORT).use { client ->
-        client.send("default root")
-        println()
-        client.send(". furnishings --all")
+    private enum class ResponseType {
+        NONE,
+        STDOUT,
+        STDERR,
+        EXIT_CODE
+    }
+
+    companion object {
+        private val responseTypeMap = mapOf(
+            BurrowPrintWriters.Prefix.STDOUT.trim() to ResponseType.STDOUT,
+            BurrowPrintWriters.Prefix.STDERR.trim() to ResponseType.STDERR,
+            BurrowPrintWriters.Prefix.EXIT_CODE.trim() to ResponseType.EXIT_CODE
+        )
+
+        @JvmStatic
+        fun main(args: Array<String>) {
+            BurrowClient(
+                "localhost",
+                BurrowServer.Standard.PORT
+            ).use { client ->
+                client.send(args)
+            }
+        }
+
+        /**
+         * Constructs the original command string from an array of arguments.
+         * @param args an array of command arguments
+         * @return the original command string
+         */
+        @JvmStatic
+        fun getOriginalCommand(args: Array<String>): String {
+            return args.joinToString(" ") { arg ->
+                if (arg.contains(" ")) "\"$arg\"" else arg
+            }
+        }
     }
 }

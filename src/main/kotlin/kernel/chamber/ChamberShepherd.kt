@@ -6,6 +6,7 @@ import burrow.kernel.event.Event
 class ChamberShepherd(private val burrow: Burrow) {
     val chambers = mutableMapOf<String, Chamber>()
 
+    @Throws(BuildChamberException::class)
     fun buildChamber(chamberName: String) {
         val chamber = Chamber(burrow, chamberName)
 

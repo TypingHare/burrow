@@ -3,16 +3,16 @@ package burrow.kernel
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.command.CommandData
-import burrow.kernel.command.CommandUtility
 import burrow.kernel.command.Environment
 import burrow.kernel.command.Processor
 import burrow.kernel.event.EventBus
 import burrow.kernel.furnishing.FurnishingWareHouse
-import burrow.kernel.stream.BurrowPrintWriter
+import burrow.kernel.stream.BurrowPrintWriters
 import ch.qos.logback.classic.Level
 import org.reflections.Reflections
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import picocli.CommandLine
 import java.nio.file.Path
 import java.time.Duration
 import java.time.Instant
@@ -56,6 +56,9 @@ class Burrow {
         logger.info("Started Burrow in {} ms", duration.toMillis())
     }
 
+    fun parse(args: Array<String>, environment: Environment) =
+        parse(args.toList(), environment)
+
     private fun parse(args: List<String>, environment: Environment) {
         val hasChamberName = args.isNotEmpty() && !args[0].startsWith("-")
         val chamberName =
@@ -65,7 +68,7 @@ class Burrow {
 
         val chamber: Chamber
         try {
-            chamber = chamberShepherd[chamberName]
+            chamber = chamberShepherd[chamberName.trim()]
             val hasCommandName =
                 primaryArgs.isNotEmpty() && !primaryArgs[0].startsWith("-")
             val commandName =
@@ -84,13 +87,12 @@ class Burrow {
             chamber.processor.execute(commandData)
         } catch (ex: Exception) {
             logger.error("Failed to initialize chamber: $chamberName", ex)
-            BurrowPrintWriter.stderr(environment.outputStream)
+            BurrowPrintWriters.stderr(environment.outputStream)
                 .println("Failed to initialize chamber: $chamberName")
+            BurrowPrintWriters.exitCode(environment.outputStream)
+                .println(CommandLine.ExitCode.USAGE)
         }
     }
-
-    fun parse(command: String, environment: Environment) =
-        parse(CommandUtility.splitArguments(command), environment)
 
     fun destroy() {
         val chamberNames = chamberShepherd.chambers.keys.toList()

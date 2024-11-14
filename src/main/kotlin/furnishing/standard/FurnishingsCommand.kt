@@ -28,7 +28,7 @@ class FurnishingsCommand(data: CommandData) : Command(data) {
     private fun displayFurnishingDependencyTree() {
         val index = AtomicInteger(0)
         renovator.dependencyTree.root.children.onEach {
-            printTree(it, index.getAndIncrement(), 0, 2)
+            printTree(it, index.getAndIncrement(), 0, 4)
         }
     }
 

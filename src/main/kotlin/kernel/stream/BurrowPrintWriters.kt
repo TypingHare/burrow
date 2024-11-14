@@ -3,7 +3,7 @@ package burrow.kernel.stream
 import java.io.OutputStream
 import java.io.PrintWriter
 
-object BurrowPrintWriter {
+object BurrowPrintWriters {
     @JvmStatic
     private fun printWriter(
         outputStream: OutputStream,
@@ -24,5 +24,10 @@ object BurrowPrintWriter {
         const val STDOUT = "STDOUT\n"
         const val STDERR = "STDERR\n"
         const val EXIT_CODE = "EXIT_CODE\n"
+    }
+
+    object Suffix {
+        const val INVISIBLE_SYMBOL = "\\i"
+        const val NEWLINE_CANCEL_SYMBOL = "\\c"
     }
 }
