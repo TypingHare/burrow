@@ -8,7 +8,7 @@ fun main() {
     burrow.chamberShepherd["default"]
 
     val environment = Environment(System.out, "~", 80)
-    burrow.parse(". commands -a", environment)
+    burrow.parse(". commands", environment)
 
     burrow.destroy()
 }

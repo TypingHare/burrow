@@ -3,8 +3,8 @@ package burrow.kernel.command
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
 import burrow.kernel.event.Event
+import burrow.kernel.stream.BurrowPrintWriter
 import picocli.CommandLine
-import java.io.PrintWriter
 
 class Processor(chamber: Chamber) : ChamberModule(chamber) {
     companion object {
@@ -33,24 +33,28 @@ class Processor(chamber: Chamber) : ChamberModule(chamber) {
         }
 
         val commandClass = commandClasses[commandName]!!
+        val outputStream = commandData.environment.outputStream
         try {
             val constructor =
                 commandClass.java.getConstructor(CommandData::class.java)
             val command = constructor.newInstance(commandData)
             val commandArgs = commandData.commandArgs
-            CommandLine(command).execute(*commandArgs.toTypedArray())
+            val exitCode =
+                CommandLine(command).execute(*commandArgs.toTypedArray())
+            BurrowPrintWriter.exitCode(outputStream).println(exitCode)
         } catch (ex: Throwable) {
-            val stdout = PrintWriter(commandData.environment.outputStream)
-            stdout.println(ex.message)
+            BurrowPrintWriter.stdout(outputStream).println(ex.message)
         }
     }
 
     object EventHandler {
         fun commandNotFoundEventHandler(event: CommandNotFoundEvent) {
             val commandName = event.commandData.commandName
-            val stderr =
-                PrintWriter(event.commandData.environment.outputStream, true)
-            stderr.println("Command not found: $commandName")
+            val outputStream = event.commandData.environment.outputStream
+            BurrowPrintWriter.stderr(outputStream)
+                .println("Command not found: $commandName")
+            BurrowPrintWriter.exitCode(outputStream)
+                .println(CommandLine.ExitCode.USAGE)
         }
     }
 }

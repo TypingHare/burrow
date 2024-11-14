@@ -1,4 +1,3 @@
 # TODO
 
-- [ ] furnishings.json
-- [ ] output stream
+- [ ] BurrowCli

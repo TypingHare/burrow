@@ -4,8 +4,8 @@ import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.FurnishingNotFoundException
+import burrow.kernel.stream.BurrowPrintWriter
 import picocli.CommandLine
-import java.io.PrintWriter
 import java.util.concurrent.Callable
 import kotlin.reflect.KClass
 
@@ -33,8 +33,12 @@ abstract class Command(data: CommandData) : ChamberModule(data.chamber),
     protected val args = data.commandArgs
     private val environment = data.environment
 
-    protected val stdout = PrintWriter(System.out, true)
-    protected val stderr = PrintWriter(environment.outputStream, true)
+    protected val stdout = BurrowPrintWriter.stdout(environment.outputStream)
+    protected val stderr = BurrowPrintWriter.stderr(environment.outputStream)
+
+    protected fun exit(exitCode: Int) {
+        BurrowPrintWriter.exitCode(environment.outputStream).println(exitCode)
+    }
 
     override fun call(): Int {
         return CommandLine.ExitCode.OK

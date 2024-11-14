@@ -12,7 +12,7 @@ import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
 
 class Chamber(val burrow: Burrow, val name: String) {
-    private val rootPath: Path = burrow.chambersPath.resolve(name).normalize()
+    val rootPath: Path = burrow.chambersPath.resolve(name).normalize()
     val config = Config()
     val renovator = Renovator(this)
     val processor = Processor(this)

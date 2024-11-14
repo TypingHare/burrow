@@ -8,11 +8,11 @@ import burrow.kernel.command.Environment
 import burrow.kernel.command.Processor
 import burrow.kernel.event.EventBus
 import burrow.kernel.furnishing.FurnishingWareHouse
+import burrow.kernel.stream.BurrowPrintWriter
 import ch.qos.logback.classic.Level
 import org.reflections.Reflections
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.PrintWriter
 import java.nio.file.Path
 import java.time.Duration
 import java.time.Instant
@@ -56,7 +56,7 @@ class Burrow {
         logger.info("Started Burrow in {} ms", duration.toMillis())
     }
 
-    fun parse(args: List<String>, environment: Environment) {
+    private fun parse(args: List<String>, environment: Environment) {
         val hasChamberName = args.isNotEmpty() && !args[0].startsWith("-")
         val chamberName =
             if (hasChamberName) args[0] else Standard.ROOT_CHAMBER_NAME
@@ -83,7 +83,8 @@ class Burrow {
             )
             chamber.processor.execute(commandData)
         } catch (ex: Exception) {
-            PrintWriter(environment.outputStream)
+            logger.error("Failed to initialize chamber: $chamberName", ex)
+            BurrowPrintWriter.stderr(environment.outputStream)
                 .println("Failed to initialize chamber: $chamberName")
         }
     }

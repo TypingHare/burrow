@@ -8,6 +8,7 @@ import burrow.kernel.furnishing.Furniture
 
 @DependsOn([Standard::class])
 @Furniture(
+    version = "0.0.0",
     description = "Dictator allows developers to manage chambers.",
     type = Furniture.Type.ROOT
 )

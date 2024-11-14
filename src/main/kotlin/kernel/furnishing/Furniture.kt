@@ -1,9 +1,10 @@
 package burrow.kernel.furnishing
 
 annotation class Furniture(
-    val label: String = "",
+    val version: String,
     val description: String,
-    val type: String = Type.MAIN
+    val type: String = Type.MAIN,
+    val label: String = "",
 ) {
     object Type {
         const val ROOT = "ROOT"

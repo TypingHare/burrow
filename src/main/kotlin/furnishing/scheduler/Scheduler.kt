@@ -15,7 +15,8 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 @Furniture(
-    description = "",
+    version = "0.0.0",
+    description = "Scheduler.",
     type = Furniture.Type.ROOT
 )
 class Scheduler(chamber: Chamber) : Furnishing(chamber) {
