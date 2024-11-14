@@ -6,7 +6,7 @@ import picocli.CommandLine
 
 @CommandLine.Command(
     name = "help",
-    description = ["Display the usage of a specific command."]
+    description = ["Displays the usage of a specific command."]
 )
 class HelpCommand(data: CommandData) : Command(data) {
     @CommandLine.Parameters(

@@ -6,7 +6,10 @@ import picocli.CommandLine
 
 @CommandLine.Command(
     name = "root",
-    description = ["Displays the path of chamber root directory."]
+    description = [
+        "Displays the absolute path to the root directory of the current " +
+                "chamber."
+    ]
 )
 class RootCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

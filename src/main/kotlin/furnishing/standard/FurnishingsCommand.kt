@@ -9,12 +9,18 @@ import java.util.concurrent.atomic.AtomicInteger
 
 @CommandLine.Command(
     name = "furnishings",
-    description = ["Display the furnishing dependency tree."]
+    description = [
+        "Display a complete list of all available furnishings instead of the " +
+                "dependency tree."
+    ]
 )
 class FurnishingsCommand(data: CommandData) : Command(data) {
     @CommandLine.Option(
         names = ["-a", "--all"],
-        description = ["Display a list of all available furnishings."],
+        description = [
+            "Display a complete list of all available furnishings instead of " +
+                    "the dependency tree."
+        ],
         defaultValue = "false"
     )
     var all = false

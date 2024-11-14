@@ -74,7 +74,16 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
     }
 
     private fun findFurnishingClass(id: String): FurnishingClass? {
-        return burrow.furnishingWarehouse.getFurnishingClass(id)
+        val furnishingClass = burrow.furnishingWarehouse.getFurnishingClass(id)
+        if (furnishingClass != null) {
+            return furnishingClass
+        }
+
+        val sp = id.split(".");
+        val classSimpleName =
+            sp[sp.size - 1].replaceFirstChar { it.uppercase() }
+        val otherId = sp.joinToString(".") + "." + classSimpleName
+        return burrow.furnishingWarehouse.getFurnishingClass(otherId)
     }
 
     private fun createFurnishingInstance(clazz: FurnishingClass): Furnishing {

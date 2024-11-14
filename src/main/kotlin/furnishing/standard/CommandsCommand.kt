@@ -8,12 +8,17 @@ import picocli.CommandLine
 
 @CommandLine.Command(
     name = "commands",
-    description = ["Display all commands in the top-level furnishing."],
+    description = [
+        "Displays available commands for each furnishing in the system."
+    ],
 )
 class CommandsCommand(data: CommandData) : Command(data) {
     @CommandLine.Option(
         names = ["-a", "--all"],
-        description = ["Display all commands."],
+        description = [
+            "Displays commands for all furnishings, including nested " +
+                    "furnishings."
+        ],
         defaultValue = "false"
     )
     var all = false
