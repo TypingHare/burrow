@@ -7,7 +7,7 @@ import picocli.CommandLine
 import java.util.concurrent.atomic.AtomicInteger
 
 @CommandLine.Command(
-    name = "chambers",
+    name = "init/chambers",
     description = ["Display the built chambers."]
 )
 class ChambersCommand(data: CommandData) : Command(data) {

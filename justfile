@@ -4,6 +4,7 @@ build:
     mkdir -p ~/.burrow/libs/
     mv build/libs/* ~/.burrow/libs/
 
+# Move binary files to ~/.burrow/bin
 move-bin:
     mkdir -p ~/.burrow/bin
-    cp src/main/bin/* ~/.burrow/bin
+    cp src/main/resources/init/bin/* ~/.burrow/bin

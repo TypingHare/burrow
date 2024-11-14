@@ -147,7 +147,7 @@ class Burrow {
 
     object Default {
         const val ROOT_DIR = ".burrow"
-        const val CHAMBERS_DIR = "chambers"
+        const val CHAMBERS_DIR = "init/chambers"
         const val LOGS_DIR = "logs"
     }
 
