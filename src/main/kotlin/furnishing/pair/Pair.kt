@@ -42,11 +42,11 @@ class Pair(chamber: Chamber) : Furnishing(chamber) {
     }
 
     override fun assemble() {
-        burrow.affairManager.subscribe(EntryPostRegisterEvent::class) {
+        affairManager.subscribe(EntryPostRegisterEvent::class) {
             add(it.entry)
         }
 
-        burrow.affairManager.subscribe(EntryPostCreateEvent::class) {
+        affairManager.subscribe(EntryPostCreateEvent::class) {
             add(it.entry)
         }
     }

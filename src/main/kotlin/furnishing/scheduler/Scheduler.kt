@@ -5,6 +5,7 @@ import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberPostBuildEvent
 import burrow.kernel.chamber.ChamberPreBuildEvent
 import burrow.kernel.config.Config
+import burrow.kernel.config.ConfigItemHandler
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.Furniture
 import org.slf4j.LoggerFactory
@@ -30,16 +31,12 @@ class Scheduler(chamber: Chamber) : Furnishing(chamber) {
     private val postBuildInstantMap = mutableMapOf<String, Instant>()
 
     override fun prepareConfig(config: Config) {
-        config.addKey(
-            ConfigKey.INTERVAL_MS,
+        val configItemHandler = ConfigItemHandler(
             { it.toLong() },
             { it.toString() }
         )
-        config.addKey(
-            ConfigKey.THRESHOLD_MS,
-            { it.toLong() },
-            { it.toString() }
-        )
+        config.addKey(ConfigKey.INTERVAL_MS, configItemHandler)
+        config.addKey(ConfigKey.THRESHOLD_MS, configItemHandler)
     }
 
     override fun modifyConfig(config: Config) {

@@ -80,9 +80,9 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
             ?: throw IllegalArgumentException("ID is required")
         if (exists(id)) throw DuplicateIdException(id)
 
-        burrow.affairManager.post(EntryPreRegisterEvent(this, properties))
+        affairManager.post(EntryPreRegisterEvent(this, properties))
         val entry = Entry(id, properties.toMutableMap())
-        burrow.affairManager.post(EntryPostRegisterEvent(this, entry))
+        affairManager.post(EntryPostRegisterEvent(this, entry))
 
         while (entryStore.size <= id) entryStore.add(null)
         entryStore[id] = entry
@@ -94,9 +94,9 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
     fun create(properties: Map<String, String>): Entry {
         val id: Int = maxId.incrementAndGet()
 
-        burrow.affairManager.post(EntryPreCreateEvent(this, properties))
+        affairManager.post(EntryPreCreateEvent(this, properties))
         val entry = Entry(id, properties.toMutableMap())
-        burrow.affairManager.post(EntryPostRegisterEvent(this, entry))
+        affairManager.post(EntryPostRegisterEvent(this, entry))
 
         for (i in entryStore.size..id) entryStore.add(null)
         entryStore[id] = entry
@@ -108,10 +108,19 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
     fun delete(id: Int): Entry {
         val entry: Entry = entryStore[id] ?: throw EntryNotFoundException(id)
 
+        affairManager.post(EntryPreDeleteEvent(this, entry))
         entryStore[id] = null
         size.decrementAndGet()
+        affairManager.post(EntryPostDeleteEvent(this, entry))
 
         return entry
+    }
+
+    fun stringify(entry: Entry): String {
+        val properties = mutableMapOf<String, String>()
+        affairManager.post(EntryStringifyEvent(entry, properties))
+
+        return properties.toString()
     }
 
     fun exists(id: Int): Boolean =
@@ -165,4 +174,19 @@ class EntryPreCreateEvent(
 class EntryPostCreateEvent(
     val hoard: Hoard,
     val entry: Entry
+) : Event()
+
+class EntryPreDeleteEvent(
+    val hoard: Hoard,
+    val entry: Entry
+) : Event()
+
+class EntryPostDeleteEvent(
+    val hoard: Hoard,
+    val entry: Entry
+) : Event()
+
+class EntryStringifyEvent(
+    val entry: Entry,
+    val properties: MutableMap<String, String>
 ) : Event()

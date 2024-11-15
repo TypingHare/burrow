@@ -28,7 +28,7 @@ class Config {
         if (key !in entries || entries[key] == null) set(key, value)
     }
 
-    private fun addKey(key: String, handler: ConfigItemHandler<*>) {
+    fun addKey(key: String, handler: ConfigItemHandler<*>) {
         itemHandlers[key] = handler
     }
 

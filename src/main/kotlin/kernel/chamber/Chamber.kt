@@ -3,6 +3,7 @@ package burrow.kernel.chamber
 import burrow.kernel.Burrow
 import burrow.kernel.command.Processor
 import burrow.kernel.config.Config
+import burrow.kernel.event.EventBus
 import burrow.kernel.furnishing.Renovator
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -16,6 +17,7 @@ class Chamber(val burrow: Burrow, val name: String) {
     val config = Config()
     val renovator = Renovator(this)
     val processor = Processor(this)
+    val affairManager = EventBus()
 
     @Throws(BuildChamberException::class)
     fun build() {

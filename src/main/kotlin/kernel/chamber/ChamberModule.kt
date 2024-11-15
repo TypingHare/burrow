@@ -5,4 +5,5 @@ abstract class ChamberModule(protected val chamber: Chamber) {
     protected val config = chamber.config
     protected val renovator = chamber.renovator
     protected val processor = chamber.processor
+    protected val affairManager = chamber.affairManager
 }
