@@ -1,18 +1,18 @@
-package burrow.furnishing.hoard
+package burrow.carton.hoard
 
 class Entry(val id: Int, val properties: MutableMap<String, String>) {
-    private val entries = mutableMapOf<String, Any>()
+    val store = mutableMapOf<String, Any>()
 
     init {
         properties[Key.ID] = id.toString()
     }
 
     fun set(key: String, value: Any) {
-        entries[key] = value
+        store[key] = value
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> get(key: String): T? = entries[key] as T?
+    fun <T> get(key: String): T? = store[key] as T?
 
     fun setProperty(key: String, value: String) {
         properties[key] = value
@@ -22,7 +22,7 @@ class Entry(val id: Int, val properties: MutableMap<String, String>) {
 
     fun del(key: String) {
         properties.remove(key)
-        entries.remove(key)
+        store.remove(key)
     }
 
     object Key {

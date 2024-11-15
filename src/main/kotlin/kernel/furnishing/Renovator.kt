@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 class Renovator(chamber: Chamber) : ChamberModule(chamber) {
     companion object {
         const val STANDARD_FURNISHING_ID =
-            Burrow.Standard.CARTON_PACKAGE + ".standard.Standard"
+            Burrow.Standard.CARTON_PACKAGE_NAME + ".standard"
     }
 
     val furnishings = mutableMapOf<String, Furnishing>()

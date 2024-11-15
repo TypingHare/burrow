@@ -1,4 +1,4 @@
-package burrow.furnishing.standard
+package burrow.carton.standard
 
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.config.Config

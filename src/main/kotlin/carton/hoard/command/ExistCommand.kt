@@ -1,6 +1,6 @@
-package burrow.furnishing.hoard.command
+package burrow.carton.hoard.command
 
-import burrow.furnishing.hoard.Hoard
+import burrow.carton.hoard.Hoard
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
 import picocli.CommandLine

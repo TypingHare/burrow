@@ -1,4 +1,4 @@
-package burrow.furnishing.scheduler
+package burrow.carton.dictator
 
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber

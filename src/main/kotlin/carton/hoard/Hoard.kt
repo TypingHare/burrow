@@ -1,13 +1,14 @@
-package burrow.furnishing.hoard
+package burrow.carton.hoard
 
-import burrow.furnishing.hoard.Entry.Key
-import burrow.furnishing.hoard.command.EntryCommand
-import burrow.furnishing.hoard.command.ExistCommand
-import burrow.furnishing.hoard.command.NewCommand
+import burrow.carton.hoard.Entry.Key
+import burrow.carton.hoard.command.EntryCommand
+import burrow.carton.hoard.command.ExistCommand
+import burrow.carton.hoard.command.NewCommand
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.event.Event
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.Furniture
+import burrow.kernel.palette.Highlight
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
@@ -17,7 +18,6 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.io.path.exists
-
 
 @Furniture(
     version = "0.0.0",
@@ -58,7 +58,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
             val type = object : TypeToken<List<Map<String, String>>>() {}.type
             val entries: List<Map<String, String>> =
                 Gson().fromJson(content, type)
-            entries.forEach { register(it) }
+            entries.forEach { restore(it) }
         } catch (ex: IOException) {
             throw RuntimeException("Failed to load hoard: $hoardFilePath", ex)
         }
@@ -75,13 +75,14 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
         }
     }
 
-    private fun register(properties: Map<String, String>) {
+    private fun restore(properties: Map<String, String>) {
         val id = properties[Key.ID]?.toInt()
             ?: throw IllegalArgumentException("ID is required")
         if (exists(id)) throw DuplicateIdException(id)
 
         affairManager.post(EntryPreRegisterEvent(this, properties))
         val entry = Entry(id, properties.toMutableMap())
+        properties.forEach { (k, v) -> entry.set(k, v) }
         affairManager.post(EntryPostRegisterEvent(this, entry))
 
         while (entryStore.size <= id) entryStore.add(null)
@@ -96,6 +97,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
 
         affairManager.post(EntryPreCreateEvent(this, properties))
         val entry = Entry(id, properties.toMutableMap())
+        properties.forEach { (k, v) -> entry.set(k, v) }
         affairManager.post(EntryPostRegisterEvent(this, entry))
 
         for (i in entryStore.size..id) entryStore.add(null)
@@ -116,11 +118,17 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
         return entry
     }
 
-    fun stringify(entry: Entry): String {
+    fun convertStoreToProperties(entry: Entry): Map<String, String> {
         val properties = mutableMapOf<String, String>()
+        for ((key, value) in entry.store) {
+            if (key == Key.ID) {
+                continue
+            }
+            properties[key] = value.toString()
+        }
         affairManager.post(EntryStringifyEvent(entry, properties))
 
-        return properties.toString()
+        return properties
     }
 
     fun exists(id: Int): Boolean =
@@ -146,6 +154,12 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
 
     object Standard {
         const val HOARD_FILE = "hoard.json"
+    }
+
+    object Highlights {
+        val KEY = Highlight(81, 0, 0)
+        val VALUE = Highlight(222, 0, 0)
+        val BRACE = Highlight(75, 0, 0)
     }
 }
 

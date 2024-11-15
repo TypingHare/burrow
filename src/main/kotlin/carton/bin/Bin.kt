@@ -1,4 +1,4 @@
-package burrow.furnishing.bin
+package burrow.carton.bin
 
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.furnishing.Furnishing
@@ -9,5 +9,4 @@ import burrow.kernel.furnishing.Furniture
     description = "Bin",
     type = Furniture.Type.COMPONENT
 )
-class Bin(chamber: Chamber) : Furnishing(chamber) {
-}
+class Bin(chamber: Chamber) : Furnishing(chamber)

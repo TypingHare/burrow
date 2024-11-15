@@ -3,8 +3,6 @@ package burrow.server
 import burrow.kernel.Burrow
 import burrow.kernel.buildBurrow
 import burrow.kernel.command.Environment
-import org.apache.commons.cli.DefaultParser
-import org.apache.commons.cli.Options
 import org.slf4j.LoggerFactory
 import java.io.BufferedReader
 import java.io.Closeable
@@ -12,6 +10,7 @@ import java.io.InputStreamReader
 import java.io.OutputStream
 import java.net.ServerSocket
 import java.net.Socket
+import java.util.*
 
 
 class BurrowServer(val burrow: Burrow) : Closeable {
@@ -63,12 +62,43 @@ class BurrowServer(val burrow: Burrow) : Closeable {
         commandString: String,
         outputStream: OutputStream
     ) {
-        val args = DefaultParser().parse(
-            Options(),
-            commandString.split(" ").toTypedArray(),
-            true
-        ).args
-        burrow.parse(args, Environment(outputStream, "~", 80))
+        burrow.parse(
+            tokenizeCommandString(commandString).toTypedArray(),
+            Environment(outputStream, "~", 80)
+        )
+    }
+
+    private fun tokenizeCommandString(commandString: String): List<String> {
+        val tokens = mutableListOf<String>()
+        val tokenizer = StringTokenizer(commandString, " \"", true)
+        var insideQuote = false
+        var currentToken = StringBuilder()
+
+        while (tokenizer.hasMoreTokens()) {
+            val token = tokenizer.nextToken()
+            when {
+                token == "\"" -> {
+                    insideQuote = !insideQuote
+                    if (!insideQuote && currentToken.isNotEmpty()) {
+                        tokens.add(currentToken.toString())
+                        currentToken = StringBuilder()
+                    }
+                }
+
+                token == " " && !insideQuote -> {
+                    if (currentToken.isNotEmpty()) {
+                        tokens.add(currentToken.toString())
+                        currentToken = StringBuilder()
+                    }
+                }
+
+                else -> currentToken.append(token)
+            }
+        }
+        if (currentToken.isNotEmpty()) {
+            tokens.add(currentToken.toString())
+        }
+        return tokens
     }
 
     object Standard {

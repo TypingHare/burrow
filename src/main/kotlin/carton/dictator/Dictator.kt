@@ -1,6 +1,6 @@
-package burrow.furnishing.dictator
+package burrow.carton.dictator
 
-import burrow.furnishing.standard.Standard
+import burrow.carton.standard.Standard
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.furnishing.DependsOn
 import burrow.kernel.furnishing.Furnishing

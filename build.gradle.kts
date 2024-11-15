@@ -32,7 +32,6 @@ dependencies {
     // Terminal
     implementation("info.picocli:picocli:4.7.6")
     implementation("org.jline:jline:3.27.1")
-    implementation("commons-cli:commons-cli:1.9.0")
 
     // Tools
     implementation("com.google.code.gson:gson:2.11.0")

@@ -21,16 +21,14 @@ import kotlin.io.path.isDirectory
 class Burrow {
     companion object {
         val CLASS_LOADER: ClassLoader = Companion::class.java.classLoader
-
         val logger: Logger = LoggerFactory.getLogger(Burrow::class.java)
     }
 
-    private val rootPath: Path
+    val rootPath: Path
     val chambersPath: Path
-
-    val chamberShepherd by lazy { ChamberShepherd(this) }
-    val furnishingWarehouse by lazy { FurnishingWareHouse() }
-    val affairManager by lazy { EventBus() }
+    val chamberShepherd = ChamberShepherd(this)
+    val furnishingWarehouse = FurnishingWareHouse()
+    val affairManager = EventBus()
 
     init {
         rootPath = Path.of(
@@ -128,7 +126,7 @@ class Burrow {
     private fun initializeFurnishingWarehouse() {
         furnishingWarehouse.scanPackage(
             CLASS_LOADER,
-            setOf(Standard.CARTON_PACKAGE)
+            setOf(Standard.CARTON_PACKAGE_NAME)
         )
     }
 
@@ -136,26 +134,24 @@ class Burrow {
         chamberShepherd.buildChamber(Standard.ROOT_CHAMBER_NAME)
     }
 
-    private fun getEnvOrDefault(key: String, defaultValue: String): String =
+    fun getEnvOrDefault(key: String, defaultValue: String): String =
         System.getenv(key) ?: defaultValue
 
     object EnvKey {
         const val ROOT_DIR = "BURROW_ROOT_DIR"
         const val CHAMBERS_DIR = "BURROW_CHAMBERS_DIR"
-        const val LOGS_DIR = "BURROW_LOGS_DIR"
     }
 
     object Default {
         const val ROOT_DIR = ".burrow"
         const val CHAMBERS_DIR = "chambers"
-        const val LOGS_DIR = "logs"
     }
 
     object Standard {
         const val ROOT_CHAMBER_NAME = "."
         const val FURNISHINGS_FILE_NAME = "furnishings.json"
         const val CONFIG_FILE_NAME = "config.json"
-        const val CARTON_PACKAGE = "burrow.furnishing"
+        const val CARTON_PACKAGE_NAME = "burrow.carton"
     }
 }
 

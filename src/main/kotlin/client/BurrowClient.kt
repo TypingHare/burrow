@@ -8,10 +8,19 @@ import java.net.Socket
 import kotlin.system.exitProcess
 
 class BurrowClient(host: String, port: Int) : Closeable {
-    private val clientSocket = Socket(host, port)
+    private val clientSocket: Socket
     private var currentResponseType = ResponseType.NONE
     private var stdoutOutputStream: OutputStream = System.out
     private var stderrOutputStream: OutputStream = System.err
+
+    init {
+        try {
+            clientSocket = Socket(host, port)
+        } catch (ex: IOException) {
+            System.err.println("Failed to connect to Burrow server ($host:$port)!")
+            exitProcess(CommandLine.ExitCode.SOFTWARE)
+        }
+    }
 
     fun setStdoutOutputStream(stdoutOutputStream: OutputStream) {
         this.stdoutOutputStream = stdoutOutputStream
@@ -47,7 +56,9 @@ class BurrowClient(host: String, port: Int) : Closeable {
                 }
             }
         } catch (ex: IOException) {
-            throw RuntimeException("Failed to send command to the server.", ex)
+            System.err.println("IO exception encountered!")
+            ex.printStackTrace()
+            return CommandLine.ExitCode.SOFTWARE
         }
 
         return CommandLine.ExitCode.OK

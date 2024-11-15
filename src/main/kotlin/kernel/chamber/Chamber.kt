@@ -5,6 +5,8 @@ import burrow.kernel.command.Processor
 import burrow.kernel.config.Config
 import burrow.kernel.event.EventBus
 import burrow.kernel.furnishing.Renovator
+import burrow.kernel.palette.Palette
+import burrow.kernel.palette.PicocliPalette
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.nio.file.Files
@@ -18,6 +20,7 @@ class Chamber(val burrow: Burrow, val name: String) {
     val renovator = Renovator(this)
     val processor = Processor(this)
     val affairManager = EventBus()
+    var palette: Palette = PicocliPalette()
 
     @Throws(BuildChamberException::class)
     fun build() {

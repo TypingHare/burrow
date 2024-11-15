@@ -1,15 +1,10 @@
-package burrow.furnishing.pair
+package burrow.carton.hoard
 
-import burrow.furnishing.hoard.Entry
-import burrow.furnishing.hoard.EntryPostCreateEvent
-import burrow.furnishing.hoard.EntryPostRegisterEvent
-import burrow.furnishing.hoard.Hoard
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.config.Config
 import burrow.kernel.furnishing.DependsOn
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.Furniture
-
 
 @Furniture(
     version = "0.0.0",
