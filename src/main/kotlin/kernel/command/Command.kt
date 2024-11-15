@@ -6,11 +6,13 @@ import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.FurnishingNotFoundException
 import burrow.kernel.stream.BurrowPrintWriters
 import picocli.CommandLine
+import picocli.CommandLine.IExecutionExceptionHandler
+import picocli.CommandLine.IParameterExceptionHandler
 import java.util.concurrent.Callable
 import kotlin.reflect.KClass
 
 abstract class Command(data: CommandData) : ChamberModule(data.chamber),
-    Callable<Int> {
+    Callable<Int>, IParameterExceptionHandler, IExecutionExceptionHandler {
     companion object {
         fun extractName(commandClass: CommandClass): String {
             val commandAnnotation =
@@ -47,6 +49,46 @@ abstract class Command(data: CommandData) : ChamberModule(data.chamber),
     protected fun <F : Furnishing> use(furnishingClass: KClass<F>): F {
         return renovator.getFurnishing(furnishingClass)
             ?: throw FurnishingNotFoundException(furnishingClass.java.name)
+    }
+
+    /**
+     * Handles exceptions thrown during command line parameter parsing.
+     * @param ex   the exception thrown during parsing
+     * @param args the arguments that were passed to the command
+     * @return an exit code indicating the result of the error handling
+     */
+    override fun handleParseException(
+        ex: CommandLine.ParameterException,
+        args: Array<String?>?
+    ): Int {
+        when (ex) {
+            is CommandLine.MissingParameterException -> {
+                val paramLabels =
+                    ex.missing.joinToString(" ") { it.paramLabel() }
+                stderr.println("Missing parameters: $paramLabels")
+            }
+
+            else -> {
+                stderr.println("Failed to parse command: ${ex.message}")
+            }
+        }
+        return CommandLine.ExitCode.SOFTWARE
+    }
+
+    /**
+     * Handles exceptions thrown during command execution.
+     * @param ex              the exception thrown during execution
+     * @param commandLine     the command line that was being executed
+     * @param fullParseResult the result of parsing the command line arguments
+     * @return an exit code indicating the result of the error handling
+     */
+    override fun handleExecutionException(
+        ex: Exception?,
+        commandLine: CommandLine?,
+        fullParseResult: CommandLine.ParseResult?
+    ): Int {
+        ex?.let { stderr.println(it.message) }
+        return CommandLine.ExitCode.SOFTWARE
     }
 }
 

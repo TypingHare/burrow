@@ -5,6 +5,7 @@ import burrow.kernel.chamber.ChamberModule
 import burrow.kernel.event.Event
 import burrow.kernel.stream.BurrowPrintWriters
 import picocli.CommandLine
+import java.util.concurrent.atomic.AtomicInteger
 
 class Processor(chamber: Chamber) : ChamberModule(chamber) {
     companion object {
@@ -34,16 +35,23 @@ class Processor(chamber: Chamber) : ChamberModule(chamber) {
 
         val commandClass = commandClasses[commandName]!!
         val outputStream = commandData.environment.outputStream
+        val exitCode = AtomicInteger(CommandLine.ExitCode.OK)
         try {
             val constructor =
                 commandClass.java.getConstructor(CommandData::class.java)
             val command = constructor.newInstance(commandData)
             val commandArgs = commandData.commandArgs
-            val exitCode =
-                CommandLine(command).execute(*commandArgs.toTypedArray())
-            BurrowPrintWriters.exitCode(outputStream).println(exitCode)
+            exitCode.set(
+                CommandLine(command)
+                    .setParameterExceptionHandler(command)
+                    .setExecutionExceptionHandler(command)
+                    .execute(*commandArgs.toTypedArray())
+            )
         } catch (ex: Throwable) {
-            BurrowPrintWriters.stdout(outputStream).println(ex.message)
+            exitCode.set(CommandLine.ExitCode.SOFTWARE)
+            BurrowPrintWriters.stderr(outputStream).println(ex.message)
+        } finally {
+            BurrowPrintWriters.exitCode(outputStream).println(exitCode.get())
         }
     }
 

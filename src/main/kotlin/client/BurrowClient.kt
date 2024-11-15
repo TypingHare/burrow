@@ -5,6 +5,7 @@ import burrow.server.BurrowServer
 import picocli.CommandLine
 import java.io.*
 import java.net.Socket
+import kotlin.system.exitProcess
 
 class BurrowClient(host: String, port: Int) : Closeable {
     private val clientSocket = Socket(host, port)
@@ -90,7 +91,8 @@ class BurrowClient(host: String, port: Int) : Closeable {
                 "localhost",
                 BurrowServer.Standard.PORT
             ).use { client ->
-                client.send(args)
+                val exitCode = client.send(args)
+                exitProcess(exitCode)
             }
         }
 
