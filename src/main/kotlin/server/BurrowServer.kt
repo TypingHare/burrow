@@ -22,7 +22,11 @@ class BurrowServer(val burrow: Burrow) : Closeable {
         @JvmStatic
         fun main(args: Array<String>) {
             System.setProperty("slf4j.internal.verbosity", "WARN")
-            BurrowServer(buildBurrow()).listen()
+
+            val burrowServer = BurrowServer(buildBurrow())
+            Runtime.getRuntime()
+                .addShutdownHook(Thread { burrowServer.close() })
+            burrowServer.listen()
         }
     }
 

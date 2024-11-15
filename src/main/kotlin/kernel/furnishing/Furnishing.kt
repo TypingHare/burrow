@@ -40,6 +40,11 @@ abstract class Furnishing(chamber: Chamber) : ChamberModule(chamber),
         processor.registerCommand(commandClass)
     }
 
+    protected fun <F : Furnishing> use(furnishingClass: KClass<F>): F {
+        return renovator.getFurnishing(furnishingClass)
+            ?: throw NotDependencyFurnishingException(furnishingClass.java.name)
+    }
+
     open fun assemble() {}
 
     open fun launch() {}
@@ -48,3 +53,6 @@ abstract class Furnishing(chamber: Chamber) : ChamberModule(chamber),
 }
 
 typealias FurnishingClass = KClass<out Furnishing>
+
+class NotDependencyFurnishingException(id: String) :
+    RuntimeException("Not a dependency furnishing: $id")

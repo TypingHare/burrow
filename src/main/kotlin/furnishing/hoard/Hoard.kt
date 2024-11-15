@@ -1,5 +1,9 @@
 package burrow.furnishing.hoard
 
+import burrow.furnishing.hoard.Entry.Key
+import burrow.furnishing.hoard.command.EntryCommand
+import burrow.furnishing.hoard.command.ExistCommand
+import burrow.furnishing.hoard.command.NewCommand
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.event.Event
 import burrow.kernel.furnishing.Furnishing
@@ -27,6 +31,12 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
     private var maxId = AtomicInteger(0)
     private val size = AtomicInteger(0)
     private val saveWhenDiscard = AtomicBoolean(true)
+
+    override fun assemble() {
+        registerCommand(NewCommand::class)
+        registerCommand(ExistCommand::class)
+        registerCommand(EntryCommand::class)
+    }
 
     override fun launch() {
         loadFromHoardFile(hoardFilePath)
@@ -66,13 +76,12 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
     }
 
     private fun register(properties: Map<String, String>) {
-        val id = properties["id"]?.toInt()
+        val id = properties[Key.ID]?.toInt()
             ?: throw IllegalArgumentException("ID is required")
         if (exists(id)) throw DuplicateIdException(id)
 
         burrow.affairManager.post(EntryPreRegisterEvent(this, properties))
-        val entry =
-            Entry(id, properties.toMutableMap().apply { remove(EntryKey.ID) })
+        val entry = Entry(id, properties.toMutableMap())
         burrow.affairManager.post(EntryPostRegisterEvent(this, entry))
 
         while (entryStore.size <= id) entryStore.add(null)
@@ -82,7 +91,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
         size.incrementAndGet()
     }
 
-    private fun create(properties: Map<String, String>): Entry {
+    fun create(properties: Map<String, String>): Entry {
         val id: Int = maxId.incrementAndGet()
 
         burrow.affairManager.post(EntryPreCreateEvent(this, properties))
@@ -96,7 +105,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
         return entry
     }
 
-    private fun delete(id: Int): Entry {
+    fun delete(id: Int): Entry {
         val entry: Entry = entryStore[id] ?: throw EntryNotFoundException(id)
 
         entryStore[id] = null
@@ -105,9 +114,10 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
         return entry
     }
 
-    private fun exists(id: Int): Boolean =
+    fun exists(id: Int): Boolean =
         id >= 0 && id < entryStore.size && entryStore[id] != null
 
+    @Throws(EntryNotFoundException::class)
     operator fun get(id: Int): Entry {
         try {
             return entryStore[id] ?: throw EntryNotFoundException(id)
@@ -128,10 +138,6 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
     object Standard {
         const val HOARD_FILE = "hoard.json"
     }
-
-    object EntryKey {
-        const val ID = "id"
-    }
 }
 
 
@@ -139,7 +145,7 @@ class EntryNotFoundException(id: Int) :
     RuntimeException("Entry with such ID not found: $id")
 
 class DuplicateIdException(id: Int) :
-    java.lang.RuntimeException("Duplicate entry id: $id")
+    RuntimeException("Duplicate entry id: $id")
 
 class EntryPreRegisterEvent(
     val hoard: Hoard,
