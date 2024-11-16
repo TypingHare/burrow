@@ -4,22 +4,39 @@ import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
 import burrow.kernel.command.CommandClass
 import burrow.kernel.config.ConfigSupport
-import burrow.kernel.event.Event
-import burrow.kernel.event.EventHandler
 import kotlin.reflect.KClass
 
 abstract class Furnishing(chamber: Chamber) : ChamberModule(chamber),
     ConfigSupport {
     companion object {
+        private fun getFurnitureAnnotation(furnishingClass: FurnishingClass): Furniture =
+            furnishingClass.java.getAnnotation(Furniture::class.java)
+
         fun extractId(furnishingClass: FurnishingClass): String =
             furnishingClass.java.name
 
         fun extractLabel(furnishingClass: FurnishingClass): String {
-            val furnitureAnnotation =
-                furnishingClass.java.getAnnotation(Furniture::class.java)
-
-            return furnitureAnnotation?.label.takeIf { !it.isNullOrBlank() }
+            return getFurnitureAnnotation(furnishingClass).label
+                .takeIf { it.isNotBlank() }
                 ?: furnishingClass.java.simpleName
+        }
+
+        fun extractVersion(furnishingClass: FurnishingClass): String {
+            return getFurnitureAnnotation(furnishingClass).version
+        }
+
+        fun extractDescription(furnishingClass: FurnishingClass): String {
+            return getFurnitureAnnotation(furnishingClass).description
+        }
+
+        fun extractType(furnishingClass: FurnishingClass): String {
+            return getFurnitureAnnotation(furnishingClass).type
+        }
+
+        fun extractDependencies(furnishingClass: FurnishingClass): List<FurnishingClass> {
+            val dependsOn =
+                furnishingClass.java.getAnnotation(DependsOn::class.java)
+            return dependsOn?.dependencies?.toList() ?: emptyList()
         }
     }
 

@@ -36,7 +36,7 @@ class CommandsCommand(data: CommandData) : Command(data) {
     private fun getTopLevelFurnishingsCommandClasses(): FurnishingsCommandClasses {
         val map = mutableMapOf<Furnishing, List<CommandClass>>()
         chamber.renovator.dependencyTree.root.children.forEach {
-            val furnishing = it.furnishing ?: return@forEach
+            val furnishing = it.element ?: return@forEach
             map[furnishing] = furnishing.commands.toList()
         }
 
@@ -62,8 +62,8 @@ class CommandsCommand(data: CommandData) : Command(data) {
 
             stdout.println(furnishing.getLabel())
             for (commandClass in commandClasses) {
-                val name = Command.extractName(commandClass)
-                val description = Command.extractDescription(commandClass)
+                val name = extractName(commandClass)
+                val description = extractDescription(commandClass)
                 stdout.println("    ${name.padEnd(15)} $description")
             }
 

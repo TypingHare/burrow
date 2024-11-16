@@ -1,4 +1,4 @@
 # TODO
 
 - [ ] BurrowCli
-- [ ] Colorful
+- [ ] Standard

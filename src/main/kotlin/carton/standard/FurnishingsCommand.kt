@@ -1,11 +1,10 @@
 package burrow.carton.standard
 
+import burrow.carton.standard.printtask.*
+import burrow.kernel.Burrow
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
-import burrow.kernel.furnishing.Furnishing
-import burrow.kernel.furnishing.FurnishingDependencyTree
 import picocli.CommandLine
-import java.util.concurrent.atomic.AtomicInteger
 
 @CommandLine.Command(
     name = "furnishings",
@@ -16,57 +15,71 @@ import java.util.concurrent.atomic.AtomicInteger
 )
 class FurnishingsCommand(data: CommandData) : Command(data) {
     @CommandLine.Option(
+        names = ["-t", "--tree"],
+        description = [
+            "Displays furnishings as a dependency tree."
+        ]
+    )
+    var shouldDisplayTree = false
+
+    @CommandLine.Option(
         names = ["-a", "--all"],
         description = [
-            "Display a complete list of all available furnishings instead of " +
-                    "the dependency tree."
-        ],
-        defaultValue = "false"
+            "Displays all available furnishings."
+        ]
     )
-    var all = false
+    var shouldDisplayAll = false
+
+    @CommandLine.Option(
+        names = ["-i", "--id"],
+        description = [
+            "Displays the ID of each furnishing."
+        ]
+    )
+    var shouldDisplayId = false
 
     override fun call(): Int {
-        if (all) displayFurnishingList() else displayFurnishingDependencyTree()
+        val standard = use(Standard::class)
+        if (shouldDisplayTree) {
+            val dependencyTree =
+                if (shouldDisplayAll) standard.getCompleteFurnishingClassDependencyTree()
+                else standard.getFurnishingClassDependencyTree()
+            val context = FurnishingClassDependencyTreePrintContext(
+                dependencyTree,
+                palette,
+                Burrow.Highlights.FURNISHING,
+            )
+            context.shouldPrintFurnishingId = shouldDisplayId
+            val task = FurnishingClassDependencyTreePrintTask(stdout, context)
+            task.print()
+        } else {
+            if (shouldDisplayAll) {
+                val list = standard.getAvailableFurnishingClasses().stream()
+                    .sorted { a, b ->
+                        a.java.name.compareTo(b.java.name)
+                    }.toList()
+                val context = CompleteFurnishingClassesPrintContext(
+                    list,
+                    standard.getFurnishingClasses(),
+                    palette,
+                    Standard.Highlights.DEFAULT_FURNISHING,
+                    Standard.Highlights.INSTALLED_FURNISHING
+                )
+                context.shouldPrintFurnishingId = shouldDisplayId
+                CompleteFurnishingClassesPrintTask(stdout, context).print()
+
+            } else {
+                val list = standard.getAvailableFurnishingClasses().toList()
+                val context = FurnishingClassesPrintContext(
+                    standard.getFurnishingClasses().toList(),
+                    palette,
+                    Standard.Highlights.INSTALLED_FURNISHING
+                )
+                context.shouldPrintFurnishingId = shouldDisplayId
+                FurnishingClassesPrintTask(stdout, context).print()
+            }
+        }
 
         return CommandLine.ExitCode.OK
-    }
-
-    private fun displayFurnishingDependencyTree() {
-        val index = AtomicInteger(0)
-        renovator.dependencyTree.root.children.onEach {
-            printTree(it, index.getAndIncrement(), 0, 4)
-        }
-    }
-
-    private fun printTree(
-        node: FurnishingDependencyTree.Node,
-        index: Int,
-        indentation: Int,
-        indentationIncrement: Int
-    ) {
-        val furnishing = node.furnishing ?: return
-        val id = furnishing.getId()
-        val label = furnishing.getLabel()
-        stdout.println(" ".repeat(indentation) + "[$index] $label ($id)")
-
-        val childIndex = AtomicInteger(0)
-        node.children.onEach {
-            printTree(
-                it,
-                childIndex.getAndIncrement(),
-                indentation + indentationIncrement,
-                indentationIncrement
-            )
-        }
-    }
-
-    private fun displayFurnishingList() {
-        val furnishingClasses = burrow.furnishingWarehouse.furnishingClasses
-        val index = AtomicInteger(0)
-        for (furnishingClass in furnishingClasses) {
-            val id = Furnishing.extractId(furnishingClass)
-            val label = Furnishing.extractLabel(furnishingClass)
-            stdout.println("[${index.getAndIncrement()}] $label ($id)")
-        }
     }
 }

@@ -7,6 +7,8 @@ import burrow.kernel.command.Environment
 import burrow.kernel.command.Processor
 import burrow.kernel.event.EventBus
 import burrow.kernel.furnishing.FurnishingWareHouse
+import burrow.kernel.palette.Highlight
+import burrow.kernel.palette.PicocliPalette
 import burrow.kernel.stream.BurrowPrintWriters
 import ch.qos.logback.classic.Level
 import org.reflections.Reflections
@@ -29,6 +31,7 @@ class Burrow {
     val chamberShepherd = ChamberShepherd(this)
     val furnishingWarehouse = FurnishingWareHouse()
     val affairManager = EventBus()
+    val palette = PicocliPalette()
 
     init {
         rootPath = Path.of(
@@ -51,7 +54,8 @@ class Burrow {
         initializeFurnishingWarehouse()
         buildRootChamber()
         val duration = Duration.between(start, Instant.now())
-        logger.info("Started Burrow in {} ms", duration.toMillis())
+        val coloredBurrow = palette.color("Burrow", Highlights.BURROW)
+        logger.info("Started $coloredBurrow in {} ms", duration.toMillis())
     }
 
     fun parse(args: Array<String>, environment: Environment) =
@@ -152,6 +156,14 @@ class Burrow {
         const val FURNISHINGS_FILE_NAME = "furnishings.json"
         const val CONFIG_FILE_NAME = "config.json"
         const val CARTON_PACKAGE_NAME = "burrow.carton"
+    }
+
+    object Highlights {
+        val BURROW =
+            Highlight(136, 0, Highlight.Style.ITALIC or Highlight.Style.BOLD)
+        val CHAMBER = Highlight(169, 0, Highlight.Style.BOLD)
+        val FURNISHING = Highlight(51, 0, Highlight.Style.ITALIC)
+        val COMMAND = Highlight(214, 0, Highlight.Style.NONE)
     }
 }
 

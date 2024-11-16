@@ -30,6 +30,10 @@ class Scheduler(chamber: Chamber) : Furnishing(chamber) {
     private val preBuildInstantMap = mutableMapOf<String, Instant>()
     private val postBuildInstantMap = mutableMapOf<String, Instant>()
 
+    init {
+        preBuildInstantMap[Burrow.Standard.ROOT_CHAMBER_NAME] = Instant.now()
+    }
+
     override fun prepareConfig(config: Config) {
         val configItemHandler = ConfigItemHandler(
             { it.toLong() },
@@ -59,10 +63,6 @@ class Scheduler(chamber: Chamber) : Furnishing(chamber) {
 
         burrow.affairManager.subscribe(ChamberPostBuildEvent::class) { event ->
             val chamberName = event.chamber.name
-            if (chamberName == Burrow.Standard.ROOT_CHAMBER_NAME) {
-                return@subscribe
-            }
-
             val now = Instant.now()
             postBuildInstantMap[chamberName] = now
 
@@ -72,7 +72,9 @@ class Scheduler(chamber: Chamber) : Furnishing(chamber) {
 
             val startInstant = preBuildInstantMap[chamberName]
             val duration = Duration.between(startInstant, now).toMillis()
-            logger.info("Started chamber $chamberName in $duration ms")
+            val coloredChamberName =
+                palette.color(chamberName, Burrow.Highlights.CHAMBER)
+            logger.info("Started chamber $coloredChamberName in $duration ms")
         }
     }
 

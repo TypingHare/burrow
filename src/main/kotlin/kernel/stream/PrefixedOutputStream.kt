@@ -17,7 +17,7 @@ class PrefixedOutputStream(
     }
 
     override fun flush() {
-        val output = "$prefix${buffer.toString()}"
+        val output = "$prefix$buffer"
         out.write(output.toByteArray())
         out.flush()
         buffer.clear()

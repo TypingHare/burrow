@@ -14,7 +14,7 @@ class NewCommand(data: CommandData) : Command(data) {
     private var params: Array<String> = emptyArray()
 
     override fun call(): Int {
-        if (params.isEmpty() && params.size % 2 == 1) {
+        if (params.isEmpty() || params.size % 2 == 1) {
             stderr.println("Invalid number of arguments: ${params.size}")
             return CommandLine.ExitCode.USAGE
         }
@@ -27,6 +27,6 @@ class NewCommand(data: CommandData) : Command(data) {
         val entry = use(Hoard::class).create(properties)
         stdout.println(entry.id)
 
-        return CommandLine.ExitCode.OK;
+        return CommandLine.ExitCode.OK
     }
 }

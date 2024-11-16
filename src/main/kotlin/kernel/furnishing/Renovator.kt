@@ -1,16 +1,10 @@
 package burrow.kernel.furnishing
 
-import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
 import kotlin.reflect.KClass
 
 class Renovator(chamber: Chamber) : ChamberModule(chamber) {
-    companion object {
-        const val STANDARD_FURNISHING_ID =
-            Burrow.Standard.CARTON_PACKAGE_NAME + ".standard"
-    }
-
     val furnishings = mutableMapOf<String, Furnishing>()
     val dependencyTree = FurnishingDependencyTree()
     private val labelMap = mutableMapOf<String, MutableSet<String>>()
@@ -36,7 +30,7 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
     private fun resolveDependencies(
         path: List<String>,
         dependencies: List<String>,
-        node: FurnishingDependencyTree.Node
+        node: DependencyTree.Node<Furnishing>
     ) {
         dependencies.forEach { dependency ->
             require(dependency !in path) {
@@ -45,7 +39,7 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
 
             furnishings[dependency] ?: run {
                 val furnishing = loadById(dependency)
-                val nextNode = FurnishingDependencyTree.Node(furnishing)
+                val nextNode = DependencyTree.Node(furnishing)
                 resolveDependencies(
                     path + dependency,
                     furnishing.getDependencies(),
@@ -79,7 +73,7 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
             return furnishingClass
         }
 
-        val sp = id.split(".");
+        val sp = id.split(".")
         val classSimpleName =
             sp[sp.size - 1].replaceFirstChar { it.uppercase() }
         val otherId = sp.joinToString(".") + "." + classSimpleName
@@ -90,29 +84,6 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
         val constructor = clazz.java.getDeclaredConstructor(Chamber::class.java)
             .apply { isAccessible = true }
         return constructor.newInstance(chamber)
-    }
-}
-
-class FurnishingDependencyTree {
-    class Node(val furnishing: Furnishing?) {
-        val children = mutableListOf<Node>()
-    }
-
-    private class ResolveRoutine {
-        private val resolvedNodes = mutableSetOf<Node>()
-
-        fun resolve(node: Node, consumer: (Furnishing) -> Unit) {
-            if (resolvedNodes.add(node)) {
-                node.children.forEach { resolve(it, consumer) }
-                node.furnishing?.let(consumer)
-            }
-        }
-    }
-
-    val root = Node(null)
-
-    fun resolve(resolver: (Furnishing) -> Unit) {
-        ResolveRoutine().resolve(root, resolver)
     }
 }
 
