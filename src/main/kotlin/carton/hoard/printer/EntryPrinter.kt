@@ -7,8 +7,7 @@ import burrow.kernel.stream.Printer
 import java.io.PrintWriter
 
 abstract class EntryPrinter(writer: PrintWriter, context: EntryContext) :
-    Printer<EntryContext>(writer, context) {
-}
+    Printer<EntryContext>(writer, context)
 
 data class EntryContext(val entry: Entry, val chamber: Chamber)
 

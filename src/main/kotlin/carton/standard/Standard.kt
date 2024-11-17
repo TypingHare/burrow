@@ -1,5 +1,9 @@
 package burrow.carton.standard
 
+import burrow.carton.standard.command.CommandListCommand
+import burrow.carton.standard.command.FurnishingListCommand
+import burrow.carton.standard.command.HelpCommand
+import burrow.carton.standard.command.RootCommand
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.command.CommandClass
@@ -22,7 +26,7 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
         registerCommand(HelpCommand::class)
 
         // Furnishing commands
-        registerCommand(FurnishingsCommand::class)
+        registerCommand(FurnishingListCommand::class)
 
         // Command commands
         registerCommand(CommandListCommand::class)

@@ -1,5 +1,6 @@
-package burrow.carton.standard
+package burrow.carton.standard.command
 
+import burrow.carton.standard.Standard
 import burrow.carton.standard.printer.*
 import burrow.kernel.Burrow
 import burrow.kernel.command.Command
@@ -7,13 +8,13 @@ import burrow.kernel.command.CommandData
 import picocli.CommandLine
 
 @CommandLine.Command(
-    name = "furnishings",
+    name = "furnishing.list",
     description = [
         "Display a complete list of all available furnishings instead of the " +
                 "dependency tree."
     ]
 )
-class FurnishingsCommand(data: CommandData) : Command(data) {
+class FurnishingListCommand(data: CommandData) : Command(data) {
     @CommandLine.Option(
         names = ["-t", "--tree"],
         description = [
@@ -67,11 +68,10 @@ class FurnishingsCommand(data: CommandData) : Command(data) {
                 )
                 context.shouldPrintFurnishingId = shouldDisplayId
                 CompleteFurnishingClassesPrintTask(stdout, context).print()
-
             } else {
                 val list = standard.getAvailableFurnishingClasses().toList()
                 val context = FurnishingClassesPrintContext(
-                    standard.getFurnishingClasses().toList(),
+                    list,
                     palette,
                     Standard.Highlights.INSTALLED_FURNISHING
                 )

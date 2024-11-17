@@ -1,4 +1,4 @@
-package burrow.carton.standard
+package burrow.carton.standard.command
 
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
