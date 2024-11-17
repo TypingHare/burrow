@@ -1,9 +1,7 @@
 package burrow.carton.hoard
 
 import burrow.carton.hoard.Entry.Key
-import burrow.carton.hoard.command.EntryCommand
-import burrow.carton.hoard.command.ExistCommand
-import burrow.carton.hoard.command.NewCommand
+import burrow.carton.hoard.command.*
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.event.Event
 import burrow.kernel.furnishing.Furnishing
@@ -33,9 +31,16 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
     private val saveWhenDiscard = AtomicBoolean(true)
 
     override fun assemble() {
+        // Entry relevant
         registerCommand(NewCommand::class)
         registerCommand(ExistCommand::class)
         registerCommand(EntryCommand::class)
+        registerCommand(DelCommand::class)
+
+        // Properties relevant
+        registerCommand(SetCommand::class)
+        registerCommand(UnsetCommand::class)
+        registerCommand(PropCommand::class)
     }
 
     override fun launch() {
@@ -80,10 +85,9 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
             ?: throw IllegalArgumentException("ID is required")
         if (exists(id)) throw DuplicateIdException(id)
 
-        affairManager.post(EntryPreRegisterEvent(this, properties))
         val entry = Entry(id, properties.toMutableMap())
         properties.forEach { (k, v) -> entry.set(k, v) }
-        affairManager.post(EntryPostRegisterEvent(this, entry))
+        affairManager.post(EntryRegisterEvent(entry))
 
         while (entryStore.size <= id) entryStore.add(null)
         entryStore[id] = entry
@@ -95,10 +99,9 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
     fun create(properties: Map<String, String>): Entry {
         val id: Int = maxId.incrementAndGet()
 
-        affairManager.post(EntryPreCreateEvent(this, properties))
         val entry = Entry(id, properties.toMutableMap())
         properties.forEach { (k, v) -> entry.set(k, v) }
-        affairManager.post(EntryPostRegisterEvent(this, entry))
+        affairManager.post(EntryRegisterEvent(entry))
 
         for (i in entryStore.size..id) entryStore.add(null)
         entryStore[id] = entry
@@ -110,10 +113,10 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
     fun delete(id: Int): Entry {
         val entry: Entry = entryStore[id] ?: throw EntryNotFoundException(id)
 
-        affairManager.post(EntryPreDeleteEvent(this, entry))
+        affairManager.post(EntryDeleteEvent(entry))
         entryStore[id] = null
         size.decrementAndGet()
-        affairManager.post(EntryPostDeleteEvent(this, entry))
+        affairManager.post(EntryDeleteEvent(entry))
 
         return entry
     }
@@ -133,6 +136,19 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
 
     fun exists(id: Int): Boolean =
         id >= 0 && id < entryStore.size && entryStore[id] != null
+
+    fun setProperties(entry: Entry, properties: Map<String, String>) {
+        properties.forEach { (k, v) ->
+            entry.setProperty(k, v)
+            entry.set(k, v)
+        }
+        affairManager.post(EntrySetPropertiesEvent(entry, properties))
+    }
+
+    fun unsetProperties(entry: Entry, keys: List<String>) {
+        keys.forEach { entry.unset(it) }
+        affairManager.post(EntryUnsetPropertiesEvent(entry, keys))
+    }
 
     @Throws(EntryNotFoundException::class)
     operator fun get(id: Int): Entry {
@@ -159,10 +175,12 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
     object Highlights {
         val KEY = Highlight(81, 0, 0)
         val VALUE = Highlight(222, 0, 0)
-        val BRACE = Highlight(75, 0, 0)
+        val NULL = Highlight(196, 0, 0)
+
+        val ID = Highlight(41, 0, 0)
+        val BRACE = Highlight(214, 0, 0)
     }
 }
-
 
 class EntryNotFoundException(id: Int) :
     RuntimeException("Entry with such ID not found: $id")
@@ -170,34 +188,20 @@ class EntryNotFoundException(id: Int) :
 class DuplicateIdException(id: Int) :
     RuntimeException("Duplicate entry id: $id")
 
-class EntryPreRegisterEvent(
-    val hoard: Hoard,
+class EntryRegisterEvent(val entry: Entry) : Event()
+
+class EntryCreateEvent(val entry: Entry) : Event()
+
+class EntryDeleteEvent(val entry: Entry) : Event()
+
+class EntrySetPropertiesEvent(
+    val entry: Entry,
     val properties: Map<String, String>
 ) : Event()
 
-class EntryPostRegisterEvent(
-    val hoard: Hoard,
-    val entry: Entry
-) : Event()
-
-class EntryPreCreateEvent(
-    val hoard: Hoard,
-    val properties: Map<String, String>
-) : Event()
-
-class EntryPostCreateEvent(
-    val hoard: Hoard,
-    val entry: Entry
-) : Event()
-
-class EntryPreDeleteEvent(
-    val hoard: Hoard,
-    val entry: Entry
-) : Event()
-
-class EntryPostDeleteEvent(
-    val hoard: Hoard,
-    val entry: Entry
+class EntryUnsetPropertiesEvent(
+    val entry: Entry,
+    val keys: List<String>
 ) : Event()
 
 class EntryStringifyEvent(

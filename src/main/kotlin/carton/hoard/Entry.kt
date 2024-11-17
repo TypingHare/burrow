@@ -20,7 +20,7 @@ class Entry(val id: Int, val properties: MutableMap<String, String>) {
 
     fun getProperty(key: String): String? = properties[key]
 
-    fun del(key: String) {
+    fun unset(key: String) {
         properties.remove(key)
         store.remove(key)
     }

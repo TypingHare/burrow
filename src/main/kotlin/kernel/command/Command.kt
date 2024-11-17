@@ -3,7 +3,6 @@ package burrow.kernel.command
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
 import burrow.kernel.furnishing.Furnishing
-import burrow.kernel.furnishing.FurnishingNotFoundException
 import burrow.kernel.stream.BurrowPrintWriters
 import picocli.CommandLine
 import picocli.CommandLine.IExecutionExceptionHandler
@@ -26,8 +25,8 @@ abstract class Command(data: CommandData) : ChamberModule(data.chamber),
             val commandAnnotation =
                 commandClass.java.getAnnotation(CommandLine.Command::class.java)
                     ?: throw NotACommandException(commandClass.java.name)
-
-            return commandAnnotation.description[0]
+            val descriptionArray = commandAnnotation.description
+            return if (descriptionArray.isNotEmpty()) descriptionArray[0] else ""
         }
     }
 
@@ -46,9 +45,19 @@ abstract class Command(data: CommandData) : ChamberModule(data.chamber),
         return CommandLine.ExitCode.OK
     }
 
-    protected fun <F : Furnishing> use(furnishingClass: KClass<F>): F {
-        return renovator.getFurnishing(furnishingClass)
-            ?: throw FurnishingNotFoundException(furnishingClass.java.name)
+    protected fun <F : Furnishing> use(furnishingClass: KClass<F>): F =
+        chamber.use(furnishingClass)
+
+    protected fun dispatch(
+        commandClass: CommandClass,
+        args: List<String>
+    ): Int {
+        val commandName = extractName(commandClass)
+        val commandData = CommandData(chamber, commandName, args, environment)
+        val command = commandClass.java
+            .getConstructor(CommandData::class.java)
+            .newInstance(commandData)
+        return processor.execute(command, args)
     }
 
     /**

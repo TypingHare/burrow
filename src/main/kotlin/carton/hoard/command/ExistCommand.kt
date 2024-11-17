@@ -4,6 +4,7 @@ import burrow.carton.hoard.Hoard
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
 import picocli.CommandLine
+import picocli.CommandLine.ExitCode
 
 @CommandLine.Command(
     name = "exist",
@@ -15,13 +16,15 @@ class ExistCommand(data: CommandData) : Command(data) {
 
     override fun call(): Int {
         if (id <= 0) {
-            stderr.println("Invalid entry ID: $id")
-            return CommandLine.ExitCode.USAGE
+            stderr.println(
+                "Error: Entry ID must be a positive integer. Provided ID: $id"
+            )
+            return ExitCode.USAGE
         }
 
         val isExist = use(Hoard::class).exists(id)
         stdout.println(if (isExist) "true" else "false")
 
-        return CommandLine.ExitCode.OK
+        return ExitCode.OK
     }
 }

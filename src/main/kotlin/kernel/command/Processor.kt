@@ -41,18 +41,20 @@ class Processor(chamber: Chamber) : ChamberModule(chamber) {
                 commandClass.java.getConstructor(CommandData::class.java)
             val command = constructor.newInstance(commandData)
             val commandArgs = commandData.commandArgs
-            exitCode.set(
-                CommandLine(command)
-                    .setParameterExceptionHandler(command)
-                    .setExecutionExceptionHandler(command)
-                    .execute(*commandArgs.toTypedArray())
-            )
+            exitCode.set(execute(command, commandArgs))
         } catch (ex: Throwable) {
             exitCode.set(CommandLine.ExitCode.SOFTWARE)
             BurrowPrintWriters.stderr(outputStream).println(ex.message)
         } finally {
             BurrowPrintWriters.exitCode(outputStream).println(exitCode.get())
         }
+    }
+
+    fun execute(command: Command, args: List<String>): Int {
+        return CommandLine(command)
+            .setParameterExceptionHandler(command)
+            .setExecutionExceptionHandler(command)
+            .execute(*args.toTypedArray())
     }
 
     object EventHandler {

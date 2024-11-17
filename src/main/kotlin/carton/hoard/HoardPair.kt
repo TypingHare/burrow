@@ -12,7 +12,7 @@ import burrow.kernel.furnishing.Furniture
     type = Furniture.Type.COMPONENT
 )
 @DependsOn([Hoard::class])
-class Pair(chamber: Chamber) : Furnishing(chamber) {
+class HoardPair(chamber: Chamber) : Furnishing(chamber) {
     private val hoard = use(Hoard::class)
 
     // Mapping keys to corresponding set of IDs
@@ -37,11 +37,11 @@ class Pair(chamber: Chamber) : Furnishing(chamber) {
     }
 
     override fun assemble() {
-        affairManager.subscribe(EntryPostRegisterEvent::class) {
+        affairManager.subscribe(EntryRegisterEvent::class) {
             add(it.entry)
         }
 
-        affairManager.subscribe(EntryPostCreateEvent::class) {
+        affairManager.subscribe(EntryCreateEvent::class) {
             add(it.entry)
         }
     }

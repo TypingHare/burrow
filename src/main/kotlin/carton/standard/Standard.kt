@@ -2,6 +2,7 @@ package burrow.carton.standard
 
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
+import burrow.kernel.command.CommandClass
 import burrow.kernel.config.Config
 import burrow.kernel.furnishing.DependencyTree
 import burrow.kernel.furnishing.Furnishing
@@ -24,7 +25,7 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
         registerCommand(FurnishingsCommand::class)
 
         // Command commands
-        registerCommand(CommandsCommand::class)
+        registerCommand(CommandListCommand::class)
     }
 
     override fun prepareConfig(config: Config) {
@@ -35,6 +36,25 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
     override fun modifyConfig(config: Config) {
         config.setIfAbsent(ConfigKey.ALIAS, chamber.name)
         config.setIfAbsent(ConfigKey.DESCRIPTION, "")
+    }
+
+    fun getTopLevelFurnishingsCommandClasses(): FurnishingsCommandClasses {
+        val map = mutableMapOf<Furnishing, List<CommandClass>>()
+        chamber.renovator.dependencyTree.root.children.forEach {
+            val furnishing = it.element ?: return@forEach
+            map[furnishing] = furnishing.commands.toList()
+        }
+
+        return map
+    }
+
+    fun getAllFurnishingsCommandClasses(): FurnishingsCommandClasses {
+        val map = mutableMapOf<Furnishing, List<CommandClass>>()
+        chamber.renovator.furnishings.values.forEach {
+            map[it] = it.commands.toList()
+        }
+
+        return map
     }
 
     fun getFurnishingClassDependencyTree(): FurnishingClassDependencyTree {

@@ -1,9 +1,11 @@
 package burrow.carton.hoard.command
 
 import burrow.carton.hoard.Hoard
+import burrow.carton.hoard.checkPairs
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
 import picocli.CommandLine
+import picocli.CommandLine.ExitCode
 
 @CommandLine.Command(
     name = "new",
@@ -11,22 +13,20 @@ import picocli.CommandLine
 )
 class NewCommand(data: CommandData) : Command(data) {
     @CommandLine.Parameters(arity = "0..*")
-    private var params: Array<String> = emptyArray()
+    private var pairs: Array<String> = emptyArray()
 
     override fun call(): Int {
-        if (params.isEmpty() || params.size % 2 == 1) {
-            stderr.println("Invalid number of arguments: ${params.size}")
-            return CommandLine.ExitCode.USAGE
+        if (!checkPairs(pairs, stderr)) {
+            return ExitCode.USAGE
         }
 
         val properties = mutableMapOf<String, String>()
-        for (i in 0 until params.size / 2) {
-            properties[params[i * 2]] = params[i * 2 + 1]
+        for (i in pairs.indices step 2) {
+            properties[pairs[i]] = pairs[i + 1]
         }
 
         val entry = use(Hoard::class).create(properties)
-        stdout.println(entry.id)
 
-        return CommandLine.ExitCode.OK
+        return dispatch(EntryCommand::class, listOf(entry.id.toString()))
     }
 }

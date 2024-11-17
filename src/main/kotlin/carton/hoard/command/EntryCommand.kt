@@ -2,53 +2,45 @@ package burrow.carton.hoard.command
 
 import burrow.carton.hoard.EntryNotFoundException
 import burrow.carton.hoard.Hoard
+import burrow.carton.hoard.printer.EntryContext
+import burrow.carton.hoard.printer.EntryPropertiesPrinter
+import burrow.carton.hoard.printer.EntryStorePrinter
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
 import picocli.CommandLine
-import java.io.PrintWriter
+import picocli.CommandLine.*
 
 @CommandLine.Command(
     name = "entry",
     description = ["Finds an entry by its associated ID and displays it."]
 )
 class EntryCommand(data: CommandData) : Command(data) {
-    @CommandLine.Parameters(index = "0")
-    private var id: Int = 0
+    @Parameters(index = "0")
+    private var id = 0
 
-    @CommandLine.Option(
+    @Option(
         names = ["-r", "--raw"],
         description = ["Displays the raw properties."],
         defaultValue = "false"
     )
-    private var raw: Boolean = false
+    private var shouldDisplayRawProperties = false
 
     @Throws(EntryNotFoundException::class)
     override fun call(): Int {
         if (id <= 0) {
-            stderr.println("Invalid entry ID: $id")
-            return CommandLine.ExitCode.USAGE
+            stderr.println(
+                "Error: Entry ID must be a positive integer. Provided ID: $id"
+            )
+            return ExitCode.USAGE
         }
 
         val entry = use(Hoard::class)[id]
-        val properties = if (raw) entry.properties else {
-            use(Hoard::class).convertStoreToProperties(entry)
+        if (shouldDisplayRawProperties) {
+            EntryPropertiesPrinter(stdout, EntryContext(entry, chamber)).print()
+        } else {
+            EntryStorePrinter(stdout, EntryContext(entry, chamber)).print()
         }
-        printProperties(properties, stdout)
 
-        return CommandLine.ExitCode.OK
-    }
-
-    private fun printProperties(
-        properties: Map<String, String>,
-        writer: PrintWriter
-    ) {
-        writer.println(palette.color("{", Hoard.Highlights.BRACE))
-        for ((key, value) in properties) {
-            val coloredKey = palette.color(key, Hoard.Highlights.KEY)
-            val coloredValue =
-                palette.color("\"$value\"", Hoard.Highlights.VALUE)
-            writer.println("${" ".repeat(4)}$coloredKey: $coloredValue")
-        }
-        writer.println(palette.color("}", Hoard.Highlights.BRACE))
+        return ExitCode.OK
     }
 }

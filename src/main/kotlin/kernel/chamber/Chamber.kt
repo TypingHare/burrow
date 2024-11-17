@@ -4,6 +4,8 @@ import burrow.kernel.Burrow
 import burrow.kernel.command.Processor
 import burrow.kernel.config.Config
 import burrow.kernel.event.EventBus
+import burrow.kernel.furnishing.Furnishing
+import burrow.kernel.furnishing.FurnishingNotFoundException
 import burrow.kernel.furnishing.Renovator
 import burrow.kernel.palette.Palette
 import burrow.kernel.palette.PicocliPalette
@@ -13,6 +15,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
+import kotlin.reflect.KClass
 
 class Chamber(val burrow: Burrow, val name: String) {
     val rootPath: Path = burrow.chambersPath.resolve(name).normalize()
@@ -72,6 +75,11 @@ class Chamber(val burrow: Burrow, val name: String) {
 
         // Save config
         saveConfig()
+    }
+
+    fun <F : Furnishing> use(furnishingClass: KClass<F>): F {
+        return renovator.getFurnishing(furnishingClass)
+            ?: throw FurnishingNotFoundException(furnishingClass.java.name)
     }
 
     private fun getFurnishingsFilePath(): Path =

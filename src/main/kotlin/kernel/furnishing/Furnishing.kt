@@ -64,8 +64,14 @@ abstract class Furnishing(chamber: Chamber) : ChamberModule(chamber),
             ?: throw NotDependencyFurnishingException(furnishingClass.java.name)
     }
 
+    /**
+     * Registers commands and subscribes to events.
+     */
     open fun assemble() {}
 
+    /**
+     * Initializes the chamber by reading configurations.
+     */
     open fun launch() {}
 
     open fun discard() {}

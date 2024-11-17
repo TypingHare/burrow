@@ -1,10 +1,10 @@
-package burrow.carton.standard.printtask
+package burrow.carton.standard.printer
 
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.FurnishingClass
 import burrow.kernel.palette.Highlight
 import burrow.kernel.palette.Palette
-import burrow.kernel.stream.PrintTask
+import burrow.kernel.stream.Printer
 import java.io.PrintWriter
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -22,7 +22,7 @@ class CompleteFurnishingClassesPrintContext(
 class CompleteFurnishingClassesPrintTask(
     writer: PrintWriter,
     context: CompleteFurnishingClassesPrintContext
-) : PrintTask<CompleteFurnishingClassesPrintContext>(writer, context) {
+) : Printer<CompleteFurnishingClassesPrintContext>(writer, context) {
     override fun print() {
         val index = AtomicInteger(0)
         val palette = context.palette
