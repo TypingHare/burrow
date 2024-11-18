@@ -8,3 +8,6 @@ build:
 move-bin:
     mkdir -p ~/.burrow/bin
     cp src/main/resources/init/bin/* ~/.burrow/bin
+
+start-server:
+    burrow . server.start

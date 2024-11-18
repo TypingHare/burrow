@@ -24,9 +24,18 @@ class Burrow {
     companion object {
         val CLASS_LOADER: ClassLoader = Companion::class.java.classLoader
         val logger: Logger = LoggerFactory.getLogger(Burrow::class.java)
+
+        fun getRootPath(): Path {
+            return Path.of(System.getProperty("user.home")).resolve(
+                getEnvOrDefault(EnvKey.ROOT_DIR, Default.ROOT_DIR)
+            ).normalize()
+        }
+
+        fun getEnvOrDefault(key: String, defaultValue: String): String =
+            System.getenv(key) ?: defaultValue
     }
 
-    val rootPath: Path
+    val rootPath: Path = getRootPath()
     val chambersPath: Path
     val chamberShepherd = ChamberShepherd(this)
     val furnishingWarehouse = FurnishingWareHouse()
@@ -34,19 +43,8 @@ class Burrow {
     val palette = PicocliPalette()
 
     init {
-        rootPath = Path.of(
-            System.getProperty("user.home")
-        ).resolve(
-            getEnvOrDefault(
-                EnvKey.ROOT_DIR,
-                Default.ROOT_DIR
-            )
-        ).normalize()
         chambersPath = rootPath.resolve(
-            getEnvOrDefault(
-                EnvKey.CHAMBERS_DIR,
-                Default.CHAMBERS_DIR
-            )
+            getEnvOrDefault(EnvKey.CHAMBERS_DIR, Default.CHAMBERS_DIR)
         ).normalize()
 
         val start = Instant.now()
@@ -138,9 +136,6 @@ class Burrow {
         chamberShepherd.buildChamber(Standard.ROOT_CHAMBER_NAME)
     }
 
-    fun getEnvOrDefault(key: String, defaultValue: String): String =
-        System.getenv(key) ?: defaultValue
-
     object EnvKey {
         const val ROOT_DIR = "BURROW_ROOT_DIR"
         const val CHAMBERS_DIR = "BURROW_CHAMBERS_DIR"
@@ -165,8 +160,13 @@ class Burrow {
         val FURNISHING = Highlight(51, 0, Highlight.Style.ITALIC)
         val COMMAND = Highlight(214, 0, Highlight.Style.NONE)
     }
+
+    object VERSION {
+        const val NAME = "0.0.0"
+    }
 }
 
+@Throws(BurrowInitializationException::class)
 fun buildBurrow(): Burrow {
     System.setProperty("slf4j.internal.verbosity", "WARN")
     val reflectionsLogger =

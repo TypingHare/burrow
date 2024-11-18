@@ -69,7 +69,7 @@ class FurnishingListCommand(data: CommandData) : Command(data) {
                 context.shouldPrintFurnishingId = shouldDisplayId
                 CompleteFurnishingClassesPrintTask(stdout, context).print()
             } else {
-                val list = standard.getAvailableFurnishingClasses().toList()
+                val list = standard.getFurnishingClasses().toList()
                 val context = FurnishingClassesPrintContext(
                     list,
                     palette,

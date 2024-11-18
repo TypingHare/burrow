@@ -1,9 +1,7 @@
 package burrow.carton.dictator
 
 import burrow.kernel.Burrow
-import burrow.kernel.chamber.Chamber
-import burrow.kernel.chamber.ChamberPostBuildEvent
-import burrow.kernel.chamber.ChamberPreBuildEvent
+import burrow.kernel.chamber.*
 import burrow.kernel.config.Config
 import burrow.kernel.config.ConfigItemHandler
 import burrow.kernel.furnishing.Furnishing
@@ -29,6 +27,8 @@ class Scheduler(chamber: Chamber) : Furnishing(chamber) {
         Executors.newScheduledThreadPool(1)
     private val preBuildInstantMap = mutableMapOf<String, Instant>()
     private val postBuildInstantMap = mutableMapOf<String, Instant>()
+    private val preDestroyInstantMap = mutableMapOf<String, Instant>()
+    private val postDestroyInstantMap = mutableMapOf<String, Instant>()
 
     init {
         preBuildInstantMap[Burrow.Standard.ROOT_CHAMBER_NAME] = Instant.now()
@@ -48,6 +48,7 @@ class Scheduler(chamber: Chamber) : Furnishing(chamber) {
         config.setIfAbsent(ConfigKey.THRESHOLD_MS, Default.THRESHOLD_MS)
     }
 
+    @Suppress("DuplicatedCode")
     override fun assemble() {
         val intervalMs = getIntervalMs()
         taskScheduler.scheduleAtFixedRate(
@@ -66,6 +67,10 @@ class Scheduler(chamber: Chamber) : Furnishing(chamber) {
             val now = Instant.now()
             postBuildInstantMap[chamberName] = now
 
+            // Remove chamber name from destroy instant maps
+            preDestroyInstantMap.remove(chamberName)
+            postDestroyInstantMap.remove(chamberName)
+
             if (!preBuildInstantMap.containsKey(chamberName)) {
                 return@subscribe
             }
@@ -75,6 +80,30 @@ class Scheduler(chamber: Chamber) : Furnishing(chamber) {
             val coloredChamberName =
                 palette.color(chamberName, Burrow.Highlights.CHAMBER)
             logger.info("Started chamber $coloredChamberName in $duration ms")
+        }
+
+        burrow.affairManager.subscribe(ChamberPreDestroyEvent::class) {
+            preDestroyInstantMap[it.chamber.name] = Instant.now()
+        }
+
+        burrow.affairManager.subscribe(ChamberPostDestroyEvent::class) {
+            val chamberName = it.chamber.name
+            val now = Instant.now()
+            postDestroyInstantMap[chamberName] = now
+
+            // Remove chamber name from build instant maps
+            preBuildInstantMap.remove(chamberName)
+            postBuildInstantMap.remove(chamberName)
+
+            if (!preDestroyInstantMap.containsKey(chamberName)) {
+                return@subscribe
+            }
+
+            val startInstant = preDestroyInstantMap[chamberName]
+            val duration = Duration.between(startInstant, now).toMillis()
+            val coloredChamberName =
+                palette.color(chamberName, Burrow.Highlights.CHAMBER)
+            logger.info("Destroyed chamber $coloredChamberName in $duration ms")
         }
     }
 

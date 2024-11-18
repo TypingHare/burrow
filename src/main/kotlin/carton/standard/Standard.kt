@@ -1,9 +1,6 @@
 package burrow.carton.standard
 
-import burrow.carton.standard.command.CommandListCommand
-import burrow.carton.standard.command.FurnishingListCommand
-import burrow.carton.standard.command.HelpCommand
-import burrow.carton.standard.command.RootCommand
+import burrow.carton.standard.command.*
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.command.CommandClass
@@ -22,6 +19,7 @@ import burrow.kernel.palette.Highlight
 class Standard(chamber: Chamber) : Furnishing(chamber) {
     override fun assemble() {
         // Basic commands
+        registerCommand(TestCommand::class)
         registerCommand(RootCommand::class)
         registerCommand(HelpCommand::class)
 

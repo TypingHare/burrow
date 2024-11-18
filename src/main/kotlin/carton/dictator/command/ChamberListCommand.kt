@@ -11,12 +11,12 @@ import java.util.concurrent.atomic.AtomicInteger
 
 @CommandLine.Command(
     name = "chamber.list",
-    description = ["Display the built chambers."]
+    description = ["Displays the list of all built chambers."]
 )
 class ChamberListCommand(data: CommandData) : Command(data) {
     @CommandLine.Option(
         names = ["-a", "--all"],
-        description = ["Display all chambers, including the chambers that have yet built."],
+        description = ["Displays all chambers, including the chambers that have yet built."],
         defaultValue = "false"
     )
     var shouldDisplayAll = false

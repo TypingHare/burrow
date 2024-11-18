@@ -31,7 +31,7 @@ class Clutter(chamber: Chamber) : Furnishing(chamber) {
 
     init {
         cartonsPath = burrow.rootPath.resolve(
-            burrow.getEnvOrDefault(EnvKey.CARTON_DIR, Default.CARTON_DIR)
+            Burrow.getEnvOrDefault(EnvKey.CARTON_DIR, Default.CARTON_DIR)
         ).normalize()
         ensureCartonsDirectory()
     }

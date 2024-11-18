@@ -1,5 +1,6 @@
 package burrow.carton.dictator
 
+import burrow.carton.dictator.command.ChamberBuildCommand
 import burrow.carton.dictator.command.ChamberDestroyCommand
 import burrow.carton.dictator.command.ChamberListCommand
 import burrow.carton.standard.Standard
@@ -9,6 +10,7 @@ import burrow.kernel.chamber.ChamberPostDestroyEvent
 import burrow.kernel.furnishing.DependsOn
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.Furniture
+import java.io.File
 
 @DependsOn([Standard::class])
 @Furniture(
@@ -22,6 +24,7 @@ class Dictator(chamber: Chamber) : Furnishing(chamber) {
 
     override fun assemble() {
         registerCommand(ChamberListCommand::class)
+        registerCommand(ChamberBuildCommand::class)
         registerCommand(ChamberDestroyCommand::class)
 
         burrow.affairManager.subscribe(ChamberPostBuildEvent::class) {
@@ -38,14 +41,15 @@ class Dictator(chamber: Chamber) : Furnishing(chamber) {
         }
     }
 
+    fun getAllChamberDirs(): List<File> {
+        return burrow.chambersPath.toFile().listFiles()!!.toList()
+            .filter { it.isDirectory() }
+    }
+
     fun getAllChamberInfo(): List<ChamberInfo> {
         val chamberInfoList = mutableListOf<ChamberInfo>()
-        for (file in burrow.chambersPath.toFile().listFiles()!!) {
-            if (file == null || !file.isDirectory()) {
-                continue
-            }
-
-            val name = file.name
+        for (dir in getAllChamberDirs()) {
+            val name = dir.name
             chamberInfoList.add(ChamberInfo(name, name, ""))
         }
 

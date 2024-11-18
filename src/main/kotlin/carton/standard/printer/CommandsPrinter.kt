@@ -29,7 +29,7 @@ abstract class CommandsPrinter(writer: PrintWriter, chamber: Chamber) :
                 val description = extractDescription(commandClass)
                 val coloredName =
                     chamber.palette.color(name, Burrow.Highlights.COMMAND)
-                writer.println("  ${coloredName.padEnd(35)} $description")
+                writer.println("  ${coloredName.padEnd(40)} $description")
             }
 
             writer.println()

@@ -28,7 +28,7 @@ class ChamberDestroyCommand(data: CommandData) : Command(data) {
 
         val chamberShepherd = burrow.chamberShepherd
         if (!chamberShepherd.chambers.containsKey(chamberName)) {
-            stderr.println("Chamber has yet been build: $chamberName")
+            stderr.println("Chamber has yet been built: $chamberName")
             return ExitCode.USAGE
         }
 
