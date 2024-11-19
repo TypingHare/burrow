@@ -6,7 +6,7 @@ import kotlin.reflect.KClass
 
 class Renovator(chamber: Chamber) : ChamberModule(chamber) {
     val furnishings = mutableMapOf<String, Furnishing>()
-    val dependencyTree = FurnishingDependencyTree()
+    val depTree = FurnishingDepTree()
     private val labelMap = mutableMapOf<String, MutableSet<String>>()
 
     private fun getFurnishing(id: String) = furnishings[id]
@@ -16,32 +16,32 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
         getFurnishing(furnishingClass.java.name) as T?
 
     fun loadFurnishings(furnishingIds: List<String>) {
-        resolveDependencies(emptyList(), furnishingIds, dependencyTree.root)
+        resolveDependencies(emptyList(), furnishingIds, depTree.root)
 
-        dependencyTree.resolve { it.prepareConfig(config) }
+        depTree.resolveWithoutRepetition { it.prepareConfig(config) }
     }
 
     fun initializeFurnishings() {
-        dependencyTree.resolve { it.modifyConfig(config) }
-        dependencyTree.resolve { it.assemble() }
-        dependencyTree.resolve { it.launch() }
+        depTree.resolveWithoutRepetition { it.modifyConfig(config) }
+        depTree.resolveWithoutRepetition { it.assemble() }
+        depTree.resolveWithoutRepetition { it.launch() }
     }
 
     private fun resolveDependencies(
         path: List<String>,
-        dependencies: List<String>,
-        node: DependencyTree.Node<Furnishing>
+        deps: List<String>,
+        node: DepTree.Node<Furnishing>
     ) {
-        dependencies.forEach { dependency ->
-            require(dependency !in path) {
-                "Circular dependency detected for $dependency"
+        deps.forEach { dep ->
+            require(dep !in path) {
+                "Circular dep detected for $dep"
             }
 
-            furnishings[dependency] ?: run {
-                val furnishing = loadById(dependency)
-                val nextNode = DependencyTree.Node(furnishing)
+            furnishings[dep] ?: run {
+                val furnishing = loadById(dep)
+                val nextNode = DepTree.Node(furnishing)
                 resolveDependencies(
-                    path + dependency,
+                    path + dep,
                     furnishing.getDependencies(),
                     nextNode
                 )

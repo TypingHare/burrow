@@ -71,7 +71,7 @@ class Chamber(val burrow: Burrow, val name: String) {
 
     fun destroy() {
         // Discards all the furnishings
-        renovator.dependencyTree.resolve { it.discard() }
+        renovator.depTree.resolve { it.discard() }
 
         // Save config
         saveConfig()

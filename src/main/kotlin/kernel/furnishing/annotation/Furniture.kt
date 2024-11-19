@@ -1,4 +1,4 @@
-package burrow.kernel.furnishing
+package burrow.kernel.furnishing.annotation
 
 annotation class Furniture(
     val version: String,

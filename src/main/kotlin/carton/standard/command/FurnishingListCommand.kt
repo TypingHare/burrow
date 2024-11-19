@@ -10,8 +10,8 @@ import picocli.CommandLine
 @CommandLine.Command(
     name = "furnishing.list",
     description = [
-        "Display a complete list of all available furnishings instead of the " +
-                "dependency tree."
+        "Displays a complete list of all available furnishings instead of " +
+                "the dependency tree."
     ]
 )
 class FurnishingListCommand(data: CommandData) : Command(data) {

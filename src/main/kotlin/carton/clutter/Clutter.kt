@@ -4,7 +4,7 @@ import burrow.kernel.Burrow
 import burrow.kernel.BurrowInitializationException
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.furnishing.Furnishing
-import burrow.kernel.furnishing.Furniture
+import burrow.kernel.furnishing.annotation.Furniture
 import burrow.kernel.furnishing.InvalidFurnishingClassException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

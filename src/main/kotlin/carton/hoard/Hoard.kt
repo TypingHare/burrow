@@ -5,7 +5,7 @@ import burrow.carton.hoard.command.*
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.event.Event
 import burrow.kernel.furnishing.Furnishing
-import burrow.kernel.furnishing.Furniture
+import burrow.kernel.furnishing.annotation.Furniture
 import burrow.kernel.palette.Highlight
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

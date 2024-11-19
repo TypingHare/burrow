@@ -4,6 +4,8 @@ import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
 import burrow.kernel.command.CommandClass
 import burrow.kernel.config.ConfigSupport
+import burrow.kernel.furnishing.annotation.DependsOn
+import burrow.kernel.furnishing.annotation.Furniture
 import kotlin.reflect.KClass
 
 abstract class Furnishing(chamber: Chamber) : ChamberModule(chamber),

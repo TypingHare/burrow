@@ -5,7 +5,7 @@ import burrow.kernel.chamber.*
 import burrow.kernel.config.Config
 import burrow.kernel.config.ConfigItemHandler
 import burrow.kernel.furnishing.Furnishing
-import burrow.kernel.furnishing.Furniture
+import burrow.kernel.furnishing.annotation.Furniture
 import org.slf4j.LoggerFactory
 import java.time.Duration
 import java.time.Instant

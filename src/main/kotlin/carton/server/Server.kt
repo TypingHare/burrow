@@ -5,7 +5,7 @@ import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.config.Config
 import burrow.kernel.furnishing.Furnishing
-import burrow.kernel.furnishing.Furniture
+import burrow.kernel.furnishing.annotation.Furniture
 
 @Furniture(
     version = Burrow.VERSION.NAME,

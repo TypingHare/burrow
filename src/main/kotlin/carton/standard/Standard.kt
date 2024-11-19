@@ -5,10 +5,10 @@ import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.command.CommandClass
 import burrow.kernel.config.Config
-import burrow.kernel.furnishing.DependencyTree
+import burrow.kernel.furnishing.DepTree
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.FurnishingClass
-import burrow.kernel.furnishing.Furniture
+import burrow.kernel.furnishing.annotation.Furniture
 import burrow.kernel.palette.Highlight
 
 @Furniture(
@@ -42,7 +42,7 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
 
     fun getTopLevelFurnishingsCommandClasses(): FurnishingsCommandClasses {
         val map = mutableMapOf<Furnishing, List<CommandClass>>()
-        chamber.renovator.dependencyTree.root.children.forEach {
+        chamber.renovator.depTree.root.children.forEach {
             val furnishing = it.element ?: return@forEach
             map[furnishing] = furnishing.commands.toList()
         }
@@ -62,18 +62,18 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
     fun getFurnishingClassDependencyTree(): FurnishingClassDependencyTree {
         val dependencyTree = FurnishingClassDependencyTree()
         fun handle(
-            furnishingNode: DependencyTree.Node<Furnishing>,
-            furnishingClassNode: DependencyTree.Node<FurnishingClass>
+            furnishingNode: DepTree.Node<Furnishing>,
+            furnishingClassNode: DepTree.Node<FurnishingClass>
         ) {
             furnishingNode.children.forEach {
                 val nextFurnishingNode =
-                    DependencyTree.Node(it.element!!::class)
+                    DepTree.Node(it.element!!::class)
                 handle(it, nextFurnishingNode)
                 furnishingClassNode.children.add(nextFurnishingNode)
             }
         }
 
-        handle(renovator.dependencyTree.root, dependencyTree.root)
+        handle(renovator.depTree.root, dependencyTree.root)
         return dependencyTree
     }
 
@@ -84,7 +84,7 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
         furnishingClasses.filter {
             isRootChamber || extractType(it) != Furniture.Type.ROOT
         }.forEach { dependencyTree.root.add(it) }
-        fun handle(node: DependencyTree.Node<FurnishingClass>) {
+        fun handle(node: DepTree.Node<FurnishingClass>) {
             node.children.forEach {
                 val furnishingClass = it.element!!
                 extractDependencies(furnishingClass).filter {
@@ -103,7 +103,7 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
      */
     fun getFurnishingClasses(): Set<FurnishingClass> {
         val furnishingClassSet = mutableSetOf<FurnishingClass>()
-        renovator.dependencyTree.resolve {
+        renovator.depTree.resolve {
             furnishingClassSet.add(it::class)
         }
 
@@ -135,4 +135,4 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
     }
 }
 
-class FurnishingClassDependencyTree : DependencyTree<FurnishingClass>()
+class FurnishingClassDependencyTree : DepTree<FurnishingClass>()

@@ -1,7 +1,7 @@
 package burrow.carton.standard.printer
 
 import burrow.carton.standard.FurnishingClassDependencyTree
-import burrow.kernel.furnishing.DependencyTree
+import burrow.kernel.furnishing.DepTree
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.FurnishingClass
 import burrow.kernel.palette.Highlight
@@ -36,7 +36,7 @@ class FurnishingClassDependencyTreePrintTask(
     }
 
     private fun printNode(
-        node: DependencyTree.Node<FurnishingClass>,
+        node: DepTree.Node<FurnishingClass>,
         index: Int,
         indentation: Int,
         indentationIncrement: Int

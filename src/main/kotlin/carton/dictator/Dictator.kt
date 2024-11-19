@@ -7,9 +7,9 @@ import burrow.carton.standard.Standard
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberPostBuildEvent
 import burrow.kernel.chamber.ChamberPostDestroyEvent
-import burrow.kernel.furnishing.DependsOn
+import burrow.kernel.furnishing.annotation.DependsOn
 import burrow.kernel.furnishing.Furnishing
-import burrow.kernel.furnishing.Furniture
+import burrow.kernel.furnishing.annotation.Furniture
 import java.io.File
 
 @DependsOn([Standard::class])

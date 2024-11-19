@@ -1,5 +1,6 @@
 package burrow.kernel.furnishing
 
+import burrow.kernel.furnishing.annotation.Furniture
 import org.reflections.Reflections
 import org.reflections.util.ClasspathHelper
 import org.reflections.util.ConfigurationBuilder

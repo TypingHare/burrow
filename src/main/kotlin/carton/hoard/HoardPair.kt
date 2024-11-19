@@ -2,9 +2,9 @@ package burrow.carton.hoard
 
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.config.Config
-import burrow.kernel.furnishing.DependsOn
+import burrow.kernel.furnishing.annotation.DependsOn
 import burrow.kernel.furnishing.Furnishing
-import burrow.kernel.furnishing.Furniture
+import burrow.kernel.furnishing.annotation.Furniture
 
 @Furniture(
     version = "0.0.0",
