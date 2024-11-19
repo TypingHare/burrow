@@ -1,5 +1,0 @@
-#! /bin/zsh
-
-SCRIPT_DIR=$(dirname "$0")
-BURROW_CLI_CLASS="burrow.server.BurrowServer"
-java -cp "$SCRIPT_DIR/../../../../build/libs/$JAR_NAME" "$BURROW_CLI_CLASS"
