@@ -1,7 +1,7 @@
 package burrow.kernel.command
 
 import burrow.kernel.chamber.Chamber
-import burrow.kernel.chamber.ChamberModule
+import burrow.kernel.chamber.ExtendedChamberModule
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.stream.BurrowPrintWriters
 import picocli.CommandLine
@@ -10,7 +10,7 @@ import picocli.CommandLine.IParameterExceptionHandler
 import java.util.concurrent.Callable
 import kotlin.reflect.KClass
 
-abstract class Command(data: CommandData) : ChamberModule(data.chamber),
+abstract class Command(data: CommandData) : ExtendedChamberModule(data.chamber),
     Callable<Int>, IParameterExceptionHandler, IExecutionExceptionHandler {
     companion object {
         fun extractName(commandClass: CommandClass): String {
@@ -32,7 +32,7 @@ abstract class Command(data: CommandData) : ChamberModule(data.chamber),
 
     protected val name = data.commandName
     protected val args = data.commandArgs
-    private val environment = data.environment
+    protected val environment = data.environment
 
     protected val stdout = BurrowPrintWriters.stdout(environment.outputStream)
     protected val stderr = BurrowPrintWriters.stderr(environment.outputStream)

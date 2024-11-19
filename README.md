@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] Standard Cont.
-- [ ] `furnishing.list` update
-- [ ] `furnishing.add`, `furnishing.remove`
-- [ ] Load hoard protect (If any errors raise during the loading process, it does not save)
+- [ ] Standard Cont. (Help command)
+- [ ] Hoard Cont. (Pair and Time)
+- [ ] Git
+- [ ] Server/Client Protocol (Command/Environment)

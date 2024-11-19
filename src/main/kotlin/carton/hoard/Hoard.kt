@@ -28,7 +28,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
     private val entryStore = mutableListOf<Entry?>()
     private var maxId = AtomicInteger(0)
     private val size = AtomicInteger(0)
-    private val saveWhenDiscard = AtomicBoolean(true)
+    private val saveWhenDiscard = AtomicBoolean(false)
 
     override fun assemble() {
         // Entry relevant
@@ -64,6 +64,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
             val entries: List<Map<String, String>> =
                 Gson().fromJson(content, type)
             entries.forEach { restore(it) }
+            saveWhenDiscard.set(true)
         } catch (ex: IOException) {
             throw RuntimeException("Failed to load hoard: $hoardFilePath", ex)
         }

@@ -10,6 +10,7 @@ import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.FurnishingClass
 import burrow.kernel.furnishing.annotation.Furniture
 import burrow.kernel.palette.Highlight
+import java.io.PrintWriter
 
 @Furniture(
     version = "0.0.0",
@@ -25,6 +26,8 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
 
         // Furnishing commands
         registerCommand(FurnishingListCommand::class)
+        registerCommand(FurnishingAddCommand::class)
+        registerCommand(FurnishingRemoveCommand::class)
 
         // Command commands
         registerCommand(CommandListCommand::class)
@@ -122,6 +125,21 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
         return furnishingClasses.filter {
             extractType(it) != Furniture.Type.ROOT
         }.toSet()
+    }
+
+    fun rebuildChamberAfterUpdatingFurnishingList(
+        originalFurnishingIds: Set<String>,
+        stderr: PrintWriter
+    ) {
+        val chamberName = chamber.name
+        try {
+            burrow.chamberShepherd.destroyChamber(chamberName)
+            burrow.chamberShepherd.buildChamber(chamberName)
+        } catch (ex: Exception) {
+            stderr.println("Error during restarting. Now Roll back to the original furnishing list.")
+            renovator.saveFurnishingIds(originalFurnishingIds)
+            burrow.chamberShepherd.buildChamber(chamberName)
+        }
     }
 
     object ConfigKey {

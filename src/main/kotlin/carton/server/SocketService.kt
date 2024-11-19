@@ -72,7 +72,7 @@ class SocketService(
     ) {
         burrow.parse(
             CommandLexer.tokenizeCommandString(commandString).toTypedArray(),
-            Environment(outputStream, "~", 80)
+            Environment(outputStream, "/Users/jameschan/", 80)
         )
     }
 }

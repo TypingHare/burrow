@@ -35,12 +35,8 @@ class Scheduler(chamber: Chamber) : Furnishing(chamber) {
     }
 
     override fun prepareConfig(config: Config) {
-        val configItemHandler = ConfigItemHandler(
-            { it.toLong() },
-            { it.toString() }
-        )
-        config.addKey(ConfigKey.INTERVAL_MS, configItemHandler)
-        config.addKey(ConfigKey.THRESHOLD_MS, configItemHandler)
+        config.addKey(ConfigKey.INTERVAL_MS, Config.Handler.LONG)
+        config.addKey(ConfigKey.THRESHOLD_MS, Config.Handler.LONG)
     }
 
     override fun modifyConfig(config: Config) {

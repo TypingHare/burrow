@@ -1,10 +1,19 @@
 package burrow.kernel.furnishing
 
+import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.nio.file.Files
+import java.nio.file.Path
+import kotlin.io.path.exists
 import kotlin.reflect.KClass
 
 class Renovator(chamber: Chamber) : ChamberModule(chamber) {
+    private val furnishingsFilePath: Path =
+        chamber.rootPath.resolve(Burrow.Standard.FURNISHINGS_FILE_NAME)
+
     val furnishings = mutableMapOf<String, Furnishing>()
     val depTree = FurnishingDepTree()
     private val labelMap = mutableMapOf<String, MutableSet<String>>()
@@ -15,13 +24,35 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
     fun <T : Furnishing> getFurnishing(furnishingClass: KClass<T>): T? =
         getFurnishing(furnishingClass.java.name) as T?
 
-    fun loadFurnishings(furnishingIds: List<String>) {
+    fun loadFurnishings() {
+        if (!furnishingsFilePath.exists()) {
+            throw FurnishingsFileNotFoundException(furnishingsFilePath)
+        }
+
+        loadFurnishings(loadFurnishingIds())
+    }
+
+    private fun loadFurnishings(furnishingIds: List<String>) {
         resolveDependencies(emptyList(), furnishingIds, depTree.root)
 
+        val config = chamber.config
         depTree.resolveWithoutRepetition { it.prepareConfig(config) }
     }
 
+    private fun loadFurnishingIds(): List<String> {
+        val content = Files.readString(furnishingsFilePath)
+        val type = object : TypeToken<List<String>>() {}.type
+        return Gson().fromJson(content, type)
+    }
+
+    fun saveFurnishingIds(furnishingIds: Set<String>) {
+        val type = object : TypeToken<List<String>>() {}.type
+        val content = Gson().toJson(furnishingIds, type)
+        Files.write(furnishingsFilePath, content.toByteArray())
+    }
+
     fun initializeFurnishings() {
+        val config = chamber.config
         depTree.resolveWithoutRepetition { it.modifyConfig(config) }
         depTree.resolveWithoutRepetition { it.assemble() }
         depTree.resolveWithoutRepetition { it.launch() }
@@ -89,3 +120,8 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
 
 class FurnishingNotFoundException(id: String) :
     RuntimeException("Furnishing not found: $id")
+
+class FurnishingsFileNotFoundException(private val path: Path) :
+    RuntimeException("Furnishings file not found: $path") {
+    fun getPath(): Path = path
+}
