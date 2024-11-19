@@ -5,50 +5,99 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="55d3258e-f4d8-4532-b2d2-02fcd7c7d717" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README_BACKUP_55642.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README_BASE_55642.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README_LOCAL_55642.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README_REMOTE_55642.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/justfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/clutter/Carton.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/clutter/Clutter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/cradle/Cradle.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/cradle/ExecCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/dictator/Dictator.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/dictator/Scheduler.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/dictator/command/ChamberBuildCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/dictator/command/ChamberDestroyCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/dictator/command/ChamberListCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/hoard/Entry.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/hoard/Helper.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/hoard/Hoard.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/hoard/HoardPair.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/hoard/HoardTime.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/hoard/command/DelCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/hoard/command/EntryCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/hoard/command/ExistCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/hoard/command/NewCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/hoard/command/PropCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/hoard/command/SetCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/hoard/command/UnsetCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/hoard/printer/EntryPrinter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/server/Server.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/server/SocketService.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/server/command/ServerStartCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/standard/CommandListCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/standard/Standard.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/standard/command/CommandListCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/standard/command/FurnishingAddCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/standard/command/FurnishingListCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/standard/command/FurnishingRemoveCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/standard/command/HelpCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/standard/command/RootCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/standard/command/TestCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/standard/printer/CommandsPrinter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/standard/printer/CompleteFurnishingClassesPrinter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/standard/printer/FurnishingClassDependencyTreePrinter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/carton/standard/printer/FurnishingClassesPrinter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/client/BurrowClient.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/client/Client.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/client/LocalClient.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/client/SocketBasedClient.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/client/cli/BurrowClientCli.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/client/cli/BurrowClientCliCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/client/cli/ClearCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/client/cli/CommandsCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/client/cli/ExitCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/client/cli/UseCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/common/CommandLexer.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/Burrow.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/chamber/Chamber.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/chamber/ChamberModule.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/chamber/ChamberShepherd.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/command/Command.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/command/CommandUtility.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/command/DefaultCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/command/Environment.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/command/Processor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/config/Config.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/config/ConfigSupport.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/event/Event.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/event/EventBus.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/furnishing/DepTree.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/furnishing/Furnishing.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/furnishing/FurnishingWarehouse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/furnishing/Renovator.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/furnishing/annotation/DependsOn.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/furnishing/annotation/Furniture.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/palette/Highlight.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/palette/Palette.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/palette/PicocliPalette.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/stream/BurrowPrintWriters.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/stream/PrefixedOutputStream.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/kernel/stream/Printer.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/init/bin/burrow" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/init/bin/burrow-cli" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/init/bin/burrow-server" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/init/chambers/config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/init/chambers/furnishings.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/init/chambers/playground/config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/init/chambers/playground/furnishings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/chain/ContextHook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/chain/ContextHook.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/client/BurrowCli.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/Chamber.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/Chamber.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberLifeCycleContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/chamber/ChamberLifeCycleContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/CommandContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/CommandContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/command/Processor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/command/Processor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/config/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/config/Config.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Renovator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/core/furniture/Renovator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/bincore/BinCoreFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/bincore/BinCoreFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/bincore/CreateShellCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/bincore/ShellNewCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberInfoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberInfoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberListCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberNewCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/dictator/ChamberNewCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/Entry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/Entry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/Hoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/Hoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/HoardFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/HoardFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/CreateEntryContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/CreateEntryContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/DeleteEntryContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/DeleteEntryContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/FormattedObjectToStringContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/FormattedObjectToStringContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/RegisterEntryContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/RegisterEntryContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/SetEntryContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/SetEntryContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/ToEntryObjectContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/ToEntryObjectContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/ToFormattedObjectContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/ToFormattedObjectContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/UnsetEntryContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/chain/UnsetEntryContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/command/EntriesCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/command/EntriesCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/command/EntryCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/hoard/command/EntryCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModCoreFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModCoreFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/modcore/ModListCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/KeyCountCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/KeyCountCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/KeysCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/KeyListCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/PairFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/PairFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/ValuesCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/pair/ValueListCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/scheduler/SchedulerFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/scheduler/SchedulerFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/CommandListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/CommandListCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigGetCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/ConfigValueCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureAddCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureAddCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureListCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureListCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureRemoveCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/FurnitureRemoveCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/standard/StandardFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/burrow/furniture/time/TimeFurniture.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/burrow/furniture/time/TimeFurniture.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/burrow/chain/ChainTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/burrow/chain/ChainTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +164,7 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Spring Boot.BurrowServer.executor": "Run",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Merging main",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -208,8 +257,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.18034.62" />
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.18034.62" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
       </set>
     </attachedChunks>
   </component>
@@ -240,6 +289,7 @@
       <workItem from="1721312281029" duration="1204000" />
       <workItem from="1721314087169" duration="99000" />
       <workItem from="1721574094539" duration="5131000" />
+      <workItem from="1732052204485" duration="43000" />
     </task>
     <servers />
   </component>

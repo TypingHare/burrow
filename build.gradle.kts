@@ -1,45 +1,47 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
-    id("java")
-    id("org.springframework.boot") version "3.2.5"
+    kotlin("jvm") version "2.0.20"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-group = "me.jameschan"
-version = "1.0.0"
-java.sourceCompatibility = JavaVersion.VERSION_21
+tasks {
+    withType<ShadowJar> {
+        archiveBaseName.set("burrow")
+        archiveVersion.set("0.0.0")
+
+        manifest {
+            attributes["Main-Class"] = "burrow.server.BurrowServer"
+        }
+    }
+}
+
+group = "burrow"
+version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    // Spring
-    implementation("org.springframework.boot:spring-boot-starter-web:3.3.1")
-    implementation("org.springframework.boot:spring-boot-loader:3.3.1")
-    testImplementation("org.springframework.boot:spring-boot-starter-test:3.3.1")
+    testImplementation(kotlin("test"))
 
-    // Picocli and JLine
+    // SFML
+    implementation("ch.qos.logback:logback-classic:1.5.12")
+
+    // Terminal
     implementation("info.picocli:picocli:4.7.6")
-    implementation("org.jline:jline:3.26.1")
+    implementation("org.jline:jline:3.27.1")
 
-    // Apache Http Client
-    implementation("org.apache.httpcomponents.client5:httpclient5-cache:5.3.1")
-
-    // Utility
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("com.google.guava:guava:33.2.0-jre")
+    // Tools
+    implementation("com.google.code.gson:gson:2.11.0")
     implementation("org.reflections:reflections:0.10.2")
-    implementation("commons-io:commons-io:2.11.0")
-
-    // Annotation
-    implementation("org.jetbrains:annotations:24.1.0")
-
-    // Testing
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
 tasks.test {
     useJUnitPlatform()
+}
+
+kotlin {
+    jvmToolchain(21)
 }
