@@ -65,7 +65,6 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
             val entries: List<Map<String, String>> =
                 Gson().fromJson(content, type)
             entries.forEach { restore(it) }
-            saveWhenDiscard.set(true)
         } catch (ex: IOException) {
             throw RuntimeException("Failed to load hoard: $hoardFilePath", ex)
         }
@@ -109,6 +108,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
         entryStore[id] = entry
         size.incrementAndGet()
 
+        saveWhenDiscard.set(true)
         return entry
     }
 
@@ -120,6 +120,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
         size.decrementAndGet()
         affairManager.post(EntryDeleteEvent(entry))
 
+        saveWhenDiscard.set(true)
         return entry
     }
 
@@ -145,11 +146,13 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
             entry.set(k, v)
         }
         affairManager.post(EntrySetPropertiesEvent(entry, properties))
+        saveWhenDiscard.set(true)
     }
 
     fun unsetProperties(entry: Entry, keys: List<String>) {
         keys.forEach { entry.unset(it) }
         affairManager.post(EntryUnsetPropertiesEvent(entry, keys))
+        saveWhenDiscard.set(true)
     }
 
     @Throws(EntryNotFoundException::class)
@@ -198,7 +201,7 @@ class EntryDeleteEvent(val entry: Entry) : Event()
 
 class EntrySetPropertiesEvent(
     val entry: Entry,
-    val properties: Map<String, String>
+    val props: Map<String, String>
 ) : Event()
 
 class EntryUnsetPropertiesEvent(
@@ -208,5 +211,5 @@ class EntryUnsetPropertiesEvent(
 
 class EntryStringifyEvent(
     val entry: Entry,
-    val properties: MutableMap<String, String>
+    val props: MutableMap<String, String>
 ) : Event()

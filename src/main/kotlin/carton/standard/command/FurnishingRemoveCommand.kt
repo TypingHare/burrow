@@ -39,9 +39,7 @@ class FurnishingRemoveCommand(data: CommandData) : Command(data) {
         if (!use(Standard::class).rebuildChamberAfterUpdatingFurnishingList(
                 originalFurnishingIds, stderr
             )
-        ) {
-            return ExitCode.SOFTWARE
-        }
+        ) return ExitCode.SOFTWARE
 
         stdout.println("Restarted successfully!")
         return ExitCode.OK

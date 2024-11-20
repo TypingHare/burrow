@@ -6,6 +6,8 @@ import burrow.kernel.Burrow
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
 import picocli.CommandLine
+import picocli.CommandLine.ExitCode
+import picocli.CommandLine.Option
 import java.io.PrintWriter
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -14,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger
     description = ["Displays the list of all built chambers."]
 )
 class ChamberListCommand(data: CommandData) : Command(data) {
-    @CommandLine.Option(
+    @Option(
         names = ["-a", "--all"],
         description = ["Displays all chambers, including the chambers that have yet built."],
         defaultValue = "false"
@@ -34,7 +36,7 @@ class ChamberListCommand(data: CommandData) : Command(data) {
             displayChamberInfo(stdout, it, index.getAndIncrement())
         }
 
-        return CommandLine.ExitCode.OK
+        return ExitCode.OK
     }
 
     private fun displayChamberInfo(

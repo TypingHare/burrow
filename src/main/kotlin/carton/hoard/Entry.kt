@@ -12,7 +12,7 @@ class Entry(val id: Int, val props: MutableMap<String, String>) {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> get(key: String): T? = store[key] as T?
+    operator fun <T> get(key: String): T? = store[key] as T?
 
     fun setProp(key: String, value: String) {
         props[key] = value

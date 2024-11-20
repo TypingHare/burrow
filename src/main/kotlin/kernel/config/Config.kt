@@ -26,7 +26,7 @@ class Config(chamber: Chamber) : ChamberModule(chamber) {
 
     fun set(key: String, value: Any?) {
         entries[key] = value
-        isModified.set(false)
+        isModified.set(true)
     }
 
     fun setIfAbsent(key: String, value: Any) {

@@ -33,7 +33,7 @@ class Dictator(chamber: Chamber) : Furnishing(chamber) {
         burrow.affairManager.subscribe(ChamberPostBuildEvent::class) {
             val chamber = it.chamber
             val name = chamber.name
-            val alias = config.get<String>(Standard.ConfigKey.ALIAS)!!
+            val alias = chamber.config.get<String>(Standard.ConfigKey.ALIAS)!!
             val description =
                 config.get<String>(Standard.ConfigKey.DESCRIPTION)!!
             chamberInfoMap[name] = ChamberInfo(name, alias, description)
