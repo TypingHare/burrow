@@ -3,7 +3,6 @@ package burrow.carton.dictator
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.*
 import burrow.kernel.config.Config
-import burrow.kernel.config.ConfigItemHandler
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.annotation.Furniture
 import org.slf4j.LoggerFactory
@@ -14,7 +13,7 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 @Furniture(
-    version = "0.0.0",
+    version = Burrow.VERSION.NAME,
     description = "Scheduler.",
     type = Furniture.Type.ROOT
 )

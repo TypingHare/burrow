@@ -2,6 +2,7 @@ package burrow.carton.hoard
 
 import burrow.carton.hoard.Entry.Key
 import burrow.carton.hoard.command.*
+import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.event.Event
 import burrow.kernel.furnishing.Furnishing
@@ -18,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.io.path.exists
 
 @Furniture(
-    version = "0.0.0",
+    version = Burrow.VERSION.NAME,
     description = "Hoard stores entries.",
     type = Furniture.Type.COMPONENT
 )
@@ -73,7 +74,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
     private fun saveToHoardFile(hoardFilePath: Path) {
         try {
             val entryPropertyList = entryStore.filterNotNull()
-                .map { return@map it.properties }
+                .map { return@map it.props }
             val content = Gson().toJson(entryPropertyList)
             Files.write(hoardFilePath, content.toByteArray())
         } catch (ex: IOException) {
@@ -88,7 +89,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
 
         val entry = Entry(id, properties.toMutableMap())
         properties.forEach { (k, v) -> entry.set(k, v) }
-        affairManager.post(EntryRegisterEvent(entry))
+        affairManager.post(EntryRestoreEvent(entry))
 
         while (entryStore.size <= id) entryStore.add(null)
         entryStore[id] = entry
@@ -102,7 +103,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
 
         val entry = Entry(id, properties.toMutableMap())
         properties.forEach { (k, v) -> entry.set(k, v) }
-        affairManager.post(EntryRegisterEvent(entry))
+        affairManager.post(EntryRestoreEvent(entry))
 
         for (i in entryStore.size..id) entryStore.add(null)
         entryStore[id] = entry
@@ -140,7 +141,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
 
     fun setProperties(entry: Entry, properties: Map<String, String>) {
         properties.forEach { (k, v) ->
-            entry.setProperty(k, v)
+            entry.setProp(k, v)
             entry.set(k, v)
         }
         affairManager.post(EntrySetPropertiesEvent(entry, properties))
@@ -189,7 +190,7 @@ class EntryNotFoundException(id: Int) :
 class DuplicateIdException(id: Int) :
     RuntimeException("Duplicate entry id: $id")
 
-class EntryRegisterEvent(val entry: Entry) : Event()
+class EntryRestoreEvent(val entry: Entry) : Event()
 
 class EntryCreateEvent(val entry: Entry) : Event()
 

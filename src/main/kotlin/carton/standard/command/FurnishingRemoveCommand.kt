@@ -36,11 +36,14 @@ class FurnishingRemoveCommand(data: CommandData) : Command(data) {
         stdout.println("Furnishing removed: $coloredFurnishingId")
         stdout.println("Rebuilding the chamber...")
 
-        use(Standard::class).rebuildChamberAfterUpdatingFurnishingList(
-            originalFurnishingIds, stderr
-        )
-        stdout.println("Restarted successfully!")
+        if (!use(Standard::class).rebuildChamberAfterUpdatingFurnishingList(
+                originalFurnishingIds, stderr
+            )
+        ) {
+            return ExitCode.SOFTWARE
+        }
 
+        stdout.println("Restarted successfully!")
         return ExitCode.OK
     }
 }

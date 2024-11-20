@@ -1,10 +1,10 @@
 package burrow.carton.hoard
 
-class Entry(val id: Int, val properties: MutableMap<String, String>) {
+class Entry(val id: Int, val props: MutableMap<String, String>) {
     val store = mutableMapOf<String, Any>()
 
     init {
-        properties[Key.ID] = id.toString()
+        props[Key.ID] = id.toString()
     }
 
     fun set(key: String, value: Any) {
@@ -14,14 +14,14 @@ class Entry(val id: Int, val properties: MutableMap<String, String>) {
     @Suppress("UNCHECKED_CAST")
     fun <T> get(key: String): T? = store[key] as T?
 
-    fun setProperty(key: String, value: String) {
-        properties[key] = value
+    fun setProp(key: String, value: String) {
+        props[key] = value
     }
 
-    fun getProperty(key: String): String? = properties[key]
+    fun getProp(key: String): String? = props[key]
 
     fun unset(key: String) {
-        properties.remove(key)
+        props.remove(key)
         store.remove(key)
     }
 

@@ -12,7 +12,7 @@ class Processor(chamber: Chamber) : ChamberModule(chamber) {
         const val DEFAULT_COMMAND_NAME = ""
     }
 
-    private val commandClasses = mutableMapOf<String, CommandClass>()
+    val commandClasses = mutableMapOf<String, CommandClass>()
 
     init {
         registerCommand(DefaultCommand::class)

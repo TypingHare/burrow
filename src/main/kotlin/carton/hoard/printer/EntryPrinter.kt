@@ -14,7 +14,9 @@ data class EntryContext(val entry: Entry, val chamber: Chamber)
 class EntryStorePrinter(writer: PrintWriter, context: EntryContext) :
     EntryPrinter(writer, context) {
     override fun print() {
-        val store = context.entry.store
+        val entry = context.entry
+        val properties =
+            context.chamber.use(Hoard::class).convertStoreToProperties(entry)
         val palette = context.chamber.palette
         val entryId = context.entry.id
 
@@ -22,10 +24,10 @@ class EntryStorePrinter(writer: PrintWriter, context: EntryContext) :
         val coloredOpenBrace = palette.color("{", Hoard.Highlights.BRACE)
         val coloredCloseBrace = palette.color("}", Hoard.Highlights.BRACE)
         writer.println("[$coloredId] $coloredOpenBrace")
-        for ((key, value) in store) {
+        for ((key, value) in properties) {
             val coloredKey = palette.color(key, Hoard.Highlights.KEY)
             val coloredValue =
-                palette.color(value.toString(), Hoard.Highlights.VALUE)
+                palette.color(value, Hoard.Highlights.VALUE)
             writer.println("${" ".repeat(4)}$coloredKey: $coloredValue")
         }
         writer.println(coloredCloseBrace)
@@ -35,7 +37,7 @@ class EntryStorePrinter(writer: PrintWriter, context: EntryContext) :
 class EntryPropertiesPrinter(writer: PrintWriter, context: EntryContext) :
     EntryPrinter(writer, context) {
     override fun print() {
-        val properties = context.entry.properties
+        val properties = context.entry.props
         val palette = context.chamber.palette
 
         writer.println(palette.color("{", Hoard.Highlights.BRACE))

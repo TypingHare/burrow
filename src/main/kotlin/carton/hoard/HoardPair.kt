@@ -1,25 +1,25 @@
 package burrow.carton.hoard
 
+import burrow.carton.hoard.command.PairNewCommand
+import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.config.Config
-import burrow.kernel.furnishing.annotation.DependsOn
 import burrow.kernel.furnishing.Furnishing
+import burrow.kernel.furnishing.annotation.DependsOn
 import burrow.kernel.furnishing.annotation.Furniture
 
 @Furniture(
-    version = "0.0.0",
+    version = Burrow.VERSION.NAME,
     description = "Implemented key-value pair functionalities for entries.",
     type = Furniture.Type.COMPONENT
 )
 @DependsOn([Hoard::class])
 class HoardPair(chamber: Chamber) : Furnishing(chamber) {
-    private val hoard = use(Hoard::class)
-
     // Mapping keys to corresponding set of IDs
     private val idSetStore = mutableMapOf<String, MutableSet<Int>>()
 
-    private var keyName: String = Default.KEY_NAME
-    private var valueName: String = Default.VALUE_NAME
+    private var keyName = Default.KEY_NAME
+    private var valueName = Default.VALUE_NAME
 
     override fun prepareConfig(config: Config) {
         config.addKey(
@@ -37,23 +37,35 @@ class HoardPair(chamber: Chamber) : Furnishing(chamber) {
     }
 
     override fun assemble() {
-        affairManager.subscribe(EntryRegisterEvent::class) {
-            add(it.entry)
+        registerCommand(PairNewCommand::class)
+
+        affairManager.subscribe(EntryRestoreEvent::class) {
+            addToIdSetStore(it.entry)
         }
 
         affairManager.subscribe(EntryCreateEvent::class) {
-            add(it.entry)
+            addToIdSetStore(it.entry)
+        }
+
+        affairManager.subscribe(EntryDeleteEvent::class) {
+            removeToIdSetStore(it.entry)
         }
     }
 
     override fun launch() {
         keyName = config.get<String>(ConfigKey.KEY_NAME)!!
-        valueName = config.get<String>(ConfigKey.KEY_NAME)!!
+        valueName = config.get<String>(ConfigKey.VALUE_NAME)!!
     }
 
-    private fun add(entry: Entry) {
-        val key = entry.get<String>(keyName)!!
+    private fun addToIdSetStore(entry: Entry) {
+
+        val key = entry.getProp(keyName)!!
         idSetStore.computeIfAbsent(key) { mutableSetOf() }.add(entry.id)
+    }
+
+    private fun removeToIdSetStore(entry: Entry) {
+        val key = entry.getProp(keyName)!!
+        idSetStore[key]?.remove(entry.id)
     }
 
     fun getKeyName(): String = keyName

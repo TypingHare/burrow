@@ -6,6 +6,8 @@ import burrow.kernel.Burrow
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
 import picocli.CommandLine
+import picocli.CommandLine.ExitCode
+import picocli.CommandLine.Option
 
 @CommandLine.Command(
     name = "furnishing.list",
@@ -15,7 +17,7 @@ import picocli.CommandLine
     ]
 )
 class FurnishingListCommand(data: CommandData) : Command(data) {
-    @CommandLine.Option(
+    @Option(
         names = ["-t", "--tree"],
         description = [
             "Displays furnishings as a dependency tree."
@@ -23,7 +25,7 @@ class FurnishingListCommand(data: CommandData) : Command(data) {
     )
     var shouldDisplayTree = false
 
-    @CommandLine.Option(
+    @Option(
         names = ["-a", "--all"],
         description = [
             "Displays all available furnishings."
@@ -31,7 +33,7 @@ class FurnishingListCommand(data: CommandData) : Command(data) {
     )
     var shouldDisplayAll = false
 
-    @CommandLine.Option(
+    @Option(
         names = ["-i", "--id"],
         description = [
             "Displays the ID of each furnishing."
@@ -80,6 +82,6 @@ class FurnishingListCommand(data: CommandData) : Command(data) {
             }
         }
 
-        return CommandLine.ExitCode.OK
+        return ExitCode.OK
     }
 }

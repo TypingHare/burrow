@@ -3,6 +3,7 @@ package burrow.carton.standard.command
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
 import picocli.CommandLine
+import picocli.CommandLine.ExitCode
 
 @CommandLine.Command(
     name = "help",
@@ -11,13 +12,30 @@ import picocli.CommandLine
 class HelpCommand(data: CommandData) : Command(data) {
     @CommandLine.Parameters(
         index = "0",
-        description = ["The name of the command."]
+        description = ["The name of the command."],
+        defaultValue = ""
     )
-    var commandName: String = ""
+    private var commandName: String = ""
 
     override fun call(): Int {
-        stdout.println(commandName)
+        return if (commandName.isEmpty())
+            displayChamberUsage()
+        else
+            displayCommandUsage(commandName)
+    }
 
-        return CommandLine.ExitCode.OK
+    private fun displayChamberUsage(): Int {
+        return ExitCode.OK
+    }
+
+    private fun displayCommandUsage(commandName: String): Int {
+        val commandClass = processor.commandClasses[commandName]
+        if (commandClass == null) {
+            stderr.println("Unknown command $commandName")
+            return ExitCode.USAGE
+        }
+
+        stdout.println(CommandLine(commandClass.java).usageMessage)
+        return ExitCode.OK
     }
 }

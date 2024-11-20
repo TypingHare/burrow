@@ -41,7 +41,7 @@ class PropCommand(data: CommandData) : Command(data) {
         val hoard = use(Hoard::class)
         val entry = hoard[id]
         if (shouldRetrieveRawValue) {
-            val rawValue = entry.getProperty(key)
+            val rawValue = entry.getProp(key)
             if (rawValue == null) {
                 stdout.println(palette.color("null", Hoard.Highlights.NULL))
             } else {

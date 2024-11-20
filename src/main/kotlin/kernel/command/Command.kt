@@ -10,7 +10,8 @@ import picocli.CommandLine.IParameterExceptionHandler
 import java.util.concurrent.Callable
 import kotlin.reflect.KClass
 
-abstract class Command(data: CommandData) : ExtendedChamberModule(data.chamber),
+abstract class Command(val data: CommandData) :
+    ExtendedChamberModule(data.chamber),
     Callable<Int>, IParameterExceptionHandler, IExecutionExceptionHandler {
     companion object {
         fun extractName(commandClass: CommandClass): String {
@@ -50,14 +51,16 @@ abstract class Command(data: CommandData) : ExtendedChamberModule(data.chamber),
 
     protected fun dispatch(
         commandClass: CommandClass,
-        args: List<String>
+        args: List<Any>
     ): Int {
+        val stringArgs = args.map { it.toString() }
         val commandName = extractName(commandClass)
-        val commandData = CommandData(chamber, commandName, args, environment)
+        val commandData =
+            CommandData(chamber, commandName, stringArgs, environment)
         val command = commandClass.java
             .getConstructor(CommandData::class.java)
             .newInstance(commandData)
-        return processor.execute(command, args)
+        return processor.execute(command, stringArgs)
     }
 
     /**

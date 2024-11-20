@@ -13,7 +13,7 @@ import burrow.kernel.palette.Highlight
 import java.io.PrintWriter
 
 @Furniture(
-    version = "0.0.0",
+    version = Burrow.VERSION.NAME,
     description = "Standard Furnishing of all chambers.",
     type = Furniture.Type.COMPONENT
 )
@@ -130,16 +130,20 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
     fun rebuildChamberAfterUpdatingFurnishingList(
         originalFurnishingIds: Set<String>,
         stderr: PrintWriter
-    ) {
+    ): Boolean {
         val chamberName = chamber.name
         try {
             burrow.chamberShepherd.destroyChamber(chamberName)
             burrow.chamberShepherd.buildChamber(chamberName)
         } catch (ex: Exception) {
+            stderr.println(ex.message)
             stderr.println("Error during restarting. Now Roll back to the original furnishing list.")
             renovator.saveFurnishingIds(originalFurnishingIds)
             burrow.chamberShepherd.buildChamber(chamberName)
+            return false
         }
+
+        return true
     }
 
     object ConfigKey {

@@ -42,12 +42,14 @@ class FurnishingAddCommand(data: CommandData) : Command(data) {
         stdout.println("Furnishing added: $coloredFurnishingId")
         stdout.println("Rebuilding the chamber...")
 
-        use(Standard::class).rebuildChamberAfterUpdatingFurnishingList(
-            originalFurnishingIds, stderr
-        )
+        if (!use(Standard::class).rebuildChamberAfterUpdatingFurnishingList(
+                originalFurnishingIds, stderr
+            )
+        ) {
+            return ExitCode.SOFTWARE
+        }
 
         stdout.println("Restarted successfully!")
-
         return ExitCode.OK
     }
 }

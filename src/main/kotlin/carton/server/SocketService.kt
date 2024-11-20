@@ -3,12 +3,12 @@ package burrow.carton.server
 import burrow.common.CommandLexer
 import burrow.kernel.Burrow
 import burrow.kernel.command.Environment
+import burrow.kernel.command.TerminalSize
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.BufferedReader
 import java.io.Closeable
 import java.io.InputStreamReader
-import java.io.OutputStream
 import java.net.ServerSocket
 import java.net.Socket
 import java.nio.file.Files
@@ -51,14 +51,33 @@ class SocketService(
         logger.info("Connected to $remoteSocketAddress")
 
         val inputStream = client.getInputStream()
-        val input = BufferedReader(InputStreamReader(inputStream))
-        var command: String
-        while (input.readLine().also { command = it } != null) {
-            logger.info("Received command from $remoteSocketAddress: $command")
-            processCommand(command, client.getOutputStream())
-        }
+        val reader = BufferedReader(InputStreamReader(inputStream))
+        receiveNextCommand(client, reader)
 
         logger.info("Client disconnected: $remoteSocketAddress")
+    }
+
+    private fun receiveNextCommand(
+        client: Socket,
+        reader: BufferedReader
+    ) {
+        val remoteSocketAddress = client.remoteSocketAddress
+        var line: String
+        while (reader.readLine().also { line = it } != null) {
+            val command = line
+            logger.info("Received command from $remoteSocketAddress: $command")
+
+            val workingDirectory = reader.readLine()
+            val (width, height) = reader.readLine().split(" ")
+                .map { it.toInt() }
+            val environment = Environment(
+                client.getOutputStream(),
+                workingDirectory,
+                TerminalSize(width, height),
+            )
+
+            processCommand(command, environment)
+        }
     }
 
     private fun writeServiceLockFile() {
@@ -68,11 +87,11 @@ class SocketService(
 
     private fun processCommand(
         commandString: String,
-        outputStream: OutputStream
+        environment: Environment
     ) {
         burrow.parse(
             CommandLexer.tokenizeCommandString(commandString).toTypedArray(),
-            Environment(outputStream, "/Users/jameschan/", 80)
+            environment
         )
     }
 }

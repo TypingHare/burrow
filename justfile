@@ -11,3 +11,6 @@ move-bin:
 
 start-server:
     burrow . server.start
+
+start-cli:
+    @burrow-cli --server=localhost:4710 default

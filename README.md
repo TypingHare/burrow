@@ -1,6 +1,7 @@
 # TODO
 
-- [ ] Standard Cont. (Help command)
 - [ ] Hoard Cont. (Pair and Time)
 - [ ] Git
-- [ ] Server/Client Protocol (Command/Environment)
+- [ ] Communication Protocol (generalization)
+
+https://github.com/TypingHare/burrow/tree/java-version-deprecated/src/main/java/burrow/furniture/standard

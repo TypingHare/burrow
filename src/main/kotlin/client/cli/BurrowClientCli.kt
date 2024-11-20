@@ -58,6 +58,9 @@ class BurrowClientCli : Callable<Int> {
     )
     private var server = ""
 
+    private var host = "localhost"
+    private var port = 0
+
     private var client: Client? = null
 
     var terminal: Terminal? = null
@@ -76,8 +79,9 @@ class BurrowClientCli : Callable<Int> {
 
         initializeBurrowClient()
 
-        // Initial chamber name
-        useChamber(initialChamberName)
+        if (initialChamberName != currentChamberName) {
+            useChamber(initialChamberName)
+        }
 
         val reader = initializeTerminal()
         while (true) {
@@ -105,10 +109,29 @@ class BurrowClientCli : Callable<Int> {
                 exitProcess(ExitCode.USAGE)
             }
 
-            val host = sp[0]
-            val port = sp[1].toInt()
-            client = SocketBasedClient(host, port)
+            host = sp[0].trim()
+            port = sp[1].toInt()
+            connect(Default.INITIALIZATION_CONNECT_ATTEMPTS)
         }
+    }
+
+    private fun connect(attempts: Int): Boolean {
+        for (attempt in 1..attempts) {
+            try {
+                client = SocketBasedClient(host, port)
+                return true
+            } catch (ex: Exception) {
+                System.err.println("Failed to connect to server: $host:$port")
+
+                if (attempt < attempts) {
+                    val delay = attempt * attempt * 500
+                    System.err.println("Attempting to connect again in $delay milliseconds.")
+                    Thread.sleep(delay.toLong())
+                }
+            }
+        }
+
+        return false
     }
 
     private fun initializeTerminal(): LineReader {
@@ -157,8 +180,8 @@ class BurrowClientCli : Callable<Int> {
         try {
             client.executeCommand(fullCommand)
         } catch (ex: SocketException) {
-            println("Failed to connected to the socket. Reconnecting...")
-            initializeBurrowClient()
+            println("Failed to connected to the server. Reconnecting...")
+            connect(Default.RECONNECT_ATTEMPTS)
             executeCommand(command)
         }
     }
@@ -182,7 +205,9 @@ class BurrowClientCli : Callable<Int> {
     private fun checkChamberExist(chamberName: String): Boolean {
         try {
             val client = client!!
-            val exitCode = client.executeCommand("$chamberName test")
+            val exitCode = client.executeCommand(
+                ". chamber.exist $chamberName --silent --blueprint"
+            )
             return exitCode == ExitCode.OK
         } catch (ex: Exception) {
             return false
@@ -205,5 +230,10 @@ class BurrowClientCli : Callable<Int> {
         const val EXIT = "exit"
         const val USE = "use"
         const val CLEAR = "clear"
+    }
+
+    object Default {
+        const val INITIALIZATION_CONNECT_ATTEMPTS = 3
+        const val RECONNECT_ATTEMPTS = 3
     }
 }

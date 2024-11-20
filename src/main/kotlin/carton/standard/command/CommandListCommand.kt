@@ -5,6 +5,8 @@ import burrow.carton.standard.printer.TopLevelFurnishingsCommandsPrinter
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
 import picocli.CommandLine
+import picocli.CommandLine.ExitCode
+import picocli.CommandLine.Option
 
 @CommandLine.Command(
     name = "command.list",
@@ -13,11 +15,10 @@ import picocli.CommandLine
     ],
 )
 class CommandListCommand(data: CommandData) : Command(data) {
-    @CommandLine.Option(
+    @Option(
         names = ["-a", "--all"],
         description = [
-            "Displays commands for all furnishings, including nested " +
-                    "furnishings."
+            "Displays commands for all furnishings, including nested furnishings."
         ],
         defaultValue = "false"
     )
@@ -30,6 +31,6 @@ class CommandListCommand(data: CommandData) : Command(data) {
             TopLevelFurnishingsCommandsPrinter(stdout, chamber).print()
         }
 
-        return CommandLine.ExitCode.OK
+        return ExitCode.OK
     }
 }

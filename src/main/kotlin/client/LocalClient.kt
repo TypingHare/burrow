@@ -1,9 +1,8 @@
 package burrow.client
 
+import burrow.common.CommandLexer
 import burrow.kernel.buildBurrow
 import burrow.kernel.command.Environment
-import burrow.common.CommandLexer
-import picocli.CommandLine
 import java.io.IOException
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
@@ -17,23 +16,18 @@ class LocalClient : Client() {
         )
     }
 
+    @Throws(IOException::class)
     override fun executeCommand(args: Array<String>): Int {
-        try {
-            val pipedOutputStream = PipedOutputStream()
-            val pipedInputStream = PipedInputStream(pipedOutputStream)
+        val pipedOutputStream = PipedOutputStream()
+        val pipedInputStream = PipedInputStream(pipedOutputStream)
 
-            val environment = Environment(
-                pipedOutputStream,
-                System.getProperty("user.dir"),
-                80
-            )
-            burrow.parse(args, environment)
-            return processInputStreamForExitCode(pipedInputStream)
-        } catch (ex: IOException) {
-            System.err.println("IO exception encountered!")
-            ex.printStackTrace()
-            return CommandLine.ExitCode.SOFTWARE
-        }
+        val environment = Environment(
+            pipedOutputStream,
+            getWorkingDirectory(),
+            getTerminalSize()
+        )
+        burrow.parse(args, environment)
+        return processInputStreamForExitCode(pipedInputStream)
     }
 
     override fun close() {

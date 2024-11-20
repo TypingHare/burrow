@@ -1,10 +1,11 @@
 package burrow.client
 
+import burrow.kernel.command.TerminalSize
 import burrow.kernel.stream.BurrowPrintWriters
-import picocli.CommandLine
 import picocli.CommandLine.ExitCode
 import java.io.*
 import java.util.concurrent.atomic.AtomicReference
+
 
 abstract class Client : Closeable {
     private val currentResponseType = AtomicReference(ResponseType.NONE)
@@ -90,9 +91,24 @@ abstract class Client : Closeable {
             }
         }
 
-        fun getTerminalWidth(): Int {
-            val commandSpec = CommandLine.Model.CommandSpec.create()
-            return commandSpec.usageMessage().autoWidth(true).width()
+        @JvmStatic
+        fun getWorkingDirectory(): String {
+            return System.getProperty("user.dir")
+        }
+
+        @JvmStatic
+        fun getTerminalSize(): TerminalSize {
+            return try {
+                val process = ProcessBuilder("sh", "-c", "stty size < /dev/tty")
+                    .redirectErrorStream(true)
+                    .start()
+                val reader = process.inputStream.bufferedReader()
+                val (rows, cols) = reader.readLine().split(" ")
+                    .map { it.toInt() }
+                TerminalSize(cols, rows)
+            } catch (ignore: Exception) {
+                TerminalSize(80, 24)
+            }
         }
     }
 }

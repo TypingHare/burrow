@@ -18,17 +18,18 @@ class SocketBasedClient(host: String, port: Int) : Client() {
         }
     }
 
+    @Throws(IOException::class)
     override fun executeCommand(command: String): Int {
-        try {
-            val inputStream = clientSocket.getInputStream()
-            val outputStream = clientSocket.getOutputStream()
-            PrintWriter(outputStream, true).println(command)
-            return processInputStreamForExitCode(inputStream)
-        } catch (ex: IOException) {
-            System.err.println("IO exception encountered!")
-            ex.printStackTrace()
-            return ExitCode.SOFTWARE
-        }
+        val inputStream = clientSocket.getInputStream()
+        val outputStream = clientSocket.getOutputStream()
+
+        val terminalSize = getTerminalSize()
+        val writer = PrintWriter(outputStream, true)
+        writer.println(command)
+        writer.println(getWorkingDirectory())
+        writer.println(terminalSize.toString())
+
+        return processInputStreamForExitCode(inputStream)
     }
 
     override fun executeCommand(args: Array<String>): Int {

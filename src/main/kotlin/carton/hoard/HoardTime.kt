@@ -1,11 +1,12 @@
 package burrow.carton.hoard
 
+import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.annotation.Furniture
 
 @Furniture(
-    version = "0.0.0",
+    version = Burrow.VERSION.NAME,
     description = "Creation time.",
     type = Furniture.Type.COMPONENT
 )

@@ -3,6 +3,7 @@ package burrow.carton.standard.command
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
 import picocli.CommandLine
+import picocli.CommandLine.ExitCode
 
 @CommandLine.Command(
     name = "root",
@@ -15,6 +16,6 @@ class RootCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
         stdout.println(chamber.rootPath)
 
-        return CommandLine.ExitCode.OK
+        return ExitCode.OK
     }
 }
