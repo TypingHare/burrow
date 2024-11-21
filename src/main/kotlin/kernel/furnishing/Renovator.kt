@@ -21,6 +21,7 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
     private fun getFurnishing(id: String) = furnishings[id]
 
     @Suppress("UNCHECKED_CAST")
+    @Throws(FurnishingNotFoundException::class)
     fun <T : Furnishing> getFurnishing(furnishingClass: KClass<T>): T? =
         getFurnishing(furnishingClass.java.name) as T?
 

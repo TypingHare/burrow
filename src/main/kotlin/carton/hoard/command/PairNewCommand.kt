@@ -1,6 +1,5 @@
 package burrow.carton.hoard.command
 
-import burrow.carton.hoard.Hoard
 import burrow.carton.hoard.HoardPair
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
@@ -25,13 +24,7 @@ class PairNewCommand(data: CommandData) : Command(data) {
     private var value = ""
 
     override fun call(): Int {
-        val hoardPair = use(HoardPair::class)
-        val entry = use(Hoard::class).create(
-            mutableMapOf(
-                hoardPair.getKeyName() to key,
-                hoardPair.getValueName() to value,
-            )
-        )
+        val entry = use(HoardPair::class).createEntry(key, value)
 
         return dispatch(EntryCommand::class, listOf(entry.id))
     }

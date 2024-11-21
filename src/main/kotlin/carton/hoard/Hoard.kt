@@ -26,10 +26,10 @@ import kotlin.io.path.exists
 class Hoard(chamber: Chamber) : Furnishing(chamber) {
     private val hoardFilePath: Path =
         chamber.rootPath.resolve(Standard.HOARD_FILE)
-    private val entryStore = mutableListOf<Entry?>()
-    private var maxId = AtomicInteger(0)
-    private val size = AtomicInteger(0)
-    private val saveWhenDiscard = AtomicBoolean(false)
+    val entryStore = mutableListOf<Entry?>()
+    val maxId = AtomicInteger(0)
+    val size = AtomicInteger(0)
+    val saveWhenDiscard = AtomicBoolean(false)
 
     override fun assemble() {
         // Entry relevant
@@ -42,6 +42,10 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
         registerCommand(SetCommand::class)
         registerCommand(UnsetCommand::class)
         registerCommand(PropCommand::class)
+
+        // Multiple entries
+        registerCommand(EntriesCommand::class)
+        registerCommand(CountCommand::class)
     }
 
     override fun launch() {

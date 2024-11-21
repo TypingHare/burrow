@@ -16,7 +16,6 @@ import kotlin.reflect.KClass
 class Chamber(val burrow: Burrow, val name: String) {
     val rootPath: Path = burrow.chambersPath.resolve(name).normalize()
 
-
     val config = Config(this)
     val renovator = Renovator(this)
     val processor = Processor(this)
@@ -46,6 +45,7 @@ class Chamber(val burrow: Burrow, val name: String) {
         config.saveToFile()
     }
 
+    @Throws(FurnishingNotFoundException::class)
     fun <F : Furnishing> use(furnishingClass: KClass<F>): F {
         return renovator.getFurnishing(furnishingClass)
             ?: throw FurnishingNotFoundException(furnishingClass.java.name)

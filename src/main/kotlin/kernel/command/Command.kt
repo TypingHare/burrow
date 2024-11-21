@@ -3,6 +3,7 @@ package burrow.kernel.command
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ExtendedChamberModule
 import burrow.kernel.furnishing.Furnishing
+import burrow.kernel.furnishing.FurnishingNotFoundException
 import burrow.kernel.stream.BurrowPrintWriters
 import picocli.CommandLine
 import picocli.CommandLine.IExecutionExceptionHandler
@@ -46,6 +47,7 @@ abstract class Command(val data: CommandData) :
         return CommandLine.ExitCode.OK
     }
 
+    @Throws(FurnishingNotFoundException::class)
     protected fun <F : Furnishing> use(furnishingClass: KClass<F>): F =
         chamber.use(furnishingClass)
 

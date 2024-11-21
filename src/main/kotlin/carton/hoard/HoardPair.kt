@@ -57,8 +57,16 @@ class HoardPair(chamber: Chamber) : Furnishing(chamber) {
         valueName = config.get<String>(ConfigKey.VALUE_NAME)!!
     }
 
-    private fun addToIdSetStore(entry: Entry) {
+    fun createEntry(key: String, value: Any): Entry {
+        return use(Hoard::class).create(
+            mutableMapOf(
+                getKeyName() to key,
+                getValueName() to value.toString(),
+            )
+        )
+    }
 
+    private fun addToIdSetStore(entry: Entry) {
         val key = entry.getProp(keyName)!!
         idSetStore.computeIfAbsent(key) { mutableSetOf() }.add(entry.id)
     }
@@ -68,9 +76,9 @@ class HoardPair(chamber: Chamber) : Furnishing(chamber) {
         idSetStore[key]?.remove(entry.id)
     }
 
-    fun getKeyName(): String = keyName
+    private fun getKeyName(): String = keyName
 
-    fun getValueName(): String = valueName
+    private fun getValueName(): String = valueName
 
     object Default {
         const val KEY_NAME = "key"
