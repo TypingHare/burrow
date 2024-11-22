@@ -24,8 +24,7 @@ import kotlin.io.path.exists
     type = Furniture.Type.COMPONENT
 )
 class Hoard(chamber: Chamber) : Furnishing(chamber) {
-    private val hoardFilePath: Path =
-        chamber.rootPath.resolve(Standard.HOARD_FILE)
+    val hoardFilePath: Path = chamber.rootPath.resolve(Standard.HOARD_FILE)
     val entryStore = mutableListOf<Entry?>()
     val maxId = AtomicInteger(0)
     val size = AtomicInteger(0)
@@ -38,7 +37,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
         registerCommand(EntryCommand::class)
         registerCommand(DelCommand::class)
 
-        // Properties relevant
+        // Properties
         registerCommand(SetCommand::class)
         registerCommand(UnsetCommand::class)
         registerCommand(PropCommand::class)
@@ -46,6 +45,14 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
         // Multiple entries
         registerCommand(EntriesCommand::class)
         registerCommand(CountCommand::class)
+
+        // Hoard
+        registerCommand(HoardSaveCommand::class)
+
+        // Backup
+        registerCommand(BackupCommand::class)
+        registerCommand(BackupListCommand::class)
+        registerCommand(BackupRestore::class)
     }
 
     override fun launch() {
@@ -74,7 +81,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
         }
     }
 
-    private fun saveToHoardFile(hoardFilePath: Path) {
+    fun saveToHoardFile(hoardFilePath: Path) {
         try {
             val entryPropertyList = entryStore.filterNotNull()
                 .map { return@map it.props }

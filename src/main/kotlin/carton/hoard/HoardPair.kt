@@ -1,5 +1,7 @@
 package burrow.carton.hoard
 
+import burrow.carton.hoard.command.PairCountCommand
+import burrow.carton.hoard.command.PairKeysCommand
 import burrow.carton.hoard.command.PairNewCommand
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
@@ -16,7 +18,7 @@ import burrow.kernel.furnishing.annotation.Furniture
 @DependsOn([Hoard::class])
 class HoardPair(chamber: Chamber) : Furnishing(chamber) {
     // Mapping keys to corresponding set of IDs
-    private val idSetStore = mutableMapOf<String, MutableSet<Int>>()
+    val idSetStore = mutableMapOf<String, MutableSet<Int>>()
 
     private var keyName = Default.KEY_NAME
     private var valueName = Default.VALUE_NAME
@@ -38,6 +40,8 @@ class HoardPair(chamber: Chamber) : Furnishing(chamber) {
 
     override fun assemble() {
         registerCommand(PairNewCommand::class)
+        registerCommand(PairCountCommand::class)
+        registerCommand(PairKeysCommand::class)
 
         affairManager.subscribe(EntryRestoreEvent::class) {
             addToIdSetStore(it.entry)

@@ -65,6 +65,9 @@ abstract class Command(val data: CommandData) :
         return processor.execute(command, stringArgs)
     }
 
+    protected fun dispatch(commandClass: CommandClass) =
+        dispatch(commandClass, listOf())
+
     /**
      * Handles exceptions thrown during command line parameter parsing.
      * @param ex   the exception thrown during parsing

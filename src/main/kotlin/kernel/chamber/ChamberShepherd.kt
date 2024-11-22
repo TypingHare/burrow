@@ -33,17 +33,21 @@ class ChamberShepherd(private val burrow: Burrow) {
     operator fun get(chamberName: String): Chamber =
         getOrBuildChamber(chamberName)
 
+    @Throws(ChamberNotFoundException::class, DestroyChamberException::class)
     fun destroyChamber(chamberName: String) {
         if (!hasChamber(chamberName)) {
-            println("Chamber not found: $chamberName")
-            return
+            throw ChamberNotFoundException(chamberName)
         }
 
         val chamber = chambers[chamberName]!!
 
-        burrow.affairManager.post(ChamberPreDestroyEvent(chamber))
-        chamber.destroy()
-        burrow.affairManager.post(ChamberPostDestroyEvent(chamber))
+        try {
+            burrow.affairManager.post(ChamberPreDestroyEvent(chamber))
+            chamber.destroy()
+            burrow.affairManager.post(ChamberPostDestroyEvent(chamber))
+        } catch (ex: Exception) {
+            throw DestroyChamberException(chamberName, ex)
+        }
 
         chambers.remove(chamberName)
     }

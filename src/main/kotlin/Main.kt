@@ -1,4 +1,3 @@
 package burrow
 
-fun main() {
-}
+fun main() = Unit

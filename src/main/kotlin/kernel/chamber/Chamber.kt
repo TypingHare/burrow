@@ -45,6 +45,13 @@ class Chamber(val burrow: Burrow, val name: String) {
         config.saveToFile()
     }
 
+    @Throws(BuildChamberException::class)
+    fun rebuild() {
+        val chamberShepherd = burrow.chamberShepherd
+        chamberShepherd.destroyChamber(name)
+        chamberShepherd.buildChamber(name)
+    }
+
     @Throws(FurnishingNotFoundException::class)
     fun <F : Furnishing> use(furnishingClass: KClass<F>): F {
         return renovator.getFurnishing(furnishingClass)
@@ -64,5 +71,10 @@ class ConfigFileNotFoundException(private val path: Path) :
 
 class BuildChamberException(private val name: String, cause: Throwable) :
     RuntimeException("Failed to build chamber: $name", cause) {
+    fun getName(): String = name
+}
+
+class DestroyChamberException(private val name: String, cause: Throwable) :
+    RuntimeException("Failed to destroy $name", cause) {
     fun getName(): String = name
 }
