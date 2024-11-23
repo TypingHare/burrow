@@ -3,6 +3,8 @@ package burrow.carton.standard
 import burrow.carton.standard.command.*
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
+import burrow.kernel.chamber.ChamberPostBuildEvent
+import burrow.kernel.chamber.ChamberPostDestroyEvent
 import burrow.kernel.command.CommandClass
 import burrow.kernel.config.Config
 import burrow.kernel.furnishing.DepTree
@@ -18,11 +20,16 @@ import java.io.PrintWriter
     type = Furniture.Type.COMPONENT
 )
 class Standard(chamber: Chamber) : Furnishing(chamber) {
+    private val configMap = mutableMapOf<String, Config>()
+
     override fun assemble() {
         // Basic commands
         registerCommand(TestCommand::class)
         registerCommand(RootCommand::class)
         registerCommand(HelpCommand::class)
+
+        // Chamber commands
+        registerCommand(ChamberRebuildCommand::class)
 
         // Furnishing commands
         registerCommand(FurnishingCommand::class)
@@ -36,6 +43,14 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
         registerCommand(ConfigCommand::class)
         registerCommand(ConfigSetCommand::class)
         registerCommand(ConfigGetCommand::class)
+
+        burrow.affairManager.subscribe(ChamberPostBuildEvent::class) {
+            configMap[it.chamber.name] = chamber.config.clone()
+        }
+
+        burrow.affairManager.subscribe(ChamberPostDestroyEvent::class) {
+            configMap.remove(it.chamber.name)
+        }
     }
 
     override fun prepareConfig(config: Config) {
@@ -132,7 +147,7 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
         }.toSet()
     }
 
-    fun rebuildChamberAfterUpdatingFurnishingList(
+    fun rebuildChamberPreservingFurnishingList(
         originalFurnishingIds: Set<String>,
         stderr: PrintWriter
     ): Boolean {
@@ -145,6 +160,22 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
             renovator.saveFurnishingIds(originalFurnishingIds)
             burrow.chamberShepherd.buildChamber(chamber.name)
             return false
+        }
+    }
+
+    @Throws(Exception::class)
+    fun rebuildChamberPreservingConfig(stderr: PrintWriter) {
+        try {
+            chamber.rebuild()
+        } catch (ex: Exception) {
+            stderr.println(ex.message)
+            stderr.println("Error during restarting. Now roll back to the original config.")
+
+            val originalConfig = configMap[chamber.name]!!
+            config.entries.putAll(originalConfig.entries)
+            config.isModified.set(originalConfig.isModified.get())
+
+            throw ex
         }
     }
 

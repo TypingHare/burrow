@@ -17,7 +17,7 @@ class ConfigCommand(data: CommandData) : Command(data) {
             val coloredName =
                 palette.color(name, Standard.Highlights.CONFIG_KEY)
             val coloredValue =
-                palette.color("$value", Standard.Highlights.CONFIG_VALUE)
+                palette.color("\"$value\"", Standard.Highlights.CONFIG_VALUE)
             stdout.println("$coloredName -> $coloredValue")
         }
 

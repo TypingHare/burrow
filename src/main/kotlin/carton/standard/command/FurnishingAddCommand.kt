@@ -42,7 +42,7 @@ class FurnishingAddCommand(data: CommandData) : Command(data) {
         stdout.println("Furnishing added: $coloredFurnishingId")
         stdout.println("Rebuilding the chamber...")
 
-        if (!use(Standard::class).rebuildChamberAfterUpdatingFurnishingList(
+        if (!use(Standard::class).rebuildChamberPreservingFurnishingList(
                 originalFurnishingIds, stderr
             )
         ) {

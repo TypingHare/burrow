@@ -1,9 +1,6 @@
 package burrow.carton.dictator
 
-import burrow.carton.dictator.command.ChamberBuildCommand
-import burrow.carton.dictator.command.ChamberDestroyCommand
-import burrow.carton.dictator.command.ChamberExistCommand
-import burrow.carton.dictator.command.ChamberListCommand
+import burrow.carton.dictator.command.*
 import burrow.carton.standard.Standard
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
@@ -12,9 +9,12 @@ import burrow.kernel.chamber.ChamberPostDestroyEvent
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.annotation.DependsOn
 import burrow.kernel.furnishing.annotation.Furniture
+import com.google.gson.Gson
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 
-@DependsOn([Standard::class])
+@DependsOn(Standard::class)
 @Furniture(
     version = Burrow.VERSION.NAME,
     description = "Dictator allows developers to manage chambers.",
@@ -25,6 +25,7 @@ class Dictator(chamber: Chamber) : Furnishing(chamber) {
     val chamberInfoMap = mutableMapOf<String, ChamberInfo>()
 
     override fun assemble() {
+        registerCommand(ChamberNewCommand::class)
         registerCommand(ChamberListCommand::class)
         registerCommand(ChamberBuildCommand::class)
         registerCommand(ChamberDestroyCommand::class)
@@ -32,15 +33,17 @@ class Dictator(chamber: Chamber) : Furnishing(chamber) {
 
         burrow.affairManager.subscribe(ChamberPostBuildEvent::class) {
             val chamber = it.chamber
-            val name = chamber.name
+            val chamberName = chamber.name
             val alias = chamber.config.get<String>(Standard.ConfigKey.ALIAS)!!
             val description =
                 config.get<String>(Standard.ConfigKey.DESCRIPTION)!!
-            chamberInfoMap[name] = ChamberInfo(name, alias, description)
+            chamberInfoMap[chamberName] =
+                ChamberInfo(chamberName, alias, description)
         }
 
         burrow.affairManager.subscribe(ChamberPostDestroyEvent::class) {
-            chamberInfoMap.remove(it.chamber.name)
+            val chamberName = it.chamber.name
+            chamberInfoMap.remove(chamberName)
         }
     }
 
@@ -57,6 +60,17 @@ class Dictator(chamber: Chamber) : Furnishing(chamber) {
         }
 
         return chamberInfoList
+    }
+
+    fun createFurnishingsJson(path: Path) {
+        val furnishingsJsonPath =
+            path.resolve(Burrow.Standard.FURNISHINGS_FILE_NAME)
+        val content = Gson().toJson(Default.FURNISHING_LIST)
+        Files.write(furnishingsJsonPath, content.toByteArray())
+    }
+
+    object Default {
+        val FURNISHING_LIST = listOf(Standard::class.java.name)
     }
 }
 

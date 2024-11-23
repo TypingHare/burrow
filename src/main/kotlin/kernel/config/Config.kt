@@ -3,7 +3,6 @@ package burrow.kernel.config
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
-import burrow.kernel.chamber.ConfigFileNotFoundException
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.nio.file.Files
@@ -47,7 +46,8 @@ class Config(chamber: Chamber) : ChamberModule(chamber) {
 
     fun loadFromFile() {
         if (!configFilePath.exists()) {
-            throw ConfigFileNotFoundException(configFilePath)
+            // Create an empty config file
+            Files.write(configFilePath, "{}".toByteArray())
         }
 
         importRawEntries(loadConfigRawEntries(configFilePath))
@@ -62,6 +62,12 @@ class Config(chamber: Chamber) : ChamberModule(chamber) {
         val rawEntries = exportRawEntries()
         val content = Gson().toJson(rawEntries)
         Files.write(configFilePath, content.toByteArray())
+    }
+
+    fun clone() = Config(chamber).apply {
+        itemHandlers.putAll(this@Config.itemHandlers)
+        entries.putAll(this@Config.entries)
+        isModified.set(this@Config.isModified.get())
     }
 
     private fun convertRawToItem(key: String, value: String): Any? {

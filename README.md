@@ -2,7 +2,7 @@
 
 - [ ] Git
 - [ ] Communication Protocol (generalization)
-- [ ] Config
-- [ ] backup delete (support all)
+- [ ] Implement: Delete chamber
+- [ ] Hoard -> Flat
 
 https://github.com/TypingHare/burrow/tree/java-version-deprecated/src/main/java/burrow/furniture/standard

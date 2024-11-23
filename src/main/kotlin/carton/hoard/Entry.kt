@@ -14,7 +14,12 @@ class Entry(val id: Int, val props: MutableMap<String, String>) {
     @Suppress("UNCHECKED_CAST")
     operator fun <T> get(key: String): T? = store[key] as T?
 
+    @Throws(ProtectedKeyException::class)
     fun setProp(key: String, value: String) {
+        if (key == Key.ID) {
+            throw ProtectedKeyException(key)
+        }
+
         props[key] = value
     }
 
@@ -26,6 +31,9 @@ class Entry(val id: Int, val props: MutableMap<String, String>) {
     }
 
     object Key {
-        const val ID = "id"
+        const val ID = "\$ID\$"
     }
 }
+
+class ProtectedKeyException(key: String) :
+    RuntimeException("Protected cannot be set: $key")

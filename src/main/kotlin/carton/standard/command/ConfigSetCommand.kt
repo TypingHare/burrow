@@ -1,5 +1,6 @@
 package burrow.carton.standard.command
 
+import burrow.carton.standard.Standard
 import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
 import picocli.CommandLine
@@ -29,6 +30,12 @@ class ConfigSetCommand(data: CommandData) : Command(data) {
     )
     private var shouldReset = false
 
+    @Option(
+        names = ["--rebuild", "-b"],
+        description = ["Rebuild immediately."]
+    )
+    private var rebuild = false
+
     override fun call(): Int {
         if (key !in config.entries.keys) {
             stderr.println("Key is not allowed: $key")
@@ -49,9 +56,11 @@ class ConfigSetCommand(data: CommandData) : Command(data) {
             config.set(key, handler.reader.read(value))
         }
 
-        stdout.println("Rebuilding the chamber...")
-        chamber.rebuild()
-        stdout.println("Rebuilt successfully!")
+        if (rebuild) {
+            stdout.println("Rebuilding the chamber...")
+            use(Standard::class).rebuildChamberPreservingConfig(stderr)
+            stdout.println("Rebuilt successfully!")
+        }
 
         return ExitCode.OK
     }

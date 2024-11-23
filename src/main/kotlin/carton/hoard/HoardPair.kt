@@ -16,13 +16,14 @@ import burrow.kernel.furnishing.annotation.Furniture
     description = "Implemented key-value pair functionalities for entries.",
     type = Furniture.Type.COMPONENT
 )
-@DependsOn([Hoard::class])
+@DependsOn(Hoard::class)
 class HoardPair(chamber: Chamber) : Furnishing(chamber) {
     // Mapping keys to corresponding set of IDs
     val idSetStore = mutableMapOf<String, MutableSet<Int>>()
 
     private var keyName = Default.KEY_NAME
     private var valueName = Default.VALUE_NAME
+    private var allowDuplicationKeys = Default.ALLOW_DUPLICATE_KEYS
 
     override fun prepareConfig(config: Config) {
         config.addKey(
@@ -51,11 +52,15 @@ class HoardPair(chamber: Chamber) : Furnishing(chamber) {
         registerCommand(PairValues::class)
 
         affairManager.subscribe(EntryRestoreEvent::class) {
+            val entry = it.entry
+            checkKeyDuplication(entry)
             addToIdSetStore(it.entry)
         }
 
         affairManager.subscribe(EntryCreateEvent::class) {
-            addToIdSetStore(it.entry)
+            val entry = it.entry
+            checkKeyDuplication(entry)
+            addToIdSetStore(entry)
         }
 
         affairManager.subscribe(EntryDeleteEvent::class) {
@@ -77,14 +82,27 @@ class HoardPair(chamber: Chamber) : Furnishing(chamber) {
         )
     }
 
+    @Throws(DuplicateKeyNotAllowedException::class)
+    private fun checkKeyDuplication(entry: Entry) {
+        if (allowDuplicationKeys) return
+
+        val key = getKey(entry)
+        if (idSetStore.containsKey(key)) {
+            throw DuplicateKeyNotAllowedException(key)
+        }
+    }
+
     private fun addToIdSetStore(entry: Entry) {
-        val key = entry.getProp(keyName)!!
+        val key = getKey(entry)
         idSetStore.computeIfAbsent(key) { mutableSetOf() }.add(entry.id)
     }
 
     private fun removeToIdSetStore(entry: Entry) {
-        val key = entry.getProp(keyName)!!
-        idSetStore[key]?.remove(entry.id)
+        val key = entry.getProp(keyName) ?: return
+        idSetStore[key]?.let { idSet ->
+            idSet.remove(entry.id)
+            if (idSet.isEmpty()) idSetStore.remove(key)
+        }
     }
 
     private fun getKeyName(): String = keyName
@@ -94,6 +112,11 @@ class HoardPair(chamber: Chamber) : Furnishing(chamber) {
     fun getKey(entry: Entry): String = entry.getProp(keyName)!!
 
     fun getValue(entry: Entry): String = entry.getProp(valueName)!!
+
+    fun getEntries(key: String): List<Entry> {
+        val hoard = use(Hoard::class)
+        return idSetStore[key]?.map { hoard[it] } ?: emptyList()
+    }
 
     object Default {
         const val KEY_NAME = "key"
@@ -107,3 +130,6 @@ class HoardPair(chamber: Chamber) : Furnishing(chamber) {
         const val ALLOW_DUPLICATE_KEYS = "hoard.pair.allows_duplicate_keys"
     }
 }
+
+class DuplicateKeyNotAllowedException(key: String) :
+    RuntimeException("Duplicate keys are not allowed in this chamber: $key")

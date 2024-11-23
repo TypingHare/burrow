@@ -46,6 +46,7 @@ class ChamberShepherd(private val burrow: Burrow) {
             chamber.destroy()
             burrow.affairManager.post(ChamberPostDestroyEvent(chamber))
         } catch (ex: Exception) {
+            ex.printStackTrace()
             throw DestroyChamberException(chamberName, ex)
         }
 
