@@ -45,7 +45,7 @@ class Chamber(val burrow: Burrow, val name: String) {
         config.saveToFile()
     }
 
-    @Throws(BuildChamberException::class)
+    @Throws(BuildChamberException::class, DestroyChamberException::class)
     fun rebuild() {
         val chamberShepherd = burrow.chamberShepherd
         chamberShepherd.destroyChamber(name)
@@ -75,6 +75,6 @@ class BuildChamberException(private val name: String, cause: Throwable) :
 }
 
 class DestroyChamberException(private val name: String, cause: Throwable) :
-    RuntimeException("Failed to destroy $name", cause) {
+    RuntimeException("Failed to destroy chamber: $name", cause) {
     fun getName(): String = name
 }

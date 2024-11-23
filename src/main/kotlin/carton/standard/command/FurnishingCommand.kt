@@ -10,13 +10,13 @@ import picocli.CommandLine.ExitCode
 import picocli.CommandLine.Option
 
 @CommandLine.Command(
-    name = "furnishing.list",
+    name = "furnishing",
     description = [
         "Displays a complete list of all available furnishings instead of " +
                 "the dependency tree."
     ]
 )
-class FurnishingListCommand(data: CommandData) : Command(data) {
+class FurnishingCommand(data: CommandData) : Command(data) {
     @Option(
         names = ["-t", "--tree"],
         description = [

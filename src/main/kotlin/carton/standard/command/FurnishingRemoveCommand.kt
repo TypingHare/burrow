@@ -41,7 +41,7 @@ class FurnishingRemoveCommand(data: CommandData) : Command(data) {
             )
         ) return ExitCode.SOFTWARE
 
-        stdout.println("Restarted successfully!")
+        stdout.println("Rebuilt successfully!")
         return ExitCode.OK
     }
 }

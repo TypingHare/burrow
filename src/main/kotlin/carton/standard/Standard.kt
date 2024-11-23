@@ -25,12 +25,17 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
         registerCommand(HelpCommand::class)
 
         // Furnishing commands
-        registerCommand(FurnishingListCommand::class)
+        registerCommand(FurnishingCommand::class)
         registerCommand(FurnishingAddCommand::class)
         registerCommand(FurnishingRemoveCommand::class)
 
         // Command commands
-        registerCommand(CommandListCommand::class)
+        registerCommand(CommandCommand::class)
+
+        // Config commands
+        registerCommand(ConfigCommand::class)
+        registerCommand(ConfigSetCommand::class)
+        registerCommand(ConfigGetCommand::class)
     }
 
     override fun prepareConfig(config: Config) {
@@ -131,19 +136,16 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
         originalFurnishingIds: Set<String>,
         stderr: PrintWriter
     ): Boolean {
-        val chamberName = chamber.name
         try {
-            burrow.chamberShepherd.destroyChamber(chamberName)
-            burrow.chamberShepherd.buildChamber(chamberName)
+            chamber.rebuild()
+            return true
         } catch (ex: Exception) {
             stderr.println(ex.message)
             stderr.println("Error during restarting. Now Roll back to the original furnishing list.")
             renovator.saveFurnishingIds(originalFurnishingIds)
-            burrow.chamberShepherd.buildChamber(chamberName)
+            burrow.chamberShepherd.buildChamber(chamber.name)
             return false
         }
-
-        return true
     }
 
     object ConfigKey {
@@ -154,6 +156,8 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
     object Highlights {
         val DEFAULT_FURNISHING = Highlight(67, 0, Highlight.Style.ITALIC)
         val INSTALLED_FURNISHING = Burrow.Highlights.FURNISHING
+        val CONFIG_KEY = Highlight(81, 0, 0)
+        val CONFIG_VALUE = Highlight(222, 0, 0)
     }
 }
 

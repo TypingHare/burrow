@@ -53,6 +53,7 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
         registerCommand(BackupCommand::class)
         registerCommand(BackupListCommand::class)
         registerCommand(BackupRestore::class)
+        registerCommand(BackupDeleteCommand::class)
     }
 
     override fun launch() {
@@ -164,6 +165,18 @@ class Hoard(chamber: Chamber) : Furnishing(chamber) {
         keys.forEach { entry.unset(it) }
         affairManager.post(EntryUnsetPropertiesEvent(entry, keys))
         saveWhenDiscard.set(true)
+    }
+
+    fun getBackupFileList(): List<BackupFile> {
+        val filenames = chamber.rootPath.toFile()
+            .listFiles { it -> it.isFile() }
+            ?.map { it.name } ?: emptyList()
+
+        return filenames.mapNotNull { filename ->
+            val pattern = Regex("""^hoard\.(\d+)\.json${'$'}""")
+            val matcher = pattern.find(filename) ?: return@mapNotNull null
+            BackupFile(filename, matcher.groupValues[1])
+        }
     }
 
     @Throws(EntryNotFoundException::class)

@@ -9,14 +9,14 @@ import picocli.CommandLine.ExitCode
 import picocli.CommandLine.Option
 
 @CommandLine.Command(
-    name = "command.list",
+    name = "command",
     description = [
         "Displays available commands for each furnishing in the system."
     ],
 )
-class CommandListCommand(data: CommandData) : Command(data) {
+class CommandCommand(data: CommandData) : Command(data) {
     @Option(
-        names = ["-a", "--all"],
+        names = ["--all", "-a"],
         description = [
             "Displays commands for all furnishings, including nested furnishings."
         ],

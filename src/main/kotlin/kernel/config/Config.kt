@@ -15,9 +15,9 @@ class Config(chamber: Chamber) : ChamberModule(chamber) {
     private val configFilePath: Path =
         chamber.rootPath.resolve(Burrow.Standard.CONFIG_FILE_NAME)
 
-    private val itemHandlers = mutableMapOf<String, ConfigItemHandler<*>>()
-    private val entries = mutableMapOf<String, Any?>()
-    private val isModified = AtomicBoolean(false)
+    val itemHandlers = mutableMapOf<String, ConfigItemHandler<*>>()
+    val entries = mutableMapOf<String, Any?>()
+    val isModified = AtomicBoolean(false)
 
     fun <T> get(key: String): T? {
         @Suppress("UNCHECKED_CAST")
@@ -70,6 +70,7 @@ class Config(chamber: Chamber) : ChamberModule(chamber) {
     }
 
     private fun <T> convertItemToRaw(key: String, item: T?): String {
+        println(key)
         @Suppress("UNCHECKED_CAST")
         val handler = itemHandlers[key] as ConfigItemHandler<T>?
             ?: throw InvalidConfigKeyException(key)
