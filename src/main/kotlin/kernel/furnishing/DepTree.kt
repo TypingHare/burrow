@@ -1,7 +1,7 @@
 package burrow.kernel.furnishing
 
 open class DepTree<T> {
-    open class Node<T>(val element: T?) {
+    class Node<T>(val element: T?) {
         val children = mutableListOf<Node<T>>()
 
         fun add(element: T) {
@@ -15,14 +15,14 @@ open class DepTree<T> {
             node.element?.let(resolver)
         }
 
-        fun resolveWithoutRepetition(
+        fun resolveWithoutDuplicates(
             node: Node<T>,
             resolver: (T) -> Unit,
             resolvedNodes: MutableSet<Node<T>>
         ) {
             if (resolvedNodes.add(node)) {
                 node.children.forEach {
-                    resolveWithoutRepetition(it, resolver, resolvedNodes)
+                    resolveWithoutDuplicates(it, resolver, resolvedNodes)
                 }
                 node.element?.let(resolver)
             }
@@ -35,8 +35,8 @@ open class DepTree<T> {
         ResolveRoutine<T>().resolve(root, resolver)
     }
 
-    fun resolveWithoutRepetition(resolver: (T) -> Unit) {
-        ResolveRoutine<T>().resolveWithoutRepetition(
+    fun resolveWithoutDuplicates(resolver: (T) -> Unit) {
+        ResolveRoutine<T>().resolveWithoutDuplicates(
             root,
             resolver,
             mutableSetOf()

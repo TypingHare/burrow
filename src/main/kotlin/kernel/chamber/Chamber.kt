@@ -41,7 +41,7 @@ class Chamber(val burrow: Burrow, val name: String) {
     }
 
     fun destroy() {
-        renovator.depTree.resolveWithoutRepetition { it.discard() }
+        renovator.depTree.resolveWithoutDuplicates { it.discard() }
         config.saveToFile()
     }
 

@@ -2,10 +2,13 @@ package burrow.carton.server
 
 import burrow.common.CommandLexer
 import burrow.kernel.Burrow
+import burrow.kernel.command.Command
 import burrow.kernel.command.Environment
 import burrow.kernel.command.TerminalSize
+import burrow.kernel.stream.StreamWriterManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import picocli.CommandLine.ExitCode
 import java.io.BufferedReader
 import java.io.Closeable
 import java.io.InputStreamReader
@@ -92,9 +95,19 @@ class SocketService(
         commandString: String,
         environment: Environment
     ) {
-        burrow.parse(
-            CommandLexer.tokenizeCommandString(commandString).toTypedArray(),
-            environment
-        )
+        try {
+            burrow.parse(
+                CommandLexer.tokenizeCommandString(commandString)
+                    .toTypedArray(),
+                environment
+            )
+        } catch (ex: Exception) {
+            val outputStream = environment.outputStream
+            val writerManager = StreamWriterManager(outputStream)
+            writerManager.getWriterForState(Command.WriterState.STDERR)
+                .println(ex.message)
+            writerManager.getWriterForState(Command.WriterState.EXIT_CODE)
+                .println(ExitCode.SOFTWARE)
+        }
     }
 }

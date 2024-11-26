@@ -5,8 +5,9 @@ import burrow.client.Client
 import burrow.client.LocalClient
 import burrow.client.SocketBasedClient
 import burrow.common.CommandLexer
-import burrow.kernel.Burrow
 import burrow.kernel.BuildBurrowException
+import burrow.kernel.Burrow
+import burrow.kernel.palette.Highlight
 import burrow.kernel.palette.PicocliPalette
 import org.jline.reader.LineReader
 import org.jline.reader.LineReaderBuilder
@@ -18,6 +19,8 @@ import picocli.CommandLine
 import picocli.CommandLine.*
 import java.net.SocketException
 import java.nio.charset.StandardCharsets
+import java.time.Duration
+import java.time.Instant
 import java.util.*
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
@@ -66,6 +69,10 @@ class BurrowClientCli : Callable<Int> {
     var terminal: Terminal? = null
 
     private var currentChamberName: String = Burrow.Standard.ROOT_CHAMBER_NAME
+
+    private var lastExecutionDuration: Duration? = null
+
+    private var lastExecutionExitCode: Int? = null
 
     override fun call(): Int {
         if (version) {
@@ -147,10 +154,22 @@ class BurrowClientCli : Callable<Int> {
     }
 
     private fun getPromptString(): String {
-        return PicocliPalette().color(
-            "$currentChamberName> ",
+        val palette = PicocliPalette()
+        val lastExecutionDurationMs = if (lastExecutionDuration != null)
+            "  " + palette.color(
+                lastExecutionDuration!!.toMillis().toString() + "ms",
+                Highlights.DURATION
+            ) else ""
+        val lastExecutionExitCode = if (lastExecutionExitCode != null)
+            "  " + palette.color(
+                lastExecutionExitCode!!.toString(),
+                if (lastExecutionExitCode == 0) Highlights.EXIT_CODE_OK else Highlights.EXIT_CODE_ERROR
+            ) else ""
+
+        return palette.color(
+            currentChamberName,
             Burrow.Highlights.CHAMBER
-        )
+        ) + lastExecutionExitCode + lastExecutionDurationMs + "\n$ "
     }
 
     private fun executeCommand(command: String) {
@@ -171,18 +190,34 @@ class BurrowClientCli : Callable<Int> {
                 }
             }
 
+            lastExecutionDuration = null
+            lastExecutionExitCode = null
+
+            println()
             return
         }
 
+        var currentChamberName = this.currentChamberName
+        var realCommand = command
+        if (command.startsWith(Default.ROOT_CHAMBER_CALLER)) {
+            currentChamberName = Burrow.Standard.ROOT_CHAMBER_NAME
+            realCommand =
+                command.substring(Default.ROOT_CHAMBER_CALLER.length).trim()
+        }
+
         val client = this.client!!
-        val fullCommand = "$currentChamberName $command"
+        val fullCommand = "$currentChamberName $realCommand"
+        val start = Instant.now()
 
         try {
-            client.executeCommand(fullCommand)
+            lastExecutionExitCode = client.executeCommand(fullCommand)
         } catch (ex: SocketException) {
             println("Failed to connected to the server. Reconnecting...")
             connect(Default.RECONNECT_ATTEMPTS)
             executeCommand(command)
+        } finally {
+            lastExecutionDuration = Duration.between(start, Instant.now())
+            println()
         }
     }
 
@@ -235,5 +270,12 @@ class BurrowClientCli : Callable<Int> {
     object Default {
         const val INITIALIZATION_CONNECT_ATTEMPTS = 3
         const val RECONNECT_ATTEMPTS = 3
+        const val ROOT_CHAMBER_CALLER = "@"
+    }
+
+    object Highlights {
+        val DURATION = Highlight(75, 0, 0)
+        val EXIT_CODE_OK = Highlight(121, 0, 0)
+        val EXIT_CODE_ERROR = Highlight(160, 0, 0)
     }
 }

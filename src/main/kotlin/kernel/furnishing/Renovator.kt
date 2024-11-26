@@ -37,7 +37,7 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
         resolveDependencies(emptyList(), furnishingIds, depTree.root)
 
         val config = chamber.config
-        depTree.resolveWithoutRepetition { it.prepareConfig(config) }
+        depTree.resolveWithoutDuplicates { it.prepareConfig(config) }
     }
 
     private fun loadFurnishingIds(): List<String> {
@@ -54,9 +54,9 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
 
     fun initializeFurnishings() {
         val config = chamber.config
-        depTree.resolveWithoutRepetition { it.modifyConfig(config) }
-        depTree.resolveWithoutRepetition { it.assemble() }
-        depTree.resolveWithoutRepetition { it.launch() }
+        depTree.resolveWithoutDuplicates { it.modifyConfig(config) }
+        depTree.resolveWithoutDuplicates { it.assemble() }
+        depTree.resolveWithoutDuplicates { it.launch() }
     }
 
     private fun resolveDependencies(
