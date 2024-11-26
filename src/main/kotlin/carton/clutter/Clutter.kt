@@ -1,7 +1,7 @@
 package burrow.carton.clutter
 
 import burrow.kernel.Burrow
-import burrow.kernel.BurrowInitializationException
+import burrow.kernel.BuildBurrowException
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.InvalidFurnishingClassException
@@ -103,7 +103,7 @@ class Clutter(chamber: Chamber) : Furnishing(chamber) {
         }
 
         if (!cartonsPath.toFile().mkdirs()) {
-            throw BurrowInitializationException(
+            throw BuildBurrowException(
                 "Failed to create cartons root directory: $cartonsPath"
             )
         }

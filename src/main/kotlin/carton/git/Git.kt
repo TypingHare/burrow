@@ -11,7 +11,6 @@ import burrow.kernel.furnishing.annotation.DependsOn
 import burrow.kernel.furnishing.annotation.Furniture
 import java.nio.file.Files
 import java.nio.file.Path
-import kotlin.io.path.name
 
 @Furniture(
     version = Burrow.VERSION.NAME,

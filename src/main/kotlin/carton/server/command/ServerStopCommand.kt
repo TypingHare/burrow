@@ -7,13 +7,12 @@ import picocli.CommandLine
 import picocli.CommandLine.ExitCode
 
 @CommandLine.Command(
-    name = "server.start",
-    description = ["Starts a Burrow server."]
+    name = "server.stop",
+    description = ["Stops Burrow server."],
 )
-class ServerStartCommand(data: CommandData) : Command(data) {
+class ServerStopCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
-        use(Server::class).start()
-
+        use(Server::class).stop()
         return ExitCode.OK
     }
 }

@@ -6,7 +6,7 @@ import burrow.client.LocalClient
 import burrow.client.SocketBasedClient
 import burrow.common.CommandLexer
 import burrow.kernel.Burrow
-import burrow.kernel.BurrowInitializationException
+import burrow.kernel.BuildBurrowException
 import burrow.kernel.palette.PicocliPalette
 import org.jline.reader.LineReader
 import org.jline.reader.LineReaderBuilder
@@ -92,7 +92,7 @@ class BurrowClientCli : Callable<Int> {
                 }
             } catch (ex: UserInterruptException) {
                 exit()
-            } catch (ex: BurrowInitializationException) {
+            } catch (ex: BuildBurrowException) {
                 System.err.println("Failed to initialize burrow!")
                 exitProcess(ExitCode.SOFTWARE)
             }

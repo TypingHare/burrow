@@ -1,7 +1,7 @@
 package burrow.client
 
+import burrow.kernel.command.Command
 import burrow.kernel.command.TerminalSize
-import burrow.kernel.stream.BurrowPrintWriters
 import picocli.CommandLine.ExitCode
 import java.io.*
 import java.util.concurrent.atomic.AtomicReference
@@ -79,9 +79,9 @@ abstract class Client : Closeable {
 
     companion object {
         private val responseTypeMap = mapOf(
-            BurrowPrintWriters.Prefix.STDOUT.trim() to ResponseType.STDOUT,
-            BurrowPrintWriters.Prefix.STDERR.trim() to ResponseType.STDERR,
-            BurrowPrintWriters.Prefix.EXIT_CODE.trim() to ResponseType.EXIT_CODE
+            Command.WriterState.STDOUT to ResponseType.STDOUT,
+            Command.WriterState.STDERR to ResponseType.STDERR,
+            Command.WriterState.EXIT_CODE to ResponseType.EXIT_CODE
         )
 
         @JvmStatic

@@ -4,7 +4,7 @@ import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ExtendedChamberModule
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.FurnishingNotFoundException
-import burrow.kernel.stream.BurrowPrintWriters
+import burrow.kernel.stream.StreamWriterManager
 import picocli.CommandLine
 import picocli.CommandLine.IExecutionExceptionHandler
 import picocli.CommandLine.IParameterExceptionHandler
@@ -33,15 +33,15 @@ abstract class Command(val data: CommandData) :
     }
 
     protected val name = data.commandName
-    protected val args = data.commandArgs
     protected val environment = data.environment
 
-    protected val stdout = BurrowPrintWriters.stdout(environment.outputStream)
-    protected val stderr = BurrowPrintWriters.stderr(environment.outputStream)
-
-    protected fun exit(exitCode: Int) {
-        BurrowPrintWriters.exitCode(environment.outputStream).println(exitCode)
-    }
+    private val writerManager = StreamWriterManager(environment.outputStream)
+    protected val stdout =
+        writerManager.getWriterForState(WriterState.STDOUT)
+    protected val stderr =
+        writerManager.getWriterForState(WriterState.STDERR)
+    protected val exitCodeWriter =
+        writerManager.getWriterForState(WriterState.EXIT_CODE)
 
     override fun call(): Int {
         return CommandLine.ExitCode.OK
@@ -106,6 +106,12 @@ abstract class Command(val data: CommandData) :
     ): Int {
         ex?.let { stderr.println(it.message) }
         return CommandLine.ExitCode.SOFTWARE
+    }
+
+    object WriterState {
+        const val STDOUT = "\$STDOUT$"
+        const val STDERR = "\$STDERR$"
+        const val EXIT_CODE = "\$EXIT_CODE$"
     }
 }
 

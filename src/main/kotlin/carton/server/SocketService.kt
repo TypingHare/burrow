@@ -42,6 +42,9 @@ class SocketService(
     }
 
     override fun close() {
+        if (serverSocket != null) {
+            serverSocket!!.close()
+        }
         burrow.destroy()
         serviceLockPath.deleteIfExists()
     }

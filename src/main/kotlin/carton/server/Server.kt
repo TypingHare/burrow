@@ -1,6 +1,7 @@
 package burrow.carton.server
 
 import burrow.carton.server.command.ServerStartCommand
+import burrow.carton.server.command.ServerStopCommand
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.config.Config
@@ -15,6 +16,7 @@ import burrow.kernel.furnishing.annotation.Furniture
 class Server(chamber: Chamber) : Furnishing(chamber) {
     private var host = Default.HOST
     private var port = Default.PORT
+    private var socketService: SocketService? = null
 
     override fun prepareConfig(config: Config) {
         config.addKey(ConfigKey.HOST)
@@ -28,6 +30,7 @@ class Server(chamber: Chamber) : Furnishing(chamber) {
 
     override fun assemble() {
         registerCommand(ServerStartCommand::class)
+        registerCommand(ServerStopCommand::class)
     }
 
     override fun launch() {
@@ -35,9 +38,16 @@ class Server(chamber: Chamber) : Furnishing(chamber) {
         port = config.get<Int>(ConfigKey.PORT)!!
     }
 
-    fun getHost(): String = host
+    fun start() {
+        socketService = SocketService(burrow, host, port)
+        socketService!!.listen()
+    }
 
-    fun getPort(): Int = port
+    fun stop() {
+        if (socketService != null) {
+            socketService!!.close()
+        }
+    }
 
     object ConfigKey {
         const val HOST = "server.host"

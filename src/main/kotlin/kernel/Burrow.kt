@@ -1,5 +1,6 @@
 package burrow.kernel
 
+import burrow.kernel.chamber.BuildChamberException
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.command.CommandData
@@ -9,12 +10,10 @@ import burrow.kernel.event.EventBus
 import burrow.kernel.furnishing.FurnishingWareHouse
 import burrow.kernel.palette.Highlight
 import burrow.kernel.palette.PicocliPalette
-import burrow.kernel.stream.BurrowPrintWriters
 import ch.qos.logback.classic.Level
 import org.reflections.Reflections
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import picocli.CommandLine
 import java.nio.file.Path
 import java.time.Duration
 import java.time.Instant
@@ -87,10 +86,7 @@ class Burrow {
             chamber.processor.execute(commandData)
         } catch (ex: Exception) {
             logger.error("Failed to initialize chamber: $chamberName", ex)
-            BurrowPrintWriters.stderr(environment.outputStream)
-                .println("Failed to initialize chamber: $chamberName")
-            BurrowPrintWriters.exitCode(environment.outputStream)
-                .println(CommandLine.ExitCode.USAGE)
+            throw BuildChamberException("Failed to initialize chamber", ex)
         }
     }
 
@@ -101,14 +97,14 @@ class Burrow {
         }
     }
 
-    @Throws(BurrowInitializationException::class)
+    @Throws(BuildBurrowException::class)
     private fun ensureRootDir() {
         if (rootPath.isDirectory()) {
             return
         }
 
         if (!rootPath.toFile().mkdirs()) {
-            throw BurrowInitializationException(
+            throw BuildBurrowException(
                 "Failed to create burrow root directory: $rootPath"
             )
         }
@@ -116,10 +112,10 @@ class Burrow {
         initializeFiles()
     }
 
-    @Throws(BurrowInitializationException::class)
+    @Throws(BuildBurrowException::class)
     private fun initializeFiles() {
         if (!chambersPath.toFile().mkdirs()) {
-            throw BurrowInitializationException(
+            throw BuildBurrowException(
                 "Failed to create burrow chambers directory: $chambersPath"
             )
         }
@@ -166,7 +162,7 @@ class Burrow {
     }
 }
 
-@Throws(BurrowInitializationException::class)
+@Throws(BuildBurrowException::class)
 fun buildBurrow(): Burrow {
     System.setProperty("slf4j.internal.verbosity", "WARN")
     val reflectionsLogger =
@@ -177,7 +173,7 @@ fun buildBurrow(): Burrow {
     return Burrow()
 }
 
-class BurrowInitializationException(message: String, cause: Throwable?) :
+class BuildBurrowException(message: String, cause: Throwable?) :
     RuntimeException(message, cause) {
     constructor(message: String) : this(message, null)
 }
