@@ -30,6 +30,7 @@ class Dictator(chamber: Chamber) : Furnishing(chamber) {
         registerCommand(ChamberBuildCommand::class)
         registerCommand(ChamberDestroyCommand::class)
         registerCommand(ChamberExistCommand::class)
+        registerCommand(ChamberDeleteCommand::class)
 
         burrow.affairManager.subscribe(ChamberPostBuildEvent::class) {
             val chamber = it.chamber
@@ -51,6 +52,9 @@ class Dictator(chamber: Chamber) : Furnishing(chamber) {
         return burrow.chambersPath.toFile().listFiles()!!.toList()
             .filter { it.isDirectory() }
     }
+
+    fun getAllChamberNames(): Set<String> =
+        getAllChamberDirs().map { it.name }.toSet()
 
     fun getAllChamberInfo(): List<ChamberInfo> {
         val chamberInfoList = mutableListOf<ChamberInfo>()

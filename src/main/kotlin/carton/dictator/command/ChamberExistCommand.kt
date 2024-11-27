@@ -39,8 +39,7 @@ class ChamberExistCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
         val dictator = use(Dictator::class)
         if (checkBluePrint) {
-            val chamberNameSet =
-                dictator.getAllChamberDirs().map { it.name }.toSet()
+            val chamberNameSet = dictator.getAllChamberNames()
             return satisfy(chamberName in chamberNameSet || chamberName == Burrow.Standard.ROOT_CHAMBER_NAME)
         }
 
