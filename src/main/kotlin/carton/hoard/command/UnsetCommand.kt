@@ -10,7 +10,7 @@ import picocli.CommandLine.Parameters
 
 @CommandLine.Command(
     name = "unset",
-    description = [""]
+    description = ["Unset properties."]
 )
 class UnsetCommand(data: CommandData) : Command(data) {
     @Parameters(

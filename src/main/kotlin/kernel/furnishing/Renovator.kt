@@ -66,7 +66,7 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
     ) {
         deps.forEach { dep ->
             require(dep !in path) {
-                "Circular dep detected for $dep"
+                "Circular dependency detected for $dep"
             }
 
             furnishings[dep] ?: run {

@@ -53,7 +53,7 @@ class ConfigSetCommand(data: CommandData) : Command(data) {
             config.entries.remove(key)
             renovator.depTree.resolve { it.modifyConfig(config) }
         } else {
-            config.set(key, handler.reader.read(value))
+            config[key] = handler.reader.read(value)
         }
 
         if (rebuild) {

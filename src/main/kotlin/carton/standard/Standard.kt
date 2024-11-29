@@ -142,9 +142,9 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
             return furnishingClasses.toSet()
         }
 
-        return furnishingClasses.filter {
-            extractType(it) != Furniture.Type.ROOT
-        }.toSet()
+        return furnishingClasses
+            .filter { extractType(it) != Furniture.Type.ROOT }
+            .toSet()
     }
 
     fun rebuildChamberPreservingFurnishingList(
@@ -155,6 +155,7 @@ class Standard(chamber: Chamber) : Furnishing(chamber) {
             chamber.rebuild()
             return true
         } catch (ex: Exception) {
+            ex.printStackTrace()
             stderr.println(ex.message)
             stderr.println("Error during restarting. Now Roll back to the original furnishing list.")
             renovator.saveFurnishingIds(originalFurnishingIds)

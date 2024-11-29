@@ -22,14 +22,14 @@ class CommandCommand(data: CommandData) : Command(data) {
         ],
         defaultValue = "false"
     )
-    var shouldDisplayAll = false
+    private var shouldDisplayAll = false
 
     override fun call(): Int {
-        if (shouldDisplayAll) {
-            AllFurnishingsCommandsPrinter(stdout, chamber).print()
-        } else {
-            TopLevelFurnishingsCommandsPrinter(stdout, chamber).print()
+        val furnishingsCommandPrinter = when (shouldDisplayAll) {
+            true -> AllFurnishingsCommandsPrinter(stdout, chamber)
+            false -> TopLevelFurnishingsCommandsPrinter(stdout, chamber)
         }
+        furnishingsCommandPrinter.print()
 
         return ExitCode.OK
     }

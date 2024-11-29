@@ -23,7 +23,6 @@ class HoardPair(chamber: Chamber) : Furnishing(chamber) {
 
     private var keyName = Default.KEY_NAME
     private var valueName = Default.VALUE_NAME
-    private var allowDuplicationKeys = Default.ALLOW_DUPLICATE_KEYS
 
     override fun prepareConfig(config: Config) {
         config.addKey(
@@ -53,27 +52,30 @@ class HoardPair(chamber: Chamber) : Furnishing(chamber) {
 
         affairManager.subscribe(EntryRestoreEvent::class) {
             val entry = it.entry
-            checkKeyDuplication(entry)
+            val key = getKey(entry)
+            checkKeyDuplication(key)
             addToIdSetStore(it.entry)
         }
 
         affairManager.subscribe(EntryCreateEvent::class) {
             val entry = it.entry
-            checkKeyDuplication(entry)
+            val key = getKey(entry)
+            checkKeyDuplication(key)
             addToIdSetStore(entry)
         }
 
         affairManager.subscribe(EntryDeleteEvent::class) {
             removeToIdSetStore(it.entry)
         }
-    }
 
-    override fun launch() {
         keyName = config.get<String>(ConfigKey.KEY_NAME)!!
         valueName = config.get<String>(ConfigKey.VALUE_NAME)!!
     }
 
+    @Throws(DuplicateKeyNotAllowedException::class)
     fun createEntry(key: String, value: Any): Entry {
+        checkKeyDuplication(key)
+
         return use(Hoard::class).create(
             mutableMapOf(
                 getKeyName() to key,
@@ -83,10 +85,9 @@ class HoardPair(chamber: Chamber) : Furnishing(chamber) {
     }
 
     @Throws(DuplicateKeyNotAllowedException::class)
-    private fun checkKeyDuplication(entry: Entry) {
-        if (allowDuplicationKeys) return
+    private fun checkKeyDuplication(key: String) {
+        if (getAllowDuplication()) return
 
-        val key = getKey(entry)
         if (idSetStore.containsKey(key)) {
             throw DuplicateKeyNotAllowedException(key)
         }
@@ -109,6 +110,9 @@ class HoardPair(chamber: Chamber) : Furnishing(chamber) {
 
     private fun getValueName(): String = valueName
 
+    private fun getAllowDuplication(): Boolean =
+        config.getNotNull(ConfigKey.ALLOW_DUPLICATE_KEYS)
+
     fun getKey(entry: Entry): String = entry.getProp(keyName)!!
 
     fun getValue(entry: Entry): String = entry.getProp(valueName)!!
@@ -128,6 +132,11 @@ class HoardPair(chamber: Chamber) : Furnishing(chamber) {
         const val KEY_NAME = "hoard.pair.key_name"
         const val VALUE_NAME = "hoard.pair.value_name"
         const val ALLOW_DUPLICATE_KEYS = "hoard.pair.allows_duplicate_keys"
+    }
+
+    object Highlights {
+        val KEY = Hoard.Highlights.KEY
+        val VALUE = Hoard.Highlights.VALUE
     }
 }
 

@@ -7,12 +7,18 @@ class Entry(val id: Int, val props: MutableMap<String, String>) {
         props[Key.ID] = id.toString()
     }
 
-    fun set(key: String, value: Any) {
+    @Suppress("UNCHECKED_CAST")
+    operator fun <T> get(key: String): T? = store[key] as T?
+
+    operator fun set(key: String, value: Any) {
         store[key] = value
     }
 
-    @Suppress("UNCHECKED_CAST")
-    operator fun <T> get(key: String): T? = store[key] as T?
+    fun setIfAbsent(key: String, value: Any) {
+        if (!props.containsKey(key)) {
+            set(key, value)
+        }
+    }
 
     @Throws(ProtectedKeyException::class)
     fun setProp(key: String, value: String) {
@@ -21,6 +27,12 @@ class Entry(val id: Int, val props: MutableMap<String, String>) {
         }
 
         props[key] = value
+    }
+
+    fun setPropIfAbsent(key: String, value: String) {
+        if (!props.containsKey(key)) {
+            setProp(key, value)
+        }
     }
 
     fun getProp(key: String): String? = props[key]

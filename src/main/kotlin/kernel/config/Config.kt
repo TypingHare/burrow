@@ -18,14 +18,18 @@ class Config(chamber: Chamber) : ChamberModule(chamber) {
     val entries = mutableMapOf<String, Any?>()
     val isModified = AtomicBoolean(false)
 
-    fun <T> get(key: String): T? {
+    operator fun <T> get(key: String): T? {
         @Suppress("UNCHECKED_CAST")
         return entries[key] as T?
     }
 
-    fun set(key: String, value: Any?) {
+    operator fun set(key: String, value: Any?) {
         entries[key] = value
         isModified.set(true)
+    }
+
+    fun <T> getNotNull(key: String): T {
+        return get<T>(key)!!
     }
 
     fun setIfAbsent(key: String, value: Any) {
@@ -76,7 +80,6 @@ class Config(chamber: Chamber) : ChamberModule(chamber) {
     }
 
     private fun <T> convertItemToRaw(key: String, item: T?): String {
-        println(key)
         @Suppress("UNCHECKED_CAST")
         val handler = itemHandlers[key] as ConfigItemHandler<T>?
             ?: throw InvalidConfigKeyException(key)

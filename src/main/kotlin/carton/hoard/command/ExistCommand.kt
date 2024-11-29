@@ -8,7 +8,7 @@ import picocli.CommandLine.ExitCode
 
 @CommandLine.Command(
     name = "exist",
-    description = [""]
+    description = ["Checks if an entry exists."]
 )
 class ExistCommand(data: CommandData) : Command(data) {
     @CommandLine.Parameters(index = "0", description = ["The ID of the entry."])

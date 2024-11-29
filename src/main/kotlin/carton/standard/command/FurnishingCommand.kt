@@ -12,34 +12,33 @@ import picocli.CommandLine.Option
 @CommandLine.Command(
     name = "furnishing",
     description = [
-        "Displays a complete list of all available furnishings instead of " +
-                "the dependency tree."
+        "Displays a list of furnishings that are installed."
     ]
 )
 class FurnishingCommand(data: CommandData) : Command(data) {
     @Option(
-        names = ["-t", "--tree"],
+        names = ["--tree", "-t"],
         description = [
             "Displays furnishings as a dependency tree."
         ]
     )
-    var shouldDisplayTree = false
+    private var shouldDisplayTree = false
 
     @Option(
-        names = ["-a", "--all"],
+        names = ["--all", "-a"],
         description = [
             "Displays all available furnishings."
         ]
     )
-    var shouldDisplayAll = false
+    private var shouldDisplayAll = false
 
     @Option(
-        names = ["-i", "--id"],
+        names = ["--id", "-i"],
         description = [
             "Displays the ID of each furnishing."
         ]
     )
-    var shouldDisplayId = false
+    private var shouldDisplayId = false
 
     override fun call(): Int {
         val standard = use(Standard::class)

@@ -90,7 +90,7 @@ class Burrow {
             chamber.processor.execute(commandData)
         } catch (ex: Exception) {
             logger.error("Failed to initialize chamber: $chamberName", ex)
-            throw BuildChamberException("Failed to initialize chamber", ex)
+            throw BuildChamberException(chamberName, ex)
         }
     }
 

@@ -36,8 +36,6 @@ class SetCommand(data: CommandData) : Command(data) {
         }
 
         if (!checkPairs(pairs, stderr)) {
-            println(id)
-            println(pairs.toList().toString())
             return ExitCode.USAGE
         }
 
