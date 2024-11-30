@@ -49,11 +49,6 @@ class Cradle(chamber: Chamber) : Furnishing(chamber) {
         stderr: PrintWriter
     ): Int {
         val processBuilder = getProcessBuilder(command, environment)
-        processBuilder.environment().forEach { (k, v) ->
-            println("$k -> $v")
-        }
-        processBuilder.environment()["PATH"]!!.split(":")
-            .forEach { println(it) }
         val process = processBuilder.start()
 
         var line: String

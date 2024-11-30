@@ -19,7 +19,7 @@ class Chamber(val burrow: Burrow, val name: String) {
     val config = Config(this)
     val renovator = Renovator(this)
     val processor = Processor(this)
-    val affairManager = EventBus()
+    val courier = EventBus()
     var palette: Palette = PicocliPalette()
 
     @Throws(BuildChamberException::class)

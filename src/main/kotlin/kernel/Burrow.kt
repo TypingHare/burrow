@@ -3,7 +3,6 @@ package burrow.kernel
 import burrow.kernel.chamber.BuildChamberException
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberShepherd
-import burrow.kernel.command.Command
 import burrow.kernel.command.CommandData
 import burrow.kernel.command.Environment
 import burrow.kernel.command.Processor
@@ -11,12 +10,10 @@ import burrow.kernel.event.EventBus
 import burrow.kernel.furnishing.FurnishingWareHouse
 import burrow.kernel.palette.Highlight
 import burrow.kernel.palette.PicocliPalette
-import burrow.kernel.stream.StreamWriterManager
 import ch.qos.logback.classic.Level
 import org.reflections.Reflections
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import picocli.CommandLine.ExitCode
 import java.nio.file.Path
 import java.time.Duration
 import java.time.Instant
