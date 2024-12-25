@@ -2,9 +2,12 @@ package burrow.kernel.furnishing
 
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
+import burrow.kernel.furnishing.annotation.Furniture
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.io.IOException
 import java.nio.file.Files
+import kotlin.Throws
 import kotlin.reflect.KClass
 
 class Renovator(chamber: Chamber) : ChamberModule(chamber) {
@@ -37,8 +40,18 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
     /**
      * Builds the furnishing dependency tree based on the furnishing IDs.
      */
+    @Throws(
+        IOException::class,
+        CircularDependencyException::class,
+        FurnishingNotFoundException::class,
+        CreateFurnishingException::class,
+        UnexpectedVersionException::class
+    )
     private fun loadFromFile(furnishingIds: List<String>) {
-        resolveDependencies(emptyList(), furnishingIds, depTree.root)
+        val furnishingClasses = furnishingIds.map {
+            findFurnishingClass(it)
+        }
+        resolveDependencies(emptyList(), furnishingClasses, depTree.root)
 
         val config = chamber.config
         depTree.resolveUniquely { it.prepareConfig(config) }
@@ -47,6 +60,7 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
     /**
      * Loads a list of furnishing IDs from the furnishings file.
      */
+    @Throws(IOException::class)
     private fun loadFurnishingIds(): List<String> {
         val content = Files.readString(furnishingsFile.toPath())
         val type = object : TypeToken<List<String>>() {}.type
@@ -56,6 +70,7 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
     /**
      * Save a list of furnishing IDs to the furnishings file.
      */
+    @Throws(IOException::class)
     fun saveFurnishingIds(furnishingIds: List<String>) {
         val type = object : TypeToken<List<String>>() {}.type
         val content = Gson().toJson(furnishingIds, type)
@@ -75,41 +90,50 @@ class Renovator(chamber: Chamber) : ChamberModule(chamber) {
     @Throws(
         CircularDependencyException::class,
         FurnishingNotFoundException::class,
-        CreateFurnishingException::class
+        CreateFurnishingException::class,
+        UnexpectedVersionException::class
     )
     private fun resolveDependencies(
-        path: List<String>,
-        deps: List<String>,
+        path: List<FurnishingClass>,
+        deps: List<FurnishingClass>,
         node: DepTree.Node<Furnishing>
     ) {
         deps.forEach { dep ->
             if (dep in path) {
-                throw CircularDependencyException(dep)
+                throw CircularDependencyException(path + dep)
             }
 
-            val furnishing = loadById(dep)
-            val nextNode = DepTree.Node(furnishing)
-            resolveDependencies(
-                path + dep,
-                furnishing.getDependencies(),
-                nextNode
-            )
-            node.children.add(nextNode)
+            val furnishing = createFurnishingInstance(dep)
+            val dependencies = furnishing.getDependencies()
+            val dependencyClasses = dependencies.map {
+                checkVersion(it.target, it.version)
+                it.target
+            }
 
-            registerFurnishing(furnishing)
+            DepTree.Node(furnishing).apply {
+                resolveDependencies(path + dep, dependencyClasses, this)
+                node.children.add(this)
+            }
+
+            furnishings[getId(furnishing)] = furnishing
         }
     }
 
-    private fun registerFurnishing(furnishing: Furnishing) {
-        furnishings.putIfAbsent(furnishing.javaClass.name, furnishing)
-    }
+    private fun checkVersion(
+        furnishingClass: FurnishingClass,
+        expectedVersion: String
+    ) {
+        val furniture =
+            furnishingClass.java.getAnnotation(Furniture::class.java)!!
+        val actualVersion = furniture.version
 
-    @Throws(
-        FurnishingNotFoundException::class,
-        CreateFurnishingException::class
-    )
-    private fun loadById(id: String): Furnishing {
-        return createFurnishingInstance(findFurnishingClass(id))
+        if (actualVersion != expectedVersion) {
+            throw UnexpectedVersionException(
+                furnishingClass,
+                actualVersion,
+                expectedVersion
+            )
+        }
     }
 
     @Throws(FurnishingNotFoundException::class)
@@ -140,8 +164,22 @@ class FurnishingNotFoundException(furnishingId: String) :
 class FurnishingsFileNotFoundException :
     RuntimeException("Furnishings file not found.")
 
-class CircularDependencyException(furnishingId: String) :
-    RuntimeException("Circular dependency found: $furnishingId")
+class CircularDependencyException(depPath: List<FurnishingClass>) :
+    RuntimeException(
+        "Circular dependency found: \n" +
+                depPath.joinToString(" -> ", transform = { it.java.name })
+    )
 
 class CreateFurnishingException(furnishingId: String, cause: Exception) :
     RuntimeException("Failed to create Furnishing: $furnishingId", cause)
+
+class UnexpectedVersionException(
+    furnishingClass: FurnishingClass,
+    actualVersion: String,
+    expectedString: String
+) : RuntimeException(
+    """
+        Unexpected version of: ${furnishingClass.java.name}.
+        actual version: ${actualVersion}; expected version: $expectedString
+    """.trimIndent()
+)

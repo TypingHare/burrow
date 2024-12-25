@@ -3,6 +3,7 @@ package burrow.kernel.chamber
 import burrow.kernel.Burrow
 import burrow.kernel.DirectoryBound
 import burrow.kernel.event.Event
+import kotlin.Throws
 
 class ChamberShepherd(val burrow: Burrow) : DirectoryBound(
     burrow.rootDirPath.resolve(CHAMBERS_DIR).normalize()
@@ -42,6 +43,7 @@ class ChamberShepherd(val burrow: Burrow) : DirectoryBound(
         return getChamber(chamberName)!!
     }
 
+    @Throws(ChamberNotBuiltException::class)
     private fun getBuiltChamber(chamberName: String): Chamber =
         chambers[chamberName] ?: throw ChamberNotBuiltException(chamberName)
 
@@ -66,7 +68,7 @@ class ChamberShepherd(val burrow: Burrow) : DirectoryBound(
         DestroyChamberException::class,
         BuildChamberException::class
     )
-    fun rebuild(chamberName: String) {
+    fun rebuildChamber(chamberName: String) {
         destroyChamber(chamberName)
         buildChamber(chamberName)
     }

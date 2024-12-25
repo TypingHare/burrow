@@ -11,7 +11,8 @@ class EventBus {
         eventClass: KClass<E>,
         handler: EventHandler<E>
     ) {
-        eventHandlers.computeIfAbsent(eventClass) { mutableSetOf() }
+        eventHandlers
+            .computeIfAbsent(eventClass) { mutableSetOf() }
             .add(handler)
     }
 
@@ -19,8 +20,7 @@ class EventBus {
         eventClass: KClass<E>,
         handler: EventHandler<E>
     ) {
-        eventHandlers.computeIfAbsent(eventClass) { mutableSetOf() }
-            .remove(handler)
+        eventHandlers[eventClass]?.remove(handler)
     }
 
     fun <E : Event> post(event: E) {

@@ -8,6 +8,8 @@ import org.reflections.util.FilterBuilder
 import java.net.URL
 import java.net.URLClassLoader
 import java.nio.file.Path
+import java.util.*
+import kotlin.Throws
 
 class Warehouse {
     private val cartons = mutableMapOf<ClassLoader, Carton>()
@@ -19,20 +21,22 @@ class Warehouse {
     fun scanPackage(
         path: Path,
         classLoader: ClassLoader,
-        packageNames: Set<String>
+        properties: Properties,
     ): Carton {
+        val packageNames = properties
+            .getProperty(PROPERTY_PACKAGES)
+            .split(PACKAGE_DELIMITER)
+            .filterNotNull()
         val filterBuilder = FilterBuilder().apply {
             packageNames.forEach { includePackage(it) }
         }
 
-        val urlCollection: Collection<URL> =
-            if (classLoader is URLClassLoader) {
-                classLoader.urLs.toList()
-            } else {
-                packageNames.flatMap {
-                    ClasspathHelper.forPackage(it, classLoader)
-                }.toList()
-            }
+        val urlCollection: List<URL> = when (classLoader) {
+            is URLClassLoader -> classLoader.urLs.toList()
+            else -> packageNames.flatMap {
+                ClasspathHelper.forPackage(it, classLoader)
+            }.toList()
+        }
 
         val configuration = ConfigurationBuilder()
             .filterInputsBy(filterBuilder)
@@ -40,22 +44,27 @@ class Warehouse {
             .addClassLoaders(classLoader)
 
         val reflections = Reflections(configuration)
-        val furnishingClasses =
-            reflections.getSubTypesOf(Furnishing::class.java)
-                .onEach { checkFurnishingClass(it.kotlin) }
+        val furnishingClasses = reflections
+            .getSubTypesOf(Furnishing::class.java)
+            .onEach { checkFurnishingClass(it.kotlin) }
 
-        val kotlinFurnishingClasses =
-            furnishingClasses.map { it.kotlin }.toSet()
+        val kotlinFurnishingClasses = furnishingClasses
+            .map { it.kotlin }
+            .toSet()
         this.furnishingClasses.addAll(kotlinFurnishingClasses)
 
         return Carton(path).apply {
-            this.packageNames.addAll(packageNames)
+            this.properties.putAll(properties)
             this.furnishingClasses.addAll(kotlinFurnishingClasses)
             cartons[classLoader] = this
         }
     }
 
     companion object {
+        const val PROPERTY_PACKAGES = "burrow.packages"
+
+        const val PACKAGE_DELIMITER = ":"
+
         @Throws(InvalidFurnishingClassException::class)
         fun checkFurnishingClass(furnishingClass: FurnishingClass) {
             val furnishingId = furnishingClass.java.name

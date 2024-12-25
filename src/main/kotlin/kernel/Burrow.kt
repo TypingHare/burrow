@@ -56,11 +56,11 @@ class Burrow(private val logger: Logger) : DirectoryBound(getRootDirPath()) {
     @Throws(InitializeWarehouseException::class)
     private fun initializeWarehouse() {
         try {
-            warehouse.scanPackage(
-                rootDirPath.resolve(LIBS_DIR),
-                Companion::class.java.classLoader,
-                setOf("burrow.carton")
-            )
+//            warehouse.scanPackage(
+//                rootDirPath.resolve(LIBS_DIR),
+//                Companion::class.java.classLoader,
+//                setOf("burrow.carton")
+//            )
         } catch (ex: Exception) {
             throw InitializeWarehouseException(ex)
         }

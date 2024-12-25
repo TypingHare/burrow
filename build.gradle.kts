@@ -1,8 +1,8 @@
 group = "burrow"
 version = "0.0.0"
 
-val mainClass = "burrow.Main"
-val imageName = "burrow"
+val burrowMainClass = "burrow.Main"
+val burrowImageName = "burrow"
 
 plugins {
     // Enables Kotlin compilation for JVM projects
@@ -42,14 +42,14 @@ tasks.test {
 }
 
 application {
-    mainClass.set(mainClass)
+    mainClass.set(burrowMainClass)
 }
 
 graalvmNative {
     binaries {
         named("main") {
-            imageName.set(imageName)
-            mainClass.set(mainClass)
+            imageName.set(burrowMainClass)
+            mainClass.set(burrowImageName)
         }
     }
 }

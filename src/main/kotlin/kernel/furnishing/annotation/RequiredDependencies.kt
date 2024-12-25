@@ -1,8 +1,6 @@
 package burrow.kernel.furnishing.annotation
 
-import burrow.kernel.furnishing.Furnishing
-import kotlin.reflect.KClass
-
+// Represents a bunch of required dependencies
 annotation class RequiredDependencies(
-    vararg val dependencies: KClass<out Furnishing>
+    vararg val dependencies: Dependency
 )

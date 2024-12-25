@@ -1,8 +1,8 @@
 package burrow.carton.core
 
+import burrow.carton.core.command.HelpCommand
 import burrow.carton.core.command.RootCommand
 import burrow.carton.core.command.TestCommand
-import burrow.carton.standard.command.HelpCommand
 import burrow.kernel.Burrow
 import burrow.kernel.furnishing.Furnishing
 import burrow.kernel.furnishing.Renovator

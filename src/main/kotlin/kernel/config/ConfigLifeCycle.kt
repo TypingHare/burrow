@@ -1,6 +1,6 @@
 package burrow.kernel.config
 
-interface ConfigSupport {
+interface ConfigLifeCycle {
     /**
      * Called before configs are imported from the file.
      */

@@ -8,7 +8,7 @@ import picocli.CommandLine
 import java.util.concurrent.atomic.AtomicInteger
 
 class Processor(chamber: Chamber) : ChamberModule(chamber) {
-    private val commandClasses = mutableMapOf<String, CommandClass>()
+    val commandClasses = mutableMapOf<String, CommandClass>()
 
     init {
         registerCommand(DefaultCommand::class)
@@ -39,7 +39,7 @@ class Processor(chamber: Chamber) : ChamberModule(chamber) {
             val command = constructor.newInstance(commandData)
             val commandArgs = commandData.commandArgs
             exitCode.set(execute(command, commandArgs))
-        } catch (ex: Throwable) {
+        } catch (ex: Exception) {
             exitCode.set(CommandLine.ExitCode.SOFTWARE)
             writerManager.getWriterForState(Command.WriterState.STDERR)
                 .println(ex.message)
