@@ -2,62 +2,103 @@ package burrow.kernel.chamber
 
 import burrow.kernel.Burrow
 import burrow.kernel.event.Event
+import burrow.kernel.path.PathBound
+import java.nio.file.Path
 
-class ChamberShepherd(private val burrow: Burrow) {
+class ChamberShepherd(val burrow: Burrow) : PathBound {
+    private val rootPath = burrow.getPath().resolve(CHAMBERS_DIR)
     val chambers = mutableMapOf<String, Chamber>()
+
+    override fun getPath(): Path = rootPath
 
     @Throws(BuildChamberException::class)
     fun buildChamber(chamberName: String) {
-        val chamber = Chamber(burrow, chamberName)
+        val chamber = Chamber(this, chamberName)
 
-        burrow.affairManager.post(ChamberPreBuildEvent(chamber))
-        chamber.build()
-        burrow.affairManager.post(ChamberPostBuildEvent(chamber))
+        try {
+            burrow.courier.post(ChamberPreBuildEvent(chamber))
+            chamber.checkChamberRootDirectory()
+            chamber.renovator.load()
+            chamber.config.load()
+            chamber.renovator.initializeFurnishings()
+            burrow.courier.post(ChamberPostBuildEvent(chamber))
+        } catch (ex: Exception) {
+            throw BuildChamberException(chamberName, ex)
+        }
 
         chambers[chamberName] = chamber
     }
 
-    private fun hasChamber(chamberName: String) =
-        chambers.containsKey(chamberName)
+    operator fun get(chamberName: String): Chamber =
+        getOrBuildChamber(chamberName)
 
-    private fun getChamber(chamberName: String) = chambers[chamberName]
-
-    private fun getOrBuildChamber(chamberName: String): Chamber {
-        if (!hasChamber(chamberName)) {
+    @Throws(BuildChamberException::class)
+    fun getOrBuildChamber(chamberName: String): Chamber {
+        if (!chamberExists(chamberName)) {
             buildChamber(chamberName)
         }
 
         return getChamber(chamberName)!!
     }
 
-    operator fun get(chamberName: String): Chamber =
-        getOrBuildChamber(chamberName)
+    private fun chamberExists(chamberName: String): Boolean =
+        chambers.containsKey(chamberName)
 
-    @Throws(ChamberNotFoundException::class, DestroyChamberException::class)
+    private fun getChamber(chamberName: String): Chamber? =
+        chambers[chamberName]
+
+    @Throws(ChamberNotBuiltException::class)
+    private fun getBuiltChamber(chamberName: String): Chamber =
+        chambers[chamberName] ?: throw ChamberNotBuiltException(chamberName)
+
+    @Throws(ChamberNotBuiltException::class, DestroyChamberException::class)
     fun destroyChamber(chamberName: String) {
-        if (!hasChamber(chamberName)) {
-            throw ChamberNotFoundException(chamberName)
-        }
-
-        val chamber = chambers[chamberName]!!
+        val chamber = getBuiltChamber(chamberName)
 
         try {
-            burrow.affairManager.post(ChamberPreDestroyEvent(chamber))
-            chamber.destroy()
-            burrow.affairManager.post(ChamberPostDestroyEvent(chamber))
+            burrow.courier.post(ChamberPreDestroyEvent(chamber))
+            chamber.config.save()
+            burrow.courier.post(ChamberPostDestroyEvent(chamber))
         } catch (ex: Exception) {
-            ex.printStackTrace()
             throw DestroyChamberException(chamberName, ex)
         }
 
         chambers.remove(chamberName)
     }
+
+    @Throws(
+        ChamberNotBuiltException::class,
+        DestroyChamberException::class,
+        BuildChamberException::class
+    )
+    fun rebuildChamber(chamberName: String) {
+        destroyChamber(chamberName)
+        buildChamber(chamberName)
+    }
+
+    companion object {
+        /**
+         * The relative path to the chambers root directory.
+         */
+        const val CHAMBERS_DIR = "chambers"
+
+        /**
+         * The name of the root chamber.
+         */
+        const val ROOT_CHAMBER_NAME = "."
+    }
 }
 
+class BuildChamberException(chamberName: String, cause: Exception) :
+    RuntimeException("Failed to build chamber: $chamberName", cause)
+
+class ChamberNotBuiltException(chamberName: String) :
+    RuntimeException("Chamber not built: $chamberName")
+
+class DestroyChamberException(chamberName: String, cause: Exception) :
+    RuntimeException("Failed to destroy chamber: $chamberName", cause)
+
 class ChamberPreBuildEvent(val chamber: Chamber) : Event()
-
 class ChamberPostBuildEvent(val chamber: Chamber) : Event()
-
 class ChamberPreDestroyEvent(val chamber: Chamber) : Event()
-
 class ChamberPostDestroyEvent(val chamber: Chamber) : Event()

@@ -13,5 +13,4 @@ abstract class Printer<C>(
 abstract class ChamberBasedPrinter(
     writer: PrintWriter,
     protected val chamber: Chamber
-) :
-    Printer<Chamber>(writer, chamber)
+) : Printer<Chamber>(writer, chamber)

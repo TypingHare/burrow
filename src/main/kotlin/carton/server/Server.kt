@@ -3,20 +3,19 @@ package burrow.carton.server
 import burrow.carton.server.command.ServerStartCommand
 import burrow.carton.server.command.ServerStopCommand
 import burrow.kernel.Burrow
-import burrow.kernel.chamber.Chamber
 import burrow.kernel.config.Config
-import burrow.kernel.furnishing.Furnishing
-import burrow.kernel.furnishing.annotation.Furniture
+import burrow.kernel.furniture.Furnishing
+import burrow.kernel.furniture.Renovator
+import burrow.kernel.furniture.annotation.Furniture
+import org.slf4j.LoggerFactory
 
 @Furniture(
-    version = Burrow.VERSION.NAME,
-    description = "Allows Burrow to host a server.",
+    version = Burrow.VERSION,
+    description = "Hosts a burrow service.",
     type = Furniture.Type.ROOT
 )
-class Server(chamber: Chamber) : Furnishing(chamber) {
-    private var host = Default.HOST
-    private var port = Default.PORT
-    private var socketService: SocketService? = null
+class Server(renovator: Renovator) : Furnishing(renovator) {
+    private var service: Service? = null
 
     override fun prepareConfig(config: Config) {
         config.addKey(ConfigKey.HOST)
@@ -33,20 +32,20 @@ class Server(chamber: Chamber) : Furnishing(chamber) {
         registerCommand(ServerStopCommand::class)
     }
 
-    override fun launch() {
-        host = config.get<String>(ConfigKey.HOST)!!
-        port = config.get<Int>(ConfigKey.PORT)!!
-    }
+    private fun getEndPoint() = Endpoint(
+        config.getNotNull(ConfigKey.HOST),
+        config.getNotNull(ConfigKey.PORT)
+    )
 
     fun start() {
-        socketService = SocketService(burrow, host, port)
-        socketService!!.listen()
+        val logger = LoggerFactory.getLogger(javaClass)
+        service = SocketService(burrow, logger, getEndPoint()).apply {
+            listen()
+        }
     }
 
     fun stop() {
-        if (socketService != null) {
-            socketService!!.close()
-        }
+        service?.close()
     }
 
     object ConfigKey {

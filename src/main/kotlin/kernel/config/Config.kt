@@ -1,8 +1,8 @@
 package burrow.kernel.config
 
-import burrow.kernel.Burrow
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
+import burrow.kernel.path.Persistable
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.nio.file.Files
@@ -10,13 +10,39 @@ import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.io.path.exists
 
-class Config(chamber: Chamber) : ChamberModule(chamber) {
-    private val configFilePath: Path =
-        chamber.rootPath.resolve(Burrow.Standard.CONFIG_FILE_NAME)
-
-    val itemHandlers = mutableMapOf<String, ConfigItemHandler<*>>()
+class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
+    Cloneable {
+    private val path = chamber.getPath().resolve(FILE_NAME)
+    private val itemHandlers = mutableMapOf<String, ConfigItemHandler<*>>()
     val entries = mutableMapOf<String, Any?>()
     val isModified = AtomicBoolean(false)
+
+    override fun getPath(): Path = path
+
+    override fun save() {
+        if (!isModified.get()) {
+            return
+        }
+
+        val content = Gson().toJson(exportRawEntries())
+        Files.write(path, content.toByteArray())
+    }
+
+    override fun load() {
+        if (!path.exists()) {
+            Files.write(path, "{}".toByteArray())
+        } else {
+            importRawEntries(loadConfigRawEntries(path))
+        }
+
+        isModified.set(false)
+    }
+
+    public override fun clone(): Config = Config(chamber).apply {
+        itemHandlers.putAll(this@Config.itemHandlers)
+        entries.putAll(this@Config.entries)
+        isModified.set(this@Config.isModified.get())
+    }
 
     operator fun <T> get(key: String): T? {
         @Suppress("UNCHECKED_CAST")
@@ -28,15 +54,15 @@ class Config(chamber: Chamber) : ChamberModule(chamber) {
         isModified.set(true)
     }
 
-    fun <T> getNotNull(key: String): T {
-        return get<T>(key)!!
-    }
+    fun <T> getNotNull(key: String): T = get<T>(key)!!
 
     fun setIfAbsent(key: String, value: Any) {
-        if (key !in entries || entries[key] == null) set(key, value)
+        if (!entries.containsKey(key) || entries[key] == null) {
+            set(key, value)
+        }
     }
 
-    fun addKey(key: String, handler: ConfigItemHandler<*>) {
+    private fun addKey(key: String, handler: ConfigItemHandler<*>) {
         itemHandlers[key] = handler
     }
 
@@ -47,32 +73,6 @@ class Config(chamber: Chamber) : ChamberModule(chamber) {
     ) = addKey(key, ConfigItemHandler(reader, writer))
 
     fun addKey(key: String) = addKey(key, Handler.IDENTITY)
-
-    fun loadFromFile() {
-        if (!configFilePath.exists()) {
-            // Create an empty config file
-            Files.write(configFilePath, "{}".toByteArray())
-        }
-
-        importRawEntries(loadConfigRawEntries(configFilePath))
-        isModified.set(false)
-    }
-
-    fun saveToFile() {
-        if (!isModified.get()) {
-            return
-        }
-
-        val rawEntries = exportRawEntries()
-        val content = Gson().toJson(rawEntries)
-        Files.write(configFilePath, content.toByteArray())
-    }
-
-    fun clone() = Config(chamber).apply {
-        itemHandlers.putAll(this@Config.itemHandlers)
-        entries.putAll(this@Config.entries)
-        isModified.set(this@Config.isModified.get())
-    }
 
     private fun convertRawToItem(key: String, value: String): Any? {
         val handler = itemHandlers[key] ?: throw InvalidConfigKeyException(key)
@@ -88,21 +88,16 @@ class Config(chamber: Chamber) : ChamberModule(chamber) {
     }
 
     private fun importRawEntries(rawEntries: Map<String, String>) {
-        for ((key, value) in rawEntries) {
+        rawEntries.forEach { (key, value) ->
             set(key, convertRawToItem(key, value))
         }
-
         isModified.set(true)
     }
 
     private fun exportRawEntries(): MutableMap<String, String> {
-        val rawEntries: MutableMap<String, String> = mutableMapOf()
-
-        for ((key, value) in entries) {
-            rawEntries[key] = convertItemToRaw(key, value)
-        }
-
-        return rawEntries
+        return entries.map { (key, value) ->
+            key to convertItemToRaw(key, value)
+        }.toMap().toMutableMap()
     }
 
     private fun loadConfigRawEntries(configFilePath: Path): Map<String, String> {
@@ -111,31 +106,22 @@ class Config(chamber: Chamber) : ChamberModule(chamber) {
         return Gson().fromJson(content, type)
     }
 
+    companion object {
+        const val FILE_NAME = "config.json"
+    }
+
     object Handler {
         val IDENTITY = ConfigItemHandler({ it }, { it ?: "" })
         val INT = ConfigItemHandler({ it.toInt() }, { it?.toString() ?: "0" })
         val LONG = ConfigItemHandler({ it.toLong() }, { it?.toString() ?: "0" })
         val FLOAT =
-            ConfigItemHandler({ it.toFloat() }, { it?.toString() ?: "0" })
+            ConfigItemHandler({ it.toFloat() }, { it?.toString() ?: "0.0" })
         val DOUBLE =
-            ConfigItemHandler({ it.toDouble() }, { it?.toString() ?: "0" })
+            ConfigItemHandler({ it.toDouble() }, { it?.toString() ?: "0.0" })
         val BOOLEAN =
             ConfigItemHandler({ it.toBoolean() }, { it?.toString() ?: "false" })
     }
 }
-
-fun interface ConfigItemReader<T> {
-    fun read(value: String): T?
-}
-
-fun interface ConfigItemWriter<T> {
-    fun write(item: T?): String
-}
-
-data class ConfigItemHandler<T>(
-    val reader: ConfigItemReader<T>,
-    val writer: ConfigItemWriter<T>,
-)
 
 class InvalidConfigKeyException(key: String) :
     RuntimeException("Invalid config key: $key")

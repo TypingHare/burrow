@@ -1,14 +1,14 @@
 package burrow.carton.server.command
 
 import burrow.carton.server.Server
-import burrow.kernel.command.Command
-import burrow.kernel.command.CommandData
+import burrow.kernel.terminal.Command
+import burrow.kernel.terminal.CommandData
+import burrow.kernel.terminal.ExitCode
 import picocli.CommandLine
-import picocli.CommandLine.ExitCode
 
 @CommandLine.Command(
     name = "server.stop",
-    description = ["Stops Burrow server."],
+    description = ["Stops the Burrow service."]
 )
 class ServerStopCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

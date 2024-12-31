@@ -1,14 +1,7 @@
 package burrow.carton.server
 
-import burrow.common.CommandLexer
 import burrow.kernel.Burrow
-import burrow.kernel.command.Command
-import burrow.kernel.command.Environment
-import burrow.kernel.command.TerminalSize
-import burrow.kernel.stream.StreamWriterManager
 import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import picocli.CommandLine.ExitCode
 import java.io.BufferedReader
 import java.io.Closeable
 import java.io.InputStreamReader
@@ -18,25 +11,24 @@ import java.nio.file.Files
 import kotlin.io.path.deleteIfExists
 
 class SocketService(
-    private val burrow: Burrow,
-    private val host: String,
-    private val port: Int
-) : Closeable {
+    burrow: Burrow,
+    logger: Logger,
+    endpoint: Endpoint
+) : Service(
+    burrow,
+    logger,
+    endpoint,
+    burrow.getPath().resolve(SERVICE_LOCK_FILE)
+), Closeable {
     companion object {
-        val logger: Logger = LoggerFactory.getLogger(SocketService::class.java)
+        const val SERVICE_LOCK_FILE = "socket-service.lock"
     }
 
-    private var serverSocket: ServerSocket? = null
-    private val serviceLockPath = Burrow.getRootPath().resolve("service.lock")
+    private var serverSocket = ServerSocket(endpoint.port)
 
-    init {
-        serverSocket = ServerSocket(port)
-        writeServiceLockFile()
-    }
-
-    fun listen() {
-        val serverSocket = serverSocket!!
-        logger.info("Server listening on $host:$port")
+    override fun listen() {
+        val serverSocket = serverSocket
+        logger.info("Server listening on $endpoint")
         while (true) {
             serverSocket.accept()?.let {
                 Thread({ receive(it) }, "thd0").start()
@@ -44,70 +36,14 @@ class SocketService(
         }
     }
 
-    override fun close() {
-        if (serverSocket != null) {
-            serverSocket!!.close()
-        }
-        burrow.destroy()
-        serviceLockPath.deleteIfExists()
-    }
-
-    private fun receive(client: Socket) {
+    override fun receive(client: Socket) {
         val remoteSocketAddress = client.remoteSocketAddress
         logger.info("Connected to $remoteSocketAddress")
 
         val inputStream = client.getInputStream()
         val reader = BufferedReader(InputStreamReader(inputStream))
-        receiveNextCommand(client, reader)
+//        receiveNextCommand(client, reader)
 
         logger.info("Client disconnected: $remoteSocketAddress")
-    }
-
-    private fun receiveNextCommand(
-        client: Socket,
-        reader: BufferedReader
-    ) {
-        val remoteSocketAddress = client.remoteSocketAddress
-        var line: String
-        while (reader.readLine().also { line = it } != null) {
-            val command = line
-            logger.info("Received command from $remoteSocketAddress: $command")
-
-            val workingDirectory = reader.readLine()
-            val (width, height) = reader.readLine().split(" ")
-                .map { it.toInt() }
-            val environment = Environment(
-                client.getOutputStream(),
-                workingDirectory,
-                TerminalSize(width, height),
-            )
-
-            processCommand(command, environment)
-        }
-    }
-
-    private fun writeServiceLockFile() {
-        val string = "$host\n$port"
-        Files.write(serviceLockPath, string.toByteArray())
-    }
-
-    private fun processCommand(
-        commandString: String,
-        environment: Environment
-    ) {
-        try {
-            burrow.parse(
-                CommandLexer.tokenizeCommandString(commandString)
-                    .toTypedArray(),
-                environment
-            )
-        } catch (ex: Exception) {
-            val outputStream = environment.outputStream
-            val writerManager = StreamWriterManager(outputStream)
-            writerManager.getWriterForState(Command.WriterState.STDERR)
-                .println(ex.message)
-            writerManager.getWriterForState(Command.WriterState.EXIT_CODE)
-                .println(ExitCode.SOFTWARE)
-        }
     }
 }

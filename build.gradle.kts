@@ -1,23 +1,24 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
+group = "burrow"
+version = "0.0.0"
+
 plugins {
     kotlin("jvm") version "2.0.20"
+    @Suppress("SpellCheckingInspection")
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 tasks {
     withType<ShadowJar> {
-        archiveBaseName.set("burrow")
-        archiveVersion.set("0.0.0")
+        archiveBaseName.set(group)
+        archiveVersion.set(version.toString())
 
         manifest {
             attributes["Main-Class"] = "burrow.server.BurrowServer"
         }
     }
 }
-
-group = "burrow"
-version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -26,8 +27,8 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
 
-    // SFML
-    implementation("ch.qos.logback:logback-classic:1.5.12")
+    // Log
+    runtimeOnly("ch.qos.logback:logback-classic:1.5.15")
 
     // Terminal
     implementation("info.picocli:picocli:4.7.6")
