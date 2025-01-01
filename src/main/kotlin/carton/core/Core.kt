@@ -1,7 +1,6 @@
 package burrow.carton.core
 
 import burrow.carton.core.command.*
-import burrow.carton.core.printer.FurnishingCommandClassesPrinter
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.ChamberPostBuildEvent
 import burrow.kernel.chamber.ChamberShepherd
@@ -38,6 +37,11 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
 
         // Commands related to available commands
         registerCommand(CommandCommand::class)
+
+        // Commands related to config
+        registerCommand(ConfigCommand::class)
+        registerCommand(ConfigGetCommand::class)
+        registerCommand(ConfigSetCommand::class)
 
         burrow.courier.subscribe(ChamberPostBuildEvent::class) {
             originalConfigMap[it.chamber.name] = chamber.config.clone()

@@ -17,7 +17,12 @@ fun main() {
         ),
     )
 
-    burrow.parse(listOf(".", "--help"), environment)
-    burrow.parse(listOf(".", "command"), environment)
+//    burrow.parse(listOf(".", "--help"), environment)
+//    burrow.parse(listOf(".", "config"), environment)
+//    burrow.parse(listOf(".", "config.get", "server.port"), environment)
+    burrow.parse(
+        listOf(".", "config.set", "server.port", "4710", "--rebuild"),
+        environment
+    )
 //    burrow.parse(listOf("playground", "furnishing", "--all"), environment)
 }
