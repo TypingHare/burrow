@@ -10,4 +10,9 @@ interface FurnishingLifeCycle {
      * Launches the furnishing.
      */
     fun launch() = Unit
+
+    /**
+     * Discards the furnishing.
+     */
+    fun discard() {}
 }

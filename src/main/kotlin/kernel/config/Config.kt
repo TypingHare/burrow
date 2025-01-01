@@ -62,7 +62,7 @@ class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
         }
     }
 
-    private fun addKey(key: String, handler: ConfigItemHandler<*>) {
+    fun addKey(key: String, handler: ConfigItemHandler<*>) {
         itemHandlers[key] = handler
     }
 
