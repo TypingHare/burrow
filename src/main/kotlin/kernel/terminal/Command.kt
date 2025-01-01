@@ -99,9 +99,13 @@ fun extractCommandAnnotation(commandClass: CommandClass): BurrowCommand =
     commandClass.java.getAnnotation(BurrowCommand::class.java)
         ?: throw NotACommandException(commandClass.java.name)
 
-fun extractCommandName(commandClass: CommandClass): String {
-    return extractCommandAnnotation(commandClass).name
-}
+fun extractCommandName(commandClass: CommandClass): String =
+    extractCommandAnnotation(commandClass).name
+
+fun extractCommandDescription(commandClass: CommandClass): String =
+    extractCommandAnnotation(commandClass).description.let {
+        if (it.isNotEmpty()) it[0] else ""
+    }
 
 class NotACommandException(className: String) :
     RuntimeException("Not a command class: $className")

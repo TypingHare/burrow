@@ -31,6 +31,7 @@ class Burrow : PathBound {
         try {
             ensureRootDir()
             initializeWarehouse()
+            chamberShepherd.buildChamber(ChamberShepherd.ROOT_CHAMBER_NAME)
         } catch (ex: Exception) {
             throw BuildBurrowException(ex)
         }

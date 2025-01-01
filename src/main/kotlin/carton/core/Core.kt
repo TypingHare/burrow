@@ -1,6 +1,7 @@
 package burrow.carton.core
 
 import burrow.carton.core.command.*
+import burrow.carton.core.printer.FurnishingCommandClassesPrinter
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.ChamberPostBuildEvent
 import burrow.kernel.chamber.ChamberShepherd
@@ -9,6 +10,7 @@ import burrow.kernel.furniture.*
 import burrow.kernel.furniture.annotation.Furniture
 import burrow.kernel.stream.StateWriterController
 import burrow.kernel.stream.state.OutputState
+import burrow.kernel.terminal.CommandClass
 import burrow.kernel.terminal.CommandNotFoundEvent
 import burrow.kernel.terminal.ExitCode
 import java.io.PrintWriter
@@ -31,8 +33,11 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(ChamberRebuildCommand::class)
         registerCommand(ChamberDestroyCommand::class)
 
-        // Furnishing commands
+        // Commands related to furnishings
         registerCommand(FurnishingCommand::class)
+
+        // Commands related to available commands
+        registerCommand(CommandCommand::class)
 
         burrow.courier.subscribe(ChamberPostBuildEvent::class) {
             originalConfigMap[it.chamber.name] = chamber.config.clone()
@@ -63,18 +68,54 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         }
     }
 
+    /**
+     * Retrieves all furnishing classes installed.
+     */
     fun getFurnishingClasses(): List<FurnishingClass> =
-        mutableSetOf<FurnishingClass>()
-            .apply { renovator.depTree.resolve { add(it::class) } }
+        renovator.furnishings.values
+            .map { it::class }
             .sortedBy { extractId(it) }
             .toList()
 
+    /**
+     * Retrieves all furnishing classes available for this chamber.
+     */
     fun getAvailableFurnishingClasses(): List<FurnishingClass> {
         val isRoot = chamber.name == ChamberShepherd.ROOT_CHAMBER_NAME
         return burrow.warehouse.furnishingClasses
             .filter { isRoot || extractType(it) != Furniture.Type.ROOT }
             .sortedBy { extractId(it) }
             .toList()
+    }
+
+    private fun getTopLevelFurnishings(): List<Furnishing> =
+        mutableSetOf<Furnishing?>()
+            .apply {
+                renovator.depTree.root.children.forEach { add(it.element) }
+            }
+            .filterNotNull()
+            .toList()
+
+    fun getFurnishingCommandClasses(
+        onlyTopLevel: Boolean = false
+    ): Map<Furnishing, List<CommandClass>> {
+        val furnishings = when (onlyTopLevel) {
+            true -> getTopLevelFurnishings()
+            false -> renovator.furnishings.values
+        }
+        val map = mutableMapOf<Furnishing, List<CommandClass>>().apply {
+            renovator.furnishings.values.forEach {
+                if (!furnishings.contains(it)) {
+                    return@forEach
+                }
+
+                this[it] = it.commandClasses
+                    .sortedBy { commandClass -> commandClass.java.name }
+                    .toList()
+            }
+        }
+
+        return map
     }
 
     object EventHandler {

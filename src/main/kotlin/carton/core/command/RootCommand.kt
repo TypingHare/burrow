@@ -16,7 +16,9 @@ class RootCommand(data: CommandData) : Command(data) {
     var quiet: Boolean = false
 
     override fun call(): Int {
-        if (!quiet) { stdout.println(chamber.getPath()) }
+        if (!quiet) {
+            stdout.println(chamber.getPath())
+        }
 
         return ExitCode.OK
     }

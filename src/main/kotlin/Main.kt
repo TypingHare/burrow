@@ -1,17 +1,13 @@
 package burrow
 
-import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.createBurrow
 import burrow.kernel.terminal.Command
-import burrow.kernel.terminal.CommandData
 import burrow.kernel.terminal.Environment
 
 fun main() {
     System.setProperty("slf4j.internal.verbosity", "WARN")
-    val burrow = createBurrow()
-    burrow.build()
+    val burrow = createBurrow().apply { build() }
 
-    val chamber = burrow.chamberShepherd[ChamberShepherd.ROOT_CHAMBER_NAME]
     val environment = Environment(
         System.`in`,
         System.out,
@@ -21,7 +17,7 @@ fun main() {
         ),
     )
 
-//    burrow.parse(listOf(".", "furnishing", "--all"), environment)
     burrow.parse(listOf(".", "--help"), environment)
+    burrow.parse(listOf(".", "command"), environment)
 //    burrow.parse(listOf("playground", "furnishing", "--all"), environment)
 }

@@ -16,7 +16,7 @@ abstract class Furnishing(renovator: Renovator) :
     FurnishingLifeCycle,
     FurnishingProvider {
 
-    private val commandClasses = mutableSetOf<CommandClass>()
+    val commandClasses = mutableSetOf<CommandClass>()
 
     /**
      * Retrieves the dependencies this furnishing requires.

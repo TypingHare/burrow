@@ -19,7 +19,7 @@ class Renovator(
      */
     private val path = chamber.getPath().resolve(FURNISHINGS_FILE_NAME)
 
-    private val furnishings = mutableMapOf<String, Furnishing>()
+    val furnishings = mutableMapOf<String, Furnishing>()
     val depTree = DepTree<Furnishing>()
 
     override fun getPath(): Path = path
