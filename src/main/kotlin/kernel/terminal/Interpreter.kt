@@ -4,13 +4,16 @@ import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ExtendedChamberModule
 import burrow.kernel.event.Event
 import burrow.kernel.stream.StateWriterController
+import burrow.kernel.stream.state.OutputState
 import picocli.CommandLine
 import java.io.PrintWriter
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 
 class Interpreter(chamber: Chamber) : ExtendedChamberModule(chamber),
     CommandRegistry {
     private val commandClasses = mutableMapOf<String, CommandClass>()
+    val defaultCommandName = AtomicReference(DEFAULT_COMMAND_NAME)
 
     override fun registerCommand(commandClass: CommandClass) {
         commandClasses[extractCommandName(commandClass)] = commandClass
@@ -70,17 +73,8 @@ class Interpreter(chamber: Chamber) : ExtendedChamberModule(chamber),
         }
     }
 
-    object EventHandler {
-        fun commandNotFoundEventHandler(event: CommandNotFoundEvent) {
-            val commandName = event.commandName
-            val outputStream = event.commandData.environment.outputStream
-            StateWriterController(outputStream, OutputState.STDOUT).let {
-                it.getPrintWriter(OutputState.STDERR)
-                    .println("Command not found: $commandName")
-                it.getPrintWriter(OutputState.EXIT_CODE)
-                    .println(ExitCode.USAGE)
-            }
-        }
+    companion object {
+        const val DEFAULT_COMMAND_NAME = "default"
     }
 }
 

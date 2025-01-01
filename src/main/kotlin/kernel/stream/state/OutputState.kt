@@ -1,4 +1,4 @@
-package burrow.kernel.terminal
+package burrow.kernel.stream.state
 
 object OutputState {
     const val STDOUT = "STDOUT"

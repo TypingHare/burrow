@@ -1,15 +1,16 @@
 package burrow.carton.core
 
-import burrow.carton.core.command.ChamberDestroyCommand
-import burrow.carton.core.command.ChamberRebuildCommand
-import burrow.carton.core.command.FurnishingCommand
-import burrow.carton.core.command.RootCommand
+import burrow.carton.core.command.*
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.ChamberPostBuildEvent
 import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.config.Config
 import burrow.kernel.furniture.*
 import burrow.kernel.furniture.annotation.Furniture
+import burrow.kernel.stream.StateWriterController
+import burrow.kernel.stream.state.OutputState
+import burrow.kernel.terminal.CommandNotFoundEvent
+import burrow.kernel.terminal.ExitCode
 import java.io.PrintWriter
 
 @Furniture(
@@ -25,6 +26,7 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
 
     override fun assemble() {
         // Basic commands
+        registerCommand(DefaultCommand::class)
         registerCommand(RootCommand::class)
         registerCommand(ChamberRebuildCommand::class)
         registerCommand(ChamberDestroyCommand::class)
@@ -38,6 +40,10 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
 
         burrow.courier.unsubscribe(ChamberPostBuildEvent::class) {
             originalConfigMap.remove(it.chamber.name)
+        }
+
+        burrow.courier.subscribe(CommandNotFoundEvent::class) {
+            EventHandler.commandNotFoundEventHandler(it)
         }
     }
 
@@ -69,5 +75,18 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
             .filter { isRoot || extractType(it) != Furniture.Type.ROOT }
             .sortedBy { extractId(it) }
             .toList()
+    }
+
+    object EventHandler {
+        fun commandNotFoundEventHandler(event: CommandNotFoundEvent) {
+            val commandName = event.commandName
+            val outputStream = event.commandData.environment.outputStream
+            StateWriterController(outputStream, OutputState.STDOUT).let {
+                it.getPrintWriter(OutputState.STDERR)
+                    .println("Command not found: $commandName")
+                it.getPrintWriter(OutputState.EXIT_CODE)
+                    .println(ExitCode.USAGE)
+            }
+        }
     }
 }

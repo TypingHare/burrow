@@ -1,9 +1,14 @@
 package burrow.kernel
 
+import burrow.kernel.chamber.BuildChamberException
+import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.event.EventBus
 import burrow.kernel.furniture.Warehouse
 import burrow.kernel.path.PathBound
+import burrow.kernel.terminal.CommandData
+import burrow.kernel.terminal.Environment
+import burrow.kernel.terminal.Interpreter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.nio.file.Path
@@ -35,6 +40,37 @@ class Burrow : PathBound {
         chamberShepherd.chambers.keys.toList().forEach {
             chamberShepherd.destroyChamber(it)
         }
+    }
+
+    fun parse(args: List<String>, environment: Environment) {
+        val hasChamberName = args.isNotEmpty() && !args[0].startsWith("-")
+        val chamberName =
+            if (hasChamberName) args[0] else ChamberShepherd.ROOT_CHAMBER_NAME
+        val primaryArgs =
+            if (hasChamberName) args.subList(1, args.size) else args
+
+        val chamber: Chamber
+        try {
+            chamber = chamberShepherd[chamberName.trim()]
+        } catch (ex: Exception) {
+            throw BuildChamberException(chamberName, ex)
+        }
+
+        val hasCommandName =
+            primaryArgs.isNotEmpty() && !primaryArgs[0].startsWith("-")
+        val commandName =
+            if (hasCommandName) primaryArgs[0]
+            else chamber.interpreter.defaultCommandName.get()
+        val secondaryArgs = if (hasCommandName) primaryArgs.subList(
+            1,
+            primaryArgs.size
+        ) else primaryArgs
+        val commandData = CommandData(
+            chamber,
+            secondaryArgs,
+            environment
+        )
+        chamber.interpreter.execute(commandName, commandData)
     }
 
     @Throws(CreateRootDirectoryException::class)

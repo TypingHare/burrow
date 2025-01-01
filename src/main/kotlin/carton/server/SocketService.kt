@@ -1,6 +1,8 @@
 package burrow.carton.server
 
 import burrow.kernel.Burrow
+import burrow.kernel.stream.StateBufferReader
+import burrow.kernel.stream.state.InputState
 import org.slf4j.Logger
 import java.io.BufferedReader
 import java.io.Closeable
@@ -41,9 +43,17 @@ class SocketService(
         logger.info("Connected to $remoteSocketAddress")
 
         val inputStream = client.getInputStream()
-        val reader = BufferedReader(InputStreamReader(inputStream))
-//        receiveNextCommand(client, reader)
+        val stateBufferReader =
+            StateBufferReader(
+                InputStreamReader(inputStream),
+                InputState.SESSION_CONTEXT
+            )
+        receiveNextCommand(client, stateBufferReader)
 
         logger.info("Client disconnected: $remoteSocketAddress")
+    }
+
+    private fun receiveNextCommand(client: Socket, reader: BufferedReader) {
+
     }
 }

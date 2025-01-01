@@ -5,6 +5,7 @@ import burrow.kernel.furniture.Furnishing
 import burrow.kernel.furniture.FurnishingProvider
 import burrow.kernel.furniture.NotDependencyFurnishingException
 import burrow.kernel.stream.StateWriterController
+import burrow.kernel.stream.state.OutputState
 import picocli.CommandLine
 import picocli.CommandLine.IParameterExceptionHandler
 import picocli.CommandLine.IExecutionExceptionHandler

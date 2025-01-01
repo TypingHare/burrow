@@ -20,12 +20,8 @@ fun main() {
             Command.SessionContextKey.WORKING_DIRECTORY to System.getProperty("user.home")
         ),
     )
-    chamber.interpreter.execute(
-        "furnishing",
-        CommandData(
-            chamber,
-            listOf("--all"),
-            environment
-        )
-    )
+
+//    burrow.parse(listOf(".", "furnishing", "--all"), environment)
+    burrow.parse(listOf(".", "--help"), environment)
+//    burrow.parse(listOf("playground", "furnishing", "--all"), environment)
 }
