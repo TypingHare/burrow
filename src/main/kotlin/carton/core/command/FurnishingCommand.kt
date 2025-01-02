@@ -26,20 +26,17 @@ class FurnishingCommand(data: CommandData) : Command(data) {
 
     override fun call(): Int {
         val core = use(Core::class)
-        val maxColumns = terminalSize.width
+        val maxColumns = getTerminalSize().width
 
         if (shouldDisplayTree) {
 
         } else {
-            if (shouldDisplayAll) {
-                val list = core.getAvailableFurnishingClasses()
-                val context = FurnishingClassesPrinterContext(list, maxColumns)
-                FurnishingClassesPrinter(stdout, context).print()
-            } else {
-                val list = core.getFurnishingClasses().toList()
-                val context = FurnishingClassesPrinterContext(list, maxColumns)
-                FurnishingClassesPrinter(stdout, context).print()
+            val list = when (shouldDisplayAll) {
+                true -> core.getAvailableFurnishingClasses()
+                false -> core.getFurnishingClasses().toList()
             }
+            val context = FurnishingClassesPrinterContext(list, maxColumns)
+            FurnishingClassesPrinter(stdout, context).print()
         }
 
         return ExitCode.OK

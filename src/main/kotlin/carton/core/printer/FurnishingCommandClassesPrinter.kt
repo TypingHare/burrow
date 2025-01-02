@@ -21,6 +21,10 @@ class FurnishingCommandClassesPrinter(
 ) : Printer<FurnishingCommandClassesPrinterContext>(writer, context) {
     override fun print() {
         for ((furnishing, commandClasses) in context.furnishingCommandClasses) {
+            if (commandClasses.isEmpty()) {
+                continue
+            }
+
             writer.println("[" + extractId(furnishing::class) + "]")
 
             val table = mutableListOf<List<String>>().apply {
@@ -35,8 +39,6 @@ class FurnishingCommandClassesPrinter(
                 writer,
                 TablePrinterContext(table, context.maxColumns)
             ).print()
-
-            writer.println()
         }
     }
 }

@@ -1,7 +1,5 @@
 package burrow.kernel.chamber
 
-import burrow.kernel.terminal.Interpreter
-
 abstract class ChamberModule(val chamber: Chamber) {
     protected val burrow = chamber.chamberShepherd.burrow
     protected val chamberShepherd = chamber.chamberShepherd

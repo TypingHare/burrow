@@ -58,6 +58,7 @@ class ChamberShepherd(val burrow: Burrow) : PathBound {
         try {
             burrow.courier.post(ChamberPreDestroyEvent(chamber))
             chamber.config.save()
+            chamber.renovator.discardFurnishings()
             burrow.courier.post(ChamberPostDestroyEvent(chamber))
         } catch (ex: Exception) {
             throw DestroyChamberException(chamberName, ex)

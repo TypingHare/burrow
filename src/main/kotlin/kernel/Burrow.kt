@@ -8,7 +8,6 @@ import burrow.kernel.furniture.Warehouse
 import burrow.kernel.path.PathBound
 import burrow.kernel.terminal.CommandData
 import burrow.kernel.terminal.Environment
-import burrow.kernel.terminal.Interpreter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.nio.file.Path

@@ -54,7 +54,8 @@ class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
         isModified.set(true)
     }
 
-    fun <T> getNotNull(key: String): T = get<T>(key)!!
+    fun <T> getNotNull(key: String): T =
+        get<T>(key) ?: throw ConfigValueIsNullException(key)
 
     fun setIfAbsent(key: String, value: Any) {
         if (!entries.containsKey(key) || entries[key] == null) {
@@ -125,3 +126,6 @@ class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
 
 class InvalidConfigKeyException(key: String) :
     RuntimeException("Invalid config key: $key")
+
+class ConfigValueIsNullException(key: String) :
+    RuntimeException("Config value associated is null: $key")

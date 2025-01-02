@@ -1,7 +1,7 @@
 package burrow.kernel.stream
 
-import java.io.PrintWriter
 import org.jline.utils.AttributedString
+import java.io.PrintWriter
 import kotlin.math.max
 
 class TablePrinterContext(
@@ -17,6 +17,10 @@ class TablePrinter(
 ) : Printer<TablePrinterContext>(writer, context) {
     override fun print() {
         val table = context.table
+        if (table.isEmpty()) {
+            return
+        }
+
         val spacing = context.spacing
         val cols = table[0].size
         val rows = table.size
@@ -29,10 +33,11 @@ class TablePrinter(
         }
 
         for (row in 0 until rows) {
+            var line = ""
             for (col in 0 until cols) {
-                writer.print(table[row][col].padEnd(widths[col] + spacing))
+                line += table[row][col].padEnd(widths[col] + spacing)
             }
-            writer.println()
+            writer.println(line)
         }
     }
 

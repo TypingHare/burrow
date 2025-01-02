@@ -31,14 +31,14 @@ class Interpreter(chamber: Chamber) : ExtendedChamberModule(chamber),
 
     fun execute(commandName: String, commandData: CommandData) {
         if (!commandClasses.containsKey(commandName)) {
-            burrow.courier.post(CommandNotFoundEvent(commandName, commandData))
+            courier.post(CommandNotFoundEvent(commandName, commandData))
             return
         }
 
         val commandClass = commandClasses[commandName]!!
         val outputStream = commandData.environment.outputStream
         val stateWriterController =
-            StateWriterController(outputStream, OutputState.STDOUT)
+            StateWriterController(outputStream)
         val exitCode = AtomicInteger(CommandLine.ExitCode.OK)
         try {
             val constructor =
@@ -62,13 +62,15 @@ class Interpreter(chamber: Chamber) : ExtendedChamberModule(chamber),
         printWriter: PrintWriter,
         ex: Throwable?,
     ) {
+        ex?.printStackTrace()
+
         var currentEx: Throwable? = ex;
         while (currentEx != null && currentEx.cause !== ex) {
-            if (currentEx.message == null) {
-                printWriter.println(currentEx.javaClass.name)
-            } else {
-                printWriter.println(currentEx.message)
-            }
+            printWriter.println(
+                """
+                    [${currentEx.javaClass.name}]  ${currentEx.message}
+                """.trimIndent()
+            )
             currentEx = currentEx.cause
         }
     }

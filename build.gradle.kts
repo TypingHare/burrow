@@ -11,7 +11,7 @@ plugins {
 
 tasks {
     withType<ShadowJar> {
-        archiveBaseName.set(group)
+        archiveBaseName.set("burrow")
         archiveVersion.set(version.toString())
 
         manifest {
@@ -28,7 +28,7 @@ dependencies {
     testImplementation(kotlin("test"))
 
     // Log
-    runtimeOnly("ch.qos.logback:logback-classic:1.5.15")
+    implementation("ch.qos.logback:logback-classic:1.5.15")
 
     // Terminal
     implementation("info.picocli:picocli:4.7.6")

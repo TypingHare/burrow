@@ -52,6 +52,13 @@ class Renovator(
         depTree.resolveUniquely { it.launch() }
     }
 
+    /**
+     * Discards all furnishings by resolving the dependency tree.
+     */
+    fun discardFurnishings() {
+        depTree.resolveUniquely { it.discard() }
+    }
+
     @Suppress("UNCHECKED_CAST")
     @Throws(FurnishingNotFoundException::class)
     fun <T : Furnishing> getFurnishing(furnishingClass: KClass<T>): T? =

@@ -1,6 +1,7 @@
 package burrow.client
 
 import burrow.kernel.createBurrow
+import burrow.kernel.terminal.Command
 import burrow.kernel.terminal.Environment
 import java.io.IOException
 import java.io.PipedInputStream
@@ -19,10 +20,16 @@ class LocalClient : Client() {
         val pipedOutputStream = PipedOutputStream()
         val pipedInputStream = PipedInputStream(pipedOutputStream)
 
+        val terminalSize = getTerminalSize()
         val environment = Environment(
-            pipedInputStream,
+            System.`in`,
             pipedOutputStream,
-            mutableMapOf()
+            mutableMapOf(
+                Command.SessionContextKey.TERMINAL_SIZE to terminalSize.toString(),
+                Command.SessionContextKey.WORKING_DIRECTORY to System.getProperty(
+                    "user.home"
+                )
+            )
         )
 
         burrow.parse(args.toList(), environment)

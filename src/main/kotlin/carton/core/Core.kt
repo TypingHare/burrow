@@ -3,6 +3,7 @@ package burrow.carton.core
 import burrow.carton.core.command.*
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.ChamberPostBuildEvent
+import burrow.kernel.chamber.ChamberPostDestroyEvent
 import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.config.Config
 import burrow.kernel.furniture.*
@@ -24,6 +25,14 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
      * Mapping from chamber name to the original config map.
      */
     private val originalConfigMap = mutableMapOf<String, Config>()
+
+    override fun prepareConfig(config: Config) {
+        config.addKey(ConfigKey.DESCRIPTION)
+    }
+
+    override fun modifyConfig(config: Config) {
+        config.setIfAbsent(ConfigKey.DESCRIPTION, "")
+    }
 
     override fun assemble() {
         // Basic commands
@@ -47,11 +56,11 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
             originalConfigMap[it.chamber.name] = chamber.config.clone()
         }
 
-        burrow.courier.unsubscribe(ChamberPostBuildEvent::class) {
+        burrow.courier.unsubscribe(ChamberPostDestroyEvent::class) {
             originalConfigMap.remove(it.chamber.name)
         }
 
-        burrow.courier.subscribe(CommandNotFoundEvent::class) {
+        courier.subscribe(CommandNotFoundEvent::class) {
             EventHandler.commandNotFoundEventHandler(it)
         }
     }
@@ -122,11 +131,15 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         return map
     }
 
+    object ConfigKey {
+        const val DESCRIPTION = "description"
+    }
+
     object EventHandler {
         fun commandNotFoundEventHandler(event: CommandNotFoundEvent) {
             val commandName = event.commandName
             val outputStream = event.commandData.environment.outputStream
-            StateWriterController(outputStream, OutputState.STDOUT).let {
+            StateWriterController(outputStream).let {
                 it.getPrintWriter(OutputState.STDERR)
                     .println("Command not found: $commandName")
                 it.getPrintWriter(OutputState.EXIT_CODE)

@@ -7,13 +7,9 @@ import burrow.kernel.furniture.NotDependencyFurnishingException
 import burrow.kernel.stream.StateWriterController
 import burrow.kernel.stream.state.OutputState
 import picocli.CommandLine
-import picocli.CommandLine.IParameterExceptionHandler
-import picocli.CommandLine.IExecutionExceptionHandler
+import picocli.CommandLine.*
 import picocli.CommandLine.ExitCode
-import picocli.CommandLine.ParameterException
-import picocli.CommandLine.MissingParameterException
 import java.util.concurrent.Callable
-import kotlin.jvm.Throws
 import kotlin.reflect.KClass
 
 abstract class Command(private val data: CommandData) :
@@ -24,22 +20,24 @@ abstract class Command(private val data: CommandData) :
     FurnishingProvider {
 
     private val stateWriterController =
-        StateWriterController(data.environment.outputStream, OutputState.STDOUT)
+        StateWriterController(data.environment.outputStream)
     protected val stdout =
         stateWriterController.getPrintWriter(OutputState.STDOUT)
     protected val stderr =
         stateWriterController.getPrintWriter(OutputState.STDERR)
 
     private val context = data.environment.sessionContext
-    protected val terminalSize =
-        TerminalSize.parse(getContextValue(SessionContextKey.TERMINAL_SIZE))
-    protected val workingDirectory =
-        getContextValue(SessionContextKey.WORKING_DIRECTORY)
 
     override fun <F : Furnishing> use(furnishingClass: KClass<F>): F {
         return renovator.getFurnishing(furnishingClass)
             ?: throw NotDependencyFurnishingException(furnishingClass.java.name)
     }
+
+    fun getTerminalSize() =
+        TerminalSize.parse(getContextValue(SessionContextKey.TERMINAL_SIZE))
+
+    fun getWorkingDirectory(): String =
+        getContextValue(SessionContextKey.WORKING_DIRECTORY)
 
     @Throws(MissingRequiredContextEntry::class)
     private fun getContextValue(contextKey: String): String {

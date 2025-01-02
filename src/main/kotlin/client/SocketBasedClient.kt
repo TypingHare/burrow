@@ -1,6 +1,9 @@
 package burrow.client
 
 import burrow.carton.server.Endpoint
+import burrow.kernel.stream.StateWriterController
+import burrow.kernel.stream.state.InputState
+import burrow.kernel.terminal.Command
 import burrow.kernel.terminal.ExitCode
 import java.io.IOException
 import java.io.PrintWriter
@@ -25,10 +28,20 @@ class SocketBasedClient(endpoint: Endpoint) : Client() {
         val outputStream = clientSocket.getOutputStream()
 
         val terminalSize = getTerminalSize()
-        val writer = PrintWriter(outputStream, true)
-        writer.println(command)
-        writer.println(System.getProperty("user.dir"))
-        writer.println(terminalSize.toString())
+        val stateWriterController = StateWriterController(outputStream)
+        stateWriterController.getPrintWriter(InputState.SESSION_CONTEXT).apply {
+            println(
+                Command.SessionContextKey.WORKING_DIRECTORY + " = " + System.getProperty(
+                    "user.dir"
+                )
+            )
+            println(
+                Command.SessionContextKey.TERMINAL_SIZE + " = " + terminalSize
+            )
+        }
+        stateWriterController.getPrintWriter(InputState.COMMAND).apply {
+            println(command)
+        }
 
         return processInputStreamForExitCode(inputStream)
     }

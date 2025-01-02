@@ -1,16 +1,17 @@
+burrow_root := "~/.burrow"
+
 build:
     gradle clean
     gradle shadowJar
-    mkdir -p ~/.burrow/libs/
-    mv build/libs/* ~/.burrow/libs/
+    mkdir -p {{ burrow_root }}/libs/
+    mv build/libs/* {{ burrow_root }}/libs/
 
-# Move binary files to ~/.burrow/bin
 move-bin:
-    mkdir -p ~/.burrow/bin
-    cp src/main/resources/init/bin/* ~/.burrow/bin
+    mkdir -p {{ burrow_root }}/bin
+    cp src/main/resources/init/bin/* {{ burrow_root }}/bin
 
 start-server:
     burrow . server.start
 
 start-cli:
-    @burrow-cli --server=localhost:4710 default
+    @burrow-cli --server=localhost:4710

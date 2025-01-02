@@ -6,10 +6,9 @@ import java.io.PrintWriter
 import java.util.concurrent.atomic.AtomicReference
 
 class StateWriterController(
-    private val outputStream: OutputStream,
-    private val defaultState: String
+    private val outputStream: OutputStream
 ) : Closeable {
-    private val currentState = AtomicReference(defaultState)
+    private val currentState = AtomicReference("")
     private val statePrintWriters = mutableMapOf<String, StatePrintWriter>()
 
     private fun acceptState(state: String): Boolean {

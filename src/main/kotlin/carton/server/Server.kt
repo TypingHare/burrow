@@ -39,8 +39,12 @@ class Server(renovator: Renovator) : Furnishing(renovator) {
 
     fun start() {
         val logger = LoggerFactory.getLogger(javaClass)
-        service = SocketService(burrow, logger, getEndPoint()).apply {
-            listen()
+        try {
+            service = SocketService(burrow, logger, getEndPoint()).apply {
+                listen()
+            }
+        } finally {
+            stop()
         }
     }
 

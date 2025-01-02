@@ -32,7 +32,7 @@ class CommandCommand(data: CommandData) : Command(data) {
             stdout,
             FurnishingCommandClassesPrinterContext(
                 furnishingCommandClasses,
-                terminalSize.width
+                getTerminalSize().width
             )
         ).print()
 
