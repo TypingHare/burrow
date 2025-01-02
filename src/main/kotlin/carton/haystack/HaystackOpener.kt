@@ -1,7 +1,7 @@
 package burrow.carton.haystack
 
 import burrow.carton.cradle.Cradle
-import burrow.carton.haystack.command.opener.OpenerExecCommand
+import burrow.carton.haystack.command.opener.OpenCommand
 import burrow.carton.haystack.command.opener.OpenerSetCommand
 import burrow.carton.hoard.Entry
 import burrow.carton.hoard.EntryCreateEvent
@@ -34,7 +34,7 @@ class HaystackOpener(renovator: Renovator) : Furnishing(renovator) {
 
     override fun assemble() {
         registerCommand(OpenerSetCommand::class)
-        registerCommand(OpenerExecCommand::class)
+        registerCommand(OpenCommand::class)
 
         val defaultOpener = getDefaultOpener()
         courier.subscribe(EntryCreateEvent::class) {

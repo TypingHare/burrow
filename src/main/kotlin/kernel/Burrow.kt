@@ -5,6 +5,7 @@ import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.event.EventBus
 import burrow.kernel.furniture.Warehouse
+import burrow.kernel.furniture.Warehouse.Companion.PROPERTY_PACKAGES
 import burrow.kernel.path.PathBound
 import burrow.kernel.stream.StateWriterController
 import burrow.kernel.stream.state.OutputState
@@ -135,7 +136,7 @@ class Burrow : PathBound {
             warehouse.scanPackage(
                 path.resolve(LIBS_DIR),
                 javaClass.classLoader,
-                Properties().apply { set("burrow.packages", "burrow.carton") }
+                Properties().apply { set(PROPERTY_PACKAGES, DEFAULT_PACKAGES) }
             )
         } catch (ex: Exception) {
             throw InitializeWarehouseException(ex)
@@ -154,15 +155,20 @@ class Burrow : PathBound {
         private const val ROOT_DIR = ".burrow"
 
         /**
+         * Default package to scan.
+         */
+        private const val DEFAULT_PACKAGES = "burrow.packages"
+
+        /**
          * The relative path to the libs root directory.
          */
-        const val LIBS_DIR = "libs"
+        private const val LIBS_DIR = "libs"
 
         /**
          * The root chamber indicator can be used to specify the root chamber
          * directly.
          */
-        const val ROOT_CHAMBER_INDICATOR = "@"
+        private const val ROOT_CHAMBER_INDICATOR = "@"
 
         /**
          * Retrieves Burrow root path.

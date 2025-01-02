@@ -2,7 +2,8 @@ package burrow.kernel.chamber
 
 abstract class ChamberModule(val chamber: Chamber) {
     protected val burrow = chamber.chamberShepherd.burrow
-    protected val chamberShepherd = chamber.chamberShepherd
+    protected val warehouse = burrow.warehouse
+    protected val chamberShepherd = burrow.chamberShepherd
 }
 
 abstract class ExtendedChamberModule(chamber: Chamber) :

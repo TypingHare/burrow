@@ -9,12 +9,12 @@ import burrow.kernel.terminal.CommandData
 import burrow.kernel.terminal.Parameters
 
 @BurrowCommand(
-    name = "opener.exec",
+    name = "open",
     description = [
         "Opens a relative path using the opener associated with the entry."
     ]
 )
-class OpenerExecCommand(data: CommandData) : Command(data) {
+class OpenCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
         paramLabel = "<relative-path>",
