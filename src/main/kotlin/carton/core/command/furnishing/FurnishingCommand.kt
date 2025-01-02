@@ -1,4 +1,4 @@
-package burrow.carton.core.command
+package burrow.carton.core.command.furnishing
 
 import burrow.carton.core.Core
 import burrow.carton.core.printer.FurnishingClassesPrinter

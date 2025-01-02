@@ -9,6 +9,7 @@ import burrow.kernel.terminal.CommandClass
 import burrow.kernel.terminal.extractCommandDescription
 import burrow.kernel.terminal.extractCommandName
 import java.io.PrintWriter
+import kotlin.math.max
 
 class FurnishingCommandClassesPrinterContext(
     val furnishingCommandClasses: Map<Furnishing, List<CommandClass>>,
@@ -20,9 +21,30 @@ class FurnishingCommandClassesPrinter(
     context: FurnishingCommandClassesPrinterContext
 ) : Printer<FurnishingCommandClassesPrinterContext>(writer, context) {
     override fun print() {
+        var longestCommandNameLength = 0
+        for ((_, commandClasses) in context.furnishingCommandClasses) {
+            for (commandClass in commandClasses) {
+                val commandName = extractCommandName(commandClass)
+                longestCommandNameLength = max(longestCommandNameLength, commandName.length)
+            }
+        }
+
+        var hasPrevious = false
         for ((furnishing, commandClasses) in context.furnishingCommandClasses) {
             if (commandClasses.isEmpty()) {
                 continue
+            }
+
+            if (hasPrevious) {
+                writer.println()
+            } else {
+                hasPrevious = true
+            }
+
+            var commandNameLength = 0
+            for (commandClass in commandClasses) {
+                val commandName = extractCommandName(commandClass)
+                commandNameLength = max(commandNameLength, commandName.length)
             }
 
             writer.println("[" + extractId(furnishing::class) + "]")
@@ -37,7 +59,9 @@ class FurnishingCommandClassesPrinter(
             }
             TablePrinter(
                 writer,
-                TablePrinterContext(table, context.maxColumns)
+                TablePrinterContext(table, context.maxColumns).apply {
+                    spacing += longestCommandNameLength - commandNameLength
+                }
             ).print()
         }
     }

@@ -11,7 +11,8 @@ import java.io.Closeable
 import java.io.InputStreamReader
 import java.net.ServerSocket
 import java.net.Socket
-import kotlin.math.log
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class SocketService(
     burrow: Burrow,
@@ -23,25 +24,27 @@ class SocketService(
     endpoint,
     burrow.getPath().resolve(SERVICE_LOCK_FILE)
 ), Closeable {
-    private var serverSocket = ServerSocket(endpoint.port)
+    private var serverSocket: ServerSocket? = null
+    private val threadPool = Executors.newFixedThreadPool(5)
 
     override fun listen() {
-        val serverSocket = serverSocket
+        try {
+            serverSocket = ServerSocket(endpoint.port)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            close()
+        }
+
         logger.info("Socket service is listening on $endpoint")
 
         isRunning.set(true)
         while (isRunning.get()) {
-            serverSocket.accept()?.let {
-                Thread({ receive(it) }, "thd0").start()
-            }
+            val clientSocket = serverSocket!!.accept()
+            submitToThreadPool(clientSocket)
         }
-    }
 
-    override fun close() {
-        serverSocket.close()
+        serverSocket?.close()
         logger.info("Socket service terminated")
-
-        super.close()
     }
 
     override fun receive(client: Socket) {
@@ -60,6 +63,38 @@ class SocketService(
         }
 
         logger.info("Client disconnected: $remoteSocketAddress")
+    }
+
+    override fun close() {
+        isRunning.set(false)
+        shutdown()
+        super.close()
+    }
+
+    private fun submitToThreadPool(clientSocket: Socket) {
+        threadPool.submit {
+            try {
+                receive(clientSocket)
+            } catch (ex: Exception) {
+                println("Error handling client: ${ex.message}")
+            } finally {
+                clientSocket.close()
+            }
+        }
+    }
+
+    private fun shutdown() {
+        logger.info("Shutting down thread pool...")
+        threadPool.shutdown()
+        try {
+            if (!threadPool.awaitTermination(30, TimeUnit.SECONDS)) {
+                logger.warn("Forcing shutdown...")
+                threadPool.shutdownNow()
+            }
+        } catch (ex: InterruptedException) {
+            logger.warn("Shutdown interrupted: ${ex.message}")
+            threadPool.shutdownNow()
+        }
     }
 
     private fun receiveNextCommand(client: Socket, reader: BufferedReader) {

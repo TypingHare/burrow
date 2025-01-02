@@ -1,4 +1,4 @@
-package burrow.carton.core.command
+package burrow.carton.core.command.config
 
 import burrow.kernel.stream.TablePrinter
 import burrow.kernel.stream.TablePrinterContext

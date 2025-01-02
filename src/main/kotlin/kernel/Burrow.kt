@@ -42,10 +42,13 @@ class Burrow : PathBound {
 
     fun parse(args: List<String>, environment: Environment) {
         val hasChamberName = args.isNotEmpty() && !args[0].startsWith("-")
+        val hasRootChamberIndicator = args.isNotEmpty() && args[0].startsWith(
+            ROOT_CHAMBER_INDICATOR
+        )
         val chamberName =
-            if (hasChamberName) args[0] else ChamberShepherd.ROOT_CHAMBER_NAME
+            getChamberName(args, hasChamberName, hasRootChamberIndicator)
         val primaryArgs =
-            if (hasChamberName) args.subList(1, args.size) else args
+            getPrimaryArgs(args, hasChamberName, hasRootChamberIndicator)
 
         val chamber: Chamber
         try {
@@ -69,6 +72,32 @@ class Burrow : PathBound {
             environment
         )
         chamber.interpreter.execute(commandName, commandData)
+    }
+
+    private fun getChamberName(
+        args: List<String>,
+        hasChamberName: Boolean,
+        hasRootChamberIndicator: Boolean
+    ): String {
+        if (hasRootChamberIndicator) return ChamberShepherd.ROOT_CHAMBER_NAME
+        if (hasChamberName) return args[0]
+
+        return ChamberShepherd.ROOT_CHAMBER_NAME
+    }
+
+    private fun getPrimaryArgs(
+        args: List<String>,
+        hasChamberName: Boolean,
+        hasRootChamberIndicator: Boolean
+    ): List<String> {
+        if (hasRootChamberIndicator) {
+            return mutableListOf(args[0].substring(1)).apply {
+                addAll(args.drop(1))
+            }
+        }
+        if (hasChamberName) return args.drop(1)
+
+        return args
     }
 
     @Throws(CreateRootDirectoryException::class)
@@ -120,6 +149,12 @@ class Burrow : PathBound {
          * The relative path to the libs root directory.
          */
         const val LIBS_DIR = "libs"
+
+        /**
+         * The root chamber indicator can be used to specify the root chamber
+         * directly.
+         */
+        const val ROOT_CHAMBER_INDICATOR = "@"
 
         /**
          * Retrieves Burrow root path.

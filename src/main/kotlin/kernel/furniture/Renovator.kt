@@ -75,7 +75,12 @@ class Renovator(
     )
     private fun buildFurnishingTree() {
         val furnishingClasses = furnishingIds.map { findFurnishingClass(it) }
-        resolveDependencies(emptyList(), furnishingClasses, depTree.root)
+        resolveDependencies(
+            emptyList(),
+            furnishingClasses,
+            depTree.root,
+            mutableSetOf()
+        )
 
         val config = chamber.config
         depTree.resolveUniquely { it.prepareConfig(config) }
@@ -90,11 +95,16 @@ class Renovator(
     private fun resolveDependencies(
         path: List<FurnishingClass>,
         deps: List<FurnishingClass>,
-        node: DepTree.Node<Furnishing>
+        node: DepTree.Node<Furnishing>,
+        resolvedFurnishingIds: MutableSet<String>
     ) {
         deps.forEach { dep ->
             if (dep in path) {
                 throw CircularDependencyException(path + dep)
+            }
+
+            if (dep.java.name in resolvedFurnishingIds) {
+                return@forEach
             }
 
             val furnishing = createFurnishingInstance(dep)
@@ -105,11 +115,17 @@ class Renovator(
             }
 
             DepTree.Node(furnishing).apply {
-                resolveDependencies(path + dep, dependencyClasses, this)
+                resolveDependencies(
+                    path + dep,
+                    dependencyClasses,
+                    this,
+                    resolvedFurnishingIds
+                )
                 node.children.add(this)
             }
 
             furnishings[extractId(furnishing::class)] = furnishing
+            resolvedFurnishingIds.add(furnishing.javaClass.name)
         }
     }
 

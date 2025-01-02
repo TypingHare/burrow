@@ -124,15 +124,12 @@ class BurrowCli : Callable<Int> {
             return
         }
 
-        var currentChamberName = this.currentChamberName
-        var realCommand = command
-        if (command.startsWith(ROOT_CHAMBER_CALLER)) {
-            currentChamberName = ChamberShepherd.ROOT_CHAMBER_NAME
-            realCommand = command.substring(ROOT_CHAMBER_CALLER.length)
-        }
-
         val client = this.client!!
-        val fullCommand = "$currentChamberName $realCommand"
+        val fullCommand = when (command.isNotEmpty() &&
+                command.substring(0, 1) == Burrow.ROOT_CHAMBER_INDICATOR) {
+            true -> command
+            false -> "$currentChamberName $command"
+        }
         val start = Instant.now()
 
         try {
@@ -243,7 +240,7 @@ class BurrowCli : Callable<Int> {
 
     companion object {
         const val INITIALIZATION_CONNECT_ATTEMPTS = 3
-        const val ROOT_CHAMBER_CALLER = "@"
+
         const val BYE_MESSAGE = "Bye | 再见 | 得閒飲茶 | またね"
 
         @JvmStatic

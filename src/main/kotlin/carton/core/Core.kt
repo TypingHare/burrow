@@ -1,6 +1,10 @@
 package burrow.carton.core
 
 import burrow.carton.core.command.*
+import burrow.carton.core.command.config.ConfigCommand
+import burrow.carton.core.command.config.ConfigGetCommand
+import burrow.carton.core.command.config.ConfigSetCommand
+import burrow.carton.core.command.furnishing.FurnishingCommand
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.ChamberPostBuildEvent
 import burrow.kernel.chamber.ChamberPostDestroyEvent
