@@ -137,13 +137,13 @@ class BurrowCli : Callable<Int> {
 
         try {
             lastExecutionExitCode = client.executeCommand(fullCommand)
+            println()
         } catch (ex: SocketException) {
             println("Failed to connected to the server. Reconnecting...")
             connect()
             executeCommand(command)
         } finally {
             lastExecutionDuration = Duration.between(start, Instant.now())
-            println()
         }
     }
 

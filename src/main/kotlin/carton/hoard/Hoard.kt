@@ -1,6 +1,7 @@
 package burrow.carton.hoard
 
 import burrow.carton.hoard.command.*
+import burrow.carton.hoard.command.backup.*
 import burrow.kernel.Burrow
 import burrow.kernel.event.Event
 import burrow.kernel.furniture.Furnishing
@@ -47,6 +48,12 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
         // Multiple entries and aggregation commands
         registerCommand(EntriesCommand::class)
         registerCommand(CountCommand::class)
+
+        // Backup commands
+        registerCommand(BackupCommand::class)
+        registerCommand(BackupListCommand::class)
+        registerCommand(BackupRestoreCommand::class)
+        registerCommand(BackupDeleteCommand::class)
     }
 
     override fun launch() {
@@ -61,17 +68,7 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
 
     override fun getPath(): Path = path
 
-    override fun save() {
-        try {
-            val entryPropertyList = entryStore
-                .filterNotNull()
-                .map { return@map it.toProperties() }
-            val content = Gson().toJson(entryPropertyList)
-            Files.write(path, content.toByteArray())
-        } catch (ex: IOException) {
-            throw RuntimeException("Failed to save hoard: $path", ex)
-        }
-    }
+    override fun save() = saveTo(path)
 
     @Throws(IOException::class)
     override fun load() {
@@ -190,6 +187,30 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
             return entryStore[id] ?: throw EntryNotFoundException(id)
         } catch (ex: IndexOutOfBoundsException) {
             throw EntryNotFoundException(id)
+        }
+    }
+
+    fun saveTo(path: Path) {
+        try {
+            val entryPropertyList = entryStore
+                .filterNotNull()
+                .map { return@map it.toProperties() }
+            val content = Gson().toJson(entryPropertyList)
+            Files.write(path, content.toByteArray())
+        } catch (ex: IOException) {
+            throw RuntimeException("Failed to save hoard: $path", ex)
+        }
+    }
+
+    fun getBackupFileList(): List<BackupFile> {
+        val filenames = chamber.getPath().toFile()
+            .listFiles { it -> it.isFile() }
+            ?.map { it.name } ?: emptyList()
+
+        return filenames.mapNotNull { filename ->
+            val pattern = Regex("""^hoard\.(\d+)\.json${'$'}""")
+            val matcher = pattern.find(filename) ?: return@mapNotNull null
+            BackupFile(filename, matcher.groupValues[1])
         }
     }
 
