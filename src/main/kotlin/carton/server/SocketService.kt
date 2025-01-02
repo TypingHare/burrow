@@ -85,16 +85,7 @@ class SocketService(
 
     private fun shutdown() {
         logger.info("Shutting down thread pool...")
-        threadPool.shutdown()
-        try {
-            if (!threadPool.awaitTermination(30, TimeUnit.SECONDS)) {
-                logger.warn("Forcing shutdown...")
-                threadPool.shutdownNow()
-            }
-        } catch (ex: InterruptedException) {
-            logger.warn("Shutdown interrupted: ${ex.message}")
-            threadPool.shutdownNow()
-        }
+        threadPool.shutdownNow()
     }
 
     private fun receiveNextCommand(client: Socket, reader: BufferedReader) {

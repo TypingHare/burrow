@@ -60,7 +60,7 @@ class FurnishingCommandClassesPrinter(
             TablePrinter(
                 writer,
                 TablePrinterContext(table, context.maxColumns).apply {
-                    spacing += longestCommandNameLength - commandNameLength
+                    defaultSpacing += longestCommandNameLength - commandNameLength
                 }
             ).print()
         }

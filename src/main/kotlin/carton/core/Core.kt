@@ -4,10 +4,11 @@ import burrow.carton.core.command.*
 import burrow.carton.core.command.config.ConfigCommand
 import burrow.carton.core.command.config.ConfigGetCommand
 import burrow.carton.core.command.config.ConfigSetCommand
-import burrow.carton.core.command.furnishing.FurnishingCommand
+import burrow.carton.core.command.furnishing.FurnishingAddCommand
+import burrow.carton.core.command.furnishing.FurnishingListCommand
+import burrow.carton.core.command.furnishing.FurnishingRemoveCommand
+import burrow.carton.core.command.furnishing.FurnishingTreeCommand
 import burrow.kernel.Burrow
-import burrow.kernel.chamber.ChamberPostBuildEvent
-import burrow.kernel.chamber.ChamberPostDestroyEvent
 import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.config.Config
 import burrow.kernel.furniture.*
@@ -25,11 +26,6 @@ import java.io.PrintWriter
     type = Furniture.Type.COMPONENT
 )
 class Core(renovator: Renovator) : Furnishing(renovator) {
-    /**
-     * Mapping from chamber name to the original config map.
-     */
-    private val originalConfigMap = mutableMapOf<String, Config>()
-
     override fun prepareConfig(config: Config) {
         config.addKey(ConfigKey.DESCRIPTION)
     }
@@ -46,7 +42,10 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(ChamberDestroyCommand::class)
 
         // Commands related to furnishings
-        registerCommand(FurnishingCommand::class)
+        registerCommand(FurnishingListCommand::class)
+        registerCommand(FurnishingTreeCommand::class)
+        registerCommand(FurnishingAddCommand::class)
+        registerCommand(FurnishingRemoveCommand::class)
 
         // Commands related to available commands
         registerCommand(CommandCommand::class)
@@ -56,32 +55,32 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(ConfigGetCommand::class)
         registerCommand(ConfigSetCommand::class)
 
-        burrow.courier.subscribe(ChamberPostBuildEvent::class) {
-            originalConfigMap[it.chamber.name] = chamber.config.clone()
-        }
-
-        burrow.courier.unsubscribe(ChamberPostDestroyEvent::class) {
-            originalConfigMap.remove(it.chamber.name)
-        }
-
         courier.subscribe(CommandNotFoundEvent::class) {
             EventHandler.commandNotFoundEventHandler(it)
         }
     }
 
     @Throws(Exception::class)
-    fun rebuildChamberPreservingConfig(stderr: PrintWriter) {
+    fun rebuildChamber(stderr: PrintWriter): Boolean {
+        val chamberName = chamber.name
         try {
-            chamberShepherd.rebuildChamber(chamber.name)
+            chamberShepherd.rebuildChamber(chamberName)
+            return true
         } catch (ex: Exception) {
             stderr.println(ex.message)
-            stderr.println("Error during restarting. Now roll back to the original config.")
+            stderr.println("Error during restarting. Now rolling back to the original blueprint.")
 
-            val originalConfig = originalConfigMap[chamber.name]!!
+            val blueprint = chamberShepherd.getBluePrint(chamberName)
+            val originalConfig = blueprint.config
+            val originalFurnishingIds = blueprint.furnishingIds
             config.entries.putAll(originalConfig.entries)
             config.isModified.set(originalConfig.isModified.get())
+            renovator.furnishingIds.clear()
+            renovator.furnishingIds.addAll(originalFurnishingIds)
 
-            throw ex
+            stderr.println("Blueprint has been restored.")
+
+            return false
         }
     }
 
@@ -133,6 +132,24 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         }
 
         return map
+    }
+
+    fun getFurnishingClassesTree(): DepTree<FurnishingClass> {
+        fun handle(
+            furnishingNode: DepTree.Node<Furnishing>,
+            furnishingClassNode: DepTree.Node<FurnishingClass>
+        ) {
+            furnishingNode.children.forEach {
+                val nextFurnishingNode =
+                    DepTree.Node(it.element!!::class)
+                handle(it, nextFurnishingNode)
+                furnishingClassNode.children.add(nextFurnishingNode)
+            }
+        }
+
+        return DepTree<FurnishingClass>().apply {
+            handle(renovator.depTree.root, root)
+        }
     }
 
     object ConfigKey {

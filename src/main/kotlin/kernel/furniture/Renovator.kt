@@ -8,11 +8,12 @@ import com.google.gson.reflect.TypeToken
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.exists
 import kotlin.reflect.KClass
 
 class Renovator(
     chamber: Chamber,
-    private val furnishingIds: MutableSet<String> = mutableSetOf()
+    val furnishingIds: MutableSet<String> = mutableSetOf()
 ) : ChamberModule(chamber), Persistable {
     /**
      * The path to the file storing a list of furnishing IDs.
@@ -31,8 +32,12 @@ class Renovator(
         Files.write(path, content.toByteArray())
     }
 
-    @Throws(IOException::class)
+    @Throws(FurnishingsFileNotFoundException::class, IOException::class)
     override fun load() {
+        if (!path.exists()) {
+            throw FurnishingsFileNotFoundException()
+        }
+
         val content = Files.readString(path)
         val type = object : TypeToken<List<String>>() {}.type
         val furnishingIds: List<String> = Gson().fromJson(content, type)
@@ -103,11 +108,10 @@ class Renovator(
                 throw CircularDependencyException(path + dep)
             }
 
-            if (dep.java.name in resolvedFurnishingIds) {
-                return@forEach
+            val furnishing = when (dep.java.name in resolvedFurnishingIds) {
+                true -> furnishings[dep.java.name]!!
+                false -> createFurnishingInstance(dep)
             }
-
-            val furnishing = createFurnishingInstance(dep)
             val dependencies = furnishing.getDependencies()
             val dependencyClasses = dependencies.map {
                 checkVersion(it.target, it.version)

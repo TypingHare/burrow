@@ -11,7 +11,10 @@ import java.io.PrintWriter
 class FurnishingClassesPrinterContext(
     val furnishingClasses: List<FurnishingClass>,
     val maxColumns: Int
-)
+) {
+    var addStarBeforeInstalledFurnishing: Boolean = false
+    var installedFurnishingClasses: List<FurnishingClass> = emptyList()
+}
 
 class FurnishingClassesPrinter(
     writer: PrintWriter,
@@ -19,15 +22,29 @@ class FurnishingClassesPrinter(
 ) : Printer<FurnishingClassesPrinterContext>(writer, context) {
     override fun print() {
         val table = mutableListOf<List<String>>()
+        val installedFurnishingClasses = context.installedFurnishingClasses
         context.furnishingClasses.forEach { furnishingClass ->
             val id = extractId(furnishingClass)
             val description = extractDescription(furnishingClass)
-            table.add(listOf(id, description))
+            when (context.addStarBeforeInstalledFurnishing) {
+                true -> {
+                    val isInstalled =
+                        installedFurnishingClasses.contains(furnishingClass)
+                    val starString = if (isInstalled) "*" else ""
+                    listOf(starString, id, description)
+                }
+                false -> listOf(id, description)
+            }.let { table.add(it) }
         }
 
         TablePrinter(
             writer,
-            TablePrinterContext(table, context.maxColumns)
+            TablePrinterContext(table, context.maxColumns).apply {
+                if (context.addStarBeforeInstalledFurnishing) {
+                    spacings.add(1)
+                    spacings.add(2)
+                }
+            }
         ).print()
     }
 }

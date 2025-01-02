@@ -54,7 +54,7 @@ class ConfigSetCommand(data: CommandData) : Command(data) {
         }
 
         if (shouldRebuild) {
-            use(Core::class).rebuildChamberPreservingConfig(stderr)
+            use(Core::class).rebuildChamber(stderr)
         }
 
         return ExitCode.OK

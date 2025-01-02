@@ -12,7 +12,7 @@ import burrow.kernel.terminal.ExitCode
 )
 class ChamberRebuildCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
-        use(Core::class).rebuildChamberPreservingConfig(stderr)
+        use(Core::class).rebuildChamber(stderr)
         return ExitCode.OK
     }
 }

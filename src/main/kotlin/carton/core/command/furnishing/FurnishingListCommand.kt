@@ -6,18 +6,12 @@ import burrow.carton.core.printer.FurnishingClassesPrinterContext
 import burrow.kernel.terminal.*
 
 @BurrowCommand(
-    name = "furnishing",
+    name = "furnishing.list",
     description = [
         "Displays a list of furnishings that are installed."
     ]
 )
-class FurnishingCommand(data: CommandData) : Command(data) {
-    @Option(
-        names = ["--tree", "-t"],
-        description = ["Displays furnishings as a dependency tree."]
-    )
-    private var shouldDisplayTree = false
-
+class FurnishingListCommand(data: CommandData) : Command(data) {
     @Option(
         names = ["--all", "-a"],
         description = ["Displays all available furnishings."]
@@ -27,17 +21,18 @@ class FurnishingCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
         val core = use(Core::class)
         val maxColumns = getTerminalSize().width
-
-        if (shouldDisplayTree) {
-
-        } else {
-            val list = when (shouldDisplayAll) {
-                true -> core.getAvailableFurnishingClasses()
-                false -> core.getFurnishingClasses().toList()
-            }
-            val context = FurnishingClassesPrinterContext(list, maxColumns)
-            FurnishingClassesPrinter(stdout, context).print()
+        val furnishingClasses = core.getFurnishingClasses().toList()
+        val list = when (shouldDisplayAll) {
+            true -> core.getAvailableFurnishingClasses()
+            false -> furnishingClasses
         }
+        val context = FurnishingClassesPrinterContext(list, maxColumns).apply {
+            if (shouldDisplayAll) {
+                addStarBeforeInstalledFurnishing = true
+                installedFurnishingClasses = furnishingClasses
+            }
+        }
+        FurnishingClassesPrinter(stdout, context).print()
 
         return ExitCode.OK
     }

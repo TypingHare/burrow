@@ -2,12 +2,14 @@ package burrow.kernel.chamber
 
 import burrow.kernel.Burrow
 import burrow.kernel.event.Event
+import burrow.kernel.furniture.Blueprint
 import burrow.kernel.path.PathBound
 import java.nio.file.Path
 
 class ChamberShepherd(val burrow: Burrow) : PathBound {
     private val rootPath = burrow.getPath().resolve(CHAMBERS_DIR)
     val chambers = mutableMapOf<String, Chamber>()
+    private val blueprints = mutableMapOf<String, Blueprint>()
 
     override fun getPath(): Path = rootPath
 
@@ -22,11 +24,16 @@ class ChamberShepherd(val burrow: Burrow) : PathBound {
             chamber.config.load()
             chamber.renovator.initializeFurnishings()
             burrow.courier.post(ChamberPostBuildEvent(chamber))
+
         } catch (ex: Exception) {
             throw BuildChamberException(chamberName, ex)
         }
 
         chambers[chamberName] = chamber
+        blueprints[chamberName] = Blueprint(
+            chamber.config.clone(),
+            chamber.renovator.furnishingIds
+        )
     }
 
     operator fun get(chamberName: String): Chamber =
@@ -65,6 +72,7 @@ class ChamberShepherd(val burrow: Burrow) : PathBound {
         }
 
         chambers.remove(chamberName)
+        blueprints.remove(chamberName)
     }
 
     @Throws(
@@ -76,6 +84,10 @@ class ChamberShepherd(val burrow: Burrow) : PathBound {
         destroyChamber(chamberName)
         buildChamber(chamberName)
     }
+
+    @Throws(ChamberNotBuiltException::class)
+    fun getBluePrint(chamberName:String): Blueprint =
+        blueprints[chamberName] ?: throw ChamberNotBuiltException(chamberName)
 
     companion object {
         /**
