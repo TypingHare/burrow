@@ -41,6 +41,16 @@ class Server(renovator: Renovator) : Furnishing(renovator) {
     fun start() {
         val logger = LoggerFactory.getLogger(javaClass)
         service = SocketService(burrow, logger, getEndPoint())
+
+        Runtime.getRuntime().addShutdownHook(Thread {
+            try {
+                stop()
+                burrow.destroy()
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+        })
+
         service!!.listen()
     }
 

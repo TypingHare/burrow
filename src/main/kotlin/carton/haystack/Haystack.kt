@@ -10,5 +10,4 @@ import burrow.kernel.furniture.annotation.Furniture
     description = "Manages pairs of relative paths and absolute paths.",
     type = Furniture.Type.COMPONENT
 )
-class Haystack(renovator: Renovator) : Furnishing(renovator) {
-}
+class Haystack(renovator: Renovator) : Furnishing(renovator)

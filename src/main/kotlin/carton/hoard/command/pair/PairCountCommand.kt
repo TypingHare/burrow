@@ -6,7 +6,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "count",
-    description = [""]
+    description = ["Counts the number of pairs."],
 )
 class PairCountCommand(data: CommandData) : Command(data) {
     @Parameters(

@@ -3,6 +3,7 @@ package burrow.carton.hoard
 import burrow.carton.hoard.command.pair.PairCountCommand
 import burrow.carton.hoard.command.pair.PairKeysCommand
 import burrow.carton.hoard.command.pair.PairNewCommand
+import burrow.carton.hoard.command.pair.PairValuesCommand
 import burrow.kernel.Burrow
 import burrow.kernel.config.Config
 import burrow.kernel.converter.StringConverterPairs
@@ -22,7 +23,7 @@ class HoardPair(renovator: Renovator) : Furnishing(renovator) {
     /**
      * Mapping keys to corresponding set of IDs
      */
-    val idSetStore = mutableMapOf<String, MutableSet<Int>>()
+    val idSetStore = mutableMapOf<Any, MutableSet<Int>>()
 
     override fun prepareConfig(config: Config) {
         config.addKey(ConfigKey.KEY_NAME)
@@ -46,11 +47,28 @@ class HoardPair(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(PairNewCommand::class)
         registerCommand(PairCountCommand::class)
         registerCommand(PairKeysCommand::class)
+        registerCommand(PairValuesCommand::class)
+
+        courier.subscribe(EntryRestoreEvent::class) {
+            addEntry(it.entry)
+        }
+
+        courier.subscribe(EntryCreateEvent::class) {
+            addEntry(it.entry)
+        }
+
+        courier.subscribe(EntryDeleteEvent::class) {
+            removeFromIdSetStore(it.entry, getKey<Any>(it.entry))
+        }
     }
 
     private fun getKeyName(): String = config.getNotNull(ConfigKey.KEY_NAME)
 
     private fun getValueName(): String = config.getNotNull(ConfigKey.VALUE_NAME)
+
+    fun <K> getKey(entry: Entry) = entry.get<K>(getKeyName())!!
+
+    fun <V> getValue(entry: Entry) = entry.get<V>(getValueName())!!
 
     private fun getAllowDuplication(): Boolean =
         config.getNotNull(ConfigKey.ALLOW_DUPLICATE_KEYS)
@@ -79,6 +97,23 @@ class HoardPair(renovator: Renovator) : Furnishing(renovator) {
         if (idSetStore.containsKey(key)) {
             throw DuplicateKeyNotAllowedException(key)
         }
+    }
+
+    private fun addToIdSetStore(entry: Entry, key: Any) {
+        idSetStore.computeIfAbsent(key) { mutableSetOf() }.add(entry.id)
+    }
+
+    private fun removeFromIdSetStore(entry: Entry, key: Any) {
+        idSetStore[key]?.let { idSet ->
+            idSet.remove(entry.id)
+            if (idSet.isEmpty()) idSetStore.remove(key)
+        }
+    }
+
+    private fun addEntry(entry: Entry) {
+        val key = getKey<Any>(entry)
+        checkKeyDuplication(key)
+        addToIdSetStore(entry, key)
     }
 
     object ConfigKey {

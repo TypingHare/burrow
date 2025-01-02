@@ -5,7 +5,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "keys",
-    description = ["Display all keys."]
+    description = ["Displays all keys."]
 )
 class PairKeysCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
