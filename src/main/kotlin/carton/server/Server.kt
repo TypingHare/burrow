@@ -4,6 +4,7 @@ import burrow.carton.server.command.ServerStartCommand
 import burrow.carton.server.command.ServerStopCommand
 import burrow.kernel.Burrow
 import burrow.kernel.config.Config
+import burrow.kernel.converter.StringConverterPairs
 import burrow.kernel.furniture.Furnishing
 import burrow.kernel.furniture.Renovator
 import burrow.kernel.furniture.annotation.Furniture
@@ -19,7 +20,7 @@ class Server(renovator: Renovator) : Furnishing(renovator) {
 
     override fun prepareConfig(config: Config) {
         config.addKey(ConfigKey.HOST)
-        config.addKey(ConfigKey.PORT, { it.toInt() }, { it.toString() })
+        config.addKey(ConfigKey.PORT, StringConverterPairs.INT)
     }
 
     override fun modifyConfig(config: Config) {
@@ -39,13 +40,8 @@ class Server(renovator: Renovator) : Furnishing(renovator) {
 
     fun start() {
         val logger = LoggerFactory.getLogger(javaClass)
-        try {
-            service = SocketService(burrow, logger, getEndPoint()).apply {
-                listen()
-            }
-        } finally {
-            stop()
-        }
+        service = SocketService(burrow, logger, getEndPoint())
+        service!!.listen()
     }
 
     fun stop() {

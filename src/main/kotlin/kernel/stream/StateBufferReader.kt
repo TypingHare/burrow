@@ -12,8 +12,8 @@ class StateBufferReader(
     private val currentState = AtomicReference(defaultState)
 
     override fun readLine(): String? {
-        val nextLine: String? = super.readLine()?.trim()
-        if (nextLine != null && nextLine.startsWith("$")) {
+        val nextLine: String? = super.readLine()
+        if (nextLine != null && nextLine.trim().startsWith("$")) {
             currentState.set(nextLine.substring(1))
             return readLine()
         }

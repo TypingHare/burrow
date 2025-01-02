@@ -85,6 +85,8 @@ class BurrowCli : Callable<Int> {
         }
 
         val reader = initializeTerminal()
+        CommandLine(ClearCommand(this)).execute()
+
         while (true) {
             try {
                 val command = reader.readLine(getPromptString()).trim()
@@ -109,7 +111,6 @@ class BurrowCli : Callable<Int> {
                 CliCommand.USE -> CommandLine(UseCommand(this)).execute(
                     *args.drop(1).toTypedArray()
                 )
-
                 CliCommand.CLEAR -> CommandLine(ClearCommand(this)).execute()
                 else -> {
                     println("Invalid CLI command: $commandName")
@@ -214,7 +215,7 @@ class BurrowCli : Callable<Int> {
         try {
             val client = client!!
             val exitCode = client.executeCommand(
-                ". chamber.exist $chamberName   --quiet --blueprint"
+                ". chamber.exist $chamberName --quiet --blueprint"
             )
             return exitCode == ExitCode.OK
         } catch (ex: Exception) {

@@ -2,6 +2,7 @@ package burrow.kernel.config
 
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
+import burrow.kernel.converter.*
 import burrow.kernel.path.Persistable
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -13,7 +14,7 @@ import kotlin.io.path.exists
 class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
     Cloneable {
     private val path = chamber.getPath().resolve(FILE_NAME)
-    val itemHandlers = mutableMapOf<String, ConfigItemHandler<*>>()
+    val converterPairs = mutableMapOf<String, StringConverterPair<*>>()
     val entries = mutableMapOf<String, Any?>()
     val isModified = AtomicBoolean(false)
 
@@ -39,7 +40,7 @@ class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
     }
 
     public override fun clone(): Config = Config(chamber).apply {
-        itemHandlers.putAll(this@Config.itemHandlers)
+        converterPairs.putAll(this@Config.converterPairs)
         entries.putAll(this@Config.entries)
         isModified.set(this@Config.isModified.get())
     }
@@ -63,29 +64,24 @@ class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
         }
     }
 
-    fun addKey(key: String, handler: ConfigItemHandler<*>) {
-        itemHandlers[key] = handler
+    fun addKey(key: String, handler: StringConverterPair<*>) {
+        converterPairs[key] = handler
     }
 
-    fun <T> addKey(
-        key: String,
-        reader: ConfigItemReader<T>,
-        writer: ConfigItemWriter<T>
-    ) = addKey(key, ConfigItemHandler(reader, writer))
-
-    fun addKey(key: String) = addKey(key, Handler.IDENTITY)
+    fun addKey(key: String) = addKey(key, StringConverterPairs.IDENTITY)
 
     private fun convertRawToItem(key: String, value: String): Any? {
-        val handler = itemHandlers[key] ?: throw InvalidConfigKeyException(key)
-        return handler.reader.read(value)
+        val handler =
+            converterPairs[key] ?: throw InvalidConfigKeyException(key)
+        return handler.leftConverter.toRight(value)
     }
 
     private fun <T> convertItemToRaw(key: String, item: T?): String {
         @Suppress("UNCHECKED_CAST")
-        val handler = itemHandlers[key] as ConfigItemHandler<T>?
+        val handler = converterPairs[key] as StringConverterPair<T>?
             ?: throw InvalidConfigKeyException(key)
 
-        return handler.writer.write(item)
+        return handler.rightConverter.toLeft(item)
     }
 
     private fun importRawEntries(rawEntries: Map<String, String>) {
@@ -109,18 +105,6 @@ class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
 
     companion object {
         const val FILE_NAME = "config.json"
-    }
-
-    object Handler {
-        val IDENTITY = ConfigItemHandler({ it }, { it ?: "" })
-        val INT = ConfigItemHandler({ it.toInt() }, { it?.toString() ?: "0" })
-        val LONG = ConfigItemHandler({ it.toLong() }, { it?.toString() ?: "0" })
-        val FLOAT =
-            ConfigItemHandler({ it.toFloat() }, { it?.toString() ?: "0.0" })
-        val DOUBLE =
-            ConfigItemHandler({ it.toDouble() }, { it?.toString() ?: "0.0" })
-        val BOOLEAN =
-            ConfigItemHandler({ it.toBoolean() }, { it?.toString() ?: "false" })
     }
 }
 

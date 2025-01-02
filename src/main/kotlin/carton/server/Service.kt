@@ -6,6 +6,7 @@ import java.io.Closeable
 import java.net.Socket
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.io.path.deleteIfExists
 
 abstract class Service(
@@ -13,7 +14,9 @@ abstract class Service(
     protected val logger: Logger,
     protected val endpoint: Endpoint,
     private val serviceLockPath: Path,
-): Closeable {
+) : Closeable {
+    protected val isRunning = AtomicBoolean(false)
+
     init {
         writeServiceLockFile()
     }
@@ -23,7 +26,7 @@ abstract class Service(
     abstract fun receive(client: Socket)
 
     override fun close() {
-        burrow.destroy()
+        isRunning.set(false)
         serviceLockPath.deleteIfExists()
     }
 

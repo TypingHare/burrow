@@ -3,6 +3,7 @@ package burrow.carton.server
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.*
 import burrow.kernel.config.Config
+import burrow.kernel.converter.StringConverterPairs
 import burrow.kernel.furniture.Furnishing
 import burrow.kernel.furniture.Renovator
 import burrow.kernel.furniture.annotation.Dependency
@@ -32,8 +33,8 @@ class Scheduler(renovator: Renovator) : Furnishing(renovator) {
     }
 
     override fun prepareConfig(config: Config) {
-        config.addKey(ConfigKey.INTERVAL_MS, Config.Handler.LONG)
-        config.addKey(ConfigKey.THRESHOLD_MS, Config.Handler.LONG)
+        config.addKey(ConfigKey.INTERVAL_MS, StringConverterPairs.LONG)
+        config.addKey(ConfigKey.THRESHOLD_MS, StringConverterPairs.LONG)
     }
 
     override fun modifyConfig(config: Config) {
@@ -56,11 +57,11 @@ class Scheduler(renovator: Renovator) : Furnishing(renovator) {
             TimeUnit.MILLISECONDS
         )
 
-        courier.subscribe(ChamberPreBuildEvent::class) {
+        burrow.courier.subscribe(ChamberPreBuildEvent::class) {
             preBuildInstantMap[it.chamber.name] = Instant.now()
         }
 
-        courier.subscribe(ChamberPostBuildEvent::class) { event ->
+        burrow.courier.subscribe(ChamberPostBuildEvent::class) { event ->
             val chamberName = event.chamber.name
             val now = Instant.now()
             postBuildInstantMap[chamberName] = now
@@ -78,11 +79,11 @@ class Scheduler(renovator: Renovator) : Furnishing(renovator) {
             logger.info("Started chamber $chamberName in $duration ms")
         }
 
-        courier.subscribe(ChamberPreDestroyEvent::class) {
+        burrow.courier.subscribe(ChamberPreDestroyEvent::class) {
             preDestroyInstantMap[it.chamber.name] = Instant.now()
         }
 
-        courier.subscribe(ChamberPostDestroyEvent::class) {
+        burrow.courier.subscribe(ChamberPostDestroyEvent::class) {
             val chamberName = it.chamber.name
             val now = Instant.now()
             postDestroyInstantMap[chamberName] = now

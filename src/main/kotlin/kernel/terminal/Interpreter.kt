@@ -62,13 +62,11 @@ class Interpreter(chamber: Chamber) : ExtendedChamberModule(chamber),
         printWriter: PrintWriter,
         ex: Throwable?,
     ) {
-        ex?.printStackTrace()
-
-        var currentEx: Throwable? = ex;
+        var currentEx: Throwable? = ex
         while (currentEx != null && currentEx.cause !== ex) {
             printWriter.println(
                 """
-                    [${currentEx.javaClass.name}]  ${currentEx.message}
+                    [${currentEx.javaClass.simpleName}]  ${currentEx.message}
                 """.trimIndent()
             )
             currentEx = currentEx.cause

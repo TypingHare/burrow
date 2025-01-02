@@ -27,13 +27,21 @@ class SocketService(
 
     override fun listen() {
         val serverSocket = serverSocket
-        logger.info("Server listening on $endpoint")
+        logger.info("Socket service is listening on $endpoint")
 
-        while (true) {
+        isRunning.set(true)
+        while (isRunning.get()) {
             serverSocket.accept()?.let {
                 Thread({ receive(it) }, "thd0").start()
             }
         }
+    }
+
+    override fun close() {
+        serverSocket.close()
+        logger.info("Socket service terminated")
+
+        super.close()
     }
 
     override fun receive(client: Socket) {
@@ -67,14 +75,13 @@ class SocketService(
         stateBufferReader.readUntilNull { line, state, stopSignal ->
             when (state) {
                 InputState.COMMAND -> {
-                    logger.info("Command received: $line")
-
+                    logger.debug("Command received: $line")
                     val args = CommandLexer.tokenizeCommandString(line)
                     burrow.parse(args, environment)
                     stopSignal.set(true)
                 }
                 InputState.SESSION_CONTEXT -> {
-                    logger.info(line)
+                    logger.debug(line)
                     val index = line.indexOfFirst { it == '=' }
                     val key = line.substring(0, index)
                     val value = line.substring(index + 1)

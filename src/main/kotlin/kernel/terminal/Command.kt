@@ -34,18 +34,18 @@ abstract class Command(private val data: CommandData) :
     }
 
     fun getTerminalSize() =
-        TerminalSize.parse(getContextValue(SessionContextKey.TERMINAL_SIZE))
+        TerminalSize.fromString(getContextValue(SessionContextKey.TERMINAL_SIZE))
 
     fun getWorkingDirectory(): String =
         getContextValue(SessionContextKey.WORKING_DIRECTORY)
 
     @Throws(MissingRequiredContextEntry::class)
-    private fun getContextValue(contextKey: String): String {
+    fun getContextValue(contextKey: String): String {
         return context[contextKey]
             ?: throw MissingRequiredContextEntry(contextKey)
     }
 
-    private fun dispatch(commandClass: CommandClass, args: List<Any>): Int {
+    fun dispatch(commandClass: CommandClass, args: List<Any>): Int {
         val stringArgs = args.map { it.toString() }
         val commandData =
             CommandData(data.chamber, stringArgs, data.environment)
@@ -81,10 +81,10 @@ abstract class Command(private val data: CommandData) :
     override fun handleExecutionException(
         ex: Exception?,
         commandLine: CommandLine?,
-        fullParseResult: CommandLine.ParseResult?
+        fullParseResult: ParseResult?
     ): Int {
         interpreter.printErrorMessageRecursively(stderr, ex)
-        return CommandLine.ExitCode.SOFTWARE
+        return ExitCode.SOFTWARE
     }
 
     object SessionContextKey {

@@ -2,7 +2,7 @@ burrow_root := "~/.burrow"
 
 build:
     gradle clean
-    gradle shadowJar
+    gradle shadowJar --quiet
     mkdir -p {{ burrow_root }}/libs/
     mv build/libs/* {{ burrow_root }}/libs/
 

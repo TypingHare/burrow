@@ -15,9 +15,7 @@ import java.util.*
 import kotlin.io.path.isDirectory
 
 class Burrow : PathBound {
-    private val path = Path.of(System.getProperty("user.home"))
-        .resolve(ROOT_DIR)
-        .normalize()
+    private val path = getBurrowRootPath()
 
     val courier = EventBus()
     val warehouse = Warehouse()
@@ -122,6 +120,13 @@ class Burrow : PathBound {
          * The relative path to the libs root directory.
          */
         const val LIBS_DIR = "libs"
+
+        /**
+         * Retrieves Burrow root path.
+         */
+        fun getBurrowRootPath(): Path = Path.of(System.getProperty("user.home"))
+            .resolve(ROOT_DIR)
+            .normalize()
     }
 }
 
