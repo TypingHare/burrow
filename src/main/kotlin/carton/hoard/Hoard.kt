@@ -25,7 +25,7 @@ import kotlin.io.path.exists
 class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
     private val path = chamber.getPath().resolve(HOARD_FILE)
     private val entryStore = mutableListOf<Entry?>()
-    private val converterPairsContainer = StringConverterPairContainer()
+    val converterPairsContainer = StringConverterPairContainer()
     private val maxId = AtomicInteger(0)
     val size = AtomicInteger(0)
     private val saveWhenDiscard = AtomicBoolean(false)

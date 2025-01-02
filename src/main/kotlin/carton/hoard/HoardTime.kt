@@ -77,22 +77,37 @@ class HoardTime(renovator: Renovator) : Furnishing(renovator) {
         val updatedAtEnabled = updatedAtEnabled()
         val createdAtFormat = createdAtFormat()
         val updatedAtFormat = updatedAtFormat()
+
         courier.subscribe(FormatEntryEvent::class) {
             if (createdAtEnabled) {
-                it.props[EntryKey.CREATED_AT] =
-                    dateToString(
-                        it.entry[EntryKey.CREATED_AT]!!,
-                        createdAtFormat
-                    )
+                val createdAt: Long? = it.entry[EntryKey.CREATED_AT]
+                if (createdAt != null) {
+                    it.props[EntryKey.CREATED_AT] =
+                        dateToString(createdAt, createdAtFormat)
+                }
             }
 
             if (updatedAtEnabled) {
-                it.props[EntryKey.UPDATED_AT] =
-                    dateToString(
-                        it.entry[EntryKey.UPDATED_AT]!!,
-                        updatedAtFormat
-                    )
+                val updatedAt: Long? = it.entry[EntryKey.UPDATED_AT]
+                if (updatedAt != null) {
+                    it.props[EntryKey.UPDATED_AT] =
+                        dateToString(updatedAt, createdAtFormat)
+                }
             }
+        }
+
+        if (createdAtEnabled) {
+            use(Hoard::class).converterPairsContainer.add(
+                EntryKey.CREATED_AT,
+                StringConverterPairs.LONG
+            )
+        }
+
+        if (updatedAtEnabled) {
+            use(Hoard::class).converterPairsContainer.add(
+                EntryKey.UPDATED_AT,
+                StringConverterPairs.LONG
+            )
         }
     }
 

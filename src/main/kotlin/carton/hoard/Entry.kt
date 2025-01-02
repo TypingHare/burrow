@@ -23,7 +23,7 @@ class Entry(
         store.remove(key)
     }
 
-    fun exists(key: String): Boolean = store.containsKey(key)
+    fun containsKey(key: String): Boolean = store.containsKey(key)
 
     fun <R> getLeft(key: String): String =
         converterPairsContainer.toLeft(key, get<R>(key))

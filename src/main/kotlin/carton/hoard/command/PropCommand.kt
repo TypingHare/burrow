@@ -37,9 +37,7 @@ class PropCommand(data: CommandData) : Command(data) {
 
         val hoard = use(Hoard::class)
         val entry = hoard[id]
-        if (entry.exists(key)) {
-            stdout.println("null")
-        } else {
+        if (entry.containsKey(key)) {
             when (shouldRetrieveLeftValue) {
                 true -> stdout.println(entry.getLeft<Any>(key))
                 false -> stdout.println(entry.get<Any>(key)?.toString())

@@ -62,6 +62,7 @@ class Interpreter(chamber: Chamber) : ExtendedChamberModule(chamber),
         printWriter: PrintWriter,
         ex: Throwable?,
     ) {
+        ex?.printStackTrace()
         var currentEx: Throwable? = ex
         while (currentEx != null && currentEx.cause !== ex) {
             printWriter.println(
