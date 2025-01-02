@@ -12,7 +12,7 @@ import picocli.CommandLine.ExitCode
 import java.util.concurrent.Callable
 import kotlin.reflect.KClass
 
-abstract class Command(private val data: CommandData) :
+abstract class Command(val data: CommandData) :
     ExtendedChamberModule(data.chamber),
     Callable<Int>,
     IParameterExceptionHandler,

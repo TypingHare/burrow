@@ -6,8 +6,11 @@ import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.event.EventBus
 import burrow.kernel.furniture.Warehouse
 import burrow.kernel.path.PathBound
+import burrow.kernel.stream.StateWriterController
+import burrow.kernel.stream.state.OutputState
 import burrow.kernel.terminal.CommandData
 import burrow.kernel.terminal.Environment
+import burrow.kernel.terminal.ExitCode
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.nio.file.Path
@@ -54,6 +57,11 @@ class Burrow : PathBound {
         try {
             chamber = chamberShepherd[chamberName.trim()]
         } catch (ex: Exception) {
+            StateWriterController(environment.outputStream).apply {
+                getPrintWriter(OutputState.STDERR).println(ex.message)
+                getPrintWriter(OutputState.EXIT_CODE).println(ExitCode.SOFTWARE)
+            }
+
             throw BuildChamberException(chamberName, ex)
         }
 

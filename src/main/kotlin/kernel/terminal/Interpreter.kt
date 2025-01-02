@@ -12,8 +12,14 @@ import java.util.concurrent.atomic.AtomicReference
 
 class Interpreter(chamber: Chamber) : ExtendedChamberModule(chamber),
     CommandRegistry {
-    private val commandClasses = mutableMapOf<String, CommandClass>()
+    val commandClasses = mutableMapOf<String, CommandClass>()
     val defaultCommandName = AtomicReference(DEFAULT_COMMAND_NAME)
+
+    init {
+        courier.subscribe(CommandNotFoundEvent::class) {
+            EventHandler.commandNotFoundEventHandler(it)
+        }
+    }
 
     override fun registerCommand(commandClass: CommandClass) {
         commandClasses[extractCommandName(commandClass)] = commandClass
@@ -76,6 +82,19 @@ class Interpreter(chamber: Chamber) : ExtendedChamberModule(chamber),
 
     companion object {
         const val DEFAULT_COMMAND_NAME = "default"
+    }
+
+    object EventHandler {
+        fun commandNotFoundEventHandler(event: CommandNotFoundEvent) {
+            val commandName = event.commandName
+            val outputStream = event.commandData.environment.outputStream
+            StateWriterController(outputStream).let {
+                it.getPrintWriter(OutputState.STDERR)
+                    .println("Command not found: $commandName")
+                it.getPrintWriter(OutputState.EXIT_CODE)
+                    .println(ExitCode.USAGE)
+            }
+        }
     }
 }
 

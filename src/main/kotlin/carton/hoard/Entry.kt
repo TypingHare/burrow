@@ -10,6 +10,12 @@ class Entry(
         store[key] = converterPairsContainer.toRight(key, leftValue)
     }
 
+    fun setIfAbsent(key: String, leftValue: String) {
+        if (!store.containsKey(key)) {
+            set(key, leftValue)
+        }
+    }
+
     operator fun <R> get(key: String): R? {
         @Suppress("UNCHECKED_CAST")
         return store[key] as R

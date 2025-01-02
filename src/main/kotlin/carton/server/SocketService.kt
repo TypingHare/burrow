@@ -12,7 +12,6 @@ import java.io.InputStreamReader
 import java.net.ServerSocket
 import java.net.Socket
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 class SocketService(
     burrow: Burrow,
@@ -76,7 +75,7 @@ class SocketService(
             try {
                 receive(clientSocket)
             } catch (ex: Exception) {
-                println("Error handling client: ${ex.message}")
+                logger.error("Error handling client: ${ex.message}", ex)
             } finally {
                 clientSocket.close()
             }

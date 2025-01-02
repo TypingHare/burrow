@@ -2,7 +2,6 @@ package burrow.carton.core.printer
 
 import burrow.kernel.furniture.DepTree
 import burrow.kernel.furniture.FurnishingClass
-import burrow.kernel.furniture.extractDescription
 import burrow.kernel.furniture.extractId
 import burrow.kernel.stream.Printer
 import java.io.PrintWriter
@@ -19,12 +18,14 @@ class FurnishingClassesTreePrinter(
             node: DepTree.Node<FurnishingClass>,
             indentationWidth: Int
         ) {
-            val indentation = " ".repeat(indentationWidth)
+            val indentation = when (indentationWidth) {
+                0 -> ""
+                else -> " ".repeat(indentationWidth) + "- "
+            }
             node.children.forEach {
                 if (it.element != null) {
                     val id = extractId(it.element)
-                    val description = extractDescription(it.element)
-                    writer.println("${indentation}${id.padEnd(30)}  $description")
+                    writer.println("${indentation}${id}")
                 }
                 printNode(it, indentationWidth + 4)
             }

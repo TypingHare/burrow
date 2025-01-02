@@ -13,11 +13,7 @@ import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.config.Config
 import burrow.kernel.furniture.*
 import burrow.kernel.furniture.annotation.Furniture
-import burrow.kernel.stream.StateWriterController
-import burrow.kernel.stream.state.OutputState
 import burrow.kernel.terminal.CommandClass
-import burrow.kernel.terminal.CommandNotFoundEvent
-import burrow.kernel.terminal.ExitCode
 import java.io.PrintWriter
 
 @Furniture(
@@ -54,10 +50,6 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(ConfigCommand::class)
         registerCommand(ConfigGetCommand::class)
         registerCommand(ConfigSetCommand::class)
-
-        courier.subscribe(CommandNotFoundEvent::class) {
-            EventHandler.commandNotFoundEventHandler(it)
-        }
     }
 
     @Throws(Exception::class)
@@ -154,18 +146,5 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
 
     object ConfigKey {
         const val DESCRIPTION = "description"
-    }
-
-    object EventHandler {
-        fun commandNotFoundEventHandler(event: CommandNotFoundEvent) {
-            val commandName = event.commandName
-            val outputStream = event.commandData.environment.outputStream
-            StateWriterController(outputStream).let {
-                it.getPrintWriter(OutputState.STDERR)
-                    .println("Command not found: $commandName")
-                it.getPrintWriter(OutputState.EXIT_CODE)
-                    .println(ExitCode.USAGE)
-            }
-        }
     }
 }
