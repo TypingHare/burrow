@@ -8,7 +8,7 @@ import burrow.kernel.terminal.Parameters
 
 @BurrowCommand(
     name = "exec",
-    description = ["Executes a command."]
+    header = ["Executes a command."]
 )
 class ExecCommand(data: CommandData) : Command(data) {
     @Parameters(index = "0", description = ["Command to execute."])

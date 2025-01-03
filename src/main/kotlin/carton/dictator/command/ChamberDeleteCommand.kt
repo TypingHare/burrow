@@ -6,7 +6,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "chamber.delete",
-    description = ["Deletes a chamber blueprint."]
+    header = ["Deletes a chamber blueprint."]
 )
 class ChamberDeleteCommand(data: CommandData) : Command(data) {
     @Parameters(

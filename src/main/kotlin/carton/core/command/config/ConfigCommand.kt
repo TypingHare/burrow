@@ -9,7 +9,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "config",
-    description = ["Displays chamber configurations."]
+    header = ["Displays chamber configurations."]
 )
 class ConfigCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

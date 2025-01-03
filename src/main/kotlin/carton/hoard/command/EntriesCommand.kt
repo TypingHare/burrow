@@ -7,7 +7,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "entries",
-    description = ["List specified entries."],
+    header = ["List specified entries."],
 )
 class EntriesCommand(data: CommandData) : Command(data) {
     @Parameters(

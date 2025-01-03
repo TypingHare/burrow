@@ -7,7 +7,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "chamber.destroy",
-    description = ["Destroys this chamber."]
+    header = ["Destroys this chamber."]
 )
 class ChamberDestroyCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

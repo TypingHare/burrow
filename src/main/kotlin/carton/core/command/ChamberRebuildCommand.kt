@@ -8,7 +8,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "chamber.rebuild",
-    description = ["Rebuilds this chamber."]
+    header = ["Rebuilds this chamber."]
 )
 class ChamberRebuildCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

@@ -7,7 +7,7 @@ import burrow.carton.haystack.command.InfoCommand as HaystackInfoCommand
 
 @BurrowCommand(
     name = "info",
-    description = ["Displays the information of a relative path."]
+    header = ["Displays the information of a relative path."]
 )
 class InfoCommand(data: CommandData) : Command(data) {
     @Parameters(

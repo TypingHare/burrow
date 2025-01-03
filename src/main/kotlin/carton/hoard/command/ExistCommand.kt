@@ -5,7 +5,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "exist",
-    description = ["Checks if an entry exists."]
+    header = ["Checks if an entry exists."]
 )
 class ExistCommand(data: CommandData) : Command(data) {
     @Parameters(index = "0", description = ["The ID of the entry."])

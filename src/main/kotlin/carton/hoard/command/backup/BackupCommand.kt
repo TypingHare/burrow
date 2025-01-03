@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter
 
 @BurrowCommand(
     name = "backup",
-    description = ["Create a backup for the hoard."]
+    header = ["Create a backup for the hoard."]
 )
 class BackupCommand(data: CommandData) : Command(data) {
     @Option(names = ["-s", "--silent"])

@@ -6,7 +6,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = BurrowCli.CliCommand.CLEAR,
-    description = ["Clears the terminal."]
+    header = ["Clears the terminal."]
 )
 class ClearCommand(cli: BurrowCli) : BurrowCliCommand(cli) {
     override fun call(): Int {

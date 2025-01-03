@@ -6,8 +6,8 @@ import burrow.kernel.stream.Printer
 import burrow.kernel.stream.TablePrinter
 import burrow.kernel.stream.TablePrinterContext
 import burrow.kernel.terminal.CommandClass
-import burrow.kernel.terminal.extractCommandDescription
 import burrow.kernel.terminal.extractCommandName
+import burrow.kernel.terminal.extractHeader
 import java.io.PrintWriter
 import kotlin.math.max
 
@@ -25,7 +25,8 @@ class FurnishingCommandClassesPrinter(
         for ((_, commandClasses) in context.furnishingCommandClasses) {
             for (commandClass in commandClasses) {
                 val commandName = extractCommandName(commandClass)
-                longestCommandNameLength = max(longestCommandNameLength, commandName.length)
+                longestCommandNameLength =
+                    max(longestCommandNameLength, commandName.length)
             }
         }
 
@@ -52,9 +53,8 @@ class FurnishingCommandClassesPrinter(
             val table = mutableListOf<List<String>>().apply {
                 commandClasses.forEach { commandClass ->
                     val commandName = extractCommandName(commandClass)
-                    val commandDescription =
-                        extractCommandDescription(commandClass)
-                    add(listOf(commandName, commandDescription))
+                    val commandHeader = extractHeader(commandClass)
+                    add(listOf(commandName, commandHeader))
                 }
             }
             TablePrinter(

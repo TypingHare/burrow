@@ -8,7 +8,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "keys",
-    description = ["Displays all keys."]
+    header = ["Displays all keys."]
 )
 class PairKeysCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

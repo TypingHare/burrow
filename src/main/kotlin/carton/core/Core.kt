@@ -34,16 +34,19 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         // Basic commands
         registerCommand(DefaultCommand::class)
         registerCommand(RootCommand::class)
+        registerCommand(HelpCommand::class)
+
+        // Chamber commands
         registerCommand(ChamberRebuildCommand::class)
         registerCommand(ChamberDestroyCommand::class)
 
-        // Commands related to furnishings
+        // Furnishing commands
         registerCommand(FurnishingListCommand::class)
         registerCommand(FurnishingTreeCommand::class)
         registerCommand(FurnishingAddCommand::class)
         registerCommand(FurnishingRemoveCommand::class)
 
-        // Commands related to available commands
+        // Commands related to chamber commands
         registerCommand(CommandCommand::class)
 
         // Commands related to config

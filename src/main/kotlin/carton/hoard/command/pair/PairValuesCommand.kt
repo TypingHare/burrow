@@ -5,7 +5,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "values",
-    description = ["Displays all values associated with a specified key."],
+    header = ["Displays all values associated with a specified key."],
 )
 class PairValuesCommand(data: CommandData) : Command(data) {
     @Parameters(

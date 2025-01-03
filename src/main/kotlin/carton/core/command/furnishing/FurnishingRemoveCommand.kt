@@ -5,7 +5,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "furnishing.remove",
-    description = ["Removes a furnishing from the chamber."]
+    header = ["Removes a furnishing from the chamber."]
 )
 class FurnishingRemoveCommand(data: CommandData) : Command(data) {
     @Parameters(

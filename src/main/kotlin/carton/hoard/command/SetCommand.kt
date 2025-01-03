@@ -7,7 +7,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "set",
-    description = ["Sets properties for a specific hoard entry by ID."]
+    header = ["Sets properties for a specific hoard entry by ID."]
 )
 class SetCommand(data: CommandData) : Command(data) {
     @Parameters(

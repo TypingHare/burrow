@@ -6,7 +6,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "chamber.exist",
-    description = ["Checks if a chamber is built."]
+    header = ["Checks if a chamber is built."]
 )
 class ChamberExistCommand(data: CommandData) : Command(data) {
     @Parameters(

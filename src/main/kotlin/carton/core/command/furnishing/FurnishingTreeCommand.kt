@@ -10,7 +10,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "furnishing.tree",
-    description = [
+    header = [
         "Displays a tree of furnishings that are installed."
     ]
 )

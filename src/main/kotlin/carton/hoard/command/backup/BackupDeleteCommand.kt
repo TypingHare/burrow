@@ -6,7 +6,7 @@ import java.nio.file.Files
 
 @BurrowCommand(
     name = "backup.delete",
-    description = ["Deletes a backup hoard."]
+    header = ["Deletes a backup hoard."]
 )
 class BackupDeleteCommand(data: CommandData) : Command(data) {
     @Parameters(

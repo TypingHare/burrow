@@ -7,7 +7,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "chamber.list",
-    description = ["Displays the list of all built chambers."]
+    header = ["Displays the list of all built chambers."]
 )
 class ChamberListCommand(data: CommandData) : Command(data) {
     @Option(

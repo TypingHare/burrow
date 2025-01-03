@@ -9,7 +9,7 @@ import java.nio.file.Files
 
 @BurrowCommand(
     name = "shell.content",
-    description = ["Displays the shell file content."],
+    header = ["Displays the shell file content."],
 )
 class ShellContentCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

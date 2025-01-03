@@ -6,7 +6,7 @@ import kotlin.io.path.exists
 
 @BurrowCommand(
     name = "shell.new",
-    description = ["Creates a new shell file."]
+    header = ["Creates a new shell file."]
 )
 class ShellNewCommand(data: CommandData) : Command(data) {
     @Option(

@@ -8,7 +8,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "command",
-    description = [
+    header = [
         "Displays available commands for each furnishing in the system."
     ]
 )

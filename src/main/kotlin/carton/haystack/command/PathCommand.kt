@@ -8,7 +8,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "path",
-    description = ["Displays all paths."]
+    header = ["Displays all paths."]
 )
 class PathCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

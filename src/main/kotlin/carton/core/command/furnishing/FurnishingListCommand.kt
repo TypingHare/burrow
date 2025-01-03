@@ -7,7 +7,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "furnishing.list",
-    description = [
+    header = [
         "Displays a list of furnishings that are installed."
     ]
 )

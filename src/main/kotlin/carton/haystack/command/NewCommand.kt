@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 @BurrowCommand(
     name = "new",
-    description = ["Creates a new path pair."]
+    header = ["Creates a new path pair."]
 )
 class NewCommand(data: CommandData) : Command(data) {
     @Parameters(

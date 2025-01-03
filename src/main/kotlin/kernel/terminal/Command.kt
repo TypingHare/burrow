@@ -95,16 +95,16 @@ abstract class Command(val data: CommandData) :
     }
 }
 
-fun extractCommandAnnotation(commandClass: CommandClass): BurrowCommand =
+fun extractBurrowCommand(commandClass: CommandClass): BurrowCommand =
     commandClass.java.getAnnotation(BurrowCommand::class.java)
         ?: throw NotACommandException(commandClass.java.name)
 
 fun extractCommandName(commandClass: CommandClass): String =
-    extractCommandAnnotation(commandClass).name
+    extractBurrowCommand(commandClass).name
 
-fun extractCommandDescription(commandClass: CommandClass): String =
-    extractCommandAnnotation(commandClass).description.let {
-        if (it.isNotEmpty()) it[0] else ""
+fun extractHeader(commandClass: CommandClass): String =
+    extractBurrowCommand(commandClass).header.let {
+        it.firstOrNull() ?: ""
     }
 
 class NotACommandException(className: String) :

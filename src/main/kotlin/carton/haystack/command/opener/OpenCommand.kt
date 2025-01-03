@@ -10,7 +10,7 @@ import burrow.kernel.terminal.Parameters
 
 @BurrowCommand(
     name = "open",
-    description = [
+    header = [
         "Opens a relative path using the opener associated with the entry."
     ]
 )

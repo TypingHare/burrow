@@ -8,7 +8,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "count",
-    description = ["Displays the number of entries in the hoard."]
+    header = ["Displays the number of entries in the hoard."]
 )
 class CountCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

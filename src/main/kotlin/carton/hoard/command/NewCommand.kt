@@ -6,7 +6,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "new",
-    description = ["Creates a new entry."],
+    header = ["Creates a new entry."],
 )
 class NewCommand(data: CommandData) : Command(data) {
     @Parameters(arity = "0..*")

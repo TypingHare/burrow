@@ -10,7 +10,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "entry",
-    description = ["Finds an entry by its associated ID and displays it."]
+    header = ["Finds an entry by its associated ID and displays it."]
 )
 class EntryCommand(data: CommandData) : Command(data) {
     @Parameters(index = "0")

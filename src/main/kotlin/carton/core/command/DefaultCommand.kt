@@ -5,7 +5,7 @@ import picocli.CommandLine
 
 @BurrowCommand(
     name = Interpreter.DEFAULT_COMMAND_NAME,
-    description = [
+    header = [
         "The default command executed when no command is specified."
     ]
 )

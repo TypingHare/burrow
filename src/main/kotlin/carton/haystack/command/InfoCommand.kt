@@ -6,7 +6,7 @@ import java.io.File
 
 @BurrowCommand(
     name = "info",
-    description = ["Displays the information of a relative path."],
+    header = ["Displays the information of a relative path."],
 )
 class InfoCommand(data: CommandData) : Command(data) {
     @Parameters(

@@ -6,7 +6,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "del",
-    description = ["Deletes an entry."]
+    header = ["Deletes an entry."]
 )
 class DelCommand(data: CommandData) : Command(data) {
     @Parameters(

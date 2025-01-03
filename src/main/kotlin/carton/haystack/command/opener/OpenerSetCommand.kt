@@ -6,7 +6,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "opener.set",
-    description = ["Sets the opener."]
+    header = ["Sets the opener."]
 )
 class OpenerSetCommand(data: CommandData) : Command(data) {
     @Parameters(

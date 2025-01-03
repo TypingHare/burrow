@@ -5,7 +5,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "config.set",
-    description = ["Sets a value associated with a specific key."]
+    header = ["Sets a value associated with a specific key."]
 )
 class ConfigSetCommand(data: CommandData) : Command(data) {
     @Parameters(

@@ -9,7 +9,7 @@ import burrow.kernel.terminal.Parameters
 
 @BurrowCommand(
     name = "path.add",
-    description = ["Adds a path."]
+    header = ["Adds a path."]
 )
 class PathAddCommand(data: CommandData) : Command(data) {
     @Parameters(index = "0", description = ["Path to add."])

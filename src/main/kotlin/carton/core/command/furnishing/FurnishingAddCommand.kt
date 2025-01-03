@@ -5,7 +5,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "furnishing.add",
-    description = ["Adds a new furnishing."],
+    header = ["Adds a new furnishing."],
 )
 class FurnishingAddCommand(data: CommandData) : Command(data) {
     @Parameters(

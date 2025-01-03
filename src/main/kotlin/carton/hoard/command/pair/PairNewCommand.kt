@@ -9,7 +9,7 @@ import burrow.kernel.terminal.Parameters
 
 @BurrowCommand(
     name = "new",
-    description = ["Creates a new entry."]
+    header = ["Creates a new entry."]
 )
 class PairNewCommand(data: CommandData) : Command(data) {
     @Parameters(

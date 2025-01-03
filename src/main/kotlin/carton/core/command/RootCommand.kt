@@ -4,7 +4,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "root",
-    description = [
+    header = [
         "Displays the absolute path to the chamber root directory."
     ]
 )

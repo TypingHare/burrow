@@ -6,7 +6,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "chamber.build",
-    description = ["Builds a chamber."]
+    header = ["Builds a chamber."]
 )
 class ChamberBuildCommand(data: CommandData) : Command(data) {
     @Parameters(

@@ -10,7 +10,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "backup.list",
-    description = ["Displays the list of backup hoards."]
+    header = ["Displays the list of backup hoards."]
 )
 class BackupListCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

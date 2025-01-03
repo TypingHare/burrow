@@ -8,7 +8,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "shell.path",
-    description = ["Displays the path to the shell file."],
+    header = ["Displays the path to the shell file."],
 )
 class ShellPathCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

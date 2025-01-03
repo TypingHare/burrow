@@ -1,14 +1,14 @@
 package burrow.carton.server.command
 
 import burrow.carton.server.Server
+import burrow.kernel.terminal.BurrowCommand
 import burrow.kernel.terminal.Command
 import burrow.kernel.terminal.CommandData
-import picocli.CommandLine
-import picocli.CommandLine.ExitCode
+import burrow.kernel.terminal.ExitCode
 
-@CommandLine.Command(
+@BurrowCommand(
     name = "server.start",
-    description = ["Starts a Burrow service."]
+    header = ["Starts a Burrow service."]
 )
 class ServerStartCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

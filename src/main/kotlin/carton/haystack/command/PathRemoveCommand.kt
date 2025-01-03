@@ -9,7 +9,7 @@ import burrow.kernel.terminal.Parameters
 
 @BurrowCommand(
     name = "path.remove",
-    description = ["Removes a path."]
+    header = ["Removes a path."]
 )
 class PathRemoveCommand(data: CommandData) : Command(data) {
     @Parameters(index = "0", description = ["Path to remove."])

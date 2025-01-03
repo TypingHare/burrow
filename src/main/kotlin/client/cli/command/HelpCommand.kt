@@ -6,7 +6,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = BurrowCli.CliCommand.HELP,
-    description = ["Displays the usage of Burrow command line interface."]
+    header = ["Displays the usage of Burrow command line interface."]
 )
 class HelpCommand(cli: BurrowCli) : BurrowCliCommand(cli) {
     override fun call(): Int {

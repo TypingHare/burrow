@@ -7,7 +7,7 @@ import burrow.kernel.terminal.Parameters
 
 @BurrowCommand(
     name = BurrowCli.CliCommand.USE,
-    description = ["Uses a chamber."]
+    header = ["Uses a chamber."]
 )
 class UseCommand(cli: BurrowCli) : BurrowCliCommand(cli) {
     @Parameters(

@@ -4,7 +4,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "config.get",
-    description = ["Get the config value associated with a specific key."]
+    header = ["Get the config value associated with a specific key."]
 )
 class ConfigGetCommand(data: CommandData) : Command(data) {
     @Parameters(
