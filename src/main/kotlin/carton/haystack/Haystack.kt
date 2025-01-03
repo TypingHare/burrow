@@ -44,6 +44,7 @@ class Haystack(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(PathCommand::class)
         registerCommand(PathAddCommand::class)
         registerCommand(PathRemoveCommand::class)
+        registerCommand(Scan::class)
     }
 
     fun createEntry(

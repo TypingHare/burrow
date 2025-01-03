@@ -69,6 +69,14 @@ class Renovator(
     fun <T : Furnishing> getFurnishing(furnishingClass: KClass<T>): T? =
         getFurnishing(furnishingClass.java.name) as T?
 
+    private fun getAllFurnishingIds(): List<String> =
+        furnishings.values.map { it.javaClass.name }
+
+    /**
+     * Gets furnishing IDs by a furnishing name.
+     *
+     * The furnishing name can be a full name (furnishing ID) or a simple name.
+     */
     fun getFurnishingIds(furnishingName: String): List<String> {
         return if (furnishingName.contains('.')) {
             when (furnishingIds.contains(furnishingName)) {
@@ -77,7 +85,7 @@ class Renovator(
             }
         } else {
             val name = furnishingName.replaceFirstChar { it.uppercase() }
-            furnishingIds.filter { it.split(".").last() == name }
+            getAllFurnishingIds().filter { it.split(".").last() == name }
         }
     }
 
