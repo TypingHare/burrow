@@ -1,8 +1,7 @@
 package burrow.carton.dictator
 
 import burrow.carton.core.Core
-import burrow.carton.dictator.command.ChamberExistCommand
-import burrow.carton.dictator.command.ChamberListCommand
+import burrow.carton.dictator.command.*
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.ChamberPostBuildEvent
 import burrow.kernel.chamber.ChamberPostDestroyEvent
@@ -16,6 +15,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
 import java.nio.file.Files
+import java.nio.file.Path
 import kotlin.io.path.exists
 
 @Furniture(
@@ -30,6 +30,9 @@ class Dictator(renovator: Renovator) : Furnishing(renovator) {
     override fun assemble() {
         registerCommand(ChamberExistCommand::class)
         registerCommand(ChamberListCommand::class)
+        registerCommand(ChamberNewCommand::class)
+        registerCommand(ChamberBuildCommand::class)
+        registerCommand(ChamberDeleteCommand::class)
 
         burrow.courier.subscribe(ChamberPostBuildEvent::class) {
             val chamber = it.chamber
@@ -37,7 +40,7 @@ class Dictator(renovator: Renovator) : Furnishing(renovator) {
 
             chamberInfoMap[chamberName] = ChamberInfo(
                 chamberName,
-                config[Core.ConfigKey.DESCRIPTION] ?: ""
+                chamber.config[Core.ConfigKey.DESCRIPTION] ?: ""
             )
         }
 
@@ -46,7 +49,7 @@ class Dictator(renovator: Renovator) : Furnishing(renovator) {
         }
     }
 
-    private fun getAllChamberDirs(
+    fun getAllChamberDirs(
         addChambersDirectory: Boolean = false
     ): List<File> =
         chamberShepherd.getPath().toFile()
@@ -71,6 +74,14 @@ class Dictator(renovator: Renovator) : Furnishing(renovator) {
             ChamberInfo(chamberName, getDescriptionFromConfigFile(chamberName))
         }
 
+    fun createFurnishingsJson(path: Path) {
+        val furnishingsJsonPath =
+            path.resolve(Renovator.FURNISHINGS_FILE_NAME)
+        val content = Gson().toJson(DEFAULT_FURNISHING_LIST)
+        Files.write(furnishingsJsonPath, content.toByteArray())
+    }
+
+
     private fun getDescriptionFromConfigFile(chamberName: String): String {
         val configFilePath = chamberShepherd.getPath()
             .resolve(chamberName)
@@ -84,5 +95,9 @@ class Dictator(renovator: Renovator) : Furnishing(renovator) {
         val map = Gson().fromJson<Map<String, String>>(content, type)
 
         return map["description"] ?: ""
+    }
+
+    companion object {
+        val DEFAULT_FURNISHING_LIST = listOf(Core::class.java.name)
     }
 }

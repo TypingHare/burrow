@@ -2,7 +2,10 @@ package burrow.carton.hoard.command.pair
 
 import burrow.carton.hoard.HoardPair
 import burrow.carton.hoard.command.EntryCommand
-import burrow.kernel.terminal.*
+import burrow.kernel.terminal.BurrowCommand
+import burrow.kernel.terminal.Command
+import burrow.kernel.terminal.CommandData
+import burrow.kernel.terminal.Parameters
 
 @BurrowCommand(
     name = "new",

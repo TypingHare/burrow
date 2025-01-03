@@ -157,18 +157,23 @@ class Burrow : PathBound {
         /**
          * Default package to scan.
          */
-        private const val DEFAULT_PACKAGES = "burrow.packages"
+        private const val DEFAULT_PACKAGES = "burrow.carton"
 
         /**
-         * The relative path to the libs root directory.
+         * The relative path to the "libs" directory.
          */
-        private const val LIBS_DIR = "libs"
+        const val LIBS_DIR = "libs"
+
+        /**
+         * The relative path to the bin directory.
+         */
+        const val BIN_DIR = "bin"
 
         /**
          * The root chamber indicator can be used to specify the root chamber
          * directly.
          */
-        private const val ROOT_CHAMBER_INDICATOR = "@"
+        const val ROOT_CHAMBER_INDICATOR = "@"
 
         /**
          * Retrieves Burrow root path.

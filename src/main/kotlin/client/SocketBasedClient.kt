@@ -6,7 +6,6 @@ import burrow.kernel.stream.state.InputState
 import burrow.kernel.terminal.Command
 import burrow.kernel.terminal.ExitCode
 import java.io.IOException
-import java.io.PrintWriter
 import java.net.Socket
 import kotlin.system.exitProcess
 

@@ -190,6 +190,9 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
         }
     }
 
+    fun getAllEntries(): List<Entry> =
+        entryStore.filterNotNull()
+
     fun saveTo(path: Path) {
         try {
             val entryPropertyList = entryStore

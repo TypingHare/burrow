@@ -10,7 +10,7 @@ import burrow.kernel.terminal.*
 class ConfigSetCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        description = ["The key."]
+        description = ["The key of the config item to set."]
     )
     private var key = ""
 

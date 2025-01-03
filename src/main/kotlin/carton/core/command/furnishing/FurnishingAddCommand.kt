@@ -27,9 +27,7 @@ class FurnishingAddCommand(data: CommandData) : Command(data) {
             return ExitCode.USAGE
         }
 
-        val originalFurnishingIds = renovator.furnishings.keys.toSet()
-        val furnishingIds = originalFurnishingIds.toMutableSet()
-        furnishingIds.add(furnishingId)
+        renovator.furnishingIds.add(furnishingId)
         renovator.save()
 
         if (!core.rebuildChamber(stderr)) {

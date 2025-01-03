@@ -27,7 +27,7 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
     }
 
     override fun modifyConfig(config: Config) {
-        config.setIfAbsent(ConfigKey.DESCRIPTION, "")
+        config.setIfAbsent(ConfigKey.DESCRIPTION, Default.DESCRIPTION)
     }
 
     override fun assemble() {
@@ -142,6 +142,10 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         return DepTree<FurnishingClass>().apply {
             handle(renovator.depTree.root, root)
         }
+    }
+
+    object Default {
+        const val DESCRIPTION = "<No description>"
     }
 
     object ConfigKey {

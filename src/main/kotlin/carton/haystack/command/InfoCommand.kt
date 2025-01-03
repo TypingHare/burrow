@@ -6,7 +6,7 @@ import java.io.File
 
 @BurrowCommand(
     name = "info",
-    description = ["Prints the information about an entry."],
+    description = ["Displays the information of a relative path."],
 )
 class InfoCommand(data: CommandData) : Command(data) {
     @Parameters(
@@ -23,10 +23,11 @@ class InfoCommand(data: CommandData) : Command(data) {
 
         // Print file information
         val file = File(absolutePath)
-        val existing = file.exists().toString()
-        val isDirectory = file.isDirectory().toString()
-        stdout.println("Existing: $existing")
-        stdout.println("Is directory: $isDirectory")
+        val existing = file.exists()
+        stdout.println("existing: $existing")
+        if (existing) {
+            stdout.println("type: " + if (file.isDirectory()) "file" else "directory")
+        }
 
         return ExitCode.OK
     }

@@ -3,7 +3,6 @@ package burrow.client.cli.command
 import burrow.client.cli.BurrowCli
 import burrow.kernel.terminal.BurrowCommand
 import burrow.kernel.terminal.ExitCode
-import burrow.kernel.terminal.extractCommandName
 
 @BurrowCommand(
     name = BurrowCli.CliCommand.HELP,

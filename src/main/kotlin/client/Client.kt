@@ -9,7 +9,6 @@ import java.io.Closeable
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicReference
 
 abstract class Client : Closeable {
     private val stdoutStream = System.out

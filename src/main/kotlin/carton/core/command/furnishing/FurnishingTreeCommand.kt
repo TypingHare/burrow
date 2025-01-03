@@ -3,7 +3,10 @@ package burrow.carton.core.command.furnishing
 import burrow.carton.core.Core
 import burrow.carton.core.printer.FurnishingClassesTreePrinter
 import burrow.carton.core.printer.FurnishingClassesTreePrinterContext
-import burrow.kernel.terminal.*
+import burrow.kernel.terminal.BurrowCommand
+import burrow.kernel.terminal.Command
+import burrow.kernel.terminal.CommandData
+import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "furnishing.tree",
