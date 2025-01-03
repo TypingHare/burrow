@@ -1,9 +1,11 @@
 package burrow.carton.core.command
 
+import burrow.carton.core.help.CommandParser
+import burrow.carton.core.printer.SynopsisPrintContext
+import burrow.carton.core.printer.SynopsisPrinter
+import burrow.kernel.stream.TablePrinter
+import burrow.kernel.stream.TablePrinterContext
 import burrow.kernel.terminal.*
-import picocli.CommandLine
-import java.io.PrintWriter
-import java.io.StringWriter
 
 @BurrowCommand(
     name = "help",
@@ -12,7 +14,7 @@ import java.io.StringWriter
 class HelpCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        paramLabel = "<command>",
+        paramLabel = "command",
         description = ["The name of the command."],
         defaultValue = ""
     )
@@ -46,19 +48,77 @@ class HelpCommand(data: CommandData) : Command(data) {
         val burrowCommand = extractBurrowCommand(commandClass)
 
         // Header
-        val name = burrowCommand.name
         val header = burrowCommand.header.let { it.firstOrNull() ?: "" }
-        stdout.println("$name - $header")
+        stdout.println(header)
         stdout.println()
 
         // Usage
-        val usage = StringWriter()
-            .apply { CommandLine(commandClass).usage(PrintWriter(this)) }
-            .toString()
-        stdout.println(usage)
-        stdout.println()
+        stdout.println("SYNOPSIS")
+        val commandParameters = CommandParser.getCommandParameters(commandClass)
+        val commandOptions = CommandParser.getCommandOptions(commandClass)
+        SynopsisPrinter(
+            stdout,
+            SynopsisPrintContext(
+                "    ${chamber.name} ${burrowCommand.name}",
+                commandParameters,
+                commandOptions,
+                getTerminalSize().width
+            )
+        ).print()
 
+        // Description
         val descriptionParagraphs = burrowCommand.description.toList()
+        if (descriptionParagraphs.isNotEmpty()) {
+            stdout.println()
+            stdout.println("DESCRIPTION")
+            stdout.println(descriptionParagraphs.joinToString("\n"))
+        }
+
+        // Parameters
+        if (commandParameters.isNotEmpty()) {
+            stdout.println()
+            stdout.println("PARAMETERS")
+            val table = mutableListOf<List<String>>()
+            for (parameter in commandParameters) {
+                val left = when (parameter.isOptional) {
+                    true -> "[<${parameter.label}>]"
+                    false -> "<${parameter.label}>"
+                }
+
+                table.add(listOf("", left, parameter.description[0]))
+            }
+            TablePrinter(
+                stdout,
+                TablePrinterContext(table, getTerminalSize().width).apply {
+                    defaultSpacing = 4
+                }
+            ).print()
+        }
+
+        // Options
+        if (commandOptions.isNotEmpty()) {
+            stdout.println()
+            stdout.println("OPTIONS")
+            val table = mutableListOf<List<String>>()
+            for (option in commandOptions) {
+                var left = option.longName ?: ""
+                if (option.shortName != null) {
+                    if (left.isNotEmpty()) {
+                        left += ", " + option.shortName
+                    } else {
+                        left = option.shortName
+                    }
+                }
+                table.add(listOf("", left, option.description[0]))
+            }
+
+            TablePrinter(
+                stdout,
+                TablePrinterContext(table, getTerminalSize().width).apply {
+                    defaultSpacing = 4
+                }
+            ).print()
+        }
 
         return ExitCode.OK
     }
