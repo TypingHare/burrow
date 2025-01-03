@@ -86,7 +86,7 @@ class ChamberShepherd(val burrow: Burrow) : PathBound {
     }
 
     @Throws(ChamberNotBuiltException::class)
-    fun getBluePrint(chamberName:String): Blueprint =
+    fun getBluePrint(chamberName: String): Blueprint =
         blueprints[chamberName] ?: throw ChamberNotBuiltException(chamberName)
 
     companion object {

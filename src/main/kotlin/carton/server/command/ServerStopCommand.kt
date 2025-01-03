@@ -1,7 +1,10 @@
 package burrow.carton.server.command
 
 import burrow.carton.server.Server
-import burrow.kernel.terminal.*
+import burrow.kernel.terminal.BurrowCommand
+import burrow.kernel.terminal.Command
+import burrow.kernel.terminal.CommandData
+import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "server.stop",
