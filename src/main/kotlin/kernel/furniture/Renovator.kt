@@ -69,7 +69,19 @@ class Renovator(
     fun <T : Furnishing> getFurnishing(furnishingClass: KClass<T>): T? =
         getFurnishing(furnishingClass.java.name) as T?
 
-    private fun getFurnishing(id: String) = furnishings[id]
+    fun getFurnishingIds(furnishingName: String): List<String> {
+        return if (furnishingName.contains('.')) {
+            when (furnishingIds.contains(furnishingName)) {
+                true -> listOf(furnishingName)
+                false -> emptyList()
+            }
+        } else {
+            val name = furnishingName.replaceFirstChar { it.uppercase() }
+            furnishingIds.filter { it.split(".").last() == name }
+        }
+    }
+
+    fun getFurnishing(id: String) = furnishings[id]
 
     @Throws(
         IOException::class,

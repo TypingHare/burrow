@@ -18,7 +18,7 @@ class ShellNewCommand(data: CommandData) : Command(data) {
 
     override fun call(): Int {
         val bin = use(Shell::class)
-        val binFile = bin.getBinFile()
+        val binFile = bin.getShellFile()
         val shellContent = bin.getDefaultShellContent()
         if (shouldBeForce) {
             bin.createShellFile(shellContent)

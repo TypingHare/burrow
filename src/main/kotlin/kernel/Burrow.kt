@@ -1,6 +1,5 @@
 package burrow.kernel
 
-import burrow.kernel.chamber.BuildChamberException
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.event.EventBus
@@ -63,7 +62,7 @@ class Burrow : PathBound {
                 getPrintWriter(OutputState.EXIT_CODE).println(ExitCode.SOFTWARE)
             }
 
-            throw BuildChamberException(chamberName, ex)
+            throw ex
         }
 
         val hasCommandName =

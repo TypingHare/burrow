@@ -20,13 +20,16 @@ import java.nio.file.attribute.PosixFilePermissions
 )
 class Shell(renovator: Renovator) : Furnishing(renovator) {
     override fun prepareConfig(config: Config) {
-        config.addKey(ConfigKey.BIN_SHELL)
-        config.addKey(ConfigKey.BIN_NAME)
+        config.addKey(ConfigKey.SHELL_INTERPRETER)
+        config.addKey(ConfigKey.SHELL_NAME)
     }
 
     override fun modifyConfig(config: Config) {
-        config.setIfAbsent(ConfigKey.BIN_SHELL, DEFAULT.BIN_SHELL)
-        config.setIfAbsent(ConfigKey.BIN_NAME, chamber.name)
+        config.setIfAbsent(
+            ConfigKey.SHELL_INTERPRETER,
+            DEFAULT.SHELL_INTERPRETER
+        )
+        config.setIfAbsent(ConfigKey.SHELL_NAME, chamber.name)
     }
 
     override fun assemble() {
@@ -35,22 +38,27 @@ class Shell(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(ShellContentCommand::class)
     }
 
-    private fun getBinShell(): String = config.getNotNull(ConfigKey.BIN_NAME)
+    private fun getShellInterpreter(): String =
+        config.getNotNull(ConfigKey.SHELL_INTERPRETER)
 
-    private fun getBinName(): String = config.getNotNull(ConfigKey.BIN_NAME)
+    private fun getShellName(): String = config.getNotNull(ConfigKey.SHELL_NAME)
 
-    fun getBinFile(): Path =
-        burrow.getPath().resolve(Burrow.BIN_DIR).resolve(getBinName())
+    fun getShellFile(): Path =
+        burrow.getPath().resolve(Burrow.BIN_DIR).resolve(getShellName())
 
     fun createShellFile(content: String) {
-        createShellFile(getBinFile(), content)
+        createShellFile(getShellFile(), content)
     }
 
     fun getDefaultShellContent(): String {
-        val shell = getBinShell()
+        val shellInterpreter = getShellInterpreter()
         val chamberName = chamber.name
 
-        return "#! $shell\n\nburrow $chamberName \"$@\""
+        return """
+            #! $shellInterpreter
+            
+            $chamberName "${'$'}@"
+        """.trimIndent()
     }
 
     private fun createShellFile(path: Path, content: String) {
@@ -65,12 +73,12 @@ class Shell(renovator: Renovator) : Furnishing(renovator) {
     }
 
     object ConfigKey {
-        const val BIN_SHELL = "bin.shell"
-        const val BIN_NAME = "bin.name"
+        const val SHELL_INTERPRETER = "shell.interpreter"
+        const val SHELL_NAME = "shell.name"
     }
 
     object DEFAULT {
-        const val BIN_SHELL = "/bin/zsh"
+        const val SHELL_INTERPRETER = "/bin/zsh"
     }
 }
 
