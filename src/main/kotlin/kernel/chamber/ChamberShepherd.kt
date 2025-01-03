@@ -93,7 +93,7 @@ class ChamberShepherd(val burrow: Burrow) : PathBound {
         /**
          * The relative path to the chambers root directory.
          */
-        const val CHAMBERS_DIR = "chambers"
+        const val CHAMBERS_DIR = "init.chambers"
 
         /**
          * The name of the root chamber.

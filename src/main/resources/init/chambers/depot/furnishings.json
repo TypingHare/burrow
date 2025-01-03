@@ -1,0 +1,5 @@
+[
+  "burrow.carton.core.Core",
+  "burrow.carton.depot.Depot",
+  "burrow.carton.shell.Shell"
+]

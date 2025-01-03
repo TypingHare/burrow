@@ -1,0 +1,11 @@
+{
+  "description": "A simple local git repository manager.",
+  "hoard.pair.key_name": "relative_path",
+  "hoard.pair.value_name": "absolute_path",
+  "hoard.pair.allows_duplicate_keys": "false",
+  "haystack.path": "",
+  "cradle.shell_path": "/bin/zsh",
+  "opener.default": "open",
+  "shell.interpreter": "/bin/zsh",
+  "shell.name": "depot"
+}

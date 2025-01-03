@@ -15,7 +15,7 @@ tasks {
         archiveVersion.set(version.toString())
 
         manifest {
-            attributes["Main-Class"] = "burrow.server.BurrowServer"
+            attributes["Main-Class"] = "burrow.client.BurrowClient"
         }
     }
 }
