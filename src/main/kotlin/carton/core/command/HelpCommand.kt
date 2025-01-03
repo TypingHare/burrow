@@ -62,7 +62,7 @@ class HelpCommand(data: CommandData) : Command(data) {
                 "    ${chamber.name} ${burrowCommand.name}",
                 commandParameters,
                 commandOptions,
-                getTerminalSize().width
+                getTerminalWidth()
             )
         ).print()
 
@@ -89,7 +89,7 @@ class HelpCommand(data: CommandData) : Command(data) {
             }
             TablePrinter(
                 stdout,
-                TablePrinterContext(table, getTerminalSize().width).apply {
+                TablePrinterContext(table, getTerminalWidth()).apply {
                     defaultSpacing = 4
                 }
             ).print()
@@ -114,7 +114,7 @@ class HelpCommand(data: CommandData) : Command(data) {
 
             TablePrinter(
                 stdout,
-                TablePrinterContext(table, getTerminalSize().width).apply {
+                TablePrinterContext(table, getTerminalWidth()).apply {
                     defaultSpacing = 4
                 }
             ).print()

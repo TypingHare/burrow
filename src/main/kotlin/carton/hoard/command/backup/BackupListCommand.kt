@@ -20,7 +20,7 @@ class BackupListCommand(data: CommandData) : Command(data) {
             stdout,
             BackupListPrinterContext(
                 sortedBackupFileList,
-                getTerminalSize().width
+                getTerminalWidth()
             )
         ).print()
 

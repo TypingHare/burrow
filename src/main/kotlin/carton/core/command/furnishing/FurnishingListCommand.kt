@@ -20,7 +20,7 @@ class FurnishingListCommand(data: CommandData) : Command(data) {
 
     override fun call(): Int {
         val core = use(Core::class)
-        val maxColumns = getTerminalSize().width
+        val maxColumns = getTerminalWidth()
         val furnishingClasses = core.getFurnishingClasses().toList()
         val list = when (shouldDisplayAll) {
             true -> core.getAvailableFurnishingClasses()

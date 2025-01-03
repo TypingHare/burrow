@@ -17,7 +17,7 @@ import burrow.kernel.terminal.ExitCode
 class FurnishingTreeCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
         val core = use(Core::class)
-        val maxColumns = getTerminalSize().width
+        val maxColumns = getTerminalWidth()
         val tree = core.getFurnishingClassesTree()
         val context = FurnishingClassesTreePrinterContext(tree, maxColumns)
         FurnishingClassesTreePrinter(stdout, context).print()

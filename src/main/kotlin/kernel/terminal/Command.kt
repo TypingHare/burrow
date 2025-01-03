@@ -33,8 +33,10 @@ abstract class Command(val data: CommandData) :
             ?: throw NotDependencyFurnishingException(furnishingClass.java.name)
     }
 
-    fun getTerminalSize() =
+    private fun getTerminalSize() =
         TerminalSize.fromString(getContextValue(SessionContextKey.TERMINAL_SIZE))
+
+    fun getTerminalWidth(): Int = getTerminalSize().width
 
     fun getWorkingDirectory(): String =
         getContextValue(SessionContextKey.WORKING_DIRECTORY)

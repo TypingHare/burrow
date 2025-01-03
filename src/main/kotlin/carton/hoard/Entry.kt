@@ -6,7 +6,11 @@ class Entry(
 ) {
     val store = mutableMapOf<String, Any>()
 
-    operator fun set(key: String, leftValue: String) {
+    operator fun set(key: String, rightValue: Any) {
+        store[key] = rightValue
+    }
+
+    fun setWithLeft(key: String, leftValue: String) {
         store[key] = converterPairsContainer.toRight(key, leftValue)
     }
 

@@ -20,7 +20,7 @@ class ConfigCommand(data: CommandData) : Command(data) {
         }
         TablePrinter(
             stdout,
-            TablePrinterContext(table, getTerminalSize().width)
+            TablePrinterContext(table, getTerminalWidth())
         ).print()
 
         return ExitCode.OK

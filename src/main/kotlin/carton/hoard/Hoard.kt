@@ -47,6 +47,7 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
 
         // Multiple entries and aggregation commands
         registerCommand(EntriesCommand::class)
+        registerCommand(TableCommand::class)
         registerCommand(CountCommand::class)
 
         // Backup commands
@@ -96,7 +97,7 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
         if (exists(id)) throw DuplicateIdException(id)
 
         val entry = Entry(id, converterPairsContainer)
-        properties.forEach { (k, v) -> entry[k] = v }
+        properties.forEach { (k, v) -> entry.setWithLeft(k, v) }
         courier.post(EntryRestoreEvent(entry))
 
         while (entryStore.size <= id) entryStore.add(null)
@@ -113,7 +114,7 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
         val id: Int = maxId.incrementAndGet()
 
         val entry = Entry(id, converterPairsContainer)
-        properties.forEach { (k, v) -> entry[k] = v }
+        properties.forEach { (k, v) -> entry.setWithLeft(k, v) }
         courier.post(EntryRestoreEvent(entry))
 
         for (i in entryStore.size..id) entryStore.add(null)
@@ -150,7 +151,7 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
      */
     fun setProperties(entry: Entry, properties: Map<String, String>) {
         properties.forEach { (k, v) ->
-            entry[k] = v
+            entry.setWithLeft(k, v)
         }
         courier.post(EntrySetPropertiesEvent(entry, properties))
         saveWhenDiscard.set(true)

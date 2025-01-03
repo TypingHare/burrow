@@ -81,7 +81,7 @@ class CommandCommand(data: CommandData) : Command(data) {
             stdout,
             FurnishingCommandClassesPrinterContext(
                 furnishingCommandClasses,
-                getTerminalSize().width
+                getTerminalWidth()
             )
         ).print()
     }
