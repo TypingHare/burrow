@@ -11,11 +11,11 @@ import burrow.kernel.stream.state.OutputState
 import burrow.kernel.terminal.CommandData
 import burrow.kernel.terminal.Environment
 import burrow.kernel.terminal.ExitCode
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.nio.file.Path
 import java.util.*
 import kotlin.io.path.isDirectory
+import kotlin.time.measureTimedValue
 
 class Burrow : PathBound {
     private val path = getBurrowRootPath()
@@ -29,9 +29,13 @@ class Burrow : PathBound {
     @Throws(BuildBurrowException::class)
     fun build() {
         try {
-            ensureRootDir()
-            initializeWarehouse()
-            chamberShepherd.buildChamber(ChamberShepherd.ROOT_CHAMBER_NAME)
+            val durationMs = measureTimedValue {
+                ensureRootDir()
+                initializeWarehouse()
+                chamberShepherd.buildChamber(ChamberShepherd.ROOT_CHAMBER_NAME)
+            }.duration.inWholeMilliseconds
+
+            logger.info("Built Burrow in $durationMs ms")
         } catch (ex: Exception) {
             throw BuildBurrowException(ex)
         }
@@ -156,7 +160,7 @@ class Burrow : PathBound {
         /**
          * Default package to scan.
          */
-        private const val DEFAULT_PACKAGES = "burrow.carton"
+        const val DEFAULT_PACKAGES = "burrow.carton"
 
         /**
          * The relative path to the "libs" directory.
@@ -180,17 +184,8 @@ class Burrow : PathBound {
         fun getBurrowRootPath(): Path = Path.of(System.getProperty("user.home"))
             .resolve(ROOT_DIR)
             .normalize()
-    }
-}
 
-fun createBurrow(
-    logger: Logger = LoggerFactory.getLogger(Burrow::class.java)
-): Burrow {
-    try {
-        return Burrow()
-    } catch (ex: Throwable) {
-        logger.error(ex.message, ex)
-        throw ex
+        private val logger = LoggerFactory.getLogger(Burrow::class.java)
     }
 }
 

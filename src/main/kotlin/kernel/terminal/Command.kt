@@ -85,8 +85,6 @@ abstract class Command(val data: CommandData) :
         commandLine: CommandLine?,
         fullParseResult: ParseResult?
     ): Int {
-        ex?.printStackTrace()
-
         interpreter.printErrorMessageRecursively(stderr, ex)
         return ExitCode.SOFTWARE
     }

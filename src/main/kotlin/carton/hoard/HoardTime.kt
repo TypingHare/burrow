@@ -83,7 +83,7 @@ class HoardTime(renovator: Renovator) : Furnishing(renovator) {
                 val createdAt: Long? = it.entry[EntryKey.CREATED_AT]
                 if (createdAt != null) {
                     it.props[EntryKey.CREATED_AT] =
-                        dateToString(createdAt, createdAtFormat)
+                        timestampToString(createdAt, createdAtFormat)
                 }
             }
 
@@ -91,7 +91,7 @@ class HoardTime(renovator: Renovator) : Furnishing(renovator) {
                 val updatedAt: Long? = it.entry[EntryKey.UPDATED_AT]
                 if (updatedAt != null) {
                     it.props[EntryKey.UPDATED_AT] =
-                        dateToString(updatedAt, updatedAtFormat)
+                        timestampToString(updatedAt, updatedAtFormat)
                 }
             }
         }
@@ -137,7 +137,7 @@ class HoardTime(renovator: Renovator) : Furnishing(renovator) {
         }
     }
 
-    private fun dateToString(timestampMs: Long, format: String): String {
+    private fun timestampToString(timestampMs: Long, format: String): String {
         return LocalDateTime.ofInstant(
             Instant.ofEpochMilli(timestampMs),
             ZoneId.systemDefault()

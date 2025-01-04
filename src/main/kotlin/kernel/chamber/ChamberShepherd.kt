@@ -8,6 +8,7 @@ import java.nio.file.Path
 
 class ChamberShepherd(val burrow: Burrow) : PathBound {
     private val rootPath = burrow.getPath().resolve(CHAMBERS_DIR)
+
     val chambers = mutableMapOf<String, Chamber>()
     private val blueprints = mutableMapOf<String, Blueprint>()
 

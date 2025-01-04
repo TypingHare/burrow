@@ -1,6 +1,6 @@
 package burrow.client
 
-import burrow.kernel.createBurrow
+import burrow.kernel.Burrow
 import burrow.kernel.terminal.Command
 import burrow.kernel.terminal.Environment
 import java.io.IOException
@@ -8,7 +8,7 @@ import java.io.PipedInputStream
 import java.io.PipedOutputStream
 
 class LocalClient : Client() {
-    val burrow = createBurrow().apply { build() }
+    val burrow = Burrow().apply { build() }
 
     @Throws(IOException::class)
     override fun executeCommand(command: String): Int = executeCommand(

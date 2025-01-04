@@ -76,7 +76,7 @@ class Scheduler(renovator: Renovator) : Furnishing(renovator) {
 
             val startInstant = preBuildInstantMap[chamberName]
             val duration = Duration.between(startInstant, now).toMillis()
-            logger.info("Started chamber $chamberName in $duration ms")
+            logger.info("built chamber $chamberName in $duration ms")
         }
 
         burrow.courier.subscribe(ChamberPreDestroyEvent::class) {

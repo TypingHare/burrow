@@ -3,12 +3,12 @@ package burrow.client.cli
 import burrow.carton.server.Endpoint
 import burrow.client.Client
 import burrow.client.CommandLexer
-import burrow.client.LocalClient
 import burrow.client.SocketBasedClient
 import burrow.client.cli.command.ClearCommand
 import burrow.client.cli.command.ExitCommand
 import burrow.client.cli.command.HelpCommand
 import burrow.client.cli.command.UseCommand
+import burrow.client.getClient
 import burrow.kernel.BuildBurrowException
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.ChamberShepherd
@@ -157,7 +157,7 @@ class BurrowCli : Callable<Int> {
 
     private fun initializeBurrowClient() {
         if (server.isEmpty()) {
-            client = LocalClient()
+            client = getClient()
         } else {
             try {
                 val (host, port) = server.split(":")

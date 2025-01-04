@@ -5,13 +5,14 @@ import org.reflections.Reflections
 import org.reflections.util.ClasspathHelper
 import org.reflections.util.ConfigurationBuilder
 import org.reflections.util.FilterBuilder
+import org.slf4j.LoggerFactory
 import java.net.URL
 import java.net.URLClassLoader
 import java.nio.file.Path
 import java.util.*
 
 class Warehouse {
-    private val cartons = mutableMapOf<ClassLoader, Carton>()
+    val cartons = mutableMapOf<ClassLoader, Carton>()
     val furnishingClasses = mutableSetOf<FurnishingClass>()
 
     fun getFurnishingClass(id: String): FurnishingClass? =
@@ -31,9 +32,9 @@ class Warehouse {
 
         val urlCollection: List<URL> = when (classLoader) {
             is URLClassLoader -> classLoader.urLs.toList()
-            else -> packageNames.flatMap {
-                ClasspathHelper.forPackage(it, classLoader)
-            }.toList()
+            else -> packageNames
+                .flatMap { ClasspathHelper.forPackage(it, classLoader) }
+                .toList()
         }
 
         val configuration = ConfigurationBuilder()
@@ -42,6 +43,7 @@ class Warehouse {
             .addClassLoaders(classLoader)
 
         val reflections = Reflections(configuration)
+        val d = reflections.getSubTypesOf(Furnishing::class.java)
         val furnishingClasses = reflections
             .getSubTypesOf(Furnishing::class.java)
             .onEach { checkFurnishingClass(it.kotlin) }
@@ -50,6 +52,10 @@ class Warehouse {
             .map { it.kotlin }
             .toSet()
         this.furnishingClasses.addAll(kotlinFurnishingClasses)
+
+        kotlinFurnishingClasses.forEach {
+            logger.debug("Added furnishing class: ${it.java.name}")
+        }
 
         return Carton(path).apply {
             this.properties.putAll(properties)
@@ -73,6 +79,8 @@ class Warehouse {
                 throw InvalidFurnishingClassException(furnishingId, ex)
             }
         }
+
+        private val logger = LoggerFactory.getLogger(Warehouse::class.java)
     }
 }
 

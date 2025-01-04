@@ -12,22 +12,24 @@ class BurrowClient {
         @JvmStatic
         fun main(args: Array<String>) {
             System.setProperty("slf4j.internal.verbosity", "WARN")
-
-            val burrowPath = Burrow.getBurrowRootPath()
-            val serviceLockFilePath = burrowPath.resolve(SERVICE_LOCK_FILE)
-            val client = when (serviceLockFilePath.exists()) {
-                true -> {
-                    val firstLine = Files.readAllLines(serviceLockFilePath)[0]
-                    val endPoint = Endpoint.fromString(firstLine)
-                    SocketBasedClient(endPoint)
-                }
-                false -> {
-                    LocalClient()
-                }
-            }
-
-            val exitCode = client.use { it.executeCommand(args) }
+            
+            val exitCode = getClient().use { it.executeCommand(args) }
             exitProcess(exitCode)
+        }
+    }
+}
+
+fun getClient(): Client {
+    val burrowPath = Burrow.getBurrowRootPath()
+    val serviceLockFilePath = burrowPath.resolve(SERVICE_LOCK_FILE)
+    return when (serviceLockFilePath.exists()) {
+        true -> {
+            val firstLine = Files.readAllLines(serviceLockFilePath)[0]
+            val endPoint = Endpoint.fromString(firstLine)
+            SocketBasedClient(endPoint)
+        }
+        false -> {
+            LocalClient()
         }
     }
 }

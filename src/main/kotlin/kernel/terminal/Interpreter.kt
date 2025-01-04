@@ -73,7 +73,7 @@ class Interpreter(chamber: Chamber) : ExtendedChamberModule(chamber),
         while (currentEx != null && currentEx.cause !== ex) {
             printWriter.println(
                 """
-                    [${currentEx.javaClass.simpleName}]  ${currentEx.message}
+                    [${currentEx.javaClass.simpleName}] -> ${currentEx.message}
                 """.trimIndent()
             )
             currentEx = currentEx.cause

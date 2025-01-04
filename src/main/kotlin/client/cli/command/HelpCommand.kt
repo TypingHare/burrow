@@ -21,8 +21,8 @@ class HelpCommand(cli: BurrowCli) : BurrowCliCommand(cli) {
             val burrowCommand =
                 commandClass.java.getAnnotation(BurrowCommand::class.java)
             val name = burrowCommand.name
-            val description = burrowCommand.description[0]
-            println("${name.padEnd(10)} $description")
+            val header = burrowCommand.header[0]
+            println("/${name.padEnd(9)} $header")
         }
 
         return ExitCode.OK
