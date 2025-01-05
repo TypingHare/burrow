@@ -37,6 +37,12 @@ class TableCommand(data: CommandData) : Command(data) {
     )
     private var keysString: String = ""
 
+    @Option(
+        names = ["--spacing", "-s"],
+        description = ["The spacing between two columns."],
+    )
+    private var spacing = ""
+
     override fun call(): Int {
         val hoard = use(Hoard::class)
         val propertiesList = hoard.getAllEntries()
@@ -64,8 +70,14 @@ class TableCommand(data: CommandData) : Command(data) {
             table.add(record)
         }
 
-        TablePrinter(stdout, TablePrinterContext(table, getTerminalWidth()))
-            .print()
+        val spacing = when (spacing) {
+            "" -> 2
+            else -> spacing.toInt()
+        }
+        val context = TablePrinterContext(table, getTerminalWidth()).apply {
+            defaultSpacing = spacing
+        }
+        TablePrinter(stdout, context).print()
 
         return ExitCode.OK
     }
