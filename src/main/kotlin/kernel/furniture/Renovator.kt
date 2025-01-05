@@ -1,5 +1,6 @@
 package burrow.kernel.furniture
 
+import burrow.common.event.Event
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
 import burrow.kernel.chamber.ChamberShepherd
@@ -54,9 +55,18 @@ class Renovator(
      */
     fun initializeFurnishings() {
         val config = chamber.config
-        depTree.resolveUniquely { it.modifyConfig(config) }
-        depTree.resolveUniquely { it.assemble() }
-        depTree.resolveUniquely { it.launch() }
+        depTree.resolveUniquely {
+            it.modifyConfig(config)
+            chamber.courier.post(FurnishingPostModifyConfigEvent(it))
+        }
+        depTree.resolveUniquely {
+            it.assemble()
+            chamber.courier.post(FurnishingPostAssembleEvent(it))
+        }
+        depTree.resolveUniquely {
+            it.launch()
+            chamber.courier.post(FurnishingPostLaunchEvent(it))
+        }
     }
 
     /**
@@ -71,8 +81,8 @@ class Renovator(
     fun <T : Furnishing> getFurnishing(furnishingClass: KClass<T>): T? =
         getFurnishing(furnishingClass.java.name) as T?
 
-    private fun getAllFurnishingIds(): List<String> =
-        furnishings.values.map { it.javaClass.name }
+    private fun getAllFurnishingIds(): Set<String> =
+        furnishings.values.map { it.javaClass.name }.toSet()
 
     private fun getFurnishingIds(
         furnishingName: String,
@@ -84,8 +94,10 @@ class Renovator(
                 false -> emptyList()
             }
         } else {
-            val name = furnishingName.replaceFirstChar { it.uppercase() }
-            getAllFurnishingIds().filter { it.split(".").last() == name }
+            val name = furnishingName.lowercase()
+            furnishingIds.filter {
+                it.endsWith(".$name", ignoreCase = true)
+            }
         }
     }
 
@@ -95,7 +107,7 @@ class Renovator(
      * The furnishing name can be a full name (furnishing ID) or a simple name.
      */
     fun getFurnishingIds(furnishingName: String): List<String> =
-        getFurnishingIds(furnishingName, furnishingIds)
+        getFurnishingIds(furnishingName, getAllFurnishingIds())
 
     fun getUniqueFurnishingId(furnishingName: String): String {
         val furnishingIds = getFurnishingIds(furnishingName)
@@ -151,7 +163,10 @@ class Renovator(
         )
 
         val config = chamber.config
-        depTree.resolveUniquely { it.prepareConfig(config) }
+        depTree.resolveUniquely {
+            it.prepareConfig(config)
+            chamber.courier.post(FurnishingPostPrepareConfigEvent(it))
+        }
     }
 
     @Throws(
@@ -272,3 +287,8 @@ class UnexpectedVersionException(
         expected version: $expectedString
     """.trimIndent()
 )
+
+class FurnishingPostPrepareConfigEvent(val furnishing: Furnishing) : Event()
+class FurnishingPostModifyConfigEvent(val furnishing: Furnishing) : Event()
+class FurnishingPostAssembleEvent(val furnishing: Furnishing) : Event()
+class FurnishingPostLaunchEvent(val furnishing: Furnishing) : Event()

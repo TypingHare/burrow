@@ -11,7 +11,6 @@ import java.io.File
 class InfoCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        paramLabel = "<relative-path>",
         description = ["The relative path."],
     )
     private var relativePath = ""

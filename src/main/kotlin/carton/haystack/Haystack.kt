@@ -3,9 +3,9 @@ package burrow.carton.haystack
 import burrow.carton.haystack.command.*
 import burrow.carton.hoard.Entry
 import burrow.carton.hoard.HoardPair
+import burrow.common.converter.ConverterPair
 import burrow.kernel.Burrow
 import burrow.kernel.config.Config
-import burrow.kernel.converter.ConverterPair
 import burrow.kernel.furniture.Furnishing
 import burrow.kernel.furniture.Renovator
 import burrow.kernel.furniture.annotation.Dependency

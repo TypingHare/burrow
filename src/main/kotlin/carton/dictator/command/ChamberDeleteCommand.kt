@@ -11,7 +11,7 @@ import burrow.kernel.terminal.*
 class ChamberDeleteCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        paramLabel = "<name>",
+        paramLabel = "name",
         description = ["The name of the chamber blueprint to delete."]
     )
     private var chamberName = ""

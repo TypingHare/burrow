@@ -1,8 +1,8 @@
 package burrow.kernel
 
+import burrow.common.event.EventBus
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberShepherd
-import burrow.kernel.event.EventBus
 import burrow.kernel.furniture.Warehouse
 import burrow.kernel.furniture.Warehouse.Companion.PROPERTY_PACKAGES
 import burrow.kernel.path.PathBound
@@ -137,7 +137,7 @@ class Burrow : PathBound {
     private fun initializeWarehouse() {
         try {
             warehouse.scanPackage(
-                path.resolve(LIBS_DIR),
+                path.resolve(LIBS_DIR).resolve(JAR_NAME),
                 javaClass.classLoader,
                 Properties().apply { set(PROPERTY_PACKAGES, DEFAULT_PACKAGES) }
             )
@@ -151,6 +151,11 @@ class Burrow : PathBound {
          * The version of the Burrow kernel.
          */
         const val VERSION = "0.0.0"
+
+        /**
+         * The name of the fat jar file.
+         */
+        const val JAR_NAME = "burrow-$VERSION-all.jar"
 
         /**
          * The relative path to the Burrow root directory.

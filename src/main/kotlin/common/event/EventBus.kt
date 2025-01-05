@@ -1,4 +1,4 @@
-package burrow.kernel.event
+package burrow.common.event
 
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass

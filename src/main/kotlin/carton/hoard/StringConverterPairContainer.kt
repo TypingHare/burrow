@@ -1,7 +1,7 @@
 package burrow.carton.hoard
 
-import burrow.kernel.converter.StringConverterPair
-import burrow.kernel.converter.StringConverterPairs
+import burrow.common.converter.StringConverterPair
+import burrow.common.converter.StringConverterPairs
 
 class StringConverterPairContainer(
     private val defaultConverterPair: StringConverterPair<String>

@@ -2,8 +2,8 @@ package burrow.carton.hoard
 
 import burrow.carton.hoard.command.*
 import burrow.carton.hoard.command.backup.*
+import burrow.common.event.Event
 import burrow.kernel.Burrow
-import burrow.kernel.event.Event
 import burrow.kernel.furniture.Furnishing
 import burrow.kernel.furniture.Renovator
 import burrow.kernel.furniture.annotation.Furniture
@@ -24,11 +24,11 @@ import kotlin.io.path.exists
 )
 class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
     private val path = chamber.getPath().resolve(HOARD_FILE)
-    private val entryStore = mutableListOf<Entry?>()
+    val entryStore = mutableListOf<Entry?>()
     val converterPairsContainer = StringConverterPairContainer()
-    private val maxId = AtomicInteger(0)
+    val maxId = AtomicInteger(0)
     val size = AtomicInteger(0)
-    private val saveWhenDiscard = AtomicBoolean(false)
+    val saveWhenDiscard = AtomicBoolean(false)
 
     override fun assemble() {
         // Commands related to the hoard

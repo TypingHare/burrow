@@ -2,9 +2,9 @@ package burrow.carton.server
 
 import burrow.carton.server.command.ServerStartCommand
 import burrow.carton.server.command.ServerStopCommand
+import burrow.common.converter.StringConverterPairs
 import burrow.kernel.Burrow
 import burrow.kernel.config.Config
-import burrow.kernel.converter.StringConverterPairs
 import burrow.kernel.furniture.Furnishing
 import burrow.kernel.furniture.Renovator
 import burrow.kernel.furniture.annotation.Furniture

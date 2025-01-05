@@ -1,4 +1,4 @@
-package burrow.kernel.event
+package burrow.common.event
 
 abstract class Event
 

@@ -1,4 +1,4 @@
-package burrow.kernel.converter
+package burrow.common.converter
 
 data class ConverterPair<L, R>(
     val leftConverter: LeftConverter<L, R>,

@@ -14,8 +14,11 @@ class CartonCommand(data: CommandData) : Command(data) {
         warehouse.cartons.values.joinToString("\n\n") { carton ->
             buildString {
                 appendLine(carton.path)
-                carton.furnishingClasses.forEach { furnishingClass ->
-                    appendLine("  - ${furnishingClass.java.name}")
+                carton.properties.forEach { (key, value) ->
+                    appendLine("  ~ $key = $value")
+                }
+                carton.furnishingClasses.forEach {
+                    appendLine("  - ${it.java.name}")
                 }
             }
         }.let(stdout::println)

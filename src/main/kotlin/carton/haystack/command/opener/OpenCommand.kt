@@ -17,7 +17,6 @@ import burrow.kernel.terminal.Parameters
 class OpenCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        paramLabel = "<relative-path>",
         description = ["The relative path of the entry."]
     )
     private var relativePath = ""

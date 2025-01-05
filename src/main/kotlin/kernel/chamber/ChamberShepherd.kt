@@ -1,7 +1,7 @@
 package burrow.kernel.chamber
 
+import burrow.common.event.Event
 import burrow.kernel.Burrow
-import burrow.kernel.event.Event
 import burrow.kernel.furniture.Blueprint
 import burrow.kernel.path.PathBound
 import java.nio.file.Path

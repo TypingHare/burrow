@@ -39,7 +39,6 @@ import kotlin.system.exitProcess
 class BurrowCli : Callable<Int> {
     @Parameters(
         index = "0",
-        paramLabel = "<initial-chamber-name>",
         description = ["The name of the initial chamber."],
         defaultValue = ChamberShepherd.ROOT_CHAMBER_NAME
     )
@@ -54,7 +53,6 @@ class BurrowCli : Callable<Int> {
 
     @Option(
         names = ["-r", "--server"],
-        paramLabel = "<server>",
         description = ["Server host and port."],
         defaultValue = ""
     )

@@ -1,7 +1,7 @@
 package burrow.kernel.chamber
 
+import burrow.common.event.EventBus
 import burrow.kernel.config.Config
-import burrow.kernel.event.EventBus
 import burrow.kernel.furniture.Renovator
 import burrow.kernel.path.PathBound
 import burrow.kernel.terminal.Interpreter

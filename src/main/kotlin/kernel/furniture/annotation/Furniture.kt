@@ -6,7 +6,7 @@ package burrow.kernel.furniture.annotation
 annotation class Furniture(
     val version: String,
     val description: String,
-    val type: String = Type.MAIN,
+    val type: String = Type.COMPONENT,
 ) {
     object Type {
         // Only the root chamber can install

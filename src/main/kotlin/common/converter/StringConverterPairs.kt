@@ -1,4 +1,4 @@
-package burrow.kernel.converter
+package burrow.common.converter
 
 object StringConverterPairs {
     val IDENTITY = StringConverterPair({ it }, { it ?: "" })

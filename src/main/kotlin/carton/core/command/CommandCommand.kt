@@ -15,7 +15,6 @@ import burrow.kernel.terminal.*
 class CommandCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        paramLabel = "<furnishing-id>",
         description = [
             "Only displays the commands of a specified furnishing ID."
         ],

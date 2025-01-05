@@ -1,6 +1,6 @@
 # TODO
 
 - [ ] "Already in use" AND "NullPointerException" problem
-- [ ] Entry -> set right value directly
+- [ ] Memo
 
 https://github.com/TypingHare/burrow/tree/java-version-deprecated/src/main/java/burrow/furniture/standard

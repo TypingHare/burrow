@@ -1,9 +1,9 @@
 package burrow.kernel.config
 
+import burrow.common.converter.StringConverterPair
+import burrow.common.converter.StringConverterPairs
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
-import burrow.kernel.converter.StringConverterPair
-import burrow.kernel.converter.StringConverterPairs
 import burrow.kernel.path.Persistable
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

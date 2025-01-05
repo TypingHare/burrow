@@ -13,7 +13,6 @@ import kotlin.io.path.exists
 class BackupRestoreCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        paramLabel = "<file-name>",
         description = ["The file name of the backup used to restore."]
     )
     private var fileName = ""

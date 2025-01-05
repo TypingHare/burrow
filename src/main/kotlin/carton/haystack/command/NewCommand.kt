@@ -11,14 +11,12 @@ import burrow.kernel.terminal.*
 class NewCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        paramLabel = "<relative-path>",
         description = ["The relative path to add."],
     )
     private var relativePath = ""
 
     @Parameters(
         index = "1",
-        paramLabel = "<absolute-path>",
         description = ["The associated absolute path."],
         defaultValue = ""
     )

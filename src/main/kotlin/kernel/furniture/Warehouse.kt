@@ -44,8 +44,7 @@ class Warehouse {
             .setUrls(urlCollection)
             .addClassLoaders(classLoader)
 
-        val reflections = Reflections(configuration)
-        val furnishingClasses = reflections
+        val furnishingClasses = Reflections(configuration)
             .getSubTypesOf(Furnishing::class.java)
             .onEach {
                 checkFurnishingClass(it.kotlin)
@@ -64,11 +63,11 @@ class Warehouse {
             logger.debug("Added furnishing class: ${it.java.name}")
         }
 
-        return Carton(path).apply {
+        return Carton(path, classLoader).apply {
             this.properties.putAll(properties)
             this.furnishingClasses.addAll(kotlinFurnishingClasses)
             cartons[classLoader] = this
-            
+
             furnishingIds.forEach {
                 this@Warehouse.furnishingIdToCarton[it] = this
             }

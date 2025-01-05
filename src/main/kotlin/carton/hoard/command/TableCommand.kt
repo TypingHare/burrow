@@ -40,10 +40,14 @@ class TableCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
         val hoard = use(Hoard::class)
         val propertiesList = hoard.getAllEntries()
-            .filter { it.id >= startId }
-            .let { if (length in it.indices) it.subList(0, length) else it }
-            .map { Pair(it.id, hoard.formatStore(it)) }
+            .filter(
+                when (shouldReverse) {
+                    true -> { it -> it.id <= startId }
+                    false -> { it -> it.id >= startId }
+                })
             .let { if (shouldReverse) it.reversed() else it }
+            .let { if (length >= 0) it.take(length) else it }
+            .map { Pair(it.id, hoard.formatStore(it)) }
 
         val propertyKeyList = when (keysString) {
             "" -> getPropertyKeys(propertiesList)

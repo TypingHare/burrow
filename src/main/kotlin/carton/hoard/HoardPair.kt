@@ -4,9 +4,9 @@ import burrow.carton.hoard.command.pair.PairCountCommand
 import burrow.carton.hoard.command.pair.PairKeysCommand
 import burrow.carton.hoard.command.pair.PairNewCommand
 import burrow.carton.hoard.command.pair.PairValuesCommand
+import burrow.common.converter.StringConverterPairs
 import burrow.kernel.Burrow
 import burrow.kernel.config.Config
-import burrow.kernel.converter.StringConverterPairs
 import burrow.kernel.furniture.Furnishing
 import burrow.kernel.furniture.Renovator
 import burrow.kernel.furniture.annotation.Dependency

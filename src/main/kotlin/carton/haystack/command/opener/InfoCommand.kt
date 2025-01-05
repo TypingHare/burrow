@@ -12,7 +12,6 @@ import burrow.carton.haystack.command.InfoCommand as HaystackInfoCommand
 class InfoCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        paramLabel = "<relative-path>",
         description = ["The relative path."],
     )
     private var relativePath = ""

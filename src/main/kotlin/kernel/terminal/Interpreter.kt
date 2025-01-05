@@ -1,8 +1,8 @@
 package burrow.kernel.terminal
 
+import burrow.common.event.Event
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ExtendedChamberModule
-import burrow.kernel.event.Event
 import burrow.kernel.stream.StateWriterController
 import burrow.kernel.stream.state.OutputState
 import picocli.CommandLine

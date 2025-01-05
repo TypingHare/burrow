@@ -24,7 +24,8 @@ class FurnishingListCommand(data: CommandData) : Command(data) {
         val furnishingClasses = core.getFurnishingClasses().toList()
         val list = when (shouldDisplayAll) {
             true -> renovator.getAvailableFurnishingClasses()
-            false -> furnishingClasses
+                .sortedBy { it.java.name }
+            false -> furnishingClasses.sortedBy { it.java.name }
         }.toList()
         val context = FurnishingClassesPrinterContext(list, maxColumns).apply {
             if (shouldDisplayAll) {

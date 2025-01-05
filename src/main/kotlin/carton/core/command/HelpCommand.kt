@@ -3,6 +3,9 @@ package burrow.carton.core.command
 import burrow.carton.core.help.CommandParser
 import burrow.carton.core.printer.SynopsisPrintContext
 import burrow.carton.core.printer.SynopsisPrinter
+import burrow.common.palette.Highlight
+import burrow.common.palette.PicocliPalette
+import burrow.common.palette.Style
 import burrow.kernel.stream.TablePrinter
 import burrow.kernel.stream.TablePrinterContext
 import burrow.kernel.terminal.*
@@ -46,6 +49,8 @@ class HelpCommand(data: CommandData) : Command(data) {
         }
 
         val burrowCommand = extractBurrowCommand(commandClass)
+        val palette = PicocliPalette()
+        val boldHighlight = Highlight(style = Style.BOLD)
 
         // Header
         val header = burrowCommand.header.let { it.firstOrNull() ?: "" }
@@ -53,7 +58,7 @@ class HelpCommand(data: CommandData) : Command(data) {
         stdout.println()
 
         // Usage
-        stdout.println("SYNOPSIS")
+        stdout.println(palette.color("SYNOPSIS", boldHighlight))
         val commandParameters = CommandParser.getCommandParameters(commandClass)
         val commandOptions = CommandParser.getCommandOptions(commandClass)
         SynopsisPrinter(
@@ -70,14 +75,14 @@ class HelpCommand(data: CommandData) : Command(data) {
         val descriptionParagraphs = burrowCommand.description.toList()
         if (descriptionParagraphs.isNotEmpty()) {
             stdout.println()
-            stdout.println("DESCRIPTION")
+            stdout.println(palette.color("DESCRIPTION", boldHighlight))
             stdout.println(descriptionParagraphs.joinToString("\n"))
         }
 
         // Parameters
         if (commandParameters.isNotEmpty()) {
             stdout.println()
-            stdout.println("PARAMETERS")
+            stdout.println(palette.color("PARAMETERS", boldHighlight))
             val table = mutableListOf<List<String>>()
             for (parameter in commandParameters) {
                 val left = when (parameter.isOptional) {
@@ -98,7 +103,7 @@ class HelpCommand(data: CommandData) : Command(data) {
         // Options
         if (commandOptions.isNotEmpty()) {
             stdout.println()
-            stdout.println("OPTIONS")
+            stdout.println(palette.color("OPTIONS", boldHighlight))
             val table = mutableListOf<List<String>>()
             for (option in commandOptions) {
                 var left = option.longName ?: ""

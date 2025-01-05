@@ -17,7 +17,7 @@ class ChamberNewCommand(data: CommandData) : Command(data) {
     private var chamberName = ""
 
     @Parameters(
-        index = "0",
+        index = "1",
         description = ["The description of the chamber."],
         defaultValue = Core.Default.DESCRIPTION
     )
