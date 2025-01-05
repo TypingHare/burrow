@@ -6,7 +6,7 @@ annotation class InverseSetConfig(
 
 annotation class ConfigItem(
     val key: String,
-    val defaultValue: String,
+    val defaultValue: String = CONFIG_ITEM_VALUE_DEFAULT,
     val value: String = CONFIG_ITEM_VALUE_DEFAULT,
     val type: ConverterPairType = ConverterPairType.IDENTITY
 )

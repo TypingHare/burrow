@@ -115,7 +115,7 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
 
         val entry = Entry(id, converterPairsContainer)
         properties.forEach { (k, v) -> entry.setWithLeft(k, v) }
-        courier.post(EntryRestoreEvent(entry))
+        courier.post(EntryCreateEvent(entry))
 
         for (i in entryStore.size..id) entryStore.add(null)
         entryStore[id] = entry

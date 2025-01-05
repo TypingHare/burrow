@@ -41,12 +41,22 @@ class Inverse(renovator: Renovator) : Furnishing(renovator) {
                 furnishing::class.java.getAnnotation(InverseSetConfig::class.java)
             if (inverseSetConfig != null) {
                 for (configItem in inverseSetConfig.config) {
+                    val key = configItem.key
                     when (val value = configItem.value) {
-                        CONFIG_ITEM_VALUE_DEFAULT -> config.setIfAbsent(
-                            configItem.key,
-                            configItem.defaultValue
-                        )
-                        else -> config[configItem.key] = value
+                        CONFIG_ITEM_VALUE_DEFAULT -> {
+                            val defaultValue = configItem.defaultValue
+                            if (defaultValue == CONFIG_ITEM_VALUE_DEFAULT) {
+                                throw ConfigItemNoValueException(key)
+                            }
+
+                            config.setIfAbsent(
+                                key,
+                                config.convertRawToItem(key, defaultValue)
+                            )
+                        }
+                        else -> {
+                            config[key] = config.convertRawToItem(key, value)
+                        }
                     }
                 }
             }
@@ -97,3 +107,6 @@ class Inverse(renovator: Renovator) : Furnishing(renovator) {
         }
     }
 }
+
+class ConfigItemNoValueException(key: String) :
+    RuntimeException("Both default value and value are no specified: $key")

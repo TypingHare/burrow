@@ -59,7 +59,7 @@ class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
     fun <T> getNotNull(key: String): T =
         get<T>(key) ?: throw ConfigValueIsNullException(key)
 
-    fun setIfAbsent(key: String, value: Any) {
+    fun setIfAbsent(key: String, value: Any?) {
         if (!entries.containsKey(key) || entries[key] == null) {
             set(key, value)
         }
@@ -71,13 +71,13 @@ class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
 
     fun addKey(key: String) = addKey(key, StringConverterPairs.IDENTITY)
 
-    private fun convertRawToItem(key: String, value: String): Any? {
+    fun convertRawToItem(key: String, value: String): Any? {
         val handler =
             converterPairs[key] ?: throw InvalidConfigKeyException(key)
         return handler.leftConverter.toRight(value)
     }
 
-    private fun <T> convertItemToRaw(key: String, item: T?): String {
+    fun <T> convertItemToRaw(key: String, item: T?): String {
         @Suppress("UNCHECKED_CAST")
         val handler = converterPairs[key] as StringConverterPair<T>?
             ?: throw InvalidConfigKeyException(key)

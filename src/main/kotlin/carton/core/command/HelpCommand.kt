@@ -76,7 +76,9 @@ class HelpCommand(data: CommandData) : Command(data) {
         if (descriptionParagraphs.isNotEmpty()) {
             stdout.println()
             stdout.println(palette.color("DESCRIPTION", boldHighlight))
-            stdout.println(descriptionParagraphs.joinToString("\n"))
+            stdout.println(descriptionParagraphs.joinToString("\n") {
+                " ".repeat(4) + it
+            })
         }
 
         // Parameters
