@@ -9,6 +9,9 @@ import burrow.client.cli.command.ExitCommand
 import burrow.client.cli.command.HelpCommand
 import burrow.client.cli.command.UseCommand
 import burrow.client.getClient
+import burrow.common.palette.Highlight
+import burrow.common.palette.PicocliPalette
+import burrow.common.palette.Style
 import burrow.kernel.BuildBurrowException
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.ChamberShepherd
@@ -65,6 +68,8 @@ class BurrowCli : Callable<Int> {
     private var currentChamberName = ChamberShepherd.ROOT_CHAMBER_NAME
     private var lastExecutionDuration: Duration? = null
     private var lastExecutionExitCode: Int? = null
+
+    private val palette = PicocliPalette()
 
     override fun call(): Int {
         if (version) {
@@ -224,8 +229,16 @@ class BurrowCli : Callable<Int> {
             if (it != null) "${it.toMillis()}ms" else ""
         }
 
+        val coloredChamberName =
+            palette.color(currentChamberName, Highlights.CHAMBER)
+        val coloredExitCode = when (exitCodeString) {
+            "0" -> palette.color(exitCodeString, Highlights.EXIT_CODE_OK)
+            else -> palette.color(exitCodeString, Highlights.EXIT_CODE_ERROR)
+        }
+        val coloredDuration = palette.color(durationString, Highlights.DURATION)
+
         return """
-            $currentChamberName  $exitCodeString  $durationString
+            $coloredChamberName  $coloredExitCode  $coloredDuration
             ➜ 
         """.trimIndent()
     }
@@ -253,5 +266,12 @@ class BurrowCli : Callable<Int> {
         const val EXIT = "exit"
         const val USE = "use"
         const val CLEAR = "clear"
+    }
+
+    object Highlights {
+        val CHAMBER = Highlight(169, 0, Style.BOLD)
+        val DURATION = Highlight(75, 0, 0)
+        val EXIT_CODE_OK = Highlight(121, 0, 0)
+        val EXIT_CODE_ERROR = Highlight(160, 0, 0)
     }
 }

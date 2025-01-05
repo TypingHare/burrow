@@ -4,5 +4,6 @@
 - [ ] Memo
 - [ ] Complete "help" command
 - [ ] Redirect log to a file
+- [ ] Hoard changes?
 
 https://github.com/TypingHare/burrow/tree/java-version-deprecated/src/main/java/burrow/furniture/standard
