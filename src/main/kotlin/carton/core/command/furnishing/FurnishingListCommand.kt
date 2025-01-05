@@ -23,9 +23,9 @@ class FurnishingListCommand(data: CommandData) : Command(data) {
         val maxColumns = getTerminalWidth()
         val furnishingClasses = core.getFurnishingClasses().toList()
         val list = when (shouldDisplayAll) {
-            true -> core.getAvailableFurnishingClasses()
+            true -> renovator.getAvailableFurnishingClasses()
             false -> furnishingClasses
-        }
+        }.toList()
         val context = FurnishingClassesPrinterContext(list, maxColumns).apply {
             if (shouldDisplayAll) {
                 addStarBeforeInstalledFurnishing = true

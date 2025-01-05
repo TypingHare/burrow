@@ -8,6 +8,18 @@ object StringConverterPairs {
         StringConverterPair({ it.toFloat() }, { it?.toString() ?: "0.0" })
     val DOUBLE =
         StringConverterPair({ it.toDouble() }, { it?.toString() ?: "0.0" })
-    val BOOLEAN =
-        StringConverterPair({ it.toBoolean() }, { it?.toString() ?: "false" })
+    val BOOLEAN = StringConverterPair(
+        {
+            when (it.lowercase()) {
+                "true" -> true
+                else -> false
+            }
+        },
+        {
+            when (it) {
+                true -> "true"
+                else -> "false"
+            }
+        }
+    )
 }

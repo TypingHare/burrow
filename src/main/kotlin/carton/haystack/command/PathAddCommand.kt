@@ -1,6 +1,6 @@
 package burrow.carton.haystack.command
 
-import burrow.carton.core.command.ChamberRebuildCommand
+import burrow.carton.core.command.chamber.ChamberRebuildCommand
 import burrow.carton.haystack.Haystack
 import burrow.kernel.terminal.BurrowCommand
 import burrow.kernel.terminal.Command

@@ -74,13 +74,20 @@ class Dictator(renovator: Renovator) : Furnishing(renovator) {
             ChamberInfo(chamberName, getDescriptionFromConfigFile(chamberName))
         }
 
-    fun createFurnishingsJson(path: Path) {
+    fun createFurnishingsJson(chamberPath: Path) {
         val furnishingsJsonPath =
-            path.resolve(Renovator.FURNISHINGS_FILE_NAME)
+            chamberPath.resolve(Renovator.FILE_NAME)
         val content = Gson().toJson(DEFAULT_FURNISHING_LIST)
         Files.write(furnishingsJsonPath, content.toByteArray())
     }
 
+    fun createConfigJson(chamberPath: Path, description: String) {
+        val configJsonPath = chamberPath.resolve(Config.FILE_NAME)
+        val content = Gson().toJson(
+            mapOf(Core.ConfigKey.DESCRIPTION to description)
+        )
+        Files.write(configJsonPath, content.toByteArray())
+    }
 
     private fun getDescriptionFromConfigFile(chamberName: String): String {
         val configFilePath = chamberShepherd.getPath()

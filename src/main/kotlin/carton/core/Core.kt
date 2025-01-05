@@ -1,15 +1,14 @@
 package burrow.carton.core
 
 import burrow.carton.core.command.*
+import burrow.carton.core.command.chamber.ChamberCommand
+import burrow.carton.core.command.chamber.ChamberDestroyCommand
+import burrow.carton.core.command.chamber.ChamberRebuildCommand
 import burrow.carton.core.command.config.ConfigCommand
 import burrow.carton.core.command.config.ConfigGetCommand
 import burrow.carton.core.command.config.ConfigSetCommand
-import burrow.carton.core.command.furnishing.FurnishingAddCommand
-import burrow.carton.core.command.furnishing.FurnishingListCommand
-import burrow.carton.core.command.furnishing.FurnishingRemoveCommand
-import burrow.carton.core.command.furnishing.FurnishingTreeCommand
+import burrow.carton.core.command.furnishing.*
 import burrow.kernel.Burrow
-import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.config.Config
 import burrow.kernel.furniture.*
 import burrow.kernel.furniture.annotation.Furniture
@@ -37,6 +36,7 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(HelpCommand::class)
 
         // Chamber commands
+        registerCommand(ChamberCommand::class)
         registerCommand(ChamberRebuildCommand::class)
         registerCommand(ChamberDestroyCommand::class)
 
@@ -45,11 +45,12 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(FurnishingTreeCommand::class)
         registerCommand(FurnishingAddCommand::class)
         registerCommand(FurnishingRemoveCommand::class)
+        registerCommand(FurnishingMatchCommand::class)
 
         // Commands related to chamber commands
         registerCommand(CommandCommand::class)
 
-        // Commands related to config
+        // Config commands
         registerCommand(ConfigCommand::class)
         registerCommand(ConfigGetCommand::class)
         registerCommand(ConfigSetCommand::class)
@@ -86,25 +87,6 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         renovator.furnishings.values
             .map { it::class }
             .sortedBy { extractId(it) }
-            .toList()
-
-    /**
-     * Retrieves all furnishing classes available for this chamber.
-     */
-    fun getAvailableFurnishingClasses(): List<FurnishingClass> {
-        val isRoot = chamber.name == ChamberShepherd.ROOT_CHAMBER_NAME
-        return burrow.warehouse.furnishingClasses
-            .filter { isRoot || extractType(it) != Furniture.Type.ROOT }
-            .sortedBy { extractId(it) }
-            .toList()
-    }
-
-    private fun getTopLevelFurnishings(): List<Furnishing> =
-        mutableSetOf<Furnishing?>()
-            .apply {
-                renovator.depTree.root.children.forEach { add(it.element) }
-            }
-            .filterNotNull()
             .toList()
 
     fun getFurnishingCommandClasses(
@@ -146,6 +128,19 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
             handle(renovator.depTree.root, root)
         }
     }
+
+    private fun getTopLevelFurnishings(): List<Furnishing> =
+        mutableSetOf<Furnishing?>()
+            .apply {
+                renovator.depTree.root.children.forEach { add(it.element) }
+            }
+            .filterNotNull()
+            .toList()
+
+    fun getFurnishingConfigKeys(furnishing: Furnishing): Set<String> =
+        Config(this.chamber)
+            .apply { furnishing.prepareConfig(this) }
+            .converterPairs.keys
 
     object Default {
         const val DESCRIPTION = "<No description>"

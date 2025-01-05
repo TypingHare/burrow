@@ -24,26 +24,31 @@ class TableCommand(data: CommandData) : Command(data) {
     )
     private var length = -1
 
+    @Option(
+        names = ["--reverse", "-r"],
+        description = ["Reverse."]
+    )
+    private var shouldReverse = false
+
+    @Option(
+        names = ["--keys", "-k"],
+        description = ["A list of keys to be displayed."],
+        defaultValue = ""
+    )
+    private var keysString: String = ""
+
     override fun call(): Int {
         val hoard = use(Hoard::class)
         val propertiesList = hoard.getAllEntries()
             .filter { it.id >= startId }
             .let { if (length in it.indices) it.subList(0, length) else it }
             .map { Pair(it.id, hoard.formatStore(it)) }
+            .let { if (shouldReverse) it.reversed() else it }
 
-        // Collect the property keys
-        val propertyKeySet = mutableSetOf<String>()
-        for (properties in propertiesList) {
-            properties.second.keys.forEach { propertyKeySet.add(it) }
+        val propertyKeyList = when (keysString) {
+            "" -> getPropertyKeys(propertiesList)
+            else -> keysString.split(Hoard.KEY_DELIMITER).map { it.trim() }
         }
-
-        if (propertyKeySet.size > 10) {
-            stderr.println("There are more than 10 property keys. The table would be too big!")
-            return ExitCode.USAGE
-        }
-
-        // Create the table
-        val propertyKeyList = propertyKeySet.toList()
         val table = mutableListOf<List<String>>().apply {
             add(mutableListOf("ID").apply { addAll(propertyKeyList) })
         }
@@ -59,5 +64,17 @@ class TableCommand(data: CommandData) : Command(data) {
             .print()
 
         return ExitCode.OK
+    }
+
+    private fun getPropertyKeys(
+        propertiesList: List<Pair<Int, Map<String, String>>>
+    ): List<String> {
+        // Collect the property keys
+        val propertyKeySet = mutableSetOf<String>()
+        for (properties in propertiesList) {
+            properties.second.keys.forEach { propertyKeySet.add(it) }
+        }
+
+        return propertyKeySet.toList()
     }
 }

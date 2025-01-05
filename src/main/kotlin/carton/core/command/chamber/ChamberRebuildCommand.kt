@@ -1,4 +1,4 @@
-package burrow.carton.core.command
+package burrow.carton.core.command.chamber
 
 import burrow.carton.core.Core
 import burrow.kernel.terminal.BurrowCommand

@@ -16,19 +16,20 @@ open class DepTree<T> {
         resolveUniquely(action, root, mutableSetOf())
     }
 
-    fun resolveUniquely(
+    private fun resolveUniquely(
         action: (T) -> Unit,
         node: Node<T>,
-        visitedNodes: MutableSet<Node<T>>
+        visitedElements: MutableSet<T?>
     ) {
-        if (visitedNodes.add(node)) {
-            node.children.forEach { resolveUniquely(action, it, visitedNodes) }
+        if (visitedElements.add(node.element)) {
+            node.children.forEach {
+                resolveUniquely(action, it, visitedElements)
+            }
             node.element?.let(action)
         }
     }
 
     class Node<T>(val element: T?) {
         val children = mutableListOf<Node<T>>()
-        fun addChild(element: T): Boolean = children.add(Node(element))
     }
 }

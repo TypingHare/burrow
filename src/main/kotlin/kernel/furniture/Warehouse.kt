@@ -14,6 +14,8 @@ import java.util.*
 class Warehouse {
     val cartons = mutableMapOf<ClassLoader, Carton>()
     val furnishingClasses = mutableSetOf<FurnishingClass>()
+    val furnishingIds = mutableSetOf<String>()
+    val furnishingIdToCarton = mutableMapOf<String, Carton>()
 
     fun getFurnishingClass(id: String): FurnishingClass? =
         furnishingClasses.firstOrNull { it.java.name == id }
@@ -43,15 +45,20 @@ class Warehouse {
             .addClassLoaders(classLoader)
 
         val reflections = Reflections(configuration)
-        val d = reflections.getSubTypesOf(Furnishing::class.java)
         val furnishingClasses = reflections
             .getSubTypesOf(Furnishing::class.java)
-            .onEach { checkFurnishingClass(it.kotlin) }
+            .onEach {
+                checkFurnishingClass(it.kotlin)
+                checkAlreadyExist(it.kotlin)
+            }
 
         val kotlinFurnishingClasses = furnishingClasses
             .map { it.kotlin }
             .toSet()
         this.furnishingClasses.addAll(kotlinFurnishingClasses)
+
+        val furnishingIds = kotlinFurnishingClasses.map { it.java.name }
+        this.furnishingIds.addAll(furnishingIds)
 
         kotlinFurnishingClasses.forEach {
             logger.debug("Added furnishing class: ${it.java.name}")
@@ -61,6 +68,16 @@ class Warehouse {
             this.properties.putAll(properties)
             this.furnishingClasses.addAll(kotlinFurnishingClasses)
             cartons[classLoader] = this
+            
+            furnishingIds.forEach {
+                this@Warehouse.furnishingIdToCarton[it] = this
+            }
+        }
+    }
+
+    private fun checkAlreadyExist(furnishingClass: FurnishingClass) {
+        if (furnishingClass.java.name in furnishingIds) {
+            throw FurnishingAlreadyExistsException(furnishingClass.java.name)
         }
     }
 
@@ -89,3 +106,6 @@ class InvalidFurnishingClassException(id: String, cause: Exception) :
 
 class NotAnnotatedByFurnitureException(id: String) :
     RuntimeException("Furnishing class should annotated by ${Furniture::class.java.name} : $id")
+
+class FurnishingAlreadyExistsException(furnishingId: String) :
+    RuntimeException("Furnishing class already exists: $furnishingId")

@@ -26,11 +26,19 @@ class TablePrinter(
         val defaultSpacing = context.defaultSpacing
         val cols = table[0].size
         val rows = table.size
-        val widths = MutableList(cols) { 0 }
+
+        val widthTable = mutableListOf<List<Int>>()
+        for (row in 0 until rows) {
+            val line = mutableListOf<Int>().apply { widthTable.add(this) }
+            for (col in 0 until cols) {
+                line.add(getWidth(table[row][col]))
+            }
+        }
+
+        val maxWidths = MutableList(cols) { 0 }
         for (row in 0 until rows) {
             for (col in 0 until cols) {
-                val length = getLength(table[row][col])
-                widths[col] = max(widths[col], length)
+                maxWidths[col] = max(maxWidths[col], widthTable[row][col])
             }
         }
 
@@ -38,13 +46,30 @@ class TablePrinter(
             var line = ""
             for (col in 0 until cols) {
                 val spacing = spacings.getOrElse(col) { defaultSpacing }
-                line += table[row][col].padEnd(widths[col] + spacing)
+                line += table[row][col] + " ".repeat(maxWidths[col] - widthTable[row][col] + spacing)
             }
             writer.println(line)
         }
     }
 
-    private fun getLength(text: String): Int {
-        return AttributedString.fromAnsi(text).length
+    private fun getWidth(text: String): Int {
+        val plainText = AttributedString.fromAnsi(text)
+        var width = 0
+        for (char in plainText) {
+            width += if (char.isChineseCharacter()) {
+                2
+            } else {
+                1
+            }
+        }
+
+        return width
     }
+}
+
+fun Char.isChineseCharacter(): Boolean {
+    val codePoint = this.code
+    return (codePoint in 0x4E00..0x9FFF) ||
+            (codePoint in 0x3400..0x4DBF) ||
+            (codePoint in 0x20000..0x2A6DF)
 }

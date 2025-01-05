@@ -2,6 +2,8 @@ package burrow.kernel.furniture
 
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
+import burrow.kernel.chamber.ChamberShepherd
+import burrow.kernel.furniture.annotation.Furniture
 import burrow.kernel.path.Persistable
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -18,7 +20,7 @@ class Renovator(
     /**
      * The path to the file storing a list of furnishing IDs.
      */
-    private val path = chamber.getPath().resolve(FURNISHINGS_FILE_NAME)
+    private val path = chamber.getPath().resolve(FILE_NAME)
 
     val furnishings = mutableMapOf<String, Furnishing>()
     val depTree = DepTree<Furnishing>()
@@ -72,12 +74,10 @@ class Renovator(
     private fun getAllFurnishingIds(): List<String> =
         furnishings.values.map { it.javaClass.name }
 
-    /**
-     * Gets furnishing IDs by a furnishing name.
-     *
-     * The furnishing name can be a full name (furnishing ID) or a simple name.
-     */
-    fun getFurnishingIds(furnishingName: String): List<String> {
+    private fun getFurnishingIds(
+        furnishingName: String,
+        furnishingIds: Set<String>
+    ): List<String> {
         return if (furnishingName.contains('.')) {
             when (furnishingIds.contains(furnishingName)) {
                 true -> listOf(furnishingName)
@@ -86,6 +86,49 @@ class Renovator(
         } else {
             val name = furnishingName.replaceFirstChar { it.uppercase() }
             getAllFurnishingIds().filter { it.split(".").last() == name }
+        }
+    }
+
+    /**
+     * Gets furnishing IDs by a furnishing name.
+     *
+     * The furnishing name can be a full name (furnishing ID) or a simple name.
+     */
+    fun getFurnishingIds(furnishingName: String): List<String> =
+        getFurnishingIds(furnishingName, furnishingIds)
+
+    fun getUniqueFurnishingId(furnishingName: String): String {
+        val furnishingIds = getFurnishingIds(furnishingName)
+        return when (furnishingIds.size) {
+            0 -> throw FurnishingNameNotRecognizedException(furnishingName)
+            1 -> furnishingIds[0]
+            else -> throw MultipleFurnishingMatchedException(furnishingIds)
+        }
+    }
+
+    /**
+     * Retrieves all furnishing classes available for this chamber.
+     */
+    fun getAvailableFurnishingClasses(): Set<FurnishingClass> {
+        val isRoot = chamber.name == ChamberShepherd.ROOT_CHAMBER_NAME
+        return burrow.warehouse.furnishingClasses
+            .filter { isRoot || extractType(it) != Furniture.Type.ROOT }
+            .toSet()
+    }
+
+    private fun getAvailableFurnishingIds(furnishingName: String): List<String> {
+        return getFurnishingIds(
+            furnishingName,
+            getAvailableFurnishingClasses().map { extractId(it) }.toSet()
+        )
+    }
+
+    fun getUniqueAvailableFurnishingId(furnishingName: String): String {
+        val furnishingIds = getAvailableFurnishingIds(furnishingName)
+        return when (furnishingIds.size) {
+            0 -> throw FurnishingNameNotRecognizedException(furnishingName)
+            1 -> furnishingIds[0]
+            else -> throw MultipleFurnishingMatchedException(furnishingIds)
         }
     }
 
@@ -188,7 +231,7 @@ class Renovator(
 
 
     companion object {
-        const val FURNISHINGS_FILE_NAME = "furnishings.json"
+        const val FILE_NAME = "furnishings.json"
     }
 }
 
@@ -206,6 +249,17 @@ class CircularDependencyException(depPath: List<FurnishingClass>) :
 
 class CreateFurnishingException(furnishingId: String, cause: Exception) :
     RuntimeException("Failed to create Furnishing: $furnishingId", cause)
+
+class FurnishingNameNotRecognizedException(furnishingName: String) :
+    RuntimeException("Furnishing name not recognized: $furnishingName")
+
+class MultipleFurnishingMatchedException(furnishingIds: List<String>) :
+    RuntimeException(buildString {
+        appendLine("Multiple Furnishing matched:")
+        for (furnishingId in furnishingIds) {
+            appendLine("  - $furnishingId")
+        }
+    })
 
 class UnexpectedVersionException(
     furnishingClass: FurnishingClass,

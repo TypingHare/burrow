@@ -144,7 +144,7 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
      * Checks if an entry exists.
      */
     fun exists(id: Int): Boolean =
-        id >= 0 && id < entryStore.size && entryStore[id] != null
+        id > 0 && id < entryStore.size && entryStore[id] != null
 
     /**
      * Sets some properties for an entry.
@@ -228,6 +228,7 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
 
     companion object {
         const val HOARD_FILE = "hoard.json"
+        const val KEY_DELIMITER = ";"
     }
 }
 

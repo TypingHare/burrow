@@ -1,5 +1,6 @@
 package burrow.carton.dictator.command
 
+import burrow.carton.core.Core
 import burrow.carton.dictator.Dictator
 import burrow.kernel.terminal.*
 import java.nio.file.Files
@@ -15,6 +16,13 @@ class ChamberNewCommand(data: CommandData) : Command(data) {
     )
     private var chamberName = ""
 
+    @Parameters(
+        index = "0",
+        description = ["The description of the chamber."],
+        defaultValue = Core.Default.DESCRIPTION
+    )
+    private var description = ""
+
     override fun call(): Int {
         val chamberPath = chamberShepherd.getPath().resolve(chamberName)
         if (Files.exists(chamberPath)) {
@@ -27,7 +35,10 @@ class ChamberNewCommand(data: CommandData) : Command(data) {
             return ExitCode.SOFTWARE
         }
 
-        use(Dictator::class).createFurnishingsJson(chamberPath)
+        use(Dictator::class).apply {
+            createFurnishingsJson(chamberPath)
+            createConfigJson(chamberPath, description)
+        }
         stdout.println("Created chamber blueprint: $chamberName ($chamberPath)")
 
         return ExitCode.OK
