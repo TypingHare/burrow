@@ -10,7 +10,7 @@ import burrow.kernel.terminal.ExitCode
     name = "path",
     header = ["Displays all paths."]
 )
-class PathCommand(data: CommandData) : Command(data) {
+class PathListCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
         use(Haystack::class).getPaths().forEach { stdout.println(it) }
         return ExitCode.OK

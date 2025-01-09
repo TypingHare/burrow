@@ -41,10 +41,10 @@ class Haystack(renovator: Renovator) : Furnishing(renovator) {
     override fun assemble() {
         registerCommand(NewCommand::class)
         registerCommand(InfoCommand::class)
-        registerCommand(PathCommand::class)
+        registerCommand(PathListCommand::class)
         registerCommand(PathAddCommand::class)
         registerCommand(PathRemoveCommand::class)
-        registerCommand(Scan::class)
+        registerCommand(ScanCommand::class)
     }
 
     fun createEntry(

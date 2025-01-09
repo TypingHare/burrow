@@ -13,7 +13,7 @@ import java.io.File
     name = "scan",
     header = ["Adds all files and directories within the path scope."]
 )
-class Scan(data: CommandData) : Command(data) {
+class ScanCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
         val haystack = use(Haystack::class)
         val paths = haystack.getPaths()

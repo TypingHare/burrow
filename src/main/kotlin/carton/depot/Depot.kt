@@ -3,10 +3,7 @@ package burrow.carton.depot
 import burrow.carton.cradle.Cradle
 import burrow.carton.depot.command.ListCommand
 import burrow.carton.haystack.HaystackOpener
-import burrow.carton.haystack.command.NewCommand
-import burrow.carton.haystack.command.PathAddCommand
-import burrow.carton.haystack.command.PathCommand
-import burrow.carton.haystack.command.PathRemoveCommand
+import burrow.carton.haystack.command.*
 import burrow.carton.haystack.command.opener.InfoCommand
 import burrow.carton.haystack.command.opener.OpenCommand
 import burrow.carton.haystack.command.opener.OpenerSetCommand
@@ -29,13 +26,14 @@ import burrow.kernel.furniture.annotation.RequiredDependencies
 class Depot(renovator: Renovator) : Furnishing(renovator) {
     override fun assemble() {
         // Essential commands from Haystack
-        registerCommand(PathCommand::class)
+        registerCommand(PathListCommand::class)
         registerCommand(PathAddCommand::class)
         registerCommand(PathRemoveCommand::class)
         registerCommand(NewCommand::class)
         registerCommand(InfoCommand::class)
         registerCommand(OpenerSetCommand::class)
         registerCommand(OpenCommand::class)
+        registerCommand(ScanCommand::class)
 
         registerCommand(ListCommand::class)
     }
