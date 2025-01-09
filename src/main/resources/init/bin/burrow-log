@@ -2,6 +2,6 @@
 
 VERSION="0.0.0"
 JAR_PATH="$HOME/.burrow/libs/burrow-$VERSION-all.jar"
-TARGET_CLASS="burrow.client.BurrowCommandKt"
+TARGET_CLASS="burrow.client.BurrowLogCommandKt"
 
 java -cp "$JAR_PATH" "$TARGET_CLASS" "$@"

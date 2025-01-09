@@ -57,7 +57,7 @@ class Shell(renovator: Renovator) : Furnishing(renovator) {
         return """
             #! $shellInterpreter
             
-            $chamberName "${'$'}@"
+            burrow $chamberName "${'$'}@"
         """.trimIndent()
     }
 

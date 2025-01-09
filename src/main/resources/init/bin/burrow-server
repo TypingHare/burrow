@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+burrow-log @server.start

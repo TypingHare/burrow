@@ -8,10 +8,12 @@ import burrow.kernel.terminal.Environment
 import org.slf4j.Logger
 import java.io.BufferedReader
 import java.io.Closeable
+import java.io.IOException
 import java.io.InputStreamReader
 import java.net.ServerSocket
 import java.net.Socket
 import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicBoolean
 
 class SocketService(
     burrow: Burrow,
@@ -30,8 +32,8 @@ class SocketService(
         try {
             serverSocket = ServerSocket(endpoint.port)
         } catch (ex: Exception) {
-            ex.printStackTrace()
             close()
+            throw ex
         }
 
         logger.info("Socket service is listening on $endpoint")
@@ -57,8 +59,15 @@ class SocketService(
                 InputState.SESSION_CONTEXT
             )
 
-        while (client.isConnected) {
-            receiveNextCommand(client, stateBufferReader)
+        while (!client.isClosed) {
+            try {
+                receiveNextCommand(client, stateBufferReader).let {
+                    if (it) client.close()
+                }
+            } catch (ex: IOException) {
+                logger.error("Error reading from socket", ex)
+                break
+            }
         }
 
         logger.info("Client disconnected: $remoteSocketAddress")
@@ -87,7 +96,10 @@ class SocketService(
         threadPool.shutdownNow()
     }
 
-    private fun receiveNextCommand(client: Socket, reader: BufferedReader) {
+    private fun receiveNextCommand(
+        client: Socket,
+        reader: BufferedReader
+    ): Boolean {
         val stateBufferReader =
             StateBufferReader(reader, InputState.SESSION_CONTEXT)
         val sessionContext = mutableMapOf<String, String>()
@@ -97,7 +109,12 @@ class SocketService(
             sessionContext
         )
 
+        val isClosed = AtomicBoolean(false)
         stateBufferReader.readUntilNull { line, state, stopSignal ->
+            if (client.isClosed) {
+                stopSignal.set(true)
+            }
+
             when (state) {
                 InputState.COMMAND -> {
                     logger.debug("Command received: $line")
@@ -112,8 +129,13 @@ class SocketService(
                     val value = line.substring(index + 1)
                     sessionContext[key.trim()] = value.trim()
                 }
+                InputState.SOCKET_CLOSE -> {
+                    isClosed.set(true)
+                }
             }
         }
+
+        return isClosed.get()
     }
 
     companion object {

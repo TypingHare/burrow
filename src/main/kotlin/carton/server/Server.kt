@@ -33,7 +33,7 @@ class Server(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(ServerStopCommand::class)
     }
 
-    private fun getEndPoint() = Endpoint(
+    fun getEndPoint() = Endpoint(
         config.getNotNull(ConfigKey.HOST),
         config.getNotNull(ConfigKey.PORT)
     )

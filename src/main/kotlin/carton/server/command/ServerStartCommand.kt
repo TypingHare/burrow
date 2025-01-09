@@ -12,7 +12,15 @@ import burrow.kernel.terminal.ExitCode
 )
 class ServerStartCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
-        use(Server::class).start()
+        try {
+            use(Server::class).start()
+        } catch (ex: Exception) {
+            val port = use(Server::class).getEndPoint().port
+            stderr.println("Failed to start the server. Check if the port is allowed to listen on: $port")
+
+            throw ex
+        }
+
         return ExitCode.OK
     }
 }

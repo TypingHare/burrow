@@ -50,6 +50,10 @@ class SocketBasedClient(endpoint: Endpoint) : Client() {
         executeCommand(getOriginalCommand(args))
 
     override fun close() {
+        StateWriterController(clientSocket.getOutputStream()).getPrintWriter(
+            InputState.SOCKET_CLOSE
+        ).apply { println("-1") }
+
         clientSocket.close()
     }
 }

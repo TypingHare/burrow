@@ -1,6 +1,7 @@
 #! /usr/bin/env bash
 
-JAR_PATH="$HOME/.burrow/libs/burrow-0.0.0-all.jar"
+VERSION="0.0.0"
+JAR_PATH="$HOME/.burrow/libs/burrow-$VERSION-all.jar"
 TARGET_CLASS="burrow.client.cli.BurrowCli"
 
 java -cp "$JAR_PATH" "$TARGET_CLASS" "$@"
