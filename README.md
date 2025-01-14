@@ -2,9 +2,5 @@
 
 - [ ] Socket heartbeat detection (refactor maybe)
 - [ ] Memo
-- [ ] App
+- [ ] App (for macOS)
 - [ ] Complete the "help" command
-- [ ] Hoard changes?
-- [ ] Big bug: threads are not closed!
-
-https://github.com/TypingHare/burrow/tree/java-version-deprecated/src/main/java/burrow/furniture/standard
