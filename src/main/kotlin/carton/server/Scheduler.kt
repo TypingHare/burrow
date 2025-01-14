@@ -112,7 +112,7 @@ class Scheduler(renovator: Renovator) : Furnishing(renovator) {
     private fun destroyTimeoutChambers() {
         val chamberNames = chamberShepherd.chambers.keys
         val thresholdMs = getThresholdMs()
-        for (chamberName in chamberNames) {
+        for (chamberName in chamberNames.toList()) {
             if (chamberName == ChamberShepherd.ROOT_CHAMBER_NAME) {
                 continue
             }
