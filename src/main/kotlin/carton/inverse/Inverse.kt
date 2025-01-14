@@ -55,30 +55,31 @@ class Inverse(renovator: Renovator) : Furnishing(renovator) {
     }
 
     private fun registerConfigItem(configItem: ConfigItem) {
+        val key = configItem.key
         when (val value = configItem.value) {
-            CONFIG_ITEM_VALUE_DEFAULT -> {
-                registerConfigItemByDefaultValue(configItem)
-            }
-            else -> {
-                val key = configItem.key
-                config[key] = config.converterPairContainer.toRight(key, value)
-            }
+            CONFIG_ITEM_VALUE_DEFAULT -> setConfigItemWithDefaultValue(
+                key,
+                configItem.defaultValue
+            )
+            else -> setConfigItem(key, value)
         }
     }
 
-    private fun registerConfigItemByDefaultValue(configItem: ConfigItem) {
-        val key = configItem.key
-        val defaultValue = configItem.defaultValue
+    private fun setConfigItem(key: String, value: String) {
+        config[key] = config.converterPairContainer.toRight(key, value)
+    }
+
+    private fun setConfigItemWithDefaultValue(
+        key: String,
+        defaultValue: String
+    ) {
         if (defaultValue == CONFIG_ITEM_VALUE_DEFAULT) {
             throw ConfigItemNoValueException(key)
         }
 
         config.setIfAbsent(
             key,
-            config.converterPairContainer.toRight(
-                key,
-                defaultValue
-            )
+            config.converterPairContainer.toRight(key, defaultValue)
         )
     }
 

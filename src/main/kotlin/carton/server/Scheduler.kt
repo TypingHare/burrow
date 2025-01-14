@@ -1,5 +1,6 @@
 package burrow.carton.server
 
+import burrow.carton.server.command.scheduler.SchedulerListCommand
 import burrow.common.converter.StringConverterPair
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.*
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit
 class Scheduler(renovator: Renovator) : Furnishing(renovator) {
     private val taskScheduler = Executors.newScheduledThreadPool(1)
     private val preBuildInstantMap = mutableMapOf<String, Instant>()
-    private val postBuildInstantMap = mutableMapOf<String, Instant>()
+    val postBuildInstantMap = mutableMapOf<String, Instant>()
     private val preDestroyInstantMap = mutableMapOf<String, Instant>()
     private val postDestroyInstantMap = mutableMapOf<String, Instant>()
 
@@ -49,15 +50,21 @@ class Scheduler(renovator: Renovator) : Furnishing(renovator) {
 
     @Suppress("DuplicatedCode")
     override fun assemble() {
+        registerCommand(SchedulerListCommand::class)
+
         val intervalMs = getIntervalMs()
         taskScheduler.scheduleAtFixedRate(
-            this::callback,
+            this::destroyTimeoutChambers,
             intervalMs,
             intervalMs,
             TimeUnit.MILLISECONDS
         )
 
         burrow.courier.subscribe(ChamberPreBuildEvent::class) {
+            val chamberName = it.chamber.name
+            preDestroyInstantMap.remove(chamberName)
+            postDestroyInstantMap.remove(chamberName)
+
             preBuildInstantMap[it.chamber.name] = Instant.now()
         }
 
@@ -66,20 +73,20 @@ class Scheduler(renovator: Renovator) : Furnishing(renovator) {
             val now = Instant.now()
             postBuildInstantMap[chamberName] = now
 
-            // Remove chamber name from destroy instant maps
-            preDestroyInstantMap.remove(chamberName)
-            postDestroyInstantMap.remove(chamberName)
-
             if (!preBuildInstantMap.containsKey(chamberName)) {
                 return@subscribe
             }
 
             val startInstant = preBuildInstantMap[chamberName]
             val duration = Duration.between(startInstant, now).toMillis()
-            logger.info("built chamber $chamberName in $duration ms")
+            logger.info("Built chamber $chamberName in $duration ms")
         }
 
         burrow.courier.subscribe(ChamberPreDestroyEvent::class) {
+            val chamberName = it.chamber.name
+            preBuildInstantMap.remove(chamberName)
+            postBuildInstantMap.remove(chamberName)
+
             preDestroyInstantMap[it.chamber.name] = Instant.now()
         }
 
@@ -87,10 +94,6 @@ class Scheduler(renovator: Renovator) : Furnishing(renovator) {
             val chamberName = it.chamber.name
             val now = Instant.now()
             postDestroyInstantMap[chamberName] = now
-
-            // Remove chamber name from build instant maps
-            preBuildInstantMap.remove(chamberName)
-            postBuildInstantMap.remove(chamberName)
 
             if (!preDestroyInstantMap.containsKey(chamberName)) {
                 return@subscribe
@@ -106,17 +109,18 @@ class Scheduler(renovator: Renovator) : Furnishing(renovator) {
         taskScheduler.shutdownNow()
     }
 
-    private fun callback() {
+    private fun destroyTimeoutChambers() {
         val chamberNames = chamberShepherd.chambers.keys
+        val thresholdMs = getThresholdMs()
         for (chamberName in chamberNames) {
             if (chamberName == ChamberShepherd.ROOT_CHAMBER_NAME) {
                 continue
             }
 
             val startInstant = preBuildInstantMap[chamberName]!!
-            val duration =
+            val durationMs =
                 Duration.between(startInstant, Instant.now()).toMillis()
-            if (duration < getThresholdMs()) {
+            if (durationMs < thresholdMs) {
                 return
             }
 
@@ -126,7 +130,7 @@ class Scheduler(renovator: Renovator) : Furnishing(renovator) {
 
     private fun getIntervalMs() = config.getNotNull<Long>(ConfigKey.INTERVAL_MS)
 
-    private fun getThresholdMs() =
+    fun getThresholdMs() =
         config.getNotNull<Long>(ConfigKey.THRESHOLD_MS)
 
     companion object {
