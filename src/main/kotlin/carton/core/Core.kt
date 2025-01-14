@@ -22,7 +22,7 @@ import java.io.PrintWriter
 )
 class Core(renovator: Renovator) : Furnishing(renovator) {
     override fun prepareConfig(config: Config) {
-        config.addKey(ConfigKey.DESCRIPTION)
+        registerConfigKey(ConfigKey.DESCRIPTION)
     }
 
     override fun modifyConfig(config: Config) {
@@ -136,11 +136,6 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
             }
             .filterNotNull()
             .toList()
-
-    fun getFurnishingConfigKeys(furnishing: Furnishing): Set<String> =
-        Config(this.chamber)
-            .apply { furnishing.prepareConfig(this) }
-            .converterPairs.keys
 
     object Default {
         const val DESCRIPTION = "<No description>"

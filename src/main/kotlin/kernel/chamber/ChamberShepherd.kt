@@ -20,7 +20,7 @@ class ChamberShepherd(val burrow: Burrow) : PathBound {
 
         try {
             burrow.courier.post(ChamberPreBuildEvent(chamber))
-            chamber.checkChamberRootDirectory()
+            chamber.checkBlueprintDirectory()
             chamber.renovator.load()
             chamber.config.load()
             chamber.renovator.initializeFurnishings()

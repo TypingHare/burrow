@@ -1,6 +1,5 @@
 package burrow.kernel.stream
 
-import burrow.kernel.chamber.Chamber
 import java.io.PrintWriter
 
 abstract class Printer<C>(
@@ -9,8 +8,3 @@ abstract class Printer<C>(
 ) {
     abstract fun print()
 }
-
-abstract class ChamberBasedPrinter(
-    writer: PrintWriter,
-    protected val chamber: Chamber
-) : Printer<Chamber>(writer, chamber)

@@ -20,8 +20,8 @@ import java.nio.file.attribute.PosixFilePermissions
 )
 class Shell(renovator: Renovator) : Furnishing(renovator) {
     override fun prepareConfig(config: Config) {
-        config.addKey(ConfigKey.SHELL_INTERPRETER)
-        config.addKey(ConfigKey.SHELL_NAME)
+        registerConfigKey(ConfigKey.SHELL_INTERPRETER)
+        registerConfigKey(ConfigKey.SHELL_NAME)
     }
 
     override fun modifyConfig(config: Config) {

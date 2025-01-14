@@ -22,7 +22,7 @@ class NewCommand(data: CommandData) : Command(data) {
             properties[pairs[i]] = pairs[i + 1]
         }
 
-        val entry = use(Hoard::class).create(properties)
+        val entry = use(Hoard::class).storage.create(properties)
 
         return dispatch(EntryCommand::class, listOf(entry.id))
     }

@@ -17,10 +17,10 @@ class EntriesCommand(data: CommandData) : Command(data) {
     private var entryIds: Array<Int> = arrayOf()
 
     override fun call(): Int {
-        val hoard = use(Hoard::class)
+        val storage = use(Hoard::class).storage
         val entries = entryIds
-            .map { hoard[it] }
-            .map { it.id to hoard.formatStore(it) }
+            .map { storage[it] }
+            .map { it.id to storage.formatStore(it) }
             .toList()
         EntriesPrinter(stdout, EntriesPrinterContext(entries)).print()
 

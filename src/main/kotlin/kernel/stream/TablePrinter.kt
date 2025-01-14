@@ -9,7 +9,7 @@ class TablePrinterContext(
     val maxColumns: Int,
 ) {
     val spacings = mutableListOf<Int>()
-    var defaultSpacing = 2
+    var defaultSpacing = 4
 }
 
 class TablePrinter(

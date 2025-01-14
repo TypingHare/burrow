@@ -18,7 +18,7 @@ class ScanCommand(data: CommandData) : Command(data) {
         val haystack = use(Haystack::class)
         val paths = haystack.getPaths()
         val relativePaths = mutableSetOf<String>()
-        use(Hoard::class).getAllEntries().map {
+        use(Hoard::class).storage.getAllEntries().map {
             relativePaths.add(it[Haystack.EntryKey.RELATIVE_PATH]!!)
         }
 

@@ -25,7 +25,7 @@ class BackupCommand(data: CommandData) : Command(data) {
 
     private fun backup(): String {
         val fileName = "hoard.${getCurrentDateString()}.json"
-        use(Hoard::class).saveTo(chamber.getPath().resolve(fileName))
+        use(Hoard::class).storage.saveTo(chamber.getPath().resolve(fileName))
 
         return fileName
     }

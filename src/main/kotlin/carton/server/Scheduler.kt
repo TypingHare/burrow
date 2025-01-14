@@ -1,6 +1,6 @@
 package burrow.carton.server
 
-import burrow.common.converter.StringConverterPairs
+import burrow.common.converter.StringConverterPair
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.*
 import burrow.kernel.config.Config
@@ -33,8 +33,8 @@ class Scheduler(renovator: Renovator) : Furnishing(renovator) {
     }
 
     override fun prepareConfig(config: Config) {
-        config.addKey(ConfigKey.INTERVAL_MS, StringConverterPairs.LONG)
-        config.addKey(ConfigKey.THRESHOLD_MS, StringConverterPairs.LONG)
+        registerConfigKey(ConfigKey.INTERVAL_MS, StringConverterPair.LONG)
+        registerConfigKey(ConfigKey.THRESHOLD_MS, StringConverterPair.LONG)
     }
 
     override fun modifyConfig(config: Config) {

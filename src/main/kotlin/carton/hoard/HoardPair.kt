@@ -4,7 +4,7 @@ import burrow.carton.hoard.command.pair.PairCountCommand
 import burrow.carton.hoard.command.pair.PairKeysCommand
 import burrow.carton.hoard.command.pair.PairNewCommand
 import burrow.carton.hoard.command.pair.PairValuesCommand
-import burrow.common.converter.StringConverterPairs
+import burrow.common.converter.StringConverterPair
 import burrow.kernel.Burrow
 import burrow.kernel.config.Config
 import burrow.kernel.furniture.Furnishing
@@ -26,11 +26,11 @@ class HoardPair(renovator: Renovator) : Furnishing(renovator) {
     val idSetStore = mutableMapOf<Any, MutableSet<Int>>()
 
     override fun prepareConfig(config: Config) {
-        config.addKey(ConfigKey.KEY_NAME)
-        config.addKey(ConfigKey.VALUE_NAME)
-        config.addKey(
+        registerConfigKey(ConfigKey.KEY_NAME)
+        registerConfigKey(ConfigKey.VALUE_NAME)
+        registerConfigKey(
             ConfigKey.ALLOW_DUPLICATE_KEYS,
-            StringConverterPairs.BOOLEAN
+            StringConverterPair.BOOLEAN
         )
     }
 
@@ -66,7 +66,7 @@ class HoardPair(renovator: Renovator) : Furnishing(renovator) {
 
     private fun getValueName(): String = config.getNotNull(ConfigKey.VALUE_NAME)
 
-    fun <K> getKey(entry: Entry) = entry.get<K>(getKeyName())!!
+    private fun <K> getKey(entry: Entry) = entry.get<K>(getKeyName())!!
 
     fun <V> getValue(entry: Entry) = entry.get<V>(getValueName())!!
 
@@ -77,7 +77,7 @@ class HoardPair(renovator: Renovator) : Furnishing(renovator) {
     fun createEntry(key: Any, value: Any): Entry {
         checkKeyDuplication(key)
 
-        return use(Hoard::class).create(
+        return use(Hoard::class).storage.create(
             mutableMapOf(
                 getKeyName() to key.toString(),
                 getValueName() to value.toString(),
@@ -86,8 +86,8 @@ class HoardPair(renovator: Renovator) : Furnishing(renovator) {
     }
 
     fun getEntries(key: String): List<Entry> {
-        val hoard = use(Hoard::class)
-        return idSetStore[key]?.map { hoard[it] } ?: emptyList()
+        val storage = use(Hoard::class).storage
+        return idSetStore[key]?.map { storage[it] } ?: emptyList()
     }
 
     @Throws(DuplicateKeyNotAllowedException::class)

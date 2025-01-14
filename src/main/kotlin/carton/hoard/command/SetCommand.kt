@@ -40,10 +40,8 @@ class SetCommand(data: CommandData) : Command(data) {
             properties[pairs[i]] = pairs[i + 1]
         }
 
-        val hoard = use(Hoard::class)
-        val entry = hoard[id]
-        hoard.setProperties(entry, properties)
+        use(Hoard::class).storage.operate(id) { set(properties) }
 
-        return dispatch(EntryCommand::class, listOf(id.toString()))
+        return dispatch(EntryCommand::class, listOf(id))
     }
 }

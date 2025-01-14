@@ -32,8 +32,8 @@ class EntryCommand(data: CommandData) : Command(data) {
             return ExitCode.USAGE
         }
 
-        val hoard = use(Hoard::class)
-        val entry = hoard[id]
+        val storage = use(Hoard::class).storage
+        val entry = storage[id]
         when (shouldDisplayProperties) {
             true -> EntryPropertiesPrinter(
                 stdout,
@@ -41,7 +41,7 @@ class EntryCommand(data: CommandData) : Command(data) {
             )
             false -> EntryPrinter(
                 stdout,
-                EntryPrinterContext(entry.id, hoard.formatStore(entry))
+                EntryPrinterContext(entry.id, storage.formatStore(entry))
             )
         }.print()
 

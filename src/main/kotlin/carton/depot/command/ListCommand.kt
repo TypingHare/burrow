@@ -17,7 +17,7 @@ import java.io.File
 )
 class ListCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
-        val entries = use(Hoard::class).getAllEntries()
+        val entries = use(Hoard::class).storage.getAllEntries()
         val table = mutableListOf(
             listOf("ID", "Relative Path", "Absolute Path", "Exist", "Opener")
         )

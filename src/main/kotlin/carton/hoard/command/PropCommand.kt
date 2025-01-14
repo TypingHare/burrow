@@ -35,11 +35,10 @@ class PropCommand(data: CommandData) : Command(data) {
         if (!checkId(id, stderr)) return ExitCode.USAGE
         if (key.isEmpty()) return ExitCode.OK
 
-        val hoard = use(Hoard::class)
-        val entry = hoard[id]
+        val entry = use(Hoard::class).storage[id]
         if (entry.containsKey(key)) {
             when (shouldRetrieveLeftValue) {
-                true -> stdout.println(entry.getLeft<Any>(key))
+                true -> stdout.println(entry.getLeft(key))
                 false -> stdout.println(entry.get<Any>(key)?.toString())
             }
         }

@@ -12,7 +12,7 @@ import burrow.kernel.terminal.ExitCode
 )
 class CountCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
-        stdout.println(use(Hoard::class).size)
+        stdout.println(use(Hoard::class).storage.size)
         return ExitCode.OK
     }
 }

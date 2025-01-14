@@ -1,8 +1,8 @@
 package burrow.common.converter
 
-data class ConverterPair<L, R>(
-    val leftConverter: LeftConverter<L, R>,
-    val rightConverter: RightConverter<L, R>
+open class ConverterPair<L, R>(
+    val left: LeftConverter<L, R>,
+    val right: RightConverter<L, R>
 )
 
 fun interface LeftConverter<L, R> {

@@ -1,5 +1,6 @@
 package burrow.kernel.furniture
 
+import burrow.common.converter.StringConverterPair
 import burrow.kernel.chamber.ExtendedChamberModule
 import burrow.kernel.config.ConfigLifeCycle
 import burrow.kernel.furniture.annotation.Dependency
@@ -17,6 +18,7 @@ abstract class Furnishing(renovator: Renovator) :
     FurnishingProvider {
 
     val commandClasses = mutableSetOf<CommandClass>()
+    val configKeys = mutableSetOf<String>()
 
     /**
      * Retrieves the dependencies this furnishing requires.
@@ -26,6 +28,19 @@ abstract class Furnishing(renovator: Renovator) :
     override fun registerCommand(commandClass: CommandClass) {
         commandClasses.add(commandClass)
         interpreter.registerCommand(commandClass)
+    }
+
+    fun registerConfigKey(
+        key: String,
+        @Suppress("UNCHECKED_CAST") converterPair: StringConverterPair<*> =
+            StringConverterPair.IDENTITY as StringConverterPair<Any>
+    ) {
+        @Suppress("UNCHECKED_CAST")
+        config.converterPairContainer.add(
+            key,
+            converterPair as StringConverterPair<Any>
+        )
+        configKeys.add(key)
     }
 
     override fun unregisterCommand(commandClass: CommandClass) {

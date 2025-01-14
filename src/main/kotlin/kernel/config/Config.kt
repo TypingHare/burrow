@@ -1,7 +1,6 @@
 package burrow.kernel.config
 
-import burrow.common.converter.StringConverterPair
-import burrow.common.converter.StringConverterPairs
+import burrow.common.converter.AnyStringConverterPairContainer
 import burrow.kernel.chamber.Chamber
 import burrow.kernel.chamber.ChamberModule
 import burrow.kernel.path.Persistable
@@ -15,33 +14,33 @@ import kotlin.io.path.exists
 class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
     Cloneable {
     private val path = chamber.getPath().resolve(FILE_NAME)
-    val converterPairs = mutableMapOf<String, StringConverterPair<*>>()
+    val converterPairContainer = AnyStringConverterPairContainer()
     val entries = mutableMapOf<String, Any?>()
     val isModified = AtomicBoolean(false)
 
     override fun getPath(): Path = path
 
     override fun save() {
-        if (!isModified.get()) {
-            return
-        }
+        if (!isModified.get()) return
 
-        val content = Gson().toJson(exportRawEntries())
-        Files.write(path, content.toByteArray())
+        Gson().toJson(exportRawEntries()).let {
+            Files.write(path, it.toByteArray())
+        }
     }
 
     override fun load() {
-        if (!path.exists()) {
-            Files.write(path, "{}".toByteArray())
-        } else {
-            importRawEntries(loadConfigRawEntries(path))
+        when (path.exists()) {
+            true -> importRawEntries(loadConfigRawEntries(path))
+            else -> Files.write(path, "{}".toByteArray())
         }
 
         isModified.set(false)
     }
 
     public override fun clone(): Config = Config(chamber).apply {
-        converterPairs.putAll(this@Config.converterPairs)
+        converterPairContainer.converterPairs.putAll(
+            this@Config.converterPairContainer.converterPairs
+        )
         entries.putAll(this@Config.entries)
         isModified.set(this@Config.isModified.get())
     }
@@ -52,6 +51,10 @@ class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
     }
 
     operator fun set(key: String, value: Any?) {
+        if (!converterPairContainer.converterPairs.containsKey(key)) {
+            throw InvalidConfigKeyException(key)
+        }
+
         entries[key] = value
         isModified.set(true)
     }
@@ -65,36 +68,16 @@ class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
         }
     }
 
-    fun addKey(key: String, handler: StringConverterPair<*>) {
-        converterPairs[key] = handler
-    }
-
-    fun addKey(key: String) = addKey(key, StringConverterPairs.IDENTITY)
-
-    fun convertRawToItem(key: String, value: String): Any? {
-        val handler =
-            converterPairs[key] ?: throw InvalidConfigKeyException(key)
-        return handler.leftConverter.toRight(value)
-    }
-
-    fun <T> convertItemToRaw(key: String, item: T?): String {
-        @Suppress("UNCHECKED_CAST")
-        val handler = converterPairs[key] as StringConverterPair<T>?
-            ?: throw InvalidConfigKeyException(key)
-
-        return handler.rightConverter.toLeft(item)
-    }
-
     private fun importRawEntries(rawEntries: Map<String, String>) {
         rawEntries.forEach { (key, value) ->
-            set(key, convertRawToItem(key, value))
+            set(key, converterPairContainer.toRight<Any>(key, value))
         }
         isModified.set(true)
     }
 
     private fun exportRawEntries(): MutableMap<String, String> {
         return entries.map { (key, value) ->
-            key to convertItemToRaw(key, value)
+            key to converterPairContainer.toLeft(key, value)
         }.toMap().toMutableMap()
     }
 

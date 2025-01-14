@@ -26,7 +26,7 @@ import burrow.kernel.furniture.annotation.RequiredDependencies
 )
 class HaystackOpener(renovator: Renovator) : Furnishing(renovator) {
     override fun prepareConfig(config: Config) {
-        config.addKey(ConfigKey.DEFAULT)
+        registerConfigKey(ConfigKey.DEFAULT)
     }
 
     override fun modifyConfig(config: Config) {

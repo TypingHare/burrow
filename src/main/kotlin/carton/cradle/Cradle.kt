@@ -20,7 +20,7 @@ import java.io.PrintWriter
 )
 class Cradle(renovator: Renovator) : Furnishing(renovator) {
     override fun prepareConfig(config: Config) {
-        config.addKey(ConfigKey.SHELL_PATH)
+        registerConfigKey(ConfigKey.SHELL_PATH)
     }
 
     override fun modifyConfig(config: Config) {

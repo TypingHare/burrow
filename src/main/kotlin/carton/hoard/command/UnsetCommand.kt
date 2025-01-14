@@ -25,12 +25,7 @@ class UnsetCommand(data: CommandData) : Command(data) {
             return ExitCode.USAGE
         }
 
-        if (keys.isNotEmpty()) {
-            val hoard = use(Hoard::class)
-            val entry = hoard[id]
-            hoard.unsetProperties(entry, keys.toList())
-        }
-
+        use(Hoard::class).storage.operate(id) { unset(keys.toList()) }
         return dispatch(EntryCommand::class, listOf(id.toString()))
     }
 }

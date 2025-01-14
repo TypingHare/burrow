@@ -20,12 +20,12 @@ class Chamber(val chamberShepherd: ChamberShepherd, val name: String) :
     override fun getPath(): Path = path
 
     @Throws(BlueprintNotFoundException::class)
-    fun checkChamberRootDirectory() {
+    fun checkBlueprintDirectory() {
         if (name.isBlank() || !path.isDirectory()) {
-            throw BlueprintNotFoundException(name)
+            throw BlueprintNotFoundException(path)
         }
     }
 }
 
-class BlueprintNotFoundException(chamberName: String) :
-    RuntimeException("Chamber not found: $chamberName")
+class BlueprintNotFoundException(path: Path) :
+    RuntimeException("Blueprint not found: $path")

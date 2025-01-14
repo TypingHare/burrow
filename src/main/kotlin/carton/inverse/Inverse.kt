@@ -1,11 +1,7 @@
 package burrow.carton.inverse
 
-import burrow.carton.inverse.annotation.CONFIG_ITEM_VALUE_DEFAULT
-import burrow.carton.inverse.annotation.ConverterPairType
-import burrow.carton.inverse.annotation.InverseRegisterCommands
-import burrow.carton.inverse.annotation.InverseSetConfig
+import burrow.carton.inverse.annotation.*
 import burrow.common.converter.StringConverterPair
-import burrow.common.converter.StringConverterPairs
 import burrow.kernel.Burrow
 import burrow.kernel.furniture.*
 import burrow.kernel.furniture.annotation.Furniture
@@ -23,53 +19,67 @@ import java.net.URL
 )
 class Inverse(renovator: Renovator) : Furnishing(renovator) {
     init {
-        courier.subscribe(FurnishingPostPrepareConfigEvent::class) {
-            val furnishing = it.furnishing
+        courier.subscribe(FurnishingPostPrepareConfigEvent::class) { event ->
             val inverseSetConfig =
-                furnishing::class.java.getAnnotation(InverseSetConfig::class.java)
-            if (inverseSetConfig != null) {
-                for (configItem in inverseSetConfig.config) {
-                    val converterPair = getStringConverterPair(configItem.type)
-                    config.addKey(configItem.key, converterPair)
+                getInverseSetConfig(event.furnishing) ?: return@subscribe
+            inverseSetConfig.config.forEach { configItem ->
+                getStringConverterPair(configItem.type).let {
+                    @Suppress("UNCHECKED_CAST") val converterPair =
+                        getStringConverterPair(configItem.type) as StringConverterPair<Any>
+                    event.furnishing.registerConfigKey(
+                        configItem.key,
+                        converterPair
+                    )
                 }
             }
         }
 
-        courier.subscribe(FurnishingPostModifyConfigEvent::class) {
-            val furnishing = it.furnishing
+        courier.subscribe(FurnishingPostModifyConfigEvent::class) { event ->
             val inverseSetConfig =
-                furnishing::class.java.getAnnotation(InverseSetConfig::class.java)
-            if (inverseSetConfig != null) {
-                for (configItem in inverseSetConfig.config) {
-                    val key = configItem.key
-                    when (val value = configItem.value) {
-                        CONFIG_ITEM_VALUE_DEFAULT -> {
-                            val defaultValue = configItem.defaultValue
-                            if (defaultValue == CONFIG_ITEM_VALUE_DEFAULT) {
-                                throw ConfigItemNoValueException(key)
-                            }
-
-                            config.setIfAbsent(
-                                key,
-                                config.convertRawToItem(key, defaultValue)
-                            )
-                        }
-                        else -> {
-                            config[key] = config.convertRawToItem(key, value)
-                        }
-                    }
-                }
-            }
+                getInverseSetConfig(event.furnishing) ?: return@subscribe
+            inverseSetConfig.config.forEach { registerConfigItem(it) }
         }
 
-        courier.subscribe(FurnishingPostAssembleEvent::class) {
-            val furnishing = it.furnishing
-            val inverseRegisterCommands =
-                furnishing::class.java.getAnnotation(InverseRegisterCommands::class.java)
-            if (inverseRegisterCommands != null) {
-                scanCommands(furnishing)
+        courier.subscribe(FurnishingPostAssembleEvent::class) { event ->
+            getInverseRegisterCommands(event.furnishing) ?: return@subscribe
+            scanCommands(event.furnishing)
+        }
+    }
+
+    private fun getInverseRegisterCommands(furnishing: Furnishing): InverseRegisterCommands? {
+        return furnishing::class.java.getAnnotation(InverseRegisterCommands::class.java)
+    }
+
+    private fun getInverseSetConfig(furnishing: Furnishing): InverseSetConfig? {
+        return furnishing::class.java.getAnnotation(InverseSetConfig::class.java)
+    }
+
+    private fun registerConfigItem(configItem: ConfigItem) {
+        when (val value = configItem.value) {
+            CONFIG_ITEM_VALUE_DEFAULT -> {
+                registerConfigItemByDefaultValue(configItem)
+            }
+            else -> {
+                val key = configItem.key
+                config[key] = config.converterPairContainer.toRight(key, value)
             }
         }
+    }
+
+    private fun registerConfigItemByDefaultValue(configItem: ConfigItem) {
+        val key = configItem.key
+        val defaultValue = configItem.defaultValue
+        if (defaultValue == CONFIG_ITEM_VALUE_DEFAULT) {
+            throw ConfigItemNoValueException(key)
+        }
+
+        config.setIfAbsent(
+            key,
+            config.converterPairContainer.toRight(
+                key,
+                defaultValue
+            )
+        )
     }
 
     private fun scanCommands(furnishing: Furnishing) {
@@ -98,12 +108,12 @@ class Inverse(renovator: Renovator) : Furnishing(renovator) {
         converterPairType: ConverterPairType
     ): StringConverterPair<*> {
         return when (converterPairType) {
-            ConverterPairType.IDENTITY -> StringConverterPairs.IDENTITY
-            ConverterPairType.INT -> StringConverterPairs.INT
-            ConverterPairType.LONG -> StringConverterPairs.LONG
-            ConverterPairType.FLOAT -> StringConverterPairs.FLOAT
-            ConverterPairType.DOUBLE -> StringConverterPairs.DOUBLE
-            ConverterPairType.BOOLEAN -> StringConverterPairs.BOOLEAN
+            ConverterPairType.IDENTITY -> StringConverterPair.IDENTITY
+            ConverterPairType.INT -> StringConverterPair.INT
+            ConverterPairType.LONG -> StringConverterPair.LONG
+            ConverterPairType.FLOAT -> StringConverterPair.FLOAT
+            ConverterPairType.DOUBLE -> StringConverterPair.DOUBLE
+            ConverterPairType.BOOLEAN -> StringConverterPair.BOOLEAN
         }
     }
 }

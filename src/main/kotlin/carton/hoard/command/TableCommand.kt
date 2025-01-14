@@ -44,8 +44,8 @@ class TableCommand(data: CommandData) : Command(data) {
     private var spacing = ""
 
     override fun call(): Int {
-        val hoard = use(Hoard::class)
-        val propertiesList = hoard.getAllEntries()
+        val storage = use(Hoard::class).storage
+        val propertiesList = storage.getAllEntries()
             .filter(
                 when (shouldReverse) {
                     true -> { it -> it.id <= startId }
@@ -53,7 +53,7 @@ class TableCommand(data: CommandData) : Command(data) {
                 })
             .let { if (shouldReverse) it.reversed() else it }
             .let { if (length >= 0) it.take(length) else it }
-            .map { Pair(it.id, hoard.formatStore(it)) }
+            .map { Pair(it.id, storage.formatStore(it)) }
 
         val propertyKeyList = when (keysString) {
             "" -> getPropertyKeys(propertiesList)

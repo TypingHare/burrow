@@ -3,7 +3,7 @@ package burrow.carton.haystack
 import burrow.carton.haystack.command.*
 import burrow.carton.hoard.Entry
 import burrow.carton.hoard.HoardPair
-import burrow.common.converter.ConverterPair
+import burrow.common.converter.StringConverterPair
 import burrow.kernel.Burrow
 import burrow.kernel.config.Config
 import burrow.kernel.furniture.Furnishing
@@ -22,13 +22,7 @@ import java.nio.file.Path
 @RequiredDependencies(Dependency(HoardPair::class, Burrow.VERSION))
 class Haystack(renovator: Renovator) : Furnishing(renovator) {
     override fun prepareConfig(config: Config) {
-        config.addKey(
-            ConfigKey.PATH, ConverterPair(
-                {
-                    it.split(Standard.PATH_DELIMITER).filter(String::isNotBlank)
-                },
-                { it?.joinToString(Standard.PATH_DELIMITER).orEmpty() }
-            ))
+        registerConfigKey(ConfigKey.PATH, StringConverterPairs.STRING_LIST)
     }
 
     override fun modifyConfig(config: Config) {
@@ -106,6 +100,15 @@ class Haystack(renovator: Renovator) : Furnishing(renovator) {
 
     object Standard {
         const val PATH_DELIMITER = ":"
+    }
+
+    object StringConverterPairs {
+        val STRING_LIST = StringConverterPair(
+            {
+                it.split(Standard.PATH_DELIMITER).filter(String::isNotBlank)
+            },
+            { it?.joinToString(Standard.PATH_DELIMITER).orEmpty() }
+        )
     }
 }
 

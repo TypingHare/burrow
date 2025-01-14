@@ -39,7 +39,7 @@ class ConfigSetCommand(data: CommandData) : Command(data) {
             return ExitCode.USAGE
         }
 
-        val converterPair = config.converterPairs[key]
+        val converterPair = config.converterPairContainer.converterPairs[key]
         if (converterPair == null) {
             stderr.println("Handler not found: $key")
             return ExitCode.USAGE
@@ -50,7 +50,7 @@ class ConfigSetCommand(data: CommandData) : Command(data) {
             config.entries.remove(key)
             renovator.depTree.resolve { it.modifyConfig(config) }
         } else {
-            config[key] = converterPair.leftConverter.toRight(value)
+            config[key] = converterPair.left.toRight(value)
         }
 
         if (shouldRebuild) {

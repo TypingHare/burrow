@@ -19,7 +19,7 @@ class ExistCommand(data: CommandData) : Command(data) {
             return ExitCode.USAGE
         }
 
-        val isExist = use(Hoard::class).exists(id)
+        val isExist = use(Hoard::class).storage.exists(id)
         stdout.println(if (isExist) "true" else "false")
 
         return ExitCode.OK

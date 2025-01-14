@@ -1,6 +1,6 @@
 package burrow.carton.hoard
 
-import burrow.common.converter.StringConverterPairs
+import burrow.common.converter.StringConverterPair
 import burrow.kernel.Burrow
 import burrow.kernel.config.Config
 import burrow.kernel.furniture.Furnishing
@@ -21,16 +21,16 @@ import java.time.format.DateTimeFormatter
 @RequiredDependencies(Dependency(Hoard::class, Burrow.VERSION))
 class HoardTime(renovator: Renovator) : Furnishing(renovator) {
     override fun prepareConfig(config: Config) {
-        config.addKey(
+        registerConfigKey(
             ConfigKey.CREATED_AT_ENABLED,
-            StringConverterPairs.BOOLEAN
+            StringConverterPair.BOOLEAN
         )
-        config.addKey(
+        registerConfigKey(
             ConfigKey.UPDATED_AT_ENABLED,
-            StringConverterPairs.BOOLEAN
+            StringConverterPair.BOOLEAN
         )
-        config.addKey(ConfigKey.CREATED_AT_FORMAT)
-        config.addKey(ConfigKey.UPDATED_AT_FORMAT)
+        registerConfigKey(ConfigKey.CREATED_AT_FORMAT)
+        registerConfigKey(ConfigKey.UPDATED_AT_FORMAT)
     }
 
     override fun modifyConfig(config: Config) {
@@ -78,6 +78,7 @@ class HoardTime(renovator: Renovator) : Furnishing(renovator) {
         val createdAtFormat = createdAtFormat()
         val updatedAtFormat = updatedAtFormat()
 
+        val storage = use(Hoard::class).storage
         courier.subscribe(FormatEntryEvent::class) {
             if (createdAtEnabled) {
                 val createdAt: Long? = it.entry[EntryKey.CREATED_AT]
@@ -97,17 +98,11 @@ class HoardTime(renovator: Renovator) : Furnishing(renovator) {
         }
 
         if (createdAtEnabled) {
-            use(Hoard::class).converterPairsContainer.add(
-                EntryKey.CREATED_AT,
-                StringConverterPairs.LONG
-            )
+            storage.addMapping(EntryKey.CREATED_AT, StringConverterPair.LONG)
         }
 
         if (updatedAtEnabled) {
-            use(Hoard::class).converterPairsContainer.add(
-                EntryKey.UPDATED_AT,
-                StringConverterPairs.LONG
-            )
+            storage.addMapping(EntryKey.UPDATED_AT, StringConverterPair.LONG)
         }
     }
 
@@ -125,15 +120,13 @@ class HoardTime(renovator: Renovator) : Furnishing(renovator) {
 
     private fun setCreateTime(entry: Entry) {
         if (createdAtEnabled()) {
-            val timestampMs = System.currentTimeMillis()
-            entry[EntryKey.CREATED_AT] = timestampMs
+            entry.update(EntryKey.CREATED_AT, System.currentTimeMillis())
         }
     }
 
     private fun setUpdatedTime(entry: Entry) {
         if (updatedAtEnabled()) {
-            val timestampMs = System.currentTimeMillis()
-            entry[EntryKey.UPDATED_AT] = timestampMs
+            entry.update(EntryKey.UPDATED_AT, System.currentTimeMillis())
         }
     }
 

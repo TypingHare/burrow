@@ -2,7 +2,7 @@ package burrow.carton.server
 
 import burrow.carton.server.command.ServerStartCommand
 import burrow.carton.server.command.ServerStopCommand
-import burrow.common.converter.StringConverterPairs
+import burrow.common.converter.StringConverterPair
 import burrow.kernel.Burrow
 import burrow.kernel.config.Config
 import burrow.kernel.furniture.Furnishing
@@ -19,8 +19,8 @@ class Server(renovator: Renovator) : Furnishing(renovator) {
     private var service: Service? = null
 
     override fun prepareConfig(config: Config) {
-        config.addKey(ConfigKey.HOST)
-        config.addKey(ConfigKey.PORT, StringConverterPairs.INT)
+        registerConfigKey(ConfigKey.HOST)
+        registerConfigKey(ConfigKey.PORT, StringConverterPair.INT)
     }
 
     override fun modifyConfig(config: Config) {

@@ -23,13 +23,13 @@ class DelCommand(data: CommandData) : Command(data) {
         }
 
         val hoard = use(Hoard::class)
-        if (!hoard.exists(id)) {
+        if (!hoard.storage.exists(id)) {
             stderr.println("Entry with such ID doesn't exist: $id")
             return ExitCode.USAGE
         }
 
         dispatch(EntryCommand::class, listOf(id.toString()))
-        hoard.delete(id)
+        hoard.storage.delete(id)
 
         return ExitCode.OK
     }
