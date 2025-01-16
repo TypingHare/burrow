@@ -1,7 +1,6 @@
 package burrow.carton.core
 
 import burrow.carton.core.command.*
-import burrow.carton.core.command.chamber.ChamberCommand
 import burrow.carton.core.command.chamber.ChamberDestroyCommand
 import burrow.carton.core.command.chamber.ChamberRebuildCommand
 import burrow.carton.core.command.config.ConfigCommand
@@ -13,6 +12,8 @@ import burrow.kernel.config.Config
 import burrow.kernel.furniture.*
 import burrow.kernel.furniture.annotation.Furniture
 import burrow.kernel.terminal.CommandClass
+import burrow.kernel.terminal.CommandNotFoundEvent
+import burrow.kernel.terminal.Interpreter
 import java.io.PrintWriter
 
 @Furniture(
@@ -54,6 +55,15 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(ConfigCommand::class)
         registerCommand(ConfigGetCommand::class)
         registerCommand(ConfigSetCommand::class)
+
+        courier.unsubscribe(
+            CommandNotFoundEvent::class,
+            Interpreter.EventHandler::commandNotFoundEventHandler
+        )
+        courier.subscribe(
+            CommandNotFoundEvent::class,
+            EventHandler::commandNotFoundEventHandler
+        )
     }
 
     @Throws(Exception::class)
@@ -143,5 +153,17 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
 
     object ConfigKey {
         const val DESCRIPTION = "description"
+    }
+
+    companion object {
+        const val DEFAULT_COMMAND_NAME = "\$default\$"
+    }
+
+    object EventHandler {
+        fun commandNotFoundEventHandler(event: CommandNotFoundEvent) {
+            event.commandData.let {
+                it.chamber.interpreter.execute(DEFAULT_COMMAND_NAME, it)
+            }
+        }
     }
 }
