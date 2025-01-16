@@ -37,7 +37,6 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(HelpCommand::class)
 
         // Chamber commands
-        registerCommand(ChamberCommand::class)
         registerCommand(ChamberRebuildCommand::class)
         registerCommand(ChamberDestroyCommand::class)
 

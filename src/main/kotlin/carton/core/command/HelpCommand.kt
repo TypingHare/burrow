@@ -1,5 +1,6 @@
 package burrow.carton.core.command
 
+import burrow.carton.core.Core
 import burrow.carton.core.help.CommandParser
 import burrow.carton.core.printer.SynopsisPrintContext
 import burrow.carton.core.printer.SynopsisPrinter
@@ -23,13 +24,6 @@ class HelpCommand(data: CommandData) : Command(data) {
     )
     private var commandName = ""
 
-    @Option(
-        names = ["--json", "-j"],
-        description = ["Whether to display the data in JSON form."],
-        defaultValue = "false"
-    )
-    private var useJson = false
-
     override fun call(): Int {
         return when (commandName.isBlank()) {
             true -> displayAllCommandsInfo()
@@ -38,6 +32,11 @@ class HelpCommand(data: CommandData) : Command(data) {
     }
 
     private fun displayAllCommandsInfo(): Int {
+        val chamberName = chamber.name
+        val chamberDescription =
+            config.getNotNull<String>(Core.ConfigKey.DESCRIPTION)
+
+
         return ExitCode.OK
     }
 
