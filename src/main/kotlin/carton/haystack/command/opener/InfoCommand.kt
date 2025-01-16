@@ -7,24 +7,24 @@ import burrow.carton.haystack.command.InfoCommand as HaystackInfoCommand
 
 @BurrowCommand(
     name = "info",
-    header = ["Displays the information of a relative path."]
+    header = ["Displays the information of an entry."]
 )
 class InfoCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        description = ["The relative path."],
+        description = ["The name of the entry."],
     )
-    private var relativePath = ""
+    private var entry = ""
 
     override fun call(): Int {
         val exitCode =
-            dispatch(HaystackInfoCommand::class, listOf(relativePath))
+            dispatch(HaystackInfoCommand::class, listOf(entry))
         if (exitCode != ExitCode.OK) {
             return exitCode
         }
 
-        val entry = use(Haystack::class).getEntry(relativePath)
-        val opener = entry.get<String>(HaystackOpener.EntryKey.OPENER)
+        val entry = use(Haystack::class).getEntry(entry)
+        val opener = HaystackOpener.extractOpener(entry)
         stdout.println("opener: $opener")
 
         return ExitCode.OK

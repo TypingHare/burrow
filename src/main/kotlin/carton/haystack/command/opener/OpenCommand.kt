@@ -11,18 +11,18 @@ import burrow.kernel.terminal.Parameters
 @BurrowCommand(
     name = "open",
     header = [
-        "Opens a relative path using the opener associated with the entry."
+        "Opens an entry using the opener associated with the entry."
     ]
 )
 class OpenCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        description = ["The relative path of the entry."]
+        description = ["The name of the entry to open."]
     )
-    private var relativePath = ""
+    private var name = ""
 
     override fun call(): Int {
-        val entry = use(Haystack::class).getEntry(relativePath)
+        val entry = use(Haystack::class).getEntry(name)
         val opener = HaystackOpener.extractOpener(entry)
         val absolutePath = Haystack.extractAbsolutePath(entry)
         val command = "$opener $absolutePath"

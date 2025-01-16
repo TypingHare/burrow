@@ -16,12 +16,7 @@ class PathRemoveCommand(data: CommandData) : Command(data) {
     private var path = ""
 
     override fun call(): Int {
-        val newPathList =
-            config.getNotNull<List<String>>(Haystack.ConfigKey.PATH)
-                .toMutableList()
-                .apply { remove(path) }
-        config[Haystack.ConfigKey.PATH] = newPathList
-
+        use(Haystack::class).getPathList().apply { remove(path) }
         return dispatch(ChamberRebuildCommand::class)
     }
 }

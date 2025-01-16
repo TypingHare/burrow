@@ -6,21 +6,21 @@ import java.io.File
 
 @BurrowCommand(
     name = "info",
-    header = ["Displays the information of a relative path."],
+    header = ["Displays the information of an entry."],
 )
 class InfoCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        description = ["The relative path."],
+        description = ["The name of the entry."],
     )
-    private var relativePath = ""
+    private var name = ""
 
     override fun call(): Int {
-        val entry = use(Haystack::class).getEntry(relativePath)
+        val entry = use(Haystack::class).getEntry(name)
         val absolutePath = entry.get<String>(Haystack.EntryKey.ABSOLUTE_PATH)!!
-        stdout.println("$relativePath -> $absolutePath")
+        stdout.println("$name -> $absolutePath")
 
-        // Print file information
+        // Print some information
         val file = File(absolutePath)
         val existing = file.exists()
         stdout.println("existing: $existing")

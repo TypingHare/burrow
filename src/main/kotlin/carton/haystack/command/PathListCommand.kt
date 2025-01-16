@@ -12,7 +12,7 @@ import burrow.kernel.terminal.ExitCode
 )
 class PathListCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
-        use(Haystack::class).getPaths().forEach { stdout.println(it) }
+        use(Haystack::class).getPathList().forEach(stdout::println)
         return ExitCode.OK
     }
 }

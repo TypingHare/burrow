@@ -16,12 +16,7 @@ class PathAddCommand(data: CommandData) : Command(data) {
     private var path = ""
 
     override fun call(): Int {
-        val newPathList =
-            config.getNotNull<List<String>>(Haystack.ConfigKey.PATH)
-                .toMutableList()
-                .apply { add(path) }
-        config[Haystack.ConfigKey.PATH] = newPathList
-
+        use(Haystack::class).getPathList().apply { add(path) }
         return dispatch(ChamberRebuildCommand::class)
     }
 }

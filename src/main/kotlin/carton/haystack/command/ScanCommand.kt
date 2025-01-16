@@ -11,37 +11,48 @@ import java.io.File
 
 @BurrowCommand(
     name = "scan",
-    header = ["Adds all files and directories within the path scope."]
+    header = ["Adds all files and directories within the path scope."],
+    description = [
+        "Scans directories specified by the path list. Files and directories " +
+                "in the top hierarchy will be added. Hidden files and " +
+                "directories started with '.' will not be added."
+    ]
 )
 class ScanCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
         val haystack = use(Haystack::class)
-        val paths = haystack.getPaths()
-        val relativePaths = mutableSetOf<String>()
-        use(Hoard::class).storage.getAllEntries().map {
-            relativePaths.add(it[Haystack.EntryKey.RELATIVE_PATH]!!)
-        }
+        val paths = haystack.getPathList()
+        val names = mutableSetOf<String>()
+        use(Hoard::class).storage
+            .getAllEntries()
+            .map { names.add(it[Haystack.EntryKey.NAME]!!) }
 
-        for (path in paths) {
-            val files = File(path).listFiles()?.toList() ?: emptyList()
-            files.forEach { file ->
-                val relativePath = file.name
-                if (relativePath in relativePaths) return@forEach
-                if (relativePath.startsWith(".")) return@forEach
-
-                try {
-                    haystack.createEntry(relativePath)
-                    stdout.println("Added: $relativePath -> ${file.absolutePath}")
-                } catch (ex: MultipleAbsolutePathsException) {
-                    stderr.println("Failed to add relative path: $relativePath")
-                    stderr.println("Multiple absolute paths found: ")
-                    ex.candidateAbsolutePaths.forEach { stderr.println(it) }
-
-                    return ExitCode.USAGE
-                }
-            }
-        }
+        paths.forEach { scanDirectory(names, it) }
 
         return ExitCode.OK
+    }
+
+    private fun scanDirectory(names: MutableSet<String>, path: String) {
+        val haystack = use(Haystack::class)
+        val fileObject = File(path)
+        if (!fileObject.isDirectory()) {
+            return
+        }
+
+        val files = File(path).listFiles()?.toList() ?: emptyList()
+        files.forEach { file ->
+            val relativePath = file.name
+            if (relativePath in names) return@forEach
+            if (relativePath.startsWith(".")) return@forEach
+
+            try {
+                haystack.createEntry(relativePath)
+                names.add(relativePath)
+                stdout.println("Added: $relativePath -> ${file.absolutePath}")
+            } catch (ex: MultipleAbsolutePathsException) {
+                stderr.println("Failed to add $relativePath, as multiple absolute paths are found.")
+                ex.candidateAbsolutePaths.forEach { stderr.println(it) }
+            }
+        }
     }
 }
