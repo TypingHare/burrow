@@ -19,22 +19,20 @@ class ListCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
         val entries = use(Hoard::class).storage.getAllEntries()
         val table = mutableListOf(
-            listOf("ID", "Relative Path", "Absolute Path", "Exist", "Opener")
+            listOf("ID", "Name", "Absolute Path", "Exist", "Opener")
         )
 
         entries.forEach {
             val id = it.id.toString()
-            val relativePath = it.get<String>(Haystack.EntryKey.RELATIVE_PATH)!!
+            val relativePath = it.get<String>(Haystack.EntryKey.NAME)!!
             val absolutePath = it.get<String>(Haystack.EntryKey.ABSOLUTE_PATH)!!
             val exist = if (File(absolutePath).exists()) "yes" else "no"
             val opener = it.get<String>(HaystackOpener.EntryKey.OPENER)!!
             table.add(listOf(id, relativePath, absolutePath, exist, opener))
         }
 
-        TablePrinter(
-            stdout,
-            TablePrinterContext(table, getTerminalWidth())
-        ).print()
+        val context = TablePrinterContext(table, getTerminalWidth())
+        TablePrinter(stdout, context).print()
 
         return ExitCode.OK
     }

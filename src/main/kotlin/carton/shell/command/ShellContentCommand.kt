@@ -13,7 +13,7 @@ import java.nio.file.Files
 )
 class ShellContentCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
-        val binFile = use(Shell::class).getShellFile()
+        val binFile = use(Shell::class).getShellFilePath()
         stdout.println(Files.readString(binFile))
 
         return ExitCode.OK

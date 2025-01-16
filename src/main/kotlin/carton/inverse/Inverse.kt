@@ -5,11 +5,15 @@ import burrow.common.converter.StringConverterPair
 import burrow.kernel.Burrow
 import burrow.kernel.furniture.*
 import burrow.kernel.furniture.annotation.Furniture
+import burrow.kernel.stream.TablePrinter
+import burrow.kernel.stream.TablePrinterContext
 import burrow.kernel.terminal.Command
+import org.jline.jansi.AnsiConsole.getTerminalWidth
 import org.reflections.Reflections
 import org.reflections.util.ClasspathHelper
 import org.reflections.util.ConfigurationBuilder
 import org.reflections.util.FilterBuilder
+import java.io.PrintWriter
 import java.net.URL
 
 @Furniture(
@@ -44,6 +48,11 @@ class Inverse(renovator: Renovator) : Furnishing(renovator) {
             getInverseRegisterCommands(event.furnishing) ?: return@subscribe
             scanCommands(event.furnishing)
         }
+    }
+
+    fun printTable(stdout: PrintWriter, table: List<List<String>>) {
+        val context = TablePrinterContext(table, getTerminalWidth())
+        TablePrinter(stdout, context).print()
     }
 
     private fun getInverseRegisterCommands(furnishing: Furnishing): InverseRegisterCommands? {

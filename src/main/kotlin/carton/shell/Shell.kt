@@ -12,6 +12,7 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.attribute.PosixFilePermissions
+import kotlin.io.path.exists
 
 @Furniture(
     version = Burrow.VERSION,
@@ -43,11 +44,18 @@ class Shell(renovator: Renovator) : Furnishing(renovator) {
 
     private fun getShellName(): String = config.getNotNull(ConfigKey.SHELL_NAME)
 
-    fun getShellFile(): Path =
+    fun getShellFilePath(): Path =
         burrow.getPath().resolve(Burrow.BIN_DIR).resolve(getShellName())
 
     fun createShellFile(content: String) {
-        createShellFile(getShellFile(), content)
+        createShellFile(getShellFilePath(), content)
+    }
+
+    fun createShellFileIfNotExist(content: String) {
+        val shellFilePath = getShellFilePath()
+        if (shellFilePath.exists()) {
+            createShellFile(shellFilePath, content)
+        }
     }
 
     fun getDefaultShellContent(): String {

@@ -12,7 +12,7 @@ import burrow.kernel.terminal.ExitCode
 )
 class ShellPathCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
-        stdout.println(use(Shell::class).getShellFile())
+        stdout.println(use(Shell::class).getShellFilePath())
 
         return ExitCode.OK
     }
