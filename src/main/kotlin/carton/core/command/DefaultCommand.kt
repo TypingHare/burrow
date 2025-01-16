@@ -11,7 +11,6 @@ import burrow.kernel.terminal.Command
 import burrow.kernel.terminal.CommandData
 import burrow.kernel.terminal.ExitCode
 import picocli.CommandLine
-import java.nio.file.Path
 
 @BurrowCommand(
     name = Core.DEFAULT_COMMAND_NAME,
@@ -50,41 +49,49 @@ class DefaultCommand(data: CommandData) : Command(data) {
 
     private fun displayVersion(): Int {
         val chamberName = chamber.name
-        val idVersionMap = renovator.furnishings.values
+        val nameVersionMap = renovator.furnishings.values
             .filter { extractType(it::class) == Furniture.Type.MAIN }
-            .associate { it.javaClass.name to extractVersion(it::class) }
+            .associate { it.javaClass.simpleName to extractVersion(it::class) }
 
-        when (idVersionMap.size) {
+        when (nameVersionMap.size) {
             0 -> stdout.println("$chamberName  ${Burrow.VERSION}")
             else -> {
-                val versionString = idVersionMap.map { (id, version) ->
-                    "$id=$version"
+                val versionString = nameVersionMap.map { (name, version) ->
+                    "$name=$version"
                 }.joinToString(" | ")
                 stdout.println("$chamberName  $versionString")
             }
         }
 
-        stdout.println()
-
         return ExitCode.OK
     }
 
     private fun displayHelp(): Int {
+        displayVersion()
+
+        // Description
         val description = config.getNotNull<String>(Core.ConfigKey.DESCRIPTION)
-        stdout.println("${chamber.name} - $description")
+        stdout.println()
+        stdout.println("[Description]")
+        stdout.println(description)
 
         // Involved cartons
         val furnishingIds = renovator.furnishings.keys
-        val cartonPathSet = mutableSetOf<Path>().apply {
-            for (furnishingId in furnishingIds) {
-                this.add(warehouse.furnishingIdToCarton[furnishingId]!!.path)
+        val burrowPathString = burrow.getPath().toString()
+        val cartonPathStringSet = furnishingIds.map { furnishingId ->
+            val absolutePathString =
+                warehouse.furnishingIdToCarton[furnishingId]!!.path.toString()
+            when (absolutePathString.startsWith(burrowPathString)) {
+                true -> absolutePathString.substring(burrowPathString.length + 1)
+                false -> absolutePathString
             }
-        }
+        }.toSet()
 
         stdout.println()
         stdout.println("[Cartons]")
-        cartonPathSet.map { it.toString() }.sorted().map(stderr::println)
+        cartonPathStringSet.sorted().map(stdout::println)
 
+        // Installed furnishings
         stdout.println()
         stdout.println("[Furnishings]")
         dispatch(FurnishingListCommand::class)
