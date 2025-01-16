@@ -12,6 +12,7 @@ import burrow.kernel.config.Config
 import burrow.kernel.furniture.*
 import burrow.kernel.furniture.annotation.Furniture
 import burrow.kernel.terminal.CommandClass
+import burrow.kernel.terminal.CommandData
 import burrow.kernel.terminal.CommandNotFoundEvent
 import burrow.kernel.terminal.Interpreter
 import java.io.PrintWriter
@@ -54,6 +55,8 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(ConfigCommand::class)
         registerCommand(ConfigGetCommand::class)
         registerCommand(ConfigSetCommand::class)
+
+        interpreter.defaultCommandName.set(DEFAULT_COMMAND_NAME)
 
         courier.unsubscribe(
             CommandNotFoundEvent::class,
@@ -156,12 +159,20 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
 
     companion object {
         const val DEFAULT_COMMAND_NAME = "(default)"
+        const val NOT_FOUND_COMMAND_NAME = "(not-found)"
     }
 
     object EventHandler {
         fun commandNotFoundEventHandler(event: CommandNotFoundEvent) {
             event.commandData.let {
-                it.chamber.interpreter.execute(DEFAULT_COMMAND_NAME, it)
+                it.chamber.interpreter.execute(
+                    NotFoundCommand::class,
+                    CommandData(
+                        it.chamber,
+                        listOf(event.commandName),
+                        it.environment
+                    )
+                )
             }
         }
     }

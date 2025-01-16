@@ -39,6 +39,8 @@ class DefaultCommand(data: CommandData) : Command(data) {
         if (showVersion) return displayVersion()
         if (showHelp) return displayHelp()
 
+        stderr.println("No such command: ")
+
         return displayHelp()
     }
 
