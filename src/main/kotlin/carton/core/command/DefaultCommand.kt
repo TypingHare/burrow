@@ -3,6 +3,7 @@ package burrow.carton.core.command
 import burrow.carton.core.Core
 import burrow.carton.core.command.furnishing.FurnishingListCommand
 import burrow.kernel.Burrow
+import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.furniture.annotation.Furniture
 import burrow.kernel.furniture.extractType
 import burrow.kernel.furniture.extractVersion
@@ -35,20 +36,14 @@ class DefaultCommand(data: CommandData) : Command(data) {
     private var showHelp = false
 
     override fun call(): Int {
-        if (showVersion) {
-            return displayVersion()
-        }
+        if (showVersion) return displayVersion()
+        if (showHelp) return displayHelp()
 
-        if (showHelp) {
-            return displayHelp()
-        }
-
-
-        return ExitCode.OK
+        return displayHelp()
     }
 
     private fun displayVersion(): Int {
-        val chamberName = chamber.name
+        val chamberName = getChamberName()
         val nameVersionMap = renovator.furnishings.values
             .filter { extractType(it::class) == Furniture.Type.MAIN }
             .associate { it.javaClass.simpleName to extractVersion(it::class) }
@@ -64,6 +59,14 @@ class DefaultCommand(data: CommandData) : Command(data) {
         }
 
         return ExitCode.OK
+    }
+
+    private fun getChamberName(): String {
+        if (chamber.name == ChamberShepherd.ROOT_CHAMBER_NAME) {
+            return "Burrow"
+        }
+
+        return chamber.name
     }
 
     private fun displayHelp(): Int {

@@ -155,7 +155,7 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
     }
 
     companion object {
-        const val DEFAULT_COMMAND_NAME = "\$default\$"
+        const val DEFAULT_COMMAND_NAME = "(default)"
     }
 
     object EventHandler {

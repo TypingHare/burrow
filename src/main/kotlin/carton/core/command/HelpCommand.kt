@@ -1,6 +1,5 @@
 package burrow.carton.core.command
 
-import burrow.carton.core.Core
 import burrow.carton.core.help.CommandParser
 import burrow.carton.core.printer.SynopsisPrintContext
 import burrow.carton.core.printer.SynopsisPrinter
@@ -32,12 +31,7 @@ class HelpCommand(data: CommandData) : Command(data) {
     }
 
     private fun displayAllCommandsInfo(): Int {
-        val chamberName = chamber.name
-        val chamberDescription =
-            config.getNotNull<String>(Core.ConfigKey.DESCRIPTION)
-
-
-        return ExitCode.OK
+        return dispatch(CommandCommand::class, listOf("--all"))
     }
 
     private fun displayCommandInfo(): Int {

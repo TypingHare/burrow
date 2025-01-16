@@ -57,12 +57,11 @@ class FurnishingCommandClassesPrinter(
                     add(listOf(commandName, commandHeader))
                 }
             }
-            TablePrinter(
-                writer,
-                TablePrinterContext(table, context.maxColumns).apply {
-                    defaultSpacing += longestCommandNameLength - commandNameLength
-                }
-            ).print()
+
+            val context = TablePrinterContext(table, context.maxColumns).apply {
+                defaultSpacing += longestCommandNameLength - commandNameLength
+            }
+            TablePrinter(writer, context).print()
         }
     }
 }

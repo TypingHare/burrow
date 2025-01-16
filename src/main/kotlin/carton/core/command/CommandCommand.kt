@@ -40,10 +40,8 @@ class CommandCommand(data: CommandData) : Command(data) {
 
     private fun displayMultipleFurnishingCommands(): Int {
         val core = use(Core::class)
-        val furnishingCommandClasses = when (shouldDisplayAll) {
-            true -> core.getFurnishingCommandClasses(onlyTopLevel = false)
-            false -> core.getFurnishingCommandClasses(onlyTopLevel = true)
-        }
+        val furnishingCommandClasses =
+            core.getFurnishingCommandClasses(onlyTopLevel = !shouldDisplayAll)
 
         printFurnishingCommands(furnishingCommandClasses)
 
