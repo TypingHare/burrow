@@ -14,7 +14,7 @@ move-bin:
     cp src/main/resources/init/bin/* {{ burrow_root }}/bin
 
 start-server:
-    burrow @server.start
+    burrow-server
 
 start-cli:
-    @burrow-cli --server=localhost:4710
+    @burrow-cli

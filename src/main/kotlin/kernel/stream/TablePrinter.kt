@@ -56,10 +56,9 @@ class TablePrinter(
         val plainText = AttributedString.fromAnsi(text)
         var width = 0
         for (char in plainText) {
-            width += if (char.isChineseCharacter()) {
-                2
-            } else {
-                1
+            width += when (char.isChineseCharacter()) {
+                true -> 2
+                false -> 1
             }
         }
 

@@ -32,7 +32,13 @@ class LocalClient : Client() {
             )
         )
 
-        burrow.parse(args.toList(), environment)
+        Thread {
+            try {
+                burrow.parse(args.toList(), environment)
+            } catch (ex: Exception) {
+                pipedOutputStream.close()
+            }
+        }.apply { start() }
 
         return processInputStreamForExitCode(pipedInputStream)
     }
