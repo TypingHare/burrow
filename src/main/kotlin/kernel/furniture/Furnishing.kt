@@ -61,6 +61,9 @@ fun extractFurniture(furnishingClass: FurnishingClass): Furniture? =
 fun extractId(furnishingClass: FurnishingClass): String =
     furnishingClass.java.name
 
+fun extractVersion(furnishingClass: FurnishingClass): String =
+    extractFurniture(furnishingClass)!!.version
+
 fun extractDescription(furnishingClass: FurnishingClass): String =
     extractFurniture(furnishingClass)!!.description
 
