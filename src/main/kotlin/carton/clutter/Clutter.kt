@@ -1,6 +1,6 @@
 package burrow.carton.clutter
 
-import burrow.carton.clutter.command.CartonCommand
+import burrow.carton.clutter.command.CartonListCommand
 import burrow.kernel.Burrow
 import burrow.kernel.furniture.*
 import burrow.kernel.furniture.annotation.Furniture
@@ -19,7 +19,7 @@ import kotlin.time.measureTimedValue
     type = Furniture.Type.ROOT
 )
 class Clutter(renovator: Renovator) : Furnishing(renovator), PathBound {
-    private val path = burrow.getPath().resolve(CARTON_DIR)
+    private val path = burrow.getPath().resolve(Burrow.LIBS_DIR)
     private val cartonMap = mutableMapOf<Path, Carton>()
 
     init {
@@ -29,7 +29,7 @@ class Clutter(renovator: Renovator) : Furnishing(renovator), PathBound {
     override fun getPath(): Path = path
 
     override fun assemble() {
-        registerCommand(CartonCommand::class)
+        registerCommand(CartonListCommand::class)
     }
 
     override fun launch() {
@@ -40,17 +40,24 @@ class Clutter(renovator: Renovator) : Furnishing(renovator), PathBound {
             }
         }
 
-        for (jarFile in jarFiles) {
-            val jarPath = jarFile.toPath()
+        val allFiles = path.toFile().listFiles()?.toList() ?: listOf()
+        val cartonJarPaths = allFiles
+            .filter { it.isFile() }
+            .filter { it.name.endsWith(".carton.jar") }
+            .map { it.toPath() }
+
+        for (cartonJarPath in cartonJarPaths) {
             val timedValue = measureTimedValue {
-                loadCarton(jarPath)
+                loadCarton(cartonJarPath)
             }
             val durationMs = timedValue.duration.inWholeMilliseconds
-            logger.info("Loaded carton [$jarPath] in $durationMs ms")
-
-            cartonMap[jarPath] = timedValue.value
+            logger.info("Loaded carton [$cartonJarPath] in $durationMs ms")
+            cartonMap[cartonJarPath] = timedValue.value
         }
     }
+
+    fun stripBurrowPath(pathString: String): String =
+        pathString.substring(burrow.getPath().toString().length + 1)
 
     @Throws(CartonPropertiesFileNotFoundException::class)
     private fun loadCarton(jarPath: Path): Carton {
@@ -77,7 +84,6 @@ class Clutter(renovator: Renovator) : Furnishing(renovator), PathBound {
     }
 
     companion object {
-        const val CARTON_DIR = "cartons"
         const val PROPERTIES_FILE = "carton.properties"
 
         private val logger = LoggerFactory.getLogger(Burrow::class.java)

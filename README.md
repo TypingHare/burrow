@@ -1,5 +1,4 @@
 # TODO
 
-- [ ] Socket heartbeat detection (refactor maybe)
-- [ ] Memo
-- [ ] App (for macOS)
+- [ ] Socket heartbeat detection (a refactor needed)
+- [ ] Memo (fuzzy search?)

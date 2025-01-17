@@ -155,7 +155,7 @@ class Burrow : PathBound {
         /**
          * The name of the fat jar file.
          */
-        const val JAR_NAME = "burrow-$VERSION-all.jar"
+        const val JAR_NAME = "burrow.jar"
 
         /**
          * The relative path to the Burrow root directory.

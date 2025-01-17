@@ -24,6 +24,4 @@ import burrow.kernel.furniture.annotation.RequiredDependencies
 )
 @InverseSetConfig
 @InverseRegisterCommands
-class Memo(renovator: Renovator) : Furnishing(renovator) {
-
-}
+class Memo(renovator: Renovator) : Furnishing(renovator)

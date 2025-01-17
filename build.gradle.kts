@@ -24,6 +24,10 @@ repositories {
     mavenCentral()
 }
 
+kotlin {
+    jvmToolchain(21)
+}
+
 dependencies {
     testImplementation(kotlin("test"))
 
@@ -43,6 +47,8 @@ tasks.test {
     useJUnitPlatform()
 }
 
-kotlin {
-    jvmToolchain(21)
+tasks.shadowJar {
+    archiveBaseName.set("burrow")
+    archiveVersion.set("")
+    archiveClassifier.set("")
 }

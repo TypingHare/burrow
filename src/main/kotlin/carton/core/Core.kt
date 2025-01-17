@@ -34,6 +34,7 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
     override fun assemble() {
         // Basic commands
         registerCommand(DefaultCommand::class)
+        registerCommand(NotFoundCommand::class)
         registerCommand(RootCommand::class)
         registerCommand(HelpCommand::class)
 
@@ -164,16 +165,19 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
 
     object EventHandler {
         fun commandNotFoundEventHandler(event: CommandNotFoundEvent) {
-            event.commandData.let {
-                it.chamber.interpreter.execute(
-                    NotFoundCommand::class,
-                    CommandData(
-                        it.chamber,
+            val commandData = event.commandData
+            val interpreter = commandData.chamber.interpreter
+            if (interpreter.commandClasses.containsKey(NOT_FOUND_COMMAND_NAME)) {
+                return interpreter.execute(
+                    NOT_FOUND_COMMAND_NAME, CommandData(
+                        commandData.chamber,
                         listOf(event.commandName),
-                        it.environment
+                        commandData.environment
                     )
                 )
             }
+
+            Interpreter.EventHandler.commandNotFoundEventHandler(event)
         }
     }
 }
