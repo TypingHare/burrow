@@ -1,7 +1,10 @@
 package burrow.carton.core.command.furnishing
 
-import burrow.carton.core.Core
-import burrow.kernel.terminal.*
+import burrow.carton.core.command.chamber.ChamberRebuildCommand
+import burrow.kernel.terminal.BurrowCommand
+import burrow.kernel.terminal.Command
+import burrow.kernel.terminal.CommandData
+import burrow.kernel.terminal.Parameters
 
 @BurrowCommand(
     name = "furnishing.add",
@@ -17,18 +20,12 @@ class FurnishingAddCommand(data: CommandData) : Command(data) {
     private var furnishingName = ""
 
     override fun call(): Int {
-        val core = use(Core::class)
         val uniqueAvailableFurnishingId =
             renovator.getUniqueAvailableFurnishingId(furnishingName)
 
         renovator.furnishingIds.add(uniqueAvailableFurnishingId)
         renovator.save()
 
-        if (!core.rebuildChamber(stderr)) {
-            return ExitCode.SOFTWARE
-        }
-        stdout.println("Furnishing added: $uniqueAvailableFurnishingId")
-
-        return ExitCode.OK
+        return dispatch(ChamberRebuildCommand::class)
     }
 }

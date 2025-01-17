@@ -59,7 +59,7 @@ class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
         isModified.set(true)
     }
 
-    fun <T> getNotNull(key: String): T =
+    fun <T> w(key: String): T =
         get<T>(key) ?: throw ConfigValueIsNullException(key)
 
     fun setIfAbsent(key: String, value: Any?) {

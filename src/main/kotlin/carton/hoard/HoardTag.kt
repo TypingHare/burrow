@@ -42,7 +42,10 @@ class HoardTag(renovator: Renovator) : Furnishing(renovator) {
     }
 
     fun getTags(entry: Entry): MutableSet<String> =
-        entry.get<MutableSet<String>>(EntryKey.TAGS)!!
+        entry.get<MutableSet<String>>(EntryKey.TAGS)
+            ?: mutableSetOf<String>().also {
+                entry.update(EntryKey.TAGS, it)
+            }
 
     companion object {
         const val TAG_DELIMITER = "||"

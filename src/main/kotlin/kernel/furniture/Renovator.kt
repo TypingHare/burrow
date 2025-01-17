@@ -109,6 +109,10 @@ class Renovator(
     fun getFurnishingIds(furnishingName: String): List<String> =
         getFurnishingIds(furnishingName, getAllFurnishingIds())
 
+    @Throws(
+        FurnishingNameNotRecognizedException::class,
+        MultipleFurnishingMatchedException::class
+    )
     fun getUniqueFurnishingId(furnishingName: String): String {
         val furnishingIds = getFurnishingIds(furnishingName)
         return when (furnishingIds.size) {
@@ -135,6 +139,10 @@ class Renovator(
         )
     }
 
+    @Throws(
+        FurnishingNameNotRecognizedException::class,
+        MultipleFurnishingMatchedException::class
+    )
     fun getUniqueAvailableFurnishingId(furnishingName: String): String {
         val furnishingIds = getAvailableFurnishingIds(furnishingName)
         return when (furnishingIds.size) {
@@ -270,7 +278,7 @@ class FurnishingNameNotRecognizedException(furnishingName: String) :
 
 class MultipleFurnishingMatchedException(furnishingIds: List<String>) :
     RuntimeException(buildString {
-        appendLine("Multiple Furnishing matched:")
+        appendLine("Multiple Furnishing IDs matched:")
         for (furnishingId in furnishingIds) {
             appendLine("  - $furnishingId")
         }

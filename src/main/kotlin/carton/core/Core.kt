@@ -80,12 +80,18 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
             stderr.println("Error during restarting. Now rolling back to the original blueprint.")
 
             val blueprint = chamberShepherd.getBluePrint(chamberName)
+
+            // Restore configuration
             val originalConfig = blueprint.config
             val originalFurnishingIds = blueprint.furnishingIds
             config.entries.putAll(originalConfig.entries)
             config.isModified.set(originalConfig.isModified.get())
+            config.save()
+
+            // Restore furnishing IDs
             renovator.furnishingIds.clear()
             renovator.furnishingIds.addAll(originalFurnishingIds)
+            renovator.save()
 
             stderr.println("Blueprint has been restored.")
 

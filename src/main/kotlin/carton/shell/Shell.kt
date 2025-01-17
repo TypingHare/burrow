@@ -47,13 +47,13 @@ class Shell(renovator: Renovator) : Furnishing(renovator) {
     fun getShellFilePath(): Path =
         burrow.getPath().resolve(Burrow.BIN_DIR).resolve(getShellName())
 
-    fun createShellFile(content: String) {
+    fun createShellFile(content: String = getDefaultShellContent()) {
         createShellFile(getShellFilePath(), content)
     }
 
-    fun createShellFileIfNotExist(content: String) {
+    fun createShellFileIfNotExist(content: String = getDefaultShellContent()) {
         val shellFilePath = getShellFilePath()
-        if (shellFilePath.exists()) {
+        if (!shellFilePath.exists()) {
             createShellFile(shellFilePath, content)
         }
     }

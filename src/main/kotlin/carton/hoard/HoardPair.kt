@@ -66,7 +66,8 @@ class HoardPair(renovator: Renovator) : Furnishing(renovator) {
 
     private fun getValueName(): String = config.getNotNull(ConfigKey.VALUE_NAME)
 
-    private fun <K> getKey(entry: Entry) = entry.get<K>(getKeyName())!!
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun <K> getKey(entry: Entry) = entry.get<K>(getKeyName())!!
 
     fun <V> getValue(entry: Entry) = entry.get<V>(getValueName())!!
 

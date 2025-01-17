@@ -17,9 +17,8 @@ fun checkPairs(pairs: Array<String>, stderr: PrintWriter): Boolean {
     if (pairs.size % 2 == 1) {
         stderr.println(
             """
-                Error: Keys and values must be provided in pairs. Received 
-                ${pairs.size}argument(s). 
-                Example usage: key1 value1 key2 value2
+                Error: Keys and values must be provided in pairs. Received ${pairs.size} argument(s). 
+                Example usage: set 1 key1 value1 key2 value2
             """.trimIndent()
         )
         return false
