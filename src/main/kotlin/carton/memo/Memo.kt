@@ -1,6 +1,7 @@
 package burrow.carton.memo
 
 import burrow.carton.hoard.HoardPair
+import burrow.carton.hoard.HoardTag
 import burrow.carton.inverse.Inverse
 import burrow.carton.inverse.annotation.InverseRegisterCommands
 import burrow.carton.inverse.annotation.InverseSetConfig
@@ -18,16 +19,11 @@ import burrow.kernel.furniture.annotation.RequiredDependencies
 )
 @RequiredDependencies(
     Dependency(Inverse::class, Burrow.VERSION),
-    Dependency(HoardPair::class, Burrow.VERSION)
+    Dependency(HoardPair::class, Burrow.VERSION),
+    Dependency(HoardTag::class, Burrow.VERSION)
 )
 @InverseSetConfig
 @InverseRegisterCommands
 class Memo(renovator: Renovator) : Furnishing(renovator) {
-    companion object {
-        const val TAG_DELIMITER = "||"
-    }
 
-    object EntryKey {
-        const val TAGS = "TAGS"
-    }
 }
