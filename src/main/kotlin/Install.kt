@@ -7,6 +7,7 @@ import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.terminal.BurrowCommand
 import burrow.kernel.terminal.ExitCode
 import burrow.kernel.terminal.Option
+import burrow.kernel.terminal.Parameters
 import picocli.CommandLine
 import java.io.IOException
 import java.nio.file.*
@@ -20,7 +21,6 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
     System.setProperty("slf4j.internal.verbosity", "WARN")
-
     CommandLine(Install()).execute(*args)
 }
 
@@ -30,6 +30,12 @@ fun main(args: Array<String>) {
     header = ["Install Burrow."]
 )
 class Install : Callable<Int> {
+    @Parameters(
+        index = "0",
+        description = ["The path of the burrow.jar file."]
+    )
+    private var burrowJarPathString: String = ""
+
     @Option(
         names = ["--force", "-f"],
         description = ["Force installation required."],
@@ -39,11 +45,20 @@ class Install : Callable<Int> {
     @OptIn(ExperimentalPathApi::class)
     override fun call(): Int {
         val rootPath = getBurrowRootPath()
+        val libsPath = rootPath.resolve(Burrow.LIBS_DIR)
         val chambersPath = rootPath.resolve(ChamberShepherd.CHAMBERS_DIR)
         if (!shouldBeForce && chambersPath.exists()) {
             println("It seems like that you have installed Burrow. To reinstall, append the '--force' option.")
             exitProcess(ExitCode.USAGE)
         }
+
+        Files.createDirectories(libsPath)
+
+        Files.copy(
+            Path.of(burrowJarPathString),
+            libsPath.resolve("burrow.jar"),
+            StandardCopyOption.REPLACE_EXISTING
+        )
 
         chambersPath.deleteRecursively()
         initializeChambers(chambersPath)
@@ -96,43 +111,8 @@ class Install : Callable<Int> {
                     val sourcePath = fs.getPath(resource)
                     Files.walkFileTree(
                         sourcePath,
-                        object : SimpleFileVisitor<Path>() {
-                            override fun preVisitDirectory(
-                                dir: Path,
-                                attrs: BasicFileAttributes
-                            ): FileVisitResult {
-                                val targetDir = destinationPath.resolve(
-                                    sourcePath.relativize(dir).toString()
-                                )
-                                if (!Files.exists(targetDir)) {
-                                    Files.createDirectory(targetDir)
-                                }
-                                return FileVisitResult.CONTINUE
-                            }
-
-                            override fun visitFile(
-                                file: Path,
-                                attrs: BasicFileAttributes
-                            ): FileVisitResult {
-                                val targetFile = destinationPath.resolve(
-                                    sourcePath.relativize(file).toString()
-                                )
-                                Files.copy(
-                                    file,
-                                    targetFile,
-                                    StandardCopyOption.REPLACE_EXISTING
-                                )
-                                return FileVisitResult.CONTINUE
-                            }
-
-                            override fun visitFileFailed(
-                                file: Path,
-                                exc: IOException
-                            ): FileVisitResult {
-                                println("Failed to copy file: $file due to ${exc.message}")
-                                return FileVisitResult.CONTINUE
-                            }
-                        })
+                        CopyFileVisitor(destinationPath, sourcePath)
+                    )
                 }
         } catch (e: Exception) {
             println("Failed to copy resources: ${e.message}")
@@ -140,9 +120,51 @@ class Install : Callable<Int> {
         }
     }
 
-    fun setFilePermissionsTo755(path: Path) {
+    private fun setFilePermissionsTo755(path: Path) {
         @Suppress("SpellCheckingInspection") val permissions =
             PosixFilePermissions.fromString("rwxr-xr-x")
         Files.setPosixFilePermissions(path, permissions)
+    }
+
+    private class CopyFileVisitor(
+        val destinationPath: Path,
+        val sourcePath: Path
+    ) :
+        SimpleFileVisitor<Path>() {
+        override fun preVisitDirectory(
+            dir: Path,
+            attrs: BasicFileAttributes
+        ): FileVisitResult {
+            val targetDir = destinationPath.resolve(
+                sourcePath.relativize(dir).toString()
+            )
+            if (!Files.exists(targetDir)) {
+                Files.createDirectory(targetDir)
+            }
+            return FileVisitResult.CONTINUE
+        }
+
+        override fun visitFile(
+            file: Path,
+            attrs: BasicFileAttributes
+        ): FileVisitResult {
+            val targetFile = destinationPath.resolve(
+                sourcePath.relativize(file).toString()
+            )
+            Files.copy(
+                file,
+                targetFile,
+                StandardCopyOption.REPLACE_EXISTING
+            )
+            return FileVisitResult.CONTINUE
+        }
+
+        override fun visitFileFailed(
+            file: Path,
+            exc: IOException
+        ): FileVisitResult {
+            println("Failed to copy file: $file due to ${exc.message}")
+            return FileVisitResult.CONTINUE
+        }
     }
 }

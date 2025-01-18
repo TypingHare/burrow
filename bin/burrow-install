@@ -1,0 +1,21 @@
+#! /usr/bin/env bash
+
+# Determine the prefix for the burrow formula
+BURROW_PREFIX=$(brew --prefix burrow 2>/dev/null)
+
+# Verify the formula is installed
+if [[ -z "$BURROW_PREFIX" ]]; then
+  echo "Error: Burrow formula not found. Please install it using 'brew install burrow'." >&2
+  exit 1
+fi
+
+# Construct the path to the JAR file
+BURROW_JAR_PATH="$BURROW_PREFIX/libexec/burrow.jar"
+
+# Check if the JAR file exists
+if [[ ! -f "$BURROW_JAR_PATH" ]]; then
+  echo "Error: burrow.jar not found at $BURROW_JAR_PATH. Please check the installation." >&2
+  exit 1
+fi
+
+java -cp "$BURROW_JAR_PATH" burrow.InstallKt "$BURROW_JAR_PATH" "$@"
