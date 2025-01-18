@@ -45,7 +45,8 @@ class Interpreter(chamber: Chamber) : ExtendedChamberModule(chamber),
         val commandClass = commandClasses[commandName]!!
         execute(commandClass, commandData)
     }
-    
+
+    @Suppress("MemberVisibilityCanBePrivate")
     fun execute(commandClass: CommandClass, commandData: CommandData) {
         val outputStream = commandData.environment.outputStream
         val stateWriterController =

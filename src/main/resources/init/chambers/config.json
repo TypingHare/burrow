@@ -1,3 +1,7 @@
 {
-  "description": "A playground where you can try anything!"
+  "server.host": "localhost",
+  "server.port": "4710",
+  "description": "The root chamber centrally manages all chambers.",
+  "scheduler.interval_ms": "10000",
+  "scheduler.threshold_ms": "600000"
 }

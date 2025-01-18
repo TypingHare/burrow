@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-zBURROW_JAR_PATH="$HOME/.burrow/libs/burrow.jar"
+BURROW_JAR_PATH="$HOME/.burrow/libs/burrow.jar"
 TARGET_CLASS="burrow.client.BurrowCommandKt"
 
 java -cp "$BURROW_JAR_PATH" "$TARGET_CLASS" "$@"
