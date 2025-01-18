@@ -21,7 +21,7 @@ class BlueprintListCommand(data: CommandData) : Command(data) {
 
         val context = TablePrinterContext(table, getTerminalWidth())
         TablePrinter(stdout, context).print()
-
+        
         return ExitCode.OK
     }
 }

@@ -6,7 +6,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "prop",
-    header = ["Retrieve the value of a property."]
+    header = ["Retrieves the value of a property."]
 )
 class PropCommand(data: CommandData) : Command(data) {
     @Parameters(

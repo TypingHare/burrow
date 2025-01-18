@@ -1,6 +1,6 @@
 package burrow.carton.core.command.furnishing
 
-import burrow.carton.core.command.chamber.ChamberRebuildCommand
+import burrow.carton.core.command.chamber.RebuildCommand
 import burrow.kernel.terminal.BurrowCommand
 import burrow.kernel.terminal.Command
 import burrow.kernel.terminal.CommandData
@@ -8,7 +8,7 @@ import burrow.kernel.terminal.Parameters
 
 @BurrowCommand(
     name = "uninstall",
-    header = ["Uninstall a furnishing."]
+    header = ["Uninstalls a furnishing."]
 )
 class UninstallCommand(data: CommandData) : Command(data) {
     @Parameters(
@@ -23,6 +23,6 @@ class UninstallCommand(data: CommandData) : Command(data) {
             .let { idSet -> renovator.furnishingIds.removeAll(idSet) }
         renovator.save()
 
-        return dispatch(ChamberRebuildCommand::class)
+        return dispatch(RebuildCommand::class)
     }
 }

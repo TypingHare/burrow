@@ -1,8 +1,8 @@
 package burrow.carton.core
 
 import burrow.carton.core.command.*
-import burrow.carton.core.command.chamber.ChamberDestroyCommand
-import burrow.carton.core.command.chamber.ChamberRebuildCommand
+import burrow.carton.core.command.chamber.DestroyCommand
+import burrow.carton.core.command.chamber.RebuildCommand
 import burrow.carton.core.command.config.ConfigCommand
 import burrow.carton.core.command.config.ConfigGetCommand
 import burrow.carton.core.command.config.ConfigSetCommand
@@ -39,8 +39,8 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(HelpCommand::class)
 
         // Chamber commands
-        registerCommand(ChamberRebuildCommand::class)
-        registerCommand(ChamberDestroyCommand::class)
+        registerCommand(RebuildCommand::class)
+        registerCommand(DestroyCommand::class)
 
         // Furnishing commands
         registerCommand(FurnishingCommand::class)

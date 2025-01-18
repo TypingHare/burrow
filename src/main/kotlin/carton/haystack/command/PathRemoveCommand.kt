@@ -1,6 +1,6 @@
 package burrow.carton.haystack.command
 
-import burrow.carton.core.command.chamber.ChamberRebuildCommand
+import burrow.carton.core.command.chamber.RebuildCommand
 import burrow.carton.haystack.Haystack
 import burrow.kernel.terminal.BurrowCommand
 import burrow.kernel.terminal.Command
@@ -17,6 +17,6 @@ class PathRemoveCommand(data: CommandData) : Command(data) {
 
     override fun call(): Int {
         use(Haystack::class).getPathList().apply { remove(path) }
-        return dispatch(ChamberRebuildCommand::class)
+        return dispatch(RebuildCommand::class)
     }
 }

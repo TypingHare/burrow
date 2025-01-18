@@ -6,7 +6,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "unset",
-    header = ["Unset properties."]
+    header = ["Unsets properties."]
 )
 class UnsetCommand(data: CommandData) : Command(data) {
     @Parameters(

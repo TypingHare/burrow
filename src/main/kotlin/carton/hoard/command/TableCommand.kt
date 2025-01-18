@@ -7,7 +7,7 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "table",
-    header = ["Display entries in the table form."]
+    header = ["Displays entries in the table form."]
 )
 class TableCommand(data: CommandData) : Command(data) {
     @Parameters(

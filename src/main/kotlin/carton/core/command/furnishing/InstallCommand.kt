@@ -1,6 +1,6 @@
 package burrow.carton.core.command.furnishing
 
-import burrow.carton.core.command.chamber.ChamberRebuildCommand
+import burrow.carton.core.command.chamber.RebuildCommand
 import burrow.kernel.terminal.BurrowCommand
 import burrow.kernel.terminal.Command
 import burrow.kernel.terminal.CommandData
@@ -23,6 +23,6 @@ class InstallCommand(data: CommandData) : Command(data) {
             .let { idSet -> renovator.furnishingIds.addAll(idSet) }
         renovator.save()
 
-        return dispatch(ChamberRebuildCommand::class)
+        return dispatch(RebuildCommand::class)
     }
 }
