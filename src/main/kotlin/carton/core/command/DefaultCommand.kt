@@ -1,7 +1,7 @@
 package burrow.carton.core.command
 
 import burrow.carton.core.Core
-import burrow.carton.core.command.furnishing.FurnishingListCommand
+import burrow.carton.core.command.furnishing.FurnishingCommand
 import burrow.kernel.Burrow
 import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.furniture.annotation.Furniture
@@ -99,7 +99,7 @@ class DefaultCommand(data: CommandData) : Command(data) {
         // Installed furnishings
         stdout.println()
         stdout.println("[Furnishings]")
-        dispatch(FurnishingListCommand::class)
+        dispatch(FurnishingCommand::class)
 
         return ExitCode.OK
     }

@@ -6,10 +6,10 @@ import burrow.kernel.terminal.*
 import java.nio.file.Files
 
 @BurrowCommand(
-    name = "chamber.new",
+    name = "blueprint.new",
     header = ["Creates a new chamber blueprint."]
 )
-class ChamberNewCommand(data: CommandData) : Command(data) {
+class BlueprintNewCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
         description = ["The name of the chamber to create."]

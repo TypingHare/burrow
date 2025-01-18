@@ -11,9 +11,7 @@ import burrow.kernel.terminal.*
 class ChamberBuildCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        description = [
-            "The name of the chamber to build."
-        ]
+        description = ["The name of the chamber to build."]
     )
     var chamberName = ""
 
@@ -30,7 +28,7 @@ class ChamberBuildCommand(data: CommandData) : Command(data) {
         }
 
         val chamberNames =
-            use(Dictator::class).getAllChamberDirs().map { it.name }.toSet()
+            use(Dictator::class).getBlueprintDirs().map { it.name }.toSet()
         if (chamberName !in chamberNames) {
             val chamberRootDir = burrow.getPath().resolve(chamberName)
             stderr.println("Chamber root directory does not exist: $chamberRootDir")

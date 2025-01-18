@@ -13,7 +13,7 @@ import kotlin.math.max
 
 @BurrowCommand(
     name = "scheduler.list",
-    header = ["List all built chambers and elapsed time."]
+    header = ["Display all built chambers and elapsed time."]
 )
 class SchedulerListCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

@@ -8,7 +8,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "carton.list",
-    header = ["Displays all cartons loaded."]
+    header = ["Displays all loaded cartons."]
 )
 class CartonListCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

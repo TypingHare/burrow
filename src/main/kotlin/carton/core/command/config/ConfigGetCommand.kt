@@ -14,14 +14,7 @@ class ConfigGetCommand(data: CommandData) : Command(data) {
     private var key = ""
 
     override fun call(): Int {
-        val value = config.entries[key]
-        if (value == null) {
-            stderr.println("Key is not allowed: $key")
-            return ExitCode.USAGE
-        }
-
-        stdout.println(value)
-
+        stdout.println(config.getNotNull<Any>(key))
         return ExitCode.OK
     }
 }

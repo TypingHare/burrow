@@ -1,4 +1,14 @@
-# TODO
+# [Burrow]()
 
-- [ ] Socket heartbeat detection (a refactor needed)
-- [ ] Memo (fuzzy search?)
+## Installation
+
+### Homebrew
+
+```shell
+brew tap TypingHare/burrow
+brew install burrow
+burrow-install
+```
+
+### Manual
+

@@ -5,6 +5,7 @@ import burrow.carton.hoard.HoardTag
 import burrow.carton.inverse.Inverse
 import burrow.carton.inverse.annotation.InverseRegisterCommands
 import burrow.carton.inverse.annotation.InverseSetConfig
+import burrow.carton.shell.Shell
 import burrow.kernel.Burrow
 import burrow.kernel.furniture.Furnishing
 import burrow.kernel.furniture.Renovator
@@ -19,9 +20,14 @@ import burrow.kernel.furniture.annotation.RequiredDependencies
 )
 @RequiredDependencies(
     Dependency(Inverse::class, Burrow.VERSION),
+    Dependency(Shell::class, Burrow.VERSION),
     Dependency(HoardPair::class, Burrow.VERSION),
     Dependency(HoardTag::class, Burrow.VERSION)
 )
 @InverseSetConfig
 @InverseRegisterCommands
-class Memo(renovator: Renovator) : Furnishing(renovator)
+class Memo(renovator: Renovator) : Furnishing(renovator) {
+    override fun launch() {
+        use(Shell::class).createShellFileIfNotExist()
+    }
+}

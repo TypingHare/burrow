@@ -15,7 +15,7 @@ import kotlin.time.measureTimedValue
 
 @Furniture(
     version = Burrow.VERSION,
-    description = "Allows users to load cartons (JAR files) into Burrow.",
+    description = "Automatically loads cartons into Burrow.",
     type = Furniture.Type.ROOT
 )
 class Clutter(renovator: Renovator) : Furnishing(renovator), PathBound {

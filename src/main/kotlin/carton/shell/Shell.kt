@@ -69,7 +69,8 @@ class Shell(renovator: Renovator) : Furnishing(renovator) {
         """.trimIndent()
     }
 
-    private fun createShellFile(path: Path, content: String) {
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun createShellFile(path: Path, content: String) {
         try {
             Files.write(path, content.toByteArray())
             @Suppress("SpellCheckingInspection")

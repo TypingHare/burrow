@@ -8,10 +8,13 @@ import burrow.kernel.terminal.Parameters
 
 @BurrowCommand(
     name = "exec",
-    header = ["Executes a command."]
+    header = ["Executes a system command."]
 )
 class ExecCommand(data: CommandData) : Command(data) {
-    @Parameters(index = "0", description = ["Command to execute."])
+    @Parameters(
+        index = "0",
+        description = ["System command to execute."]
+    )
     private var command = ""
 
     override fun call(): Int {

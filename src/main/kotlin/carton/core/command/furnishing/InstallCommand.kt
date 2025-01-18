@@ -7,21 +7,20 @@ import burrow.kernel.terminal.CommandData
 import burrow.kernel.terminal.Parameters
 
 @BurrowCommand(
-    name = "furnishing.remove",
-    header = ["Removes a furnishing from the chamber."]
+    name = "install",
+    header = ["Installs a new furnishing."],
 )
-class FurnishingRemoveCommand(data: CommandData) : Command(data) {
+class InstallCommand(data: CommandData) : Command(data) {
     @Parameters(
-        index = "0",
-        description = [
-            "The name of the furnishing to remove."
-        ]
+        index = "0..*",
+        description = ["The names of the furnishing to install."]
     )
-    private var name = ""
+    private var names: Array<String> = emptyArray()
 
     override fun call(): Int {
-        val furnishingId = renovator.getUniqueFurnishingId(name)
-        renovator.furnishingIds.remove(furnishingId)
+        names.map { renovator.getUniqueFurnishingId(it) }
+            .toSet()
+            .let { idSet -> renovator.furnishingIds.addAll(idSet) }
         renovator.save()
 
         return dispatch(ChamberRebuildCommand::class)

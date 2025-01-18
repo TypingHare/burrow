@@ -17,7 +17,7 @@ import burrow.kernel.furniture.annotation.RequiredDependencies
 
 @Furniture(
     version = Burrow.VERSION,
-    description = "Allows users to set up the opener.",
+    description = "Allows user to open an entry with a preset opener.",
     type = Furniture.Type.COMPONENT
 )
 @RequiredDependencies(

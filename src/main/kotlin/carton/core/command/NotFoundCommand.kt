@@ -12,7 +12,7 @@ import burrow.kernel.terminal.*
 class NotFoundCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        description = ["The command name."]
+        description = ["The command name that is not found."]
     )
     private var commandName = ""
 

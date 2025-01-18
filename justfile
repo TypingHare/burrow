@@ -11,7 +11,7 @@ move-bin:
     mkdir -p {{ burrow_root }}/bin
     cp src/main/resources/init/bin/* {{ burrow_root }}/bin
 
-build-move:
+move-jar:
     just build
     mkdir -p {{ burrow_root }}/libs/
     mv build/libs/* {{ burrow_root }}/libs/

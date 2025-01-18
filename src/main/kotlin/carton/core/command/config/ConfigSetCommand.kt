@@ -22,16 +22,16 @@ class ConfigSetCommand(data: CommandData) : Command(data) {
     private var value = ""
 
     @Option(
-        names = ["--reset", "-r"],
-        description = ["Reset the config value."]
-    )
-    private var shouldReset = false
-
-    @Option(
-        names = ["--rebuild", "-b"],
+        names = ["--rebuild", "-r"],
         description = ["Rebuild immediately."]
     )
     private var shouldRebuild = false
+
+    @Option(
+        names = ["--reset", "-s"],
+        description = ["Reset the config value."]
+    )
+    private var shouldReset = false
 
     override fun call(): Int {
         if (key !in config.entries.keys) {

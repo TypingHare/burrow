@@ -20,7 +20,7 @@ class CommandCommand(data: CommandData) : Command(data) {
         ],
         defaultValue = "",
     )
-    private var furnishingId = ""
+    private var furnishingName = ""
 
     @Option(
         names = ["--all", "-a"],
@@ -32,7 +32,7 @@ class CommandCommand(data: CommandData) : Command(data) {
     private var shouldDisplayAll = false
 
     override fun call(): Int {
-        return when (furnishingId.isBlank()) {
+        return when (furnishingName.isBlank()) {
             true -> displayMultipleFurnishingCommands()
             false -> displaySingleFurnishingCommands()
         }
@@ -42,33 +42,19 @@ class CommandCommand(data: CommandData) : Command(data) {
         val core = use(Core::class)
         val furnishingCommandClasses =
             core.getFurnishingCommandClasses(onlyTopLevel = !shouldDisplayAll)
-
         printFurnishingCommands(furnishingCommandClasses)
 
         return ExitCode.OK
     }
 
     private fun displaySingleFurnishingCommands(): Int {
-        val furnishingIds = renovator.getFurnishingIds(furnishingId)
-        when (furnishingIds.size) {
-            0 -> {
-                stderr.println("Furnishing not recognized: $furnishingId")
-                return ExitCode.USAGE
-            }
-            1 -> {
-                val furnishing = renovator.getFurnishing(furnishingIds[0])!!
-                printFurnishingCommands(
-                    mapOf(furnishing to furnishing.commandClasses.toList())
-                )
+        val furnishingId = renovator.getUniqueFurnishingId(furnishingName)
+        val furnishing = renovator.getFurnishing(furnishingId)!!
+        printFurnishingCommands(
+            mapOf(furnishing to furnishing.commandClasses.toList())
+        )
 
-                return ExitCode.OK
-            }
-            else -> {
-                stderr.println("Multiple furnishings are matched:")
-                furnishingIds.forEach { stdout.println(it) }
-                return ExitCode.USAGE
-            }
-        }
+        return ExitCode.OK
     }
 
     private fun printFurnishingCommands(

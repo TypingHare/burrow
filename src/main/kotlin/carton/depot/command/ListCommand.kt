@@ -13,7 +13,7 @@ import java.io.File
 
 @BurrowCommand(
     name = "list",
-    header = ["Displays all entries in table format."],
+    header = ["Displays all repositories along with their information."],
 )
 class ListCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

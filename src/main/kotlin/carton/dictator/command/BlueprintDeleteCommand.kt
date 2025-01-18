@@ -5,10 +5,10 @@ import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.terminal.*
 
 @BurrowCommand(
-    name = "chamber.delete",
+    name = "blueprint.delete",
     header = ["Deletes a chamber blueprint."]
 )
-class ChamberDeleteCommand(data: CommandData) : Command(data) {
+class BlueprintDeleteCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
         paramLabel = "name",
@@ -29,7 +29,7 @@ class ChamberDeleteCommand(data: CommandData) : Command(data) {
         }
 
         val dictator = use(Dictator::class)
-        val chamberDirs = dictator.getAllChamberDirs()
+        val chamberDirs = dictator.getBlueprintDirs()
         val chamberDir = chamberDirs.find { it.name == chamberName }
         if (chamberDir == null) {
             stderr.println("Unable to find chamber blueprint for $chamberName")

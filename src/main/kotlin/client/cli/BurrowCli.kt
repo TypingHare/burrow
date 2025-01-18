@@ -215,7 +215,7 @@ class BurrowCli : Callable<Int> {
         try {
             val client = client!!
             val exitCode = client.executeCommand(
-                ". chamber.exist $chamberName --quiet --blueprint"
+                ". blueprint.exist $chamberName --quiet"
             )
             return exitCode == ExitCode.OK
         } catch (ex: Exception) {
@@ -246,7 +246,7 @@ class BurrowCli : Callable<Int> {
     private fun listAllAvailableChambers() {
         val client = client!!
         println("Available blueprints are as follows:")
-        client.executeCommand(". chamber.list --blueprint")
+        client.executeCommand(". blueprint.list")
     }
 
     companion object {

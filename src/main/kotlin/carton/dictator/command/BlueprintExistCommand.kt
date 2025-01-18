@@ -1,18 +1,19 @@
 package burrow.carton.dictator.command
 
 import burrow.carton.dictator.Dictator
+import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.terminal.*
 
 @BurrowCommand(
-    name = "chamber.exist",
-    header = ["Checks if a chamber is built."]
+    name = "blueprint.exist",
+    header = ["Checks if a blueprint exists."]
 )
-class ChamberExistCommand(data: CommandData) : Command(data) {
+class BlueprintExistCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
         description = ["The name of the chamber to check."]
     )
-    private var chamberName = ""
+    private var blueprintName = ""
 
     @Option(
         names = ["--quiet", "-q"],
@@ -22,12 +23,13 @@ class ChamberExistCommand(data: CommandData) : Command(data) {
 
     override fun call(): Int {
         val dictator = use(Dictator::class)
-        val existing = chamberName in dictator.chamberInfoMap.keys
+        val existing = dictator.getBlueprintNames()
+            .contains(blueprintName) || blueprintName == ChamberShepherd.ROOT_CHAMBER_NAME
 
         if (!shouldBeQuiet) {
             when (existing) {
-                true -> stdout.println("Chamber exists: $chamberName")
-                false -> stderr.println("Chamber does not exist: $chamberName")
+                true -> stdout.println("Blueprint exists: $blueprintName")
+                false -> stderr.println("Blueprint does not exist: $blueprintName")
             }
         }
 

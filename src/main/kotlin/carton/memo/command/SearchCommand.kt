@@ -11,6 +11,7 @@ import burrow.kernel.terminal.ExitCode
 )
 class SearchCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
+        // TODO: Use fuzzy search to implement this, but how?
         return ExitCode.OK
     }
 }

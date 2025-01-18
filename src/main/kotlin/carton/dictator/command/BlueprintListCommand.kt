@@ -9,17 +9,14 @@ import burrow.kernel.terminal.CommandData
 import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
-    name = "chamber.list",
-    header = ["Displays the list of all built chambers."]
+    name = "blueprint.list",
+    description = ["Displays the list of all chamber blueprints."]
 )
-class ChamberListCommand(data: CommandData) : Command(data) {
+class BlueprintListCommand(data: CommandData) : Command(data) {
     override fun call(): Int {
         val dictator = use(Dictator::class)
-        val chamberInfoList = dictator.getBuiltChamberInfoList()
-        val table = mutableListOf<List<String>>().apply {
-            chamberInfoList.forEach {
-                add(listOf(it.name, it.description))
-            }
+        val table = dictator.getBlueprintInfoList().map {
+            listOf(it.name, it.description)
         }
 
         val context = TablePrinterContext(table, getTerminalWidth())

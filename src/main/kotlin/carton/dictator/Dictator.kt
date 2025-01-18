@@ -28,11 +28,14 @@ class Dictator(renovator: Renovator) : Furnishing(renovator) {
     val chamberInfoMap = mutableMapOf<String, ChamberInfo>()
 
     override fun assemble() {
-        registerCommand(ChamberExistCommand::class)
-        registerCommand(ChamberListCommand::class)
-        registerCommand(ChamberNewCommand::class)
+        registerCommand(BlueprintNewCommand::class)
+        registerCommand(BlueprintListCommand::class)
+        registerCommand(BlueprintExistCommand::class)
+        registerCommand(BlueprintDeleteCommand::class)
+
         registerCommand(ChamberBuildCommand::class)
-        registerCommand(ChamberDeleteCommand::class)
+        registerCommand(ChamberListCommand::class)
+        registerCommand(ChamberExistCommand::class)
 
         burrow.courier.subscribe(ChamberPostBuildEvent::class) {
             val chamber = it.chamber
@@ -49,9 +52,7 @@ class Dictator(renovator: Renovator) : Furnishing(renovator) {
         }
     }
 
-    fun getAllChamberDirs(
-        addChambersDirectory: Boolean = false
-    ): List<File> =
+    fun getBlueprintDirs(addChambersDirectory: Boolean = false): List<File> =
         chamberShepherd.getPath().toFile()
             .listFiles()!!
             .toMutableList()
@@ -62,14 +63,14 @@ class Dictator(renovator: Renovator) : Furnishing(renovator) {
             }
             .filter { it.isDirectory() }
 
-    fun getAllChamberNames(): List<String> =
-        getAllChamberDirs().map { it.name }
+    fun getBlueprintNames(): List<String> =
+        getBlueprintDirs().map { it.name }
 
     fun getBuiltChamberInfoList(): List<ChamberInfo> =
         chamberInfoMap.values.toList()
 
-    fun getAvailableChamberInfoList(): List<ChamberInfo> =
-        getAllChamberDirs().map { file ->
+    fun getBlueprintInfoList(): List<ChamberInfo> =
+        getBlueprintDirs().map { file ->
             val chamberName = file.name
             ChamberInfo(chamberName, getDescriptionFromConfigFile(chamberName))
         }
