@@ -42,7 +42,7 @@ class SocketBasedClient(endpoint: Endpoint) : Client() {
             println(command)
         }
 
-        return processInputStreamForExitCode(inputStream)
+        return processInputStreamForExitCode(inputStream, stateWriterController)
     }
 
     @Throws(IOException::class)

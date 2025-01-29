@@ -119,6 +119,7 @@ class SocketService(
                 InputState.COMMAND -> {
                     logger.debug("Command received: $line")
                     val args = CommandLexer.tokenizeCommandString(line)
+                    environment.stateBufferReader = stateBufferReader
                     burrow.parse(args, environment)
                     stopSignal.set(true)
                 }

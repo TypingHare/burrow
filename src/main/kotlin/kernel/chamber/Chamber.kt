@@ -8,8 +8,10 @@ import burrow.kernel.terminal.Interpreter
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
 
-class Chamber(val chamberShepherd: ChamberShepherd, val name: String) :
-    PathBound {
+class Chamber(
+    val chamberShepherd: ChamberShepherd,
+    val name: String
+) : PathBound {
     private val path = chamberShepherd.getPath().resolve(name).normalize()
 
     val courier = EventBus()
@@ -19,6 +21,9 @@ class Chamber(val chamberShepherd: ChamberShepherd, val name: String) :
 
     override fun getPath(): Path = path
 
+    /**
+     * Checks if the blueprint directory exists.
+     */
     @Throws(BlueprintNotFoundException::class)
     fun checkBlueprintDirectory() {
         if (name.isBlank() || !path.isDirectory()) {

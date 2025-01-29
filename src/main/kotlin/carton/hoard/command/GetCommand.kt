@@ -8,12 +8,10 @@ import burrow.kernel.terminal.*
     name = "prop",
     header = ["Retrieves the value of a property."]
 )
-class PropCommand(data: CommandData) : Command(data) {
+class GetCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        description = [
-            "The unique ID of the entry."
-        ]
+        description = ["The ID of the entry."]
     )
     var id = 0
 
@@ -27,7 +25,7 @@ class PropCommand(data: CommandData) : Command(data) {
 
     @Option(
         names = ["--left", "-l"],
-        description = ["Retrieve raw property."]
+        description = ["Retrieve the left value (string) of the entry."]
     )
     var shouldRetrieveLeftValue = false
 

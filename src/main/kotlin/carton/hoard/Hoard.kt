@@ -29,6 +29,7 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
     override fun assemble() {
         // Commands related to the hoard
         registerCommand(HoardSaveCommand::class)
+        registerCommand(HoardClearCommand::class)
 
         // Commands related to entries
         registerCommand(NewCommand::class)
@@ -37,7 +38,7 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
         registerCommand(DelCommand::class)
 
         // Commands related to entry properties
-        registerCommand(PropCommand::class)
+        registerCommand(GetCommand::class)
         registerCommand(SetCommand::class)
         registerCommand(UnsetCommand::class)
 

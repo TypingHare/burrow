@@ -9,6 +9,7 @@ import burrow.kernel.stream.state.OutputState
 import picocli.CommandLine
 import picocli.CommandLine.*
 import picocli.CommandLine.ExitCode
+import java.nio.file.Path
 import java.util.concurrent.Callable
 import kotlin.reflect.KClass
 
@@ -21,9 +22,9 @@ abstract class Command(val data: CommandData) :
 
     private val stateWriterController =
         StateWriterController(data.environment.outputStream)
-    protected val stdout =
+    val stdout =
         stateWriterController.getPrintWriter(OutputState.STDOUT)
-    protected val stderr =
+    val stderr =
         stateWriterController.getPrintWriter(OutputState.STDERR)
 
     private val context = data.environment.sessionContext
@@ -38,8 +39,8 @@ abstract class Command(val data: CommandData) :
 
     fun getTerminalWidth(): Int = getTerminalSize().width
 
-    fun getWorkingDirectory(): String =
-        getContextValue(SessionContextKey.WORKING_DIRECTORY)
+    fun getWorkingDirectory(): Path =
+        Path.of(getContextValue(SessionContextKey.WORKING_DIRECTORY))
 
     @Throws(MissingRequiredContextEntry::class)
     fun getContextValue(contextKey: String): String {
@@ -56,6 +57,14 @@ abstract class Command(val data: CommandData) :
             .newInstance(commandData)
 
         return interpreter.execute(command, commandData.args)
+    }
+
+    fun readNextLine(type: ReadLineType): String? {
+        stateWriterController.getPrintWriter(OutputState.READ_LINE)
+            .println(type.name)
+        val stateBufferReader = data.environment.stateBufferReader!!
+
+        return stateBufferReader.readLine()
     }
 
     protected fun dispatch(commandClass: CommandClass) =

@@ -1,6 +1,8 @@
 package burrow.client
 
 import burrow.kernel.stream.StateBufferReader
+import burrow.kernel.stream.StateWriterController
+import burrow.kernel.stream.state.InputState
 import burrow.kernel.stream.state.OutputState
 import burrow.kernel.terminal.ExitCode
 import burrow.kernel.terminal.TerminalSize
@@ -19,6 +21,7 @@ abstract class Client : Closeable {
 
     protected fun processInputStreamForExitCode(
         inputStream: InputStream,
+        stateWriterController: StateWriterController
     ): Int {
         val exitCode = AtomicInteger(ExitCode.OK)
         val stateBufferReader =
@@ -33,6 +36,10 @@ abstract class Client : Closeable {
                 OutputState.EXIT_CODE -> {
                     exitCode.set(line.toInt())
                     stopSignal.set(true)
+                }
+                OutputState.READ_LINE -> {
+                    stateWriterController.getPrintWriter(InputState.NEXT_LINE)
+                        .println(readlnOrNull() ?: "")
                 }
             }
         }

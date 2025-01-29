@@ -6,25 +6,19 @@ import burrow.kernel.furniture.*
 import burrow.kernel.furniture.annotation.Furniture
 import burrow.kernel.path.PathBound
 import org.slf4j.LoggerFactory
-import java.io.File
 import java.net.URLClassLoader
 import java.nio.file.Path
 import java.util.*
-import kotlin.io.path.isDirectory
 import kotlin.time.measureTimedValue
 
 @Furniture(
     version = Burrow.VERSION,
-    description = "Automatically loads cartons into Burrow.",
+    description = "Loads cartons into Burrow when launched.",
     type = Furniture.Type.ROOT
 )
 class Clutter(renovator: Renovator) : Furnishing(renovator), PathBound {
     private val path = burrow.getPath().resolve(Burrow.LIBS_DIR)
     private val cartonMap = mutableMapOf<Path, Carton>()
-
-    init {
-        ensureCartonsDirectory()
-    }
 
     override fun getPath(): Path = path
 
@@ -33,32 +27,49 @@ class Clutter(renovator: Renovator) : Furnishing(renovator), PathBound {
     }
 
     override fun launch() {
-        val jarFiles = mutableListOf<File>()
-        for (file in path.toFile().listFiles()!!) {
-            if (file.isFile() && file.getName().endsWith(".jar")) {
-                jarFiles.add(file)
-            }
-        }
+        loadCartons()
+    }
 
-        val allFiles = path.toFile().listFiles()?.toList() ?: listOf()
-        val cartonJarPaths = allFiles
+    /**
+     * Strips the burrow root path from an absolute path that starts with
+     * burrow root path.
+     */
+    fun stripBurrowPath(pathString: String): String =
+        pathString.substring(burrow.getPath().toString().length + 1)
+
+    /**
+     * Loads cartons in the lib directory. The cartons that are loaded will not
+     * be loaded again.
+     */
+    private fun loadCartons() {
+        val cartonJarPaths = (path.toFile().listFiles() ?: emptyArray())
             .filter { it.isFile() }
             .filter { it.name.endsWith(".carton.jar") }
             .map { it.toPath() }
 
         for (cartonJarPath in cartonJarPaths) {
+            if (cartonMap.containsKey(cartonJarPath)) {
+                continue
+            }
+
             val timedValue = measureTimedValue {
                 loadCarton(cartonJarPath)
             }
             val durationMs = timedValue.duration.inWholeMilliseconds
             logger.info("Loaded carton [$cartonJarPath] in $durationMs ms")
+
             cartonMap[cartonJarPath] = timedValue.value
         }
     }
 
-    fun stripBurrowPath(pathString: String): String =
-        pathString.substring(burrow.getPath().toString().length + 1)
-
+    /**
+     * Loads a carton. A resource file (properties file) is required in a
+     * carton. A URL class loader is created. The path of the jar, the created
+     * class loader, and properties loaded from the "properties file" are passed
+     * to `warehouse.scanPackage`.
+     * @see PROPERTIES_FILE
+     * @see Warehouse
+     */
     @Throws(CartonPropertiesFileNotFoundException::class)
     private fun loadCarton(jarPath: Path): Carton {
         val urlArray = arrayOf(jarPath.toUri().toURL())
@@ -73,16 +84,6 @@ class Clutter(renovator: Renovator) : Furnishing(renovator), PathBound {
         return warehouse.scanPackage(jarPath, classLoader, properties)
     }
 
-    private fun ensureCartonsDirectory() {
-        if (path.isDirectory()) {
-            return
-        }
-
-        if (!path.toFile().mkdirs()) {
-            throw CreateCartonsDirectoryException(path)
-        }
-    }
-
     companion object {
         const val PROPERTIES_FILE = "carton.properties"
 
@@ -92,6 +93,3 @@ class Clutter(renovator: Renovator) : Furnishing(renovator), PathBound {
 
 class CartonPropertiesFileNotFoundException(jarPath: Path) :
     RuntimeException("Carton properties (${Clutter.PROPERTIES_FILE}) not found in carton: $jarPath")
-
-class CreateCartonsDirectoryException(path: Path) :
-    RuntimeException("Failed to create cartons directory: $path")

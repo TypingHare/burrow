@@ -106,6 +106,7 @@ class Renovator(
      *
      * The furnishing name can be a full name (furnishing ID) or a simple name.
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     fun getFurnishingIds(furnishingName: String): List<String> =
         getFurnishingIds(furnishingName, getAllFurnishingIds())
 

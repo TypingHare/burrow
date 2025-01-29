@@ -5,6 +5,7 @@ import burrow.common.converter.StringConverterPair
 import burrow.common.event.EventBus
 import burrow.kernel.path.Persistable
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
 import java.nio.file.Files
@@ -27,7 +28,7 @@ class Storage(
 
     override fun save() = saveTo(path)
 
-    @Throws(IOException::class)
+    @Throws(IOException::class, JsonSyntaxException::class)
     override fun load() {
         if (!path.exists()) {
             createNewHoardFile()
@@ -163,9 +164,16 @@ class Storage(
     fun operate(id: Int, callback: Entry.() -> Unit) {
         get(id).apply(callback)
     }
-    
+
     fun operateIfExists(id: Int, callback: Entry.() -> Unit) {
         entryStore[id]?.apply(callback)
+    }
+
+    fun clear() {
+        entryStore.clear()
+        maxId.set(0)
+        size.set(0)
+        hasUpdated.set(true)
     }
 
     private fun createNewHoardFile() {

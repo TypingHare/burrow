@@ -18,7 +18,7 @@ class InstallCommand(data: CommandData) : Command(data) {
     private var names: Array<String> = emptyArray()
 
     override fun call(): Int {
-        names.map { renovator.getUniqueFurnishingId(it) }
+        names.map { renovator.getUniqueAvailableFurnishingId(it) }
             .toSet()
             .let { idSet -> renovator.furnishingIds.addAll(idSet) }
         renovator.save()

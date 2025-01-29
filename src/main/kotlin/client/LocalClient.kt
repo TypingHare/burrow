@@ -1,6 +1,7 @@
 package burrow.client
 
 import burrow.kernel.Burrow
+import burrow.kernel.stream.StateWriterController
 import burrow.kernel.terminal.Command
 import burrow.kernel.terminal.Environment
 import java.io.IOException
@@ -40,7 +41,11 @@ class LocalClient : Client() {
             }
         }.apply { start() }
 
-        return processInputStreamForExitCode(pipedInputStream)
+        val stateWriterController = StateWriterController(pipedOutputStream)
+        return processInputStreamForExitCode(
+            pipedInputStream,
+            stateWriterController
+        )
     }
 
     override fun close() {

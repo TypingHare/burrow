@@ -4,7 +4,6 @@ import burrow.carton.hoard.HoardPair
 import burrow.carton.hoard.HoardTag
 import burrow.carton.inverse.Inverse
 import burrow.carton.inverse.annotation.InverseRegisterCommands
-import burrow.carton.inverse.annotation.InverseSetConfig
 import burrow.carton.shell.Shell
 import burrow.kernel.Burrow
 import burrow.kernel.furniture.Furnishing
@@ -24,7 +23,6 @@ import burrow.kernel.furniture.annotation.RequiredDependencies
     Dependency(HoardPair::class, Burrow.VERSION),
     Dependency(HoardTag::class, Burrow.VERSION)
 )
-@InverseSetConfig
 @InverseRegisterCommands
 class Memo(renovator: Renovator) : Furnishing(renovator) {
     override fun launch() {

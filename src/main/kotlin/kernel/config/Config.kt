@@ -14,6 +14,7 @@ import kotlin.io.path.exists
 class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
     Cloneable {
     private val path = chamber.getPath().resolve(FILE_NAME)
+
     val converterPairContainer = AnyStringConverterPairContainer()
     val entries = mutableMapOf<String, Any?>()
     val isModified = AtomicBoolean(false)

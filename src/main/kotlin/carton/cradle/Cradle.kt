@@ -6,6 +6,7 @@ import burrow.kernel.config.Config
 import burrow.kernel.furniture.Furnishing
 import burrow.kernel.furniture.Renovator
 import burrow.kernel.furniture.annotation.Furniture
+import burrow.kernel.terminal.Command
 import burrow.kernel.terminal.Command.SessionContextKey
 import burrow.kernel.terminal.Environment
 import java.io.BufferedReader
@@ -36,14 +37,23 @@ class Cradle(renovator: Renovator) : Furnishing(renovator) {
         environment: Environment,
     ): ProcessBuilder {
         val shellPath = config.get<String>(ConfigKey.SHELL_PATH)
-        val processBuilder = ProcessBuilder(shellPath, "-c", command)
         val workingDirectory =
             environment.sessionContext[SessionContextKey.WORKING_DIRECTORY]
                 ?: System.getProperty("user.dir")
-        processBuilder.directory(File(workingDirectory))
-
-        return processBuilder
+        return ProcessBuilder(shellPath, "-c", command).apply {
+            directory(File(workingDirectory))
+        }
     }
+
+    private fun getProcessBuilder(systemCommand: String): ProcessBuilder {
+        val shellPath = config.get<String>(ConfigKey.SHELL_PATH)
+        return ProcessBuilder(shellPath, "-c", systemCommand).apply {
+            directory(File(System.getProperty("user.dir")))
+        }
+    }
+
+    fun executeCommand(systemCommand: String): Int =
+        getProcessBuilder(systemCommand).start().waitFor()
 
     fun executeCommand(
         command: String,
@@ -69,6 +79,17 @@ class Cradle(renovator: Renovator) : Furnishing(renovator) {
 
         return process.waitFor()
     }
+
+    fun executeCommand(
+        systemCommand: String,
+        command: Command
+    ): Int =
+        executeCommand(
+            systemCommand,
+            command.data.environment,
+            command.stdout,
+            command.stderr
+        )
 
     object ConfigKey {
         const val SHELL_PATH = "cradle.shell_path"

@@ -14,7 +14,6 @@ import java.util.*
 class Warehouse {
     val cartons = mutableMapOf<ClassLoader, Carton>()
     val furnishingClasses = mutableSetOf<FurnishingClass>()
-    val furnishingIds = mutableSetOf<String>()
     val furnishingIdToCarton = mutableMapOf<String, Carton>()
 
     fun getFurnishingClass(id: String): FurnishingClass? =
@@ -57,8 +56,6 @@ class Warehouse {
         this.furnishingClasses.addAll(kotlinFurnishingClasses)
 
         val furnishingIds = kotlinFurnishingClasses.map { it.java.name }
-        this.furnishingIds.addAll(furnishingIds)
-
         kotlinFurnishingClasses.forEach {
             logger.debug("Added furnishing class: ${it.java.name}")
         }
@@ -75,7 +72,7 @@ class Warehouse {
     }
 
     private fun checkAlreadyExist(furnishingClass: FurnishingClass) {
-        if (furnishingClass.java.name in furnishingIds) {
+        if (furnishingClass.java.name in furnishingIdToCarton.keys) {
             throw FurnishingAlreadyExistsException(furnishingClass.java.name)
         }
     }

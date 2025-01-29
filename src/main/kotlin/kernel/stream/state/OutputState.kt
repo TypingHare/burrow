@@ -4,4 +4,5 @@ object OutputState {
     const val STDOUT = "STDOUT"
     const val STDERR = "STDERR"
     const val EXIT_CODE = "EXIT_CODE"
+    const val READ_LINE = "READ_LINE"
 }
