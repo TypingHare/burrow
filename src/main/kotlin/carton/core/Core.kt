@@ -19,7 +19,7 @@ import java.io.PrintWriter
 
 @Furniture(
     version = Burrow.VERSION,
-    description = "The core furnishing.",
+    description = "The builtin core of a chamber.",
     type = Furniture.Type.COMPONENT
 )
 class Core(renovator: Renovator) : Furnishing(renovator) {
@@ -154,17 +154,17 @@ class Core(renovator: Renovator) : Furnishing(renovator) {
             .filterNotNull()
             .toList()
 
+    companion object {
+        const val DEFAULT_COMMAND_NAME = "(default)"
+        const val NOT_FOUND_COMMAND_NAME = "(not-found)"
+    }
+
     object Default {
         const val DESCRIPTION = "<No description>"
     }
 
     object ConfigKey {
         const val DESCRIPTION = "description"
-    }
-
-    companion object {
-        const val DEFAULT_COMMAND_NAME = "(default)"
-        const val NOT_FOUND_COMMAND_NAME = "(not-found)"
     }
 
     object EventHandler {

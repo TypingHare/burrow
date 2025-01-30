@@ -25,7 +25,6 @@ class ChamberShepherd(val burrow: Burrow) : PathBound {
             chamber.config.load()
             chamber.renovator.initializeFurnishings()
             burrow.courier.post(ChamberPostBuildEvent(chamber))
-
         } catch (ex: Exception) {
             throw BuildChamberException(chamberName, ex)
         }

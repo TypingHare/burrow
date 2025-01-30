@@ -8,7 +8,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "hoard.save",
-    header = ["Saves the hoard."]
+    header = ["Saves the hoard immediately."]
 )
 class HoardSaveCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

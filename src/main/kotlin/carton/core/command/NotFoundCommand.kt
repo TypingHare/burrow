@@ -18,7 +18,6 @@ class NotFoundCommand(data: CommandData) : Command(data) {
 
     override fun call(): Int {
         stderr.println("Command not found: $commandName")
-
         return ExitCode.OK
     }
 }

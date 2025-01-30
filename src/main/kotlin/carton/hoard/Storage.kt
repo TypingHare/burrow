@@ -18,8 +18,11 @@ class Storage(
     private val path: Path,
     val courier: EventBus
 ) : Persistable {
+    @Suppress("MemberVisibilityCanBePrivate")
     val entryStore = mutableListOf<Entry?>()
     val converterPairContainer = AnyStringConverterPairContainer()
+
+    @Suppress("MemberVisibilityCanBePrivate")
     val maxId = AtomicInteger(0)
     val size = AtomicInteger(0)
     val hasUpdated = AtomicBoolean(false)
@@ -165,6 +168,7 @@ class Storage(
         get(id).apply(callback)
     }
 
+    @Suppress("unused")
     fun operateIfExists(id: Int, callback: Entry.() -> Unit) {
         entryStore[id]?.apply(callback)
     }

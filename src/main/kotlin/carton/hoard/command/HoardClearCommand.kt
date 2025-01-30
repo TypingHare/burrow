@@ -8,7 +8,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "hoard.clear",
-    header = ["Clear all entries."]
+    header = ["Clears all entries. Better off backing up before using this command."]
 )
 class HoardClearCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

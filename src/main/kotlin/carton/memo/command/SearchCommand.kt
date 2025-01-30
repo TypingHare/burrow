@@ -7,7 +7,7 @@ import burrow.kernel.terminal.ExitCode
 
 @BurrowCommand(
     name = "search",
-    header = ["Search for a key."]
+    header = ["Searches for a key."]
 )
 class SearchCommand(data: CommandData) : Command(data) {
     override fun call(): Int {

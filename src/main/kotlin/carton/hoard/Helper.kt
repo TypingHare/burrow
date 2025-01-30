@@ -2,11 +2,18 @@ package burrow.carton.hoard
 
 import java.io.PrintWriter
 
-fun checkId(id: Int, stderr: PrintWriter): Boolean {
+fun checkId(
+    id: Int,
+    stderr: PrintWriter,
+    shouldBeQuiet: Boolean = false
+): Boolean {
     if (id <= 0) {
-        stderr.println(
-            "Error: Entry ID must be a positive integer. Provided ID: $id"
-        )
+        if (!shouldBeQuiet) {
+            stderr.println(
+                "Error: Entry ID must be a positive integer. Provided ID: $id"
+            )
+        }
+
         return false
     }
 

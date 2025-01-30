@@ -5,6 +5,8 @@ import burrow.kernel.furniture.Furnishing
 import burrow.kernel.furniture.FurnishingProvider
 import burrow.kernel.furniture.NotDependencyFurnishingException
 import burrow.kernel.stream.StateWriterController
+import burrow.kernel.stream.TablePrinter
+import burrow.kernel.stream.TablePrinterContext
 import burrow.kernel.stream.state.OutputState
 import picocli.CommandLine
 import picocli.CommandLine.*
@@ -67,8 +69,19 @@ abstract class Command(val data: CommandData) :
         return stateBufferReader.readLine()
     }
 
-    protected fun dispatch(commandClass: CommandClass) =
-        dispatch(commandClass, listOf())
+    fun printTable(
+        table: List<List<String>>,
+        contextModifier: ((TablePrinterContext) -> Unit)? = null
+    ) {
+        val context = TablePrinterContext(table, getTerminalWidth())
+        if (contextModifier != null) {
+            contextModifier(context)
+        }
+
+        TablePrinter(stdout, context)
+    }
+
+    fun dispatch(commandClass: CommandClass) = dispatch(commandClass, listOf())
 
     override fun handleParseException(
         ex: ParameterException,

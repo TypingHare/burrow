@@ -2,7 +2,7 @@ package burrow.carton.hoard
 
 import burrow.carton.hoard.command.*
 import burrow.carton.hoard.command.backup.BackupCommand
-import burrow.carton.hoard.command.backup.BackupDeleteCommand
+import burrow.carton.hoard.command.backup.BackupDelCommand
 import burrow.carton.hoard.command.backup.BackupListCommand
 import burrow.carton.hoard.command.backup.BackupRestoreCommand
 import burrow.common.event.Event
@@ -46,12 +46,13 @@ class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {
         registerCommand(EntriesCommand::class)
         registerCommand(TableCommand::class)
         registerCommand(CountCommand::class)
+        registerCommand(SetAllCommand::class)
 
         // Backup commands
         registerCommand(BackupCommand::class)
         registerCommand(BackupListCommand::class)
         registerCommand(BackupRestoreCommand::class)
-        registerCommand(BackupDeleteCommand::class)
+        registerCommand(BackupDelCommand::class)
     }
 
     override fun getPath(): Path = storage.getPath()

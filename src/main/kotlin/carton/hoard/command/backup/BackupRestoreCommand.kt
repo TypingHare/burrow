@@ -8,7 +8,7 @@ import kotlin.io.path.exists
 
 @BurrowCommand(
     name = "backup.restore",
-    header = ["Restores a backup hoard."],
+    header = ["Restores a backup hoard. The current hoard will be deleted."],
 )
 class BackupRestoreCommand(data: CommandData) : Command(data) {
     @Parameters(

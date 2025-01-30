@@ -6,31 +6,39 @@ import burrow.kernel.terminal.*
 
 @BurrowCommand(
     name = "del",
-    header = ["Deletes an entry."]
+    header = ["Deletes entries."]
 )
 class DelCommand(data: CommandData) : Command(data) {
     @Parameters(
-        index = "0",
+        index = "0..*",
         description = [
             "The unique ID of the entry to modify. Must be a positive integer."
         ]
     )
-    var id = 0
+    private var idArray: Array<Int> = emptyArray()
+
+    @Option(
+        names = ["--quiet", "-q"]
+    )
+    private var shouldBeQuiet: Boolean = false
 
     override fun call(): Int {
-        if (!checkId(id, stderr)) {
-            return ExitCode.USAGE
+        idArray.forEach(this::deleteEntryById)
+        return ExitCode.OK
+    }
+
+    private fun deleteEntryById(id: Int) {
+        if (!checkId(id, stderr, shouldBeQuiet)) {
+            return
         }
 
         val hoard = use(Hoard::class)
-        if (!hoard.storage.exists(id)) {
-            stderr.println("Entry with such ID doesn't exist: $id")
-            return ExitCode.USAGE
+        if (hoard.storage.exists(id)) {
+            if (!shouldBeQuiet) {
+                dispatch(EntryCommand::class, listOf(id.toString()))
+            }
+
+            hoard.storage.delete(id)
         }
-
-        dispatch(EntryCommand::class, listOf(id.toString()))
-        hoard.storage.delete(id)
-
-        return ExitCode.OK
     }
 }

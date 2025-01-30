@@ -8,17 +8,17 @@ import burrow.kernel.terminal.Parameters
 
 @BurrowCommand(
     name = "exec",
-    header = ["Executes a system command."]
+    header = ["Executes a shell command."]
 )
 class ExecCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
-        description = ["System command to execute."]
+        description = ["Shell command to execute."]
     )
-    private var command = ""
+    private var shellCommand = ""
 
     override fun call(): Int {
         val cradle = use(Cradle::class)
-        return cradle.executeCommand(command, data.environment, stdout, stderr)
+        return cradle.executeCommand(shellCommand, this)
     }
 }

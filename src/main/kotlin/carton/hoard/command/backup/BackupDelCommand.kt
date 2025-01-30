@@ -5,10 +5,10 @@ import burrow.kernel.terminal.*
 import java.nio.file.Files
 
 @BurrowCommand(
-    name = "backup.delete",
+    name = "backup.del",
     header = ["Deletes a backup hoard."]
 )
-class BackupDeleteCommand(data: CommandData) : Command(data) {
+class BackupDelCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
         description = ["The name of the backup file to delete."],

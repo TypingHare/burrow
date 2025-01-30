@@ -45,16 +45,17 @@ class Cradle(renovator: Renovator) : Furnishing(renovator) {
         }
     }
 
-    private fun getProcessBuilder(systemCommand: String): ProcessBuilder {
+    private fun getProcessBuilder(shellCommand: String): ProcessBuilder {
         val shellPath = config.get<String>(ConfigKey.SHELL_PATH)
-        return ProcessBuilder(shellPath, "-c", systemCommand).apply {
+        return ProcessBuilder(shellPath, "-c", shellCommand).apply {
             directory(File(System.getProperty("user.dir")))
         }
     }
 
-    fun executeCommand(systemCommand: String): Int =
-        getProcessBuilder(systemCommand).start().waitFor()
+    fun executeCommand(shellCommand: String): Int =
+        getProcessBuilder(shellCommand).start().waitFor()
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun executeCommand(
         command: String,
         environment: Environment,
@@ -81,11 +82,11 @@ class Cradle(renovator: Renovator) : Furnishing(renovator) {
     }
 
     fun executeCommand(
-        systemCommand: String,
+        shellCommand: String,
         command: Command
     ): Int =
         executeCommand(
-            systemCommand,
+            shellCommand,
             command.data.environment,
             command.stdout,
             command.stderr

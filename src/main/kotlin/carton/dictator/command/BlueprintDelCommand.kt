@@ -5,10 +5,10 @@ import burrow.kernel.chamber.ChamberShepherd
 import burrow.kernel.terminal.*
 
 @BurrowCommand(
-    name = "blueprint.delete",
+    name = "blueprint.del",
     header = ["Deletes a chamber blueprint."]
 )
-class BlueprintDeleteCommand(data: CommandData) : Command(data) {
+class BlueprintDelCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
         paramLabel = "name",

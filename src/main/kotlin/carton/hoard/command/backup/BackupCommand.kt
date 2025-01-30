@@ -11,12 +11,12 @@ import java.time.format.DateTimeFormatter
     header = ["Creates a backup for the hoard."]
 )
 class BackupCommand(data: CommandData) : Command(data) {
-    @Option(names = ["-s", "--silent"])
-    private var shouldBeSilent = false
+    @Option(names = ["-q", "--quiet"])
+    private var shouldBeQuiet = false
 
     override fun call(): Int {
         val fileName = backup()
-        if (!shouldBeSilent) {
+        if (!shouldBeQuiet) {
             stdout.println("Backup file created: $fileName")
         }
 

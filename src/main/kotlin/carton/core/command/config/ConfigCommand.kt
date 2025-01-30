@@ -1,7 +1,5 @@
 package burrow.carton.core.command.config
 
-import burrow.kernel.stream.TablePrinter
-import burrow.kernel.stream.TablePrinterContext
 import burrow.kernel.terminal.*
 
 @BurrowCommand(
@@ -29,8 +27,7 @@ class ConfigCommand(data: CommandData) : Command(data) {
             sortedConfigMap.forEach { (key, value) -> add(listOf(key, value)) }
         }
 
-        val context = TablePrinterContext(table, getTerminalWidth())
-        TablePrinter(stdout, context).print()
+        printTable(table)
 
         return ExitCode.OK
     }

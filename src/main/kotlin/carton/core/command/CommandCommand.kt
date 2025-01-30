@@ -16,7 +16,7 @@ class CommandCommand(data: CommandData) : Command(data) {
     @Parameters(
         index = "0",
         description = [
-            "Only displays the commands of a specified furnishing ID."
+            "Only displays the commands of a specified furnishing name."
         ],
         defaultValue = "",
     )

@@ -31,7 +31,7 @@ class Dictator(renovator: Renovator) : Furnishing(renovator) {
         registerCommand(BlueprintNewCommand::class)
         registerCommand(BlueprintListCommand::class)
         registerCommand(BlueprintExistCommand::class)
-        registerCommand(BlueprintDeleteCommand::class)
+        registerCommand(BlueprintDelCommand::class)
 
         registerCommand(ChamberBuildCommand::class)
         registerCommand(ChamberListCommand::class)

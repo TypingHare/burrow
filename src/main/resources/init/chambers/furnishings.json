@@ -2,6 +2,5 @@
   "burrow.carton.core.Core",
   "burrow.carton.dictator.Dictator",
   "burrow.carton.server.Server",
-  "burrow.carton.server.Scheduler",
   "burrow.carton.clutter.Clutter"
 ]

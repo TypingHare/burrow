@@ -74,7 +74,7 @@ class DefaultCommand(data: CommandData) : Command(data) {
     private fun displayHelp(): Int {
         displayVersion()
 
-        // Description
+        // Description in the configuration
         val description = config.getNotNull<String>(Core.ConfigKey.DESCRIPTION)
         stdout.println()
         stdout.println("[Description]")
