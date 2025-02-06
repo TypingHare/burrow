@@ -93,3 +93,6 @@ class Clutter(renovator: Renovator) : Furnishing(renovator), PathBound {
 
 class CartonPropertiesFileNotFoundException(jarPath: Path) :
     RuntimeException("Carton properties (${Clutter.PROPERTIES_FILE}) not found in carton: $jarPath")
+
+class InvalidCartonNameException(cartonName: String) :
+    RuntimeException("Invalid carton name: $cartonName")

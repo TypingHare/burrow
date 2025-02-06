@@ -1,8 +1,8 @@
 package burrow.carton.depot.command
 
 import burrow.carton.haystack.Haystack
-import burrow.carton.haystack.HaystackOpener
 import burrow.carton.hoard.Hoard
+import burrow.carton.launcher.Launcher
 import burrow.kernel.stream.TablePrinter
 import burrow.kernel.stream.TablePrinterContext
 import burrow.kernel.terminal.BurrowCommand
@@ -27,7 +27,7 @@ class ListCommand(data: CommandData) : Command(data) {
             val relativePath = it.get<String>(Haystack.EntryKey.NAME)!!
             val absolutePath = it.get<String>(Haystack.EntryKey.ABSOLUTE_PATH)!!
             val exist = if (File(absolutePath).exists()) "yes" else "no"
-            val opener = it.get<String>(HaystackOpener.EntryKey.OPENER)!!
+            val opener = it.get<String>(Launcher.EntryKey.LAUNCHER)!!
             table.add(listOf(id, relativePath, absolutePath, exist, opener))
         }
 

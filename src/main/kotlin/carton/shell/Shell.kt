@@ -16,7 +16,7 @@ import kotlin.io.path.exists
 
 @Furniture(
     version = Burrow.VERSION,
-    description = "Allows developers to create shell files.",
+    description = "Allow developers to create shell files.",
     type = Furniture.Type.COMPONENT
 )
 class Shell(renovator: Renovator) : Furnishing(renovator) {

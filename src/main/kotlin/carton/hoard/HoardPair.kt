@@ -15,7 +15,7 @@ import burrow.kernel.furniture.annotation.RequiredDependencies
 
 @Furniture(
     version = Burrow.VERSION,
-    description = "Implemented key-value pair functionalities for entries.",
+    description = "Implement key-value pair functionalities for entries.",
     type = Furniture.Type.COMPONENT
 )
 @RequiredDependencies(Dependency(Hoard::class, Burrow.VERSION))
@@ -86,10 +86,19 @@ class HoardPair(renovator: Renovator) : Furnishing(renovator) {
         )
     }
 
-    fun getEntries(key: String): List<Entry> {
+    fun getEntries(key: Any): List<Entry> {
         val storage = use(Hoard::class).storage
         return idSetStore[key]?.map { storage[it] } ?: emptyList()
     }
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun getFirstEntry(key: Any): Entry? = getEntries(key).firstOrNull()
+
+    fun getFirstEntryOrThrow(key: Any): Entry =
+        getFirstEntry(key) ?: throw KeyNotFoundException(
+            key,
+            getKeyName()
+        )
 
     @Throws(DuplicateKeyNotAllowedException::class)
     private fun checkKeyDuplication(key: Any) {
@@ -132,3 +141,6 @@ class HoardPair(renovator: Renovator) : Furnishing(renovator) {
 
 class DuplicateKeyNotAllowedException(key: Any) :
     RuntimeException("Duplicate keys are not allowed in this chamber: $key")
+
+class KeyNotFoundException(key: Any, keyName: String = "key") :
+    RuntimeException("No pairs associated with ${keyName}: $key")

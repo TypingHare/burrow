@@ -15,7 +15,7 @@ import java.nio.file.Path
 
 @Furniture(
     version = Burrow.VERSION,
-    description = "Hoard stores entries.",
+    description = "Store a collection of entries.",
     type = Furniture.Type.COMPONENT
 )
 class Hoard(renovator: Renovator) : Furnishing(renovator), Persistable {

@@ -53,7 +53,8 @@ class Config(chamber: Chamber) : ChamberModule(chamber), Persistable,
 
     operator fun set(key: String, value: Any?) {
         if (!converterPairContainer.converterPairs.containsKey(key)) {
-            throw InvalidConfigKeyException(key)
+            return
+//            throw InvalidConfigKeyException(key)
         }
 
         entries[key] = value

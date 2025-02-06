@@ -14,7 +14,7 @@ import java.net.URL
 
 @Furniture(
     version = Burrow.VERSION,
-    description = "Allows developers to create furnishings more easily.",
+    description = "Allow developers to create furnishings more easily.",
     type = Furniture.Type.COMPONENT
 )
 class Inverse(renovator: Renovator) : Furnishing(renovator) {

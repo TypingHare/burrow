@@ -16,7 +16,7 @@ import java.io.PrintWriter
 
 @Furniture(
     version = Burrow.VERSION,
-    description = "Allows users to create a child process and execute a command.",
+    description = "Allow users to create a child process and execute a command.",
     type = Furniture.Type.COMPONENT
 )
 class Cradle(renovator: Renovator) : Furnishing(renovator) {

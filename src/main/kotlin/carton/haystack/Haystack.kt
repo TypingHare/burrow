@@ -66,12 +66,6 @@ class Haystack(renovator: Renovator) : Furnishing(renovator) {
         return createEntry(name, absolutePath.toString())
     }
 
-    fun getEntry(name: String): Entry {
-        return use(HoardPair::class)
-            .getEntries(name)
-            .firstOrNull() ?: throw EntryNotFoundException(name)
-    }
-
     fun getPathList(): MutableList<String> = config.getNotNull(ConfigKey.PATH)
 
     private fun getCandidateAbsolutePaths(relativePath: String): List<Path> {

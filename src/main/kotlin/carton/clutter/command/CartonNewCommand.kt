@@ -1,5 +1,6 @@
 package burrow.carton.clutter.command
 
+import burrow.carton.clutter.InvalidCartonNameException
 import burrow.kernel.terminal.*
 import kotlin.io.path.createDirectories
 
@@ -25,5 +26,3 @@ class CartonNewCommand(data: CommandData) : Command(data) {
     }
 }
 
-class InvalidCartonNameException(cartonName: String) :
-    RuntimeException("Invalid carton name: $cartonName")

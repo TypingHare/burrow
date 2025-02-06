@@ -1,6 +1,7 @@
 package burrow.carton.haystack.command
 
 import burrow.carton.haystack.Haystack
+import burrow.carton.hoard.HoardPair
 import burrow.kernel.terminal.*
 import java.io.File
 
@@ -15,8 +16,10 @@ class InfoCommand(data: CommandData) : Command(data) {
     )
     private var name = ""
 
+    private val hoardPair = use(HoardPair::class)
+
     override fun call(): Int {
-        val entry = use(Haystack::class).getEntry(name)
+        val entry = hoardPair.getFirstEntryOrThrow(name)
         val absolutePath = entry.get<String>(Haystack.EntryKey.ABSOLUTE_PATH)!!
         stdout.println("$name -> $absolutePath")
 
