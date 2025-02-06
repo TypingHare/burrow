@@ -6,7 +6,7 @@ group = "burrow"
 version = "0.0.0"
 
 dependencies {
-    implementation(files("{{home_dir}}/.burrow/libs/burrow.jar"))
+    implementation(files(System.getProperty("user.home") + "/.burrow/libs/burrow.jar"))
     testImplementation(kotlin("test"))
 }
 

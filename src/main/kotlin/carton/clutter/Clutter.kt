@@ -1,6 +1,7 @@
 package burrow.carton.clutter
 
 import burrow.carton.clutter.command.CartonListCommand
+import burrow.carton.clutter.command.CartonNewCommand
 import burrow.kernel.Burrow
 import burrow.kernel.furniture.*
 import burrow.kernel.furniture.annotation.Furniture
@@ -24,6 +25,7 @@ class Clutter(renovator: Renovator) : Furnishing(renovator), PathBound {
 
     override fun assemble() {
         registerCommand(CartonListCommand::class)
+        registerCommand(CartonNewCommand::class)
     }
 
     override fun launch() {

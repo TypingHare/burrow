@@ -1,5 +1,6 @@
 package burrow
 
+import burrow.common.resource.copyResourceFromJar
 import burrow.kernel.Burrow
 import burrow.kernel.Burrow.Companion.BIN_DIR
 import burrow.kernel.Burrow.Companion.getBurrowRootPath
@@ -9,9 +10,9 @@ import burrow.kernel.terminal.ExitCode
 import burrow.kernel.terminal.Option
 import burrow.kernel.terminal.Parameters
 import picocli.CommandLine
-import java.io.IOException
-import java.nio.file.*
-import java.nio.file.attribute.BasicFileAttributes
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardCopyOption
 import java.nio.file.attribute.PosixFilePermissions
 import java.util.concurrent.Callable
 import kotlin.io.path.ExperimentalPathApi
@@ -90,81 +91,16 @@ class Install : Callable<Int> {
     }
 
     private fun initializeChambers(chambersPath: Path) {
-        copyFromJar("init/chambers", chambersPath)
+        copyResourceFromJar("init/chambers", chambersPath)
     }
 
     private fun initializeBin(binPath: Path) {
-        copyFromJar("init/bin", binPath)
-    }
-
-    private fun copyFromJar(resource: String, destinationPath: Path) {
-        val resourceUrl =
-            Thread.currentThread().contextClassLoader.getResource(resource)
-                ?: run {
-                    println("Resource not found: $resource")
-                    exitProcess(ExitCode.SOFTWARE)
-                }
-
-        try {
-            FileSystems.newFileSystem(resourceUrl.toURI(), mapOf<String, Any>())
-                .use { fs ->
-                    val sourcePath = fs.getPath(resource)
-                    Files.walkFileTree(
-                        sourcePath,
-                        CopyFileVisitor(destinationPath, sourcePath)
-                    )
-                }
-        } catch (e: Exception) {
-            println("Failed to copy resources: ${e.message}")
-            exitProcess(ExitCode.SOFTWARE)
-        }
+        copyResourceFromJar("init/bin", binPath)
     }
 
     private fun setFilePermissionsTo755(path: Path) {
         @Suppress("SpellCheckingInspection") val permissions =
             PosixFilePermissions.fromString("rwxr-xr-x")
         Files.setPosixFilePermissions(path, permissions)
-    }
-
-    private class CopyFileVisitor(
-        val destinationPath: Path,
-        val sourcePath: Path
-    ) :
-        SimpleFileVisitor<Path>() {
-        override fun preVisitDirectory(
-            dir: Path,
-            attrs: BasicFileAttributes
-        ): FileVisitResult {
-            val targetDir = destinationPath.resolve(
-                sourcePath.relativize(dir).toString()
-            )
-            if (!Files.exists(targetDir)) {
-                Files.createDirectory(targetDir)
-            }
-            return FileVisitResult.CONTINUE
-        }
-
-        override fun visitFile(
-            file: Path,
-            attrs: BasicFileAttributes
-        ): FileVisitResult {
-            val targetFile = destinationPath.resolve(
-                sourcePath.relativize(file).toString()
-            )
-            Files.copy(
-                file,
-                targetFile,
-                StandardCopyOption.REPLACE_EXISTING
-            )
-            return FileVisitResult.CONTINUE
-        }
-
-        override fun visitFileFailed(
-            file: Path,
-            exc: IOException
-        ): FileVisitResult {
-            println("Failed to copy file: $file due to ${exc.message}")
-            return FileVisitResult.CONTINUE
-        }
     }
 }

@@ -28,7 +28,7 @@ class LocalClient : Client() {
             mutableMapOf(
                 Command.SessionContextKey.TERMINAL_SIZE to terminalSize.toString(),
                 Command.SessionContextKey.WORKING_DIRECTORY to System.getProperty(
-                    "user.home"
+                    "user.dir"
                 )
             )
         )
