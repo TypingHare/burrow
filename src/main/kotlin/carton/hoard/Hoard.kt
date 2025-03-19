@@ -101,7 +101,8 @@ class EntryNotFoundException(id: Int) :
 class DuplicateIdException(id: Int) :
     RuntimeException("Duplicate entry id: $id")
 
-class EntryRestoreEvent(val entry: Entry) : Event()
+class EntryRestoreEvent(val entry: Entry, val props: Map<String, String>) :
+    Event()
 
 class EntryCreateEvent(val entry: Entry) : Event()
 

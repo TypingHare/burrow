@@ -53,9 +53,23 @@ class HoardTime(renovator: Renovator) : Furnishing(renovator) {
     }
 
     override fun assemble() {
-        courier.subscribe(EntryRestoreEvent::class) {
-            setCreateTime(it.entry)
-            setUpdatedTime(it.entry)
+        courier.subscribe(EntryRestoreEvent::class) { event ->
+            val entry = event.entry
+            val props = event.props
+
+            if (props.containsKey(EntryKey.CREATED_AT)) {
+                entry.update(
+                    EntryKey.CREATED_AT,
+                    props[EntryKey.CREATED_AT]!!.toLong()
+                )
+            }
+
+            if (props.containsKey(EntryKey.UPDATED_AT)) {
+                entry.update(
+                    EntryKey.UPDATED_AT,
+                    props[EntryKey.UPDATED_AT]!!.toLong()
+                )
+            }
         }
 
         courier.subscribe(EntryCreateEvent::class) {

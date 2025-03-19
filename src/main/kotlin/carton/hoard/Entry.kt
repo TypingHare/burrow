@@ -12,6 +12,7 @@ class Entry(val id: Int, private val storage: Storage) {
         storage.hasUpdated.set(true)
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun update(props: Map<String, Any>) {
         store.putAll(props)
         storage.courier.post(EntryUpdateEvent(this, props.keys.toList()))

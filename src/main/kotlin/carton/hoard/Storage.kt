@@ -69,7 +69,7 @@ class Storage(
         if (exists(id)) throw DuplicateIdException(id)
 
         val entry = Entry(id, this).apply { set(properties) }
-        courier.post(EntryRestoreEvent(entry))
+        courier.post(EntryRestoreEvent(entry, properties))
 
         while (entryStore.size <= id) entryStore.add(null)
         entryStore[id] = entry
