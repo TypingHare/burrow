@@ -92,6 +92,9 @@ func (b *Burrow) GetDir() string {
 
 // Handle handles the execution of a command in the burrow.
 func (b *Burrow) Handle(args []string) (int, error) {
+	if len(args) == 0 {
+		return GENERAL_ERROR, fmt.Errorf("no chamber specified")
+	}
 	chamberName := args[0]
 	chamberArgs := args[1:]
 

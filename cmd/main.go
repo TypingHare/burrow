@@ -15,8 +15,10 @@ func main() {
 
 	builtin.RegisterCarton(burrow.Warehouse())
 
-	_, err := burrow.Handle(os.Args[1:])
+	exitCode, err := burrow.Handle(os.Args[1:])
 	if err != nil {
 		println("Error handling command:", err.Error())
 	}
+
+	os.Exit(exitCode)
 }

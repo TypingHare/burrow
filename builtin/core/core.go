@@ -11,9 +11,8 @@ type CoreDecoration struct {
 	kernel.Decoration[CoreSpec]
 }
 
-func (d *CoreDecoration) SpecAny() any {
-	return d.Spec()
-}
+func (d *CoreDecoration) SpecAny() any           { return d.Spec() }
+func (d *CoreDecoration) Dependencies() []string { return []string{} }
 
 func (d *CoreDecoration) Assemble() error {
 	d.Chamber().AddCommand(command.CartonCommand)

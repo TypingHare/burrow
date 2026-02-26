@@ -66,11 +66,24 @@ type Chamber struct {
 // NewChamber creates a new Chamber for the given Burrow.
 func NewChamber(burrow *Burrow, name string, blueprint Blueprint) *Chamber {
 	chamber := &Chamber{
-		burrow:      burrow,
-		name:        name,
-		blueprint:   blueprint,
-		Handler:     DefaultHandler,
-		RootCommand: &cobra.Command{Use: name},
+		burrow:    burrow,
+		name:      name,
+		blueprint: blueprint,
+		Handler:   DefaultHandler,
+		RootCommand: &cobra.Command{
+			Use: name,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				if len(args) > 0 {
+					return fmt.Errorf(
+						"unknown command %q for %q",
+						args[0],
+						cmd.CommandPath(),
+					)
+				}
+
+				return nil
+			},
+		},
 	}
 
 	chamber.renovator = NewRenovator(chamber)
@@ -100,36 +113,13 @@ func (c *Chamber) Renovator() *Renovator {
 
 // Init initializes the Chamber by setting up its environment and dependencies.
 func (c *Chamber) Init() error {
-	decorationIDs, err := c.blueprint.GetDependencies()
+	dependencyIDs, err := c.blueprint.GetDependencies()
 	if err != nil {
-		return fmt.Errorf(
-			"failed to get dependencies for chamber '%s': %w",
-			c.name,
-			err,
-		)
+		return NewChamberError(c.name, "get dependencies", err)
 	}
 
-	// TODO: Implement dependency graph
-	for _, decorationID := range decorationIDs {
-		rawSpec, err := c.blueprint.GetRawSpec(decorationID)
-		if err != nil {
-			return fmt.Errorf(
-				"failed to get raw spec for dependency '%s': %w",
-				decorationID,
-				err,
-			)
-		}
-
-		decoration, err := c.renovator.AddDecoration(decorationID, rawSpec)
-		if err != nil {
-			return fmt.Errorf(
-				"failed to add dependency '%s': %w",
-				decorationID,
-				err,
-			)
-		}
-
-		decoration.Assemble()
+	if err = c.renovator.resolveRootDependencies(dependencyIDs); err != nil {
+		return NewChamberError(c.name, "resolve dependencies", err)
 	}
 
 	return nil

@@ -3,6 +3,8 @@ package kernel
 type DecorationInstance interface {
 	Chamber() *Chamber
 	SpecAny() any
+	Dependencies() []string
+
 	Assemble() error
 	Launch() error
 	Terminate() error
