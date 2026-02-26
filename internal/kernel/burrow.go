@@ -51,6 +51,8 @@ func (b *Burrow) Warehouse() *Warehouse {
 // Init initializes the burrow with the given name and sets up the environment
 // variables.
 func (b *Burrow) Init(name string) error {
+	b.Env.Set(EnvName, name)
+
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return fmt.Errorf("unable to determine user home directory: %w", err)
@@ -90,5 +92,21 @@ func (b *Burrow) GetDir() string {
 
 // Handle handles the execution of a command in the burrow.
 func (b *Burrow) Handle(args []string) (int, error) {
-	return SUCCESS, nil
+	chamberName := args[0]
+	chamberArgs := args[1:]
+
+	chamber, err := b.architect.GetOrDig(chamberName)
+	if err != nil {
+		return GENERAL_ERROR, fmt.Errorf(
+			"failed to get or dig chamber: %w",
+			err,
+		)
+	}
+
+	handler := chamber.Handler
+	if handler == nil {
+		return GENERAL_ERROR, fmt.Errorf("chamber handler is nil")
+	}
+
+	return handler(chamber, chamberArgs)
 }

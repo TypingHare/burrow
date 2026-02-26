@@ -78,3 +78,18 @@ func (w *Warehouse) RegisterCarton(carton *Carton) error {
 
 	return nil
 }
+
+// GetDecorationFactory returns the decoration factory for the given decoration
+// ID.
+func (w *Warehouse) GetDecorationFactory(
+	decorationID string,
+) (DecorationFactory, error) {
+	decorationFactory, exists := w.decorationFactoryMap[decorationID]
+	if !exists {
+		return nil, fmt.Errorf(
+			"decoration factory with ID %q does not exist",
+			decorationID,
+		)
+	}
+	return decorationFactory, nil
+}
