@@ -17,6 +17,7 @@ const (
 	EnvRootChamber = "ROOT_CHAMBER"
 )
 
+// Burrow manages a collection of in-memory CLI applications called chambers.
 type Burrow struct {
 	// Env stores environment variables for the Burrow.
 	Env Vars
@@ -80,6 +81,11 @@ func (b *Burrow) Init(name string) error {
 	b.Env.Set(EnvRootChamber, ".")
 
 	return nil
+}
+
+// GetDir returns the directory of the burrow.
+func (b *Burrow) GetDir() string {
+	return filepath.Join(b.Env.Get(EnvConfigHome), b.Env.Get(EnvName))
 }
 
 // Handle handles the execution of a command in the burrow.
