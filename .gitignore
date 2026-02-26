@@ -9,3 +9,6 @@
 
 # Go cache files
 /.cache/
+
+# Burrow Magic File.
+/cmd/magic.go
