@@ -1,10 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
-	"github.com/TypingHare/burrow/builtin"
-	"github.com/TypingHare/burrow/internal/kernel"
+	"github.com/TypingHare/burrow/v2026/internal/kernel"
 )
 
 func main() {
@@ -13,11 +13,11 @@ func main() {
 		println("Failed to initialize burrow:", err)
 	}
 
-	builtin.RegisterCarton(burrow.Warehouse())
+	registerCarton(burrow)
 
 	exitCode, err := burrow.Handle(os.Args[1:])
 	if err != nil {
-		println("Error handling command:", err.Error())
+		fmt.Fprintln(os.Stderr, err.Error())
 	}
 
 	os.Exit(exitCode)

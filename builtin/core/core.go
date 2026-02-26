@@ -1,8 +1,8 @@
 package core
 
 import (
-	"github.com/TypingHare/burrow/builtin/core/command"
-	"github.com/TypingHare/burrow/internal/kernel"
+	"github.com/TypingHare/burrow/v2026/builtin/core/command"
+	"github.com/TypingHare/burrow/v2026/internal/kernel"
 )
 
 type CoreSpec struct{}
