@@ -32,8 +32,8 @@ type Burrow struct {
 // NewBurrow creates a new burrow.
 func NewBurrow() *Burrow {
 	burrow := &Burrow{Env: NewVars()}
-	// burrow.architect = NewArchitect(burrow)
-	// burrow.warehouse = NewWarehouse(burrow)
+	burrow.architect = NewArchitect(burrow)
+	burrow.warehouse = NewWarehouse(burrow)
 
 	return burrow
 }
