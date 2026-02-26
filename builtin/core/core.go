@@ -2,7 +2,7 @@ package core
 
 import (
 	"github.com/TypingHare/burrow/v2026/builtin/core/command"
-	"github.com/TypingHare/burrow/v2026/internal/kernel"
+	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
 type CoreSpec struct{}

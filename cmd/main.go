@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/TypingHare/burrow/v2026/internal/kernel"
+	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
 func main() {

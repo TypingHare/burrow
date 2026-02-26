@@ -1,7 +1,7 @@
 package decoration
 
 import (
-	"github.com/TypingHare/burrow/v2026/internal/kernel"
+	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
 

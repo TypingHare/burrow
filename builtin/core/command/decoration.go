@@ -2,7 +2,7 @@ package command
 
 import (
 	"github.com/TypingHare/burrow/v2026/builtin/core/command/decoration"
-	"github.com/TypingHare/burrow/v2026/internal/kernel"
+	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
 
