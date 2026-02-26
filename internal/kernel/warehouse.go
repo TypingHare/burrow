@@ -1,6 +1,11 @@
 package kernel
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
+
+const DecorationIDSeparator = "@"
 
 // Warehouse is responsible for managing the cartons of the burrow.
 type Warehouse struct {
@@ -39,6 +44,16 @@ func (w *Warehouse) CartonMap() map[string]*Carton {
 	return w.cartonMap
 }
 
+// GetCarton returns the carton with the given name.
+func (w *Warehouse) GetCarton(name string) (*Carton, error) {
+	carton, exists := w.cartonMap[name]
+	if !exists {
+		return nil, fmt.Errorf("carton with name %s does not exist", name)
+	}
+
+	return carton, nil
+}
+
 func (w *Warehouse) RegisterCarton(carton *Carton) error {
 	cartonName := carton.Metadata.Get(MetadataName)
 	if cartonName == "" {
@@ -70,7 +85,7 @@ func (w *Warehouse) RegisterCarton(carton *Carton) error {
 	}
 
 	for decorationName, decorationFactory := range carton.decorationFactoryMap {
-		decorationId := decorationName + "@" + cartonName
+		decorationId := decorationName + DecorationIDSeparator + cartonName
 		w.decorationFactoryMap[decorationId] = decorationFactory
 	}
 
@@ -92,4 +107,15 @@ func (w *Warehouse) GetDecorationFactory(
 		)
 	}
 	return decorationFactory, nil
+}
+
+// SplitDecorationID splits the given decoration ID into its decoration name and
+// carton name components.
+func SplitDecorationID(decorationID string) (string, string, error) {
+	parts := strings.Split(decorationID, DecorationIDSeparator)
+	if len(parts) != 2 {
+		return "", "", fmt.Errorf("invalid decoration ID: %s", decorationID)
+	}
+
+	return parts[0], parts[1], nil
 }
