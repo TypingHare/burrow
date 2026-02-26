@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+const BlueprintDependencies = "dependencies"
+
 // Blueprint is the configuration for a Chamber, defining its structure and
 // functionality.
 type Blueprint map[string]any
@@ -32,7 +34,7 @@ func (b Blueprint) LoadFromJSONFile(path string) error {
 // GetDependencies retrieves the list of dependencies from the Blueprint. It
 // returns an error if the dependencies field is not an array of strings.
 func (b Blueprint) GetDependencies() ([]string, error) {
-	raw, exists := b["dependencies"]
+	raw, exists := b[BlueprintDependencies]
 	if !exists {
 		return []string{}, nil
 	}
