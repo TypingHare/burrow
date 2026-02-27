@@ -243,6 +243,69 @@ func (b *Burrow) AddCartonsToCartonsFile(incomingURLs []string) error {
 	return nil
 }
 
+// RemoveCartonsFromCartonsFile removes the given carton URLs from the cartons
+// file in the burrow.
+func (b *Burrow) RemoveCartonsFromCartonsFile(incomingURLs []string) error {
+	currentURLs, err := b.GetCartonURLs()
+	if err != nil {
+		return fmt.Errorf("failed to get carton URLs: %w", err)
+	}
+
+	removedURLs := make(map[string]struct{}, len(incomingURLs))
+	for _, url := range incomingURLs {
+		url = strings.TrimSpace(url)
+		if url == "" {
+			continue
+		}
+		removedURLs[url] = struct{}{}
+	}
+
+	if len(removedURLs) == 0 {
+		return nil
+	}
+
+	nextURLs := make([]string, 0, len(currentURLs))
+	changed := false
+	for _, url := range currentURLs {
+		url = strings.TrimSpace(url)
+		if url == "" {
+			changed = true
+			continue
+		}
+
+		if _, remove := removedURLs[url]; remove {
+			changed = true
+			continue
+		}
+
+		nextURLs = append(nextURLs, url)
+	}
+
+	if !changed {
+		return nil
+	}
+
+	cartonsFilePath := b.GetCartonsFilePath()
+	cartonsDirPath := filepath.Dir(cartonsFilePath)
+	if err := os.MkdirAll(cartonsDirPath, 0o755); err != nil {
+		return fmt.Errorf("failed to create cartons directory: %w", err)
+	}
+
+	content := strings.Join(nextURLs, "\n")
+	if content != "" {
+		content += "\n"
+	}
+	if err := os.WriteFile(
+		cartonsFilePath,
+		[]byte(content),
+		0o644,
+	); err != nil {
+		return fmt.Errorf("failed to write cartons file: %w", err)
+	}
+
+	return nil
+}
+
 // GetBurrowSourceDir returns the source directory of the burrow.
 func (b *Burrow) GetBurrowSourceDir() string {
 	return filepath.Join(b.GetDataDir(), "source")
@@ -474,7 +537,7 @@ func (b *Burrow) GenerateMagicGoFile(withCartons bool) error {
 }
 
 // Build the burrow executable using proper command.
-func (b *Burrow) Build(withCartons bool) error {
+func (b *Burrow) Build(withCartons bool, outputExecutablePath string) error {
 	if err := b.GenerateMagicGoFile(withCartons); err != nil {
 		return fmt.Errorf("failed to generate magic.go: %w", err)
 	}
@@ -483,7 +546,7 @@ func (b *Burrow) Build(withCartons bool) error {
 		return fmt.Errorf("failed to create build directory: %w", err)
 	}
 
-	buildArgs := []string{"build", "-o", filepath.Join("build", "burrow")}
+	buildArgs := []string{"build", "-o", outputExecutablePath}
 	if withCartons {
 		if err := b.GenerateMagicGoModFile(); err != nil {
 			return fmt.Errorf("failed to generate magic.go.mod: %w", err)
@@ -508,4 +571,10 @@ func (b *Burrow) Build(withCartons bool) error {
 	}
 
 	return nil
+}
+
+// GetBin returns the path to the burrow executable in the bin directory of the
+// burrow. If the executable does not exist, it returns an error.
+func (b *Burrow) GetBinDir() string {
+	return filepath.Join(b.GetDataDir(), b.Env.Get(EnvBinDir))
 }

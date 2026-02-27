@@ -1,19 +1,17 @@
 package carton
 
 import (
-	"path/filepath"
 	"strings"
 
 	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
 
-func InstallCommand(chamber *kernel.Chamber) *cobra.Command {
+func RemoveCommand(chamber *kernel.Chamber) *cobra.Command {
 	command := &cobra.Command{
-		Use:   "install <carton-url>...",
-		Short: "Install a carton to Burrow",
+		Use:   "remove <carton-url>...",
+		Short: "remove a carton from Burrow",
 		Long: strings.TrimSpace(`
-This command installs a carton to Burrow.
         `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			burrow := chamber.Burrow()
@@ -22,7 +20,7 @@ This command installs a carton to Burrow.
 				return chamber.Error("get carton URLs", err)
 			}
 
-			err = burrow.AddCartonsToCartonsFile(args)
+			err = burrow.RemoveCartonsFromCartonsFile(args)
 			if err != nil {
 				return chamber.Error("add cartons to cartons file", err)
 			}
@@ -35,8 +33,7 @@ This command installs a carton to Burrow.
 				return chamber.Error("generate magic go file", err)
 			}
 
-			executablePath := filepath.Join(burrow.GetBinDir(), "burrow")
-			if err = burrow.Build(true, executablePath); err != nil {
+			if err = burrow.Build(true, ""); err != nil {
 				return chamber.Error("build Burrow", err)
 			}
 

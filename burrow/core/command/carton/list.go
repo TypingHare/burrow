@@ -5,6 +5,7 @@ import (
 	"slices"
 
 	"github.com/TypingHare/burrow/v2026/kernel"
+	"github.com/deckarep/golang-set/v2"
 	"github.com/spf13/cobra"
 )
 
@@ -16,25 +17,29 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 		Short: "Show cartons used in the chamber",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if all {
-				for _, cartonName := range slices.Sorted(
-					maps.Keys(chamber.Burrow().Warehouse().CartonMap()),
-				) {
+				cartonNames := maps.Keys(
+					chamber.Burrow().Warehouse().CartonMap(),
+				)
+				for _, cartonName := range slices.Sorted(cartonNames) {
 					cmd.Println(cartonName)
 				}
+
 				return nil
 			}
 
-			cartonNames := make(map[string]struct{})
+			cartonNameSet := mapset.NewSet[string]()
 			for decorationID := range chamber.Renovator().Decorations() {
 				_, cartonName, err := kernel.SplitDecorationID(decorationID)
 				if err != nil {
 					return err
 				}
 
-				cartonNames[cartonName] = struct{}{}
+				cartonNameSet.Add(cartonName)
 			}
 
-			for _, cartonName := range slices.Sorted(maps.Keys(cartonNames)) {
+			cartonNames := cartonNameSet.ToSlice()
+			slices.Sort(cartonNames)
+			for _, cartonName := range cartonNames {
 				cmd.Println(cartonName)
 			}
 

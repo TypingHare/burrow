@@ -133,3 +133,9 @@ func (c *Chamber) AddCommand(commandFactory func(*Chamber) *cobra.Command) {
 func (c *Chamber) IsRoot() bool {
 	return c.name == c.burrow.Env.Get(EnvRootChamber)
 }
+
+// Error creates a new ChamberError with the given operation and underlying
+// error.
+func (c *Chamber) Error(op string, err error) *ChamberError {
+	return NewChamberError(c.name, op, err)
+}

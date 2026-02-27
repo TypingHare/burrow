@@ -15,6 +15,7 @@ func CartonCommand(chamber *kernel.Chamber) *cobra.Command {
 
 	if chamber.IsRoot() {
 		command.AddCommand(carton.InstallCommand(chamber))
+		command.AddCommand(carton.RemoveCommand(chamber))
 	}
 
 	return command
