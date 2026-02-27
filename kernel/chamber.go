@@ -83,6 +83,10 @@ func NewChamber(burrow *Burrow, name string, blueprint Blueprint) *Chamber {
 
 	chamber.renovator = NewRenovator(chamber)
 
+	// Stop Cobra from printing usage or errors automatically.
+	chamber.RootCommand.SilenceUsage = true
+	chamber.RootCommand.SilenceErrors = true
+
 	return chamber
 }
 

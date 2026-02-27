@@ -44,7 +44,11 @@ func (a *Architect) ChamberMap() map[string]*Chamber {
 // GetBlueprintPath returns the path to the blueprint file for the given
 // chamberName.
 func (a *Architect) GetBlueprintPath(chamberName string) string {
-	return filepath.Join(a.burrow.GetDir(), chamberName, BlueprintFileName)
+	return filepath.Join(
+		a.burrow.GetConfigDir(),
+		chamberName,
+		BlueprintFileName,
+	)
 }
 
 // GetBlueprint retrieves the Blueprint for the specified chamberName.

@@ -9,11 +9,11 @@ import (
 
 func main() {
 	burrow := kernel.NewBurrow()
-	if err := burrow.Init("burrow-go"); err != nil {
-		println("Failed to initialize burrow:", err)
+	if err := burrow.Init("burrow"); err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
 	}
 
-	registerCarton(burrow)
+	registerCarton(burrow.Warehouse())
 
 	exitCode, err := burrow.Handle(os.Args[1:])
 	if err != nil {
