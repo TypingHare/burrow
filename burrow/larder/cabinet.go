@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"encoding/csv"
 	"errors"
+	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -30,6 +32,8 @@ func NewCabinet[T any](
 	}
 }
 
+// Deserialize converts a CSV string into an object of type T using the
+// deserializer function.
 func (c *Cabinet[T]) Deserialize(str string) (T, error) {
 	reader := csv.NewReader(strings.NewReader(str))
 	items, err := reader.Read()
@@ -41,6 +45,8 @@ func (c *Cabinet[T]) Deserialize(str string) (T, error) {
 	return c.deserializer(items)
 }
 
+// Serialize converts an object of type T into a CSV string using the serializer
+// function.
 func (c *Cabinet[T]) Serialize(object T) string {
 	items := c.serializer(object)
 	var buf bytes.Buffer
@@ -52,27 +58,51 @@ func (c *Cabinet[T]) Serialize(object T) string {
 	return strings.TrimSuffix(buf.String(), "\n")
 }
 
+// Clear removes all objects from the cabinet's objects slice.
+func (c *Cabinet[T]) Clear() {
+	c.objects = c.objects[:0]
+}
+
+// Load reads the file at the cabinet's path, deserializes each CSV record into
+// an object of type T, and stores them in the cabinet's objects slice. If the
+// file does not exist, it does nothing.
 func (c *Cabinet[T]) Load() error {
 	data, err := os.ReadFile(c.path)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			return nil
 		}
-		return err
+		return fmt.Errorf("failed to read file %q: %w", c.path, err)
 	}
 
-	c.objects = c.objects[:0]
+	tempObjects := make([]T, len(c.objects))
+	copy(tempObjects, c.objects)
 
-	lines := strings.SplitSeq(string(data), "\n")
-	for line := range lines {
-		line = strings.TrimSuffix(line, "\r")
-		if strings.TrimSpace(line) == "" {
+	c.Clear()
+
+	reader := csv.NewReader(strings.NewReader(string(data)))
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			c.objects = tempObjects
+			return fmt.Errorf("failed to read CSV from %q: %w", c.path, err)
+		}
+
+		if len(record) == 0 {
 			continue
 		}
 
-		object, err := c.Deserialize(line)
+		object, err := c.deserializer(record)
 		if err != nil {
-			return err
+			c.objects = tempObjects
+			return fmt.Errorf(
+				"failed to deserialize record %q: %w",
+				record,
+				err,
+			)
 		}
 		c.objects = append(c.objects, object)
 	}
@@ -80,10 +110,17 @@ func (c *Cabinet[T]) Load() error {
 	return nil
 }
 
+// Save serializes each object in the cabinet's objects slice and writes them to
+// the file at the cabinet's path, with each object on a new line.
 func (c *Cabinet[T]) Save() error {
 	lines := make([]string, 0, len(c.objects))
 	for _, object := range c.objects {
 		lines = append(lines, c.Serialize(object))
+	}
+
+	dir := filepath.Dir(c.path)
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return fmt.Errorf("failed to create directory %s: %w", dir, err)
 	}
 
 	return os.WriteFile(c.path, []byte(strings.Join(lines, "\n")), 0o644)

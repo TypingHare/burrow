@@ -31,7 +31,11 @@ func NewChamberError(chamberName, op string, err error) *ChamberError {
 
 // Error returns a string representation of the ChamberError.
 func (e *ChamberError) Error() string {
-	return e.ChamberName + " " + e.Op + ": " + e.Err.Error()
+	if e.Err == nil {
+		return e.ChamberName + " " + e.Op
+	} else {
+		return e.ChamberName + " " + e.Op + ": " + e.Err.Error()
+	}
 }
 
 // Unwrap returns the underlying error that caused the ChamberError.

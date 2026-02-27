@@ -39,7 +39,11 @@ func GetCabinet[T any](d *LarderDecoration, name string) (*Cabinet[T], error) {
 	if !exists {
 		return nil, d.Chamber().Error("cabinet does not exist: "+name, nil)
 	}
-	cabinet, exists := value.(*Cabinet[T])
+
+	cabinet, ok := value.(*Cabinet[T])
+	if !ok {
+		return nil, d.Chamber().Error("not cabinet type: "+name, nil)
+	}
 
 	return cabinet, nil
 }
@@ -74,5 +78,6 @@ func BuildLarderDecoration(
 ) (kernel.DecorationInstance, error) {
 	return &LarderDecoration{
 		Decoration: *kernel.NewDecoration(chamber, spec),
+		cabinetMap: make(map[string]any),
 	}, nil
 }
