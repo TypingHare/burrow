@@ -3,6 +3,7 @@ package kernel
 import (
 	"fmt"
 	"path/filepath"
+	"reflect"
 
 	"github.com/spf13/cobra"
 )
@@ -148,4 +149,29 @@ func (c *Chamber) Error(op string, err error) *ChamberError {
 // GetDataDir returns the data directory for this Chamber.
 func (c *Chamber) GetDataDir() string {
 	return filepath.Join(c.Burrow().GetChambersDir(), c.name)
+}
+
+// Use retrieves a decoration of the specified type from the Chamber's
+// Renovator.
+func Use[T DecorationInstance](c *Chamber) (T, error) {
+	var zero T
+
+	decorationType := reflect.TypeFor[T]()
+	decoration, ok := c.Renovator().GetDecorationByType(decorationType)
+	if !ok {
+		return zero, c.Error(
+			fmt.Sprintf("get decoration of type %v", decorationType),
+			fmt.Errorf("decoration is not installed"),
+		)
+	}
+
+	typed, ok := decoration.(T)
+	if !ok {
+		return zero, c.Error(
+			fmt.Sprintf("cast decoration of type %v", decorationType),
+			fmt.Errorf("expected %v but got %T", decorationType, decoration),
+		)
+	}
+
+	return typed, nil
 }

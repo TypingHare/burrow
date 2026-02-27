@@ -3,6 +3,7 @@ package kernel
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"sort"
 
 	"gonum.org/v1/gonum/graph"
@@ -31,16 +32,23 @@ type Renovator struct {
 	// handled.
 	dependencyIDs []string
 
+	// DependencyOrder is a list of DecorationInstances that represents the
+	// order in which the dependencies should be resolved.
 	dependencyOrder []DecorationInstance
+
+	// DecorationTypeMap is a map of reflect.Type to DecorationInstance.
+	decorationTypeMap map[reflect.Type]DecorationInstance
 }
 
 // NewRenovator creates a new Renovator for the given chamber.
 func NewRenovator(chamber *Chamber) *Renovator {
 	return &Renovator{
-		chamber:         chamber,
-		decorationMap:   make(map[string]DecorationInstance),
-		dependencyGraph: simple.NewDirectedGraph(),
-		dependencyIDs:   []string{},
+		chamber:           chamber,
+		decorationMap:     make(map[string]DecorationInstance),
+		dependencyGraph:   simple.NewDirectedGraph(),
+		dependencyIDs:     []string{},
+		dependencyOrder:   []DecorationInstance{},
+		decorationTypeMap: make(map[reflect.Type]DecorationInstance),
 	}
 }
 
@@ -55,6 +63,19 @@ func (r *Renovator) GetDecoration(
 	decorationID string,
 ) (DecorationInstance, bool) {
 	decoration, ok := r.decorationMap[decorationID]
+	return decoration, ok
+}
+
+// GetDecorationByType returns the Decoration instance for the given
+// decoration type.
+func (r *Renovator) GetDecorationByType(
+	decorationType reflect.Type,
+) (DecorationInstance, bool) {
+	if decorationType == nil {
+		return nil, false
+	}
+
+	decoration, ok := r.decorationTypeMap[decorationType]
 	return decoration, ok
 }
 
@@ -185,6 +206,7 @@ func (r *Renovator) resolveDependencies(
 		}
 
 		r.decorationMap[decorationID] = decoration
+		r.decorationTypeMap[reflect.TypeOf(decoration)] = decoration
 	}
 
 	return nil
