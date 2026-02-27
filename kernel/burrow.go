@@ -13,7 +13,7 @@ import (
 )
 
 // Version is the version of Burrow.
-const Version = "2026.1.0"
+const Version = "2026.0.0"
 
 const (
 	EnvName        = "NAME"

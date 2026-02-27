@@ -7,10 +7,12 @@ require (
 	gonum.org/v1/gonum v0.17.0 // direct
 )
 
-require golang.org/x/mod v0.33.0
+require (
+	github.com/deckarep/golang-set/v2 v2.8.0
+	golang.org/x/mod v0.33.0
+)
 
 require (
-	github.com/deckarep/golang-set/v2 v2.8.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
 )
