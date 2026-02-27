@@ -578,3 +578,8 @@ func (b *Burrow) Build(withCartons bool, outputExecutablePath string) error {
 func (b *Burrow) GetBinDir() string {
 	return filepath.Join(b.GetDataDir(), b.Env.Get(EnvBinDir))
 }
+
+// GetChambersDir returns the path to the chambers data directory of the burrow.
+func (b *Burrow) GetChambersDir() string {
+	return filepath.Join(b.GetDataDir(), b.Env.Get(EnvChambersDir))
+}

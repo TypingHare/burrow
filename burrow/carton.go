@@ -2,6 +2,7 @@ package burrow
 
 import (
 	"github.com/TypingHare/burrow/v2026/burrow/core"
+	"github.com/TypingHare/burrow/v2026/burrow/larder"
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
@@ -21,6 +22,12 @@ func RegisterCarton(warehouse *kernel.Warehouse) error {
 		"core",
 		core.ParseCoreSpec,
 		core.BuildCoreDecoration,
+	)
+	kernel.AddTypedDecorationFactory(
+		carton,
+		"larder",
+		larder.ParseLarderSpec,
+		larder.BuildLarderDecoration,
 	)
 	warehouse.RegisterCarton(carton)
 

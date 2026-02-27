@@ -2,6 +2,7 @@ package kernel
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
@@ -138,4 +139,9 @@ func (c *Chamber) IsRoot() bool {
 // error.
 func (c *Chamber) Error(op string, err error) *ChamberError {
 	return NewChamberError(c.name, op, err)
+}
+
+// GetDataDir returns the data directory for this Chamber.
+func (c *Chamber) GetDataDir() string {
+	return filepath.Join(c.Burrow().GetChambersDir(), c.name)
 }
