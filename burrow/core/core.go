@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/TypingHare/burrow/v2026/builtin/core/command"
+	"github.com/TypingHare/burrow/v2026/burrow/core/command"
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 

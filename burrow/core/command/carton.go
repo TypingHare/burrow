@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/TypingHare/burrow/v2026/builtin/core/command/carton"
+	"github.com/TypingHare/burrow/v2026/burrow/core/command/carton"
 	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
