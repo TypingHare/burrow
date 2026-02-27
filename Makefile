@@ -6,6 +6,7 @@ BUILD_DIR = build
 build:
 	go build -o $(BUILD_DIR)/burrow ./cmd
 
+# Move this directory to ~/.local/share/burrow-test/source
 install-test:
 	mkdir -p ~/.local/share/burrow-test
 	rm -rf ~/.local/share/burrow-test/source

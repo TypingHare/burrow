@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime/debug"
 
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
@@ -10,15 +11,19 @@ import (
 func main() {
 	burrow := kernel.NewBurrow()
 	if err := burrow.Init("burrow"); err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
+		printErrWithStack(err)
 	}
 
 	registerCarton(burrow.Warehouse())
 
 	exitCode, err := burrow.Handle(os.Args[1:])
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
+		printErrWithStack(err)
 	}
 
 	os.Exit(exitCode)
+}
+
+func printErrWithStack(err error) {
+	fmt.Fprintf(os.Stderr, "error: %v\n%s\n", err, debug.Stack())
 }
