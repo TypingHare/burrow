@@ -36,11 +36,6 @@ func (e *ChamberError) Error() string {
 // Unwrap returns the underlying error that caused the ChamberError.
 func (e *ChamberError) Unwrap() error { return e.Err }
 
-// Handler is a function that executes a command in a Chamber. It takes the
-// Chamber and the command arguments as input and returns an exit code and an
-// error if the command fails.
-type Handler func(chamber *Chamber, args []string) (int, error)
-
 // Chamber is an independent CLI application inside the Burrow.
 type Chamber struct {
 	// burrow is the Burrow that this Chamber belongs to.
@@ -130,23 +125,7 @@ func (c *Chamber) AddCommand(commandFactory func(*Chamber) *cobra.Command) {
 	c.RootCommand.AddCommand(commandFactory(c))
 }
 
-// DefaultHandler is the default Handler for a Chamber. It executes the root
-// command of the Chamber with the given arguments.
-func DefaultHandler(chamber *Chamber, args []string) (int, error) {
-	if chamber == nil {
-		return ERROR_NULL_POINTER, fmt.Errorf("chamber is nil")
-	}
-
-	rootCommand := chamber.RootCommand
-	if rootCommand == nil {
-		return ERROR_NULL_POINTER, fmt.Errorf("root command is nil")
-	}
-
-	rootCommand.SetArgs(args)
-	err := rootCommand.Execute()
-	if err != nil {
-		return GENERAL_ERROR, err
-	}
-
-	return SUCCESS, nil
+// IsRoot returns true if this Chamber is the root Chamber of the Burrow.
+func (c *Chamber) IsRoot() bool {
+	return c.name == c.burrow.Env.Get(EnvRootChamber)
 }
