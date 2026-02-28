@@ -1,7 +1,4 @@
 {
-  "scripts": {
-    "test:unit": "echo 'okay'"
-  },
   "devDependencies": {
     "@commitlint/config-conventional": "^20.4.2",
     "commitlint": "^20.4.2",
@@ -9,4 +6,3 @@
     "husky": "^9.1.7"
   }
 }
-
