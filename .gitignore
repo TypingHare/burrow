@@ -1,0 +1,14 @@
+# macOS system files
+.DS_Store
+
+# Bun and npm dependencies
+/node_modules/
+
+# Build artifacts
+/build/
+
+# Go cache files
+/.cache/
+
+# Burrow magic files
+/cmd/magic.go
