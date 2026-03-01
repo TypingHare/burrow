@@ -20,8 +20,8 @@ func (d *ClutterDecoration) Dependencies() []string {
 
 func (d *ClutterDecoration) RawSpec() kernel.RawSpec {
 	return kernel.RawSpec{
-		"cartonNames":      d.Spec().CartonNames,
-		"localCartonNames": d.Spec().LocalCartonNames,
+		"cartonNames":  d.Spec().CartonNames,
+		"localCartons": d.Spec().LocalCartons,
 	}
 }
 

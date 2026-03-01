@@ -13,7 +13,7 @@ import (
 func RegisterCartonTo(warehouse *kernel.Warehouse) error {
 	carton := kernel.NewCarton()
 
-	carton.Metadata.Set(kernel.MetadataName, "github.com/TypingHare/burrow")
+	carton.Metadata.Set(kernel.MetadataName, kernel.CartonName)
 	carton.Metadata.Set(kernel.MetadataVersion, kernel.Version)
 	carton.Metadata.Set(kernel.MetadataAuthor, "James Chen")
 	carton.Metadata.Set(kernel.MetadataEmail, "jameschan312.cn@gmail.com")

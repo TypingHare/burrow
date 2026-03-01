@@ -16,21 +16,31 @@ import (
 // minor version, and only links cartons that match both.
 const Version = "2026.0.0"
 
+// CartonName is the carton name of Burrow itself.
+//
+// It is equalavent to burrow repository path. When the repository is moved,
+// this should be updated accordingly.
+const CartonName = "github.com/TypingHare/burrow"
+
 // Environment variable names used by Burrow.
 const (
-	EnvName        = "NAME"
-	EnvHome        = "HOME"
-	EnvConfigHome  = "CONFIG_HOME"
-	EnvDataHome    = "DATA_HOME"
-	EnvStateHome   = "STATE_HOME"
-	EnvBinDir      = "BIN_DIR"
-	EnvChambersDir = "CHAMBERS_DIR"
+	EnvName       = "NAME"
+	EnvHome       = "HOME"
+	EnvConfigHome = "CONFIG_HOME"
+	EnvDataHome   = "DATA_HOME"
+	EnvStateHome  = "STATE_HOME"
+	EnvBinDir     = "BIN_DIR"
+	EnvChamberDir = "CHAMBER_DIR"
+	EnvSourceDir  = "SOURCE_DIR"
 
 	EnvRootChamber       = "ROOT_CHAMBER"
 	EnvBlueprintFileName = "BLUEPRINT_FILE_NAME"
 	EnvDecorationIDSep   = "DECORATION_ID_SEP"
 
 	EnvVerbose = "VERBOSE"
+
+	EnvExecutablePath        = "EXECUTABLE_PATH"
+	EnvMinimalExecutablePath = "MINIMAL_EXECUTABLE_PATH"
 )
 
 // Burrow manages a collection of in-memory CLI applications called chambers.
@@ -95,11 +105,14 @@ func (b *Burrow) Init(name string) error {
 
 	// Set default values for other environment variables.
 	b.Env.Set(EnvBinDir, "bin")
-	b.Env.Set(EnvChambersDir, "chambers")
+	b.Env.Set(EnvChamberDir, "chamber")
+	b.Env.Set(EnvSourceDir, "source")
 	b.Env.Set(EnvRootChamber, ".")
-	b.Env.Set(EnvVerbose, "0")
 	b.Env.Set(EnvBlueprintFileName, "blueprint.json")
 	b.Env.Set(EnvDecorationIDSep, "@")
+	b.Env.Set(EnvVerbose, "0")
+	b.Env.Set(EnvExecutablePath, "burrow")
+	b.Env.Set(EnvMinimalExecutablePath, "burrow-min")
 
 	// Allow overrides from process environment variables prefixed with
 	// "BURROW_". For example, BURROW_NAME overrides NAME.
@@ -111,13 +124,6 @@ func (b *Burrow) Init(name string) error {
 
 		b.Env.Set(strings.TrimPrefix(key, "BURROW_"), value)
 	}
-
-	// TODO
-	// Ensure the config directory exists so follow-up reads/writes can happen
-	// without additional setup steps.
-	// if err := os.MkdirAll(b.GetConfigDir(), 0o755); err != nil {
-	// 	return fmt.Errorf("failed to create burrow directory: %w", err)
-	// }
 
 	return nil
 }
@@ -159,4 +165,19 @@ func (b *Burrow) GetDataDir() string {
 // GetStateDir returns the state directory of the burrow.
 func (b *Burrow) GetStateDir() string {
 	return filepath.Join(b.Env.Get(EnvStateHome), b.Env.Get(EnvName))
+}
+
+// GetBinDir returns the bin directory of the burrow.
+func (b *Burrow) GetBinDir() string {
+	return filepath.Join(b.GetDataDir(), b.Env.Get(EnvBinDir))
+}
+
+// GetChamberDir returns the chamber directory of the burrow.
+func (b *Burrow) GetChamberDir() string {
+	return filepath.Join(b.GetDataDir(), b.Env.Get(EnvChamberDir))
+}
+
+// GetSourceDir returns the source directory of the burrow.
+func (b *Burrow) GetSourceDir() string {
+	return filepath.Join(b.GetDataDir(), b.Env.Get(EnvSourceDir))
 }

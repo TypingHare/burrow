@@ -6,9 +6,14 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
+type LocalCarton struct {
+	Name string
+	Path string
+}
+
 type ClutterSpec struct {
-	CartonNames      []string
-	LocalCartonNames []string
+	CartonNames  []string
+	LocalCartons []LocalCarton
 }
 
 func ParseClutterSpec(rawSpec kernel.RawSpec) (ClutterSpec, error) {
@@ -21,20 +26,20 @@ func ParseClutterSpec(rawSpec kernel.RawSpec) (ClutterSpec, error) {
 		return ClutterSpec{}, fmt.Errorf("error parsing cartonNames: %w", err)
 	}
 
-	localCartonNames, err := kernel.GetRawSpecValueOrDefault(
+	localCartons, err := kernel.GetRawSpecValueOrDefault(
 		rawSpec,
-		"localCartonNames",
-		[]string{},
+		"localCartons",
+		[]LocalCarton{},
 	)
 	if err != nil {
 		return ClutterSpec{}, fmt.Errorf(
-			"error parsing localCartonNames: %w",
+			"error parsing localCartons: %w",
 			err,
 		)
 	}
 
 	return ClutterSpec{
-		CartonNames:      cartonNames,
-		LocalCartonNames: localCartonNames,
+		CartonNames:  cartonNames,
+		LocalCartons: localCartons,
 	}, nil
 }
