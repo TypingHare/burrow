@@ -1,4 +1,4 @@
-package clutter
+package share
 
 import (
 	"fmt"
@@ -7,7 +7,8 @@ import (
 )
 
 type ClutterSpec struct {
-	cartonNames []string
+	CartonNames      []string
+	LocalCartonNames []string
 }
 
 func ParseClutterSpec(rawSpec kernel.RawSpec) (ClutterSpec, error) {
@@ -20,7 +21,20 @@ func ParseClutterSpec(rawSpec kernel.RawSpec) (ClutterSpec, error) {
 		return ClutterSpec{}, fmt.Errorf("error parsing cartonNames: %w", err)
 	}
 
+	localCartonNames, err := kernel.GetRawSpecValueOrDefault(
+		rawSpec,
+		"localCartonNames",
+		[]string{},
+	)
+	if err != nil {
+		return ClutterSpec{}, fmt.Errorf(
+			"error parsing localCartonNames: %w",
+			err,
+		)
+	}
+
 	return ClutterSpec{
-		cartonNames: cartonNames,
+		CartonNames:      cartonNames,
+		LocalCartonNames: localCartonNames,
 	}, nil
 }

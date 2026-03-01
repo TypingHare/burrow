@@ -68,6 +68,19 @@ func (c *Chamber) Error(msg string, err error) *ChamberError {
 	return NewChamberError(c.name, msg, err)
 }
 
+// UpdateBlueprint updates the Chamber's Blueprint with the current state of its
+// decorations.
+func (c *Chamber) UpdateBlueprint() error {
+	decorationsByID := c.renovator.decorationsByID
+	for decorationID := range c.blueprint {
+		if decoration, exists := decorationsByID[decorationID]; exists {
+			c.blueprint[decorationID] = decoration.RawSpec()
+		}
+	}
+
+	return nil
+}
+
 // Use retrieves a decoration of the specified type from the Chamber's
 // Renovator.
 func Use[T DecorationInstance](chamber *Chamber) (T, error) {

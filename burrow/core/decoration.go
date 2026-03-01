@@ -17,6 +17,12 @@ type CoreDecoration struct {
 
 func (d *CoreDecoration) Dependencies() []string { return []string{} }
 
+func (d *CoreDecoration) RawSpec() kernel.RawSpec {
+	return kernel.RawSpec{
+		"DirectDependencies": d.Spec().DirectDependencies,
+	}
+}
+
 func (d *CoreDecoration) Assemble() error {
 	// Stop Cobra from printing usage or errors automatically.
 	d.RootCommand.SilenceUsage = true

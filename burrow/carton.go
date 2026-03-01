@@ -4,8 +4,9 @@ import (
 	"fmt"
 
 	"github.com/TypingHare/burrow/v2026/burrow/clutter"
+	clutterShare "github.com/TypingHare/burrow/v2026/burrow/clutter/share"
 	"github.com/TypingHare/burrow/v2026/burrow/core"
-	"github.com/TypingHare/burrow/v2026/burrow/core/share"
+	coreShare "github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
@@ -20,7 +21,7 @@ func RegisterCartonTo(warehouse *kernel.Warehouse) error {
 	if err := kernel.AddTypedDecorationFactory(
 		carton,
 		"core",
-		share.ParseCoreSpec,
+		coreShare.ParseCoreSpec,
 		core.BuildCoreDecoration,
 	); err != nil {
 		return fmt.Errorf("error adding core decoration factory: %w", err)
@@ -29,7 +30,7 @@ func RegisterCartonTo(warehouse *kernel.Warehouse) error {
 	if err := kernel.AddTypedDecorationFactory(
 		carton,
 		"clutter",
-		clutter.ParseClutterSpec,
+		clutterShare.ParseClutterSpec,
 		clutter.BuildClutterDecoration,
 	); err != nil {
 		return fmt.Errorf("error adding clutter decoration factory: %w", err)

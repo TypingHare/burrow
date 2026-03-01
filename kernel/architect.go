@@ -121,7 +121,16 @@ func (a *Architect) Bury(chamberName string) error {
 		return NewChamberError(chamberName, "chamber does not exist", nil)
 	}
 
-	err := a.SaveBlueprint(chamberName, chamber.Blueprint())
+	err := chamber.UpdateBlueprint()
+	if err != nil {
+		return NewChamberError(
+			chamberName,
+			"failed to update blueprint before burying chamber",
+			err,
+		)
+	}
+
+	err = a.SaveBlueprint(chamberName, chamber.Blueprint())
 	if err != nil {
 		return NewChamberError(
 			chamberName,

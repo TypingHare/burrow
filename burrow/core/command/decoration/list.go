@@ -4,12 +4,14 @@ import (
 	"maps"
 	"slices"
 
+	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
 
 func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 	var all bool
+	var root bool
 
 	command := &cobra.Command{
 		Use:   "list",
@@ -26,9 +28,20 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 				return nil
 			}
 
+			if root {
+				rootDecorationIDs := share.GetRootDecorationIDs(
+					chamber.Renovator(),
+				)
+				for _, rootDecorationID := range rootDecorationIDs {
+					cmd.Println(rootDecorationID)
+				}
+
+				return nil
+			}
+
 			decorationIDs := chamber.Renovator().OrderedDecorationIDs()
 			for _, decorationID := range decorationIDs {
-				cmd.Printf("%s\n", decorationID)
+				cmd.Println(decorationID)
 			}
 
 			return nil
@@ -37,6 +50,10 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 
 	command.Flags().BoolVarP(&all, "all", "a", false,
 		"Show all decorations registered in the warehouse",
+	)
+
+	command.Flags().BoolVarP(&root, "root", "r", false,
+		"Only show root decorations",
 	)
 
 	return command

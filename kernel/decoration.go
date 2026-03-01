@@ -4,6 +4,7 @@ package kernel
 type DecorationInstance interface {
 	Chamber() *Chamber
 	Dependencies() []string
+	RawSpec() RawSpec
 
 	Assemble() error
 	Launch() error
