@@ -81,7 +81,7 @@ func GenerateMagicGoModFile(
 
 		localCartonPath, isLocalCarton := localPathsByCartonNames[cartonName]
 		if isLocalCarton && localCartonPath != "" {
-			_, _, exitCode, err := share.RunExternalCommand(
+			_, stderr, exitCode, err := share.RunExternalCommand(
 				burrowSourceDir,
 				[]string{
 					"go",
@@ -96,11 +96,11 @@ func GenerateMagicGoModFile(
 				return fmt.Errorf(
 					"failed to run 'go get' for local carton %q: %w",
 					cartonName,
-					err,
+					fmt.Errorf("%s", stderr),
 				)
 			}
 
-			_, _, exitCode, err = share.RunExternalCommand(
+			_, stderr, exitCode, err = share.RunExternalCommand(
 				burrowSourceDir,
 				[]string{
 					"go",
@@ -115,11 +115,11 @@ func GenerateMagicGoModFile(
 				return fmt.Errorf(
 					"failed to run 'go get' for local carton %q: %w",
 					cartonName,
-					err,
+					fmt.Errorf("%s", stderr),
 				)
 			}
 		} else {
-			_, _, exitCode, err := share.RunExternalCommand(
+			_, stderr, exitCode, err := share.RunExternalCommand(
 				burrowSourceDir,
 				[]string{
 					"go",
@@ -134,13 +134,13 @@ func GenerateMagicGoModFile(
 					"failed to run %q for carton %q: %w",
 					"go get",
 					cartonName,
-					err,
+					fmt.Errorf("%s", stderr),
 				)
 			}
 		}
 	}
 
-	_, _, exitCode, err := share.RunExternalCommand(
+	_, stderr, exitCode, err := share.RunExternalCommand(
 		burrowSourceDir,
 		[]string{
 			"go",
@@ -156,7 +156,7 @@ func GenerateMagicGoModFile(
 			"failed to run %q for %q: %w",
 			"go mod download",
 			"-modfile=magic.go.mod",
-			err,
+			fmt.Errorf("%s", stderr),
 		)
 	}
 
@@ -307,7 +307,7 @@ func Build(
 	modFile string,
 	outputExecutablePath string,
 ) error {
-	_, _, exitCode, err := share.RunExternalCommand(
+	_, stderr, exitCode, err := share.RunExternalCommand(
 		burrowSourceDir,
 		[]string{
 			"go",
@@ -319,7 +319,10 @@ func Build(
 		},
 	)
 	if err != nil || exitCode != 0 {
-		return fmt.Errorf("failed to build Burrow executable: %w", err)
+		return fmt.Errorf(
+			"failed to build Burrow executable: %w",
+			fmt.Errorf("%s", stderr),
+		)
 	}
 
 	return nil

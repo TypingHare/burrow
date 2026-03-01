@@ -1,6 +1,7 @@
 package kernel
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -139,7 +140,8 @@ func (b *Burrow) Handle(args []string) (int, error) {
 	chamber, err := b.architect.GetOrDig(chamberName)
 	if err != nil {
 		return GeneralError, fmt.Errorf(
-			"failed to get or dig chamber: %w",
+			"failed to get or dig chamber %q: %w",
+			chamberName,
 			err,
 		)
 	}
@@ -150,6 +152,35 @@ func (b *Burrow) Handle(args []string) (int, error) {
 	}
 
 	return handler(chamber, chamberArgs)
+}
+
+func (b *Burrow) PrintErrorStack(err error) {
+	stack := []string{}
+
+	currentErr := err
+	for currentErr != nil {
+		currErrMsg := currentErr.Error()
+		nextErr := errors.Unwrap(currentErr)
+		if nextErr == nil {
+			stack = append(stack, currErrMsg)
+		} else {
+			nextErrMsg := nextErr.Error()
+			if len(nextErrMsg) < len(currErrMsg) &&
+				strings.HasSuffix(currErrMsg, nextErrMsg) {
+				currErrMsg = strings.TrimSuffix(currErrMsg, nextErrMsg)
+				currErrMsg = strings.TrimSuffix(currErrMsg, ": ")
+			}
+			stack = append(stack, currErrMsg)
+		}
+
+		currentErr = nextErr
+	}
+
+	i := 0
+	for _, errMsg := range stack {
+		fmt.Fprintf(os.Stderr, "(%d) %s\n", i, errMsg)
+		i++
+	}
 }
 
 // GetConfigDir returns the config directory of the burrow.
