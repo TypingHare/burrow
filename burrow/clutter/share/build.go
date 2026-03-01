@@ -20,12 +20,6 @@ func GenerateMagicGoModFile(
 	localCartons []LocalCarton,
 	fileName string,
 ) error {
-	if len(cartonNames) != len(localCartons) {
-		return fmt.Errorf(
-			"the length of cartonNames and localCartons must be the same",
-		)
-	}
-
 	goModPath := filepath.Join(burrowSourceDir, "go.mod")
 	_, err := os.Stat(goModPath)
 	if os.IsNotExist(err) {
@@ -266,18 +260,6 @@ func Build(
 	outputExecutablePath string,
 ) error {
 	_, _, exitCode, err := share.RunExternalCommand(
-		burrowSourceDir,
-		[]string{
-			"mod",
-			"tidy",
-			"-modfile=" + modFile,
-		},
-	)
-	if err != nil || exitCode != 0 {
-		return fmt.Errorf("failed to run 'go mod tidy': %w", err)
-	}
-
-	_, _, exitCode, err = share.RunExternalCommand(
 		burrowSourceDir,
 		[]string{
 			"go",

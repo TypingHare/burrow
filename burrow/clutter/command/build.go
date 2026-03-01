@@ -65,7 +65,7 @@ func BuildCommand(
 	}
 
 	command.Flags().BoolVarP(&minimal, "minimal", "m", false,
-		"Build a minimal version of Burrow without cartons.",
+		"Build a minimal version of Burrow without cartons",
 	)
 
 	return command

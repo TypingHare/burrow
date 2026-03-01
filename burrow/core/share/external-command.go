@@ -15,6 +15,7 @@ func RunExternalCommand(
 	}
 
 	cmd := exec.Command(args[0], args[1:]...)
+	cmd.Dir = dir
 
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
