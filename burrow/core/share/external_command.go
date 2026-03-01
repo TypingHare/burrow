@@ -31,5 +31,5 @@ func RunExternalCommand(
 		}
 	}
 
-	return stdout.String(), stderr.String(), exitCode, nil
+	return stdout.String(), stderr.String(), exitCode, err
 }

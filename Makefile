@@ -1,7 +1,8 @@
 BUILD_DIR := build
 EXECUTABLE := burrow
 EXECUTABLE_MIN := burrow-min
-DEV_BURROW_SOURCE_DIR := ~/.local/share/burrow-dev/source/TypingHare/burrow
+DEV_BURROW_DIR := $(HOME)/.local/share/burrow-dev
+DEV_BURROW_SOURCE_DIR := $(DEV_BURROW_DIR)/source/github.com/TypingHare/burrow
 MAGIC_FILE := cmd/magic.go
 
 .PHONY: help fmt test build build-min clean install-dev magic

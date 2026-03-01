@@ -48,17 +48,28 @@ func BuildCommand(
 			cartonNames := clutterDecoration.Spec().CartonNames
 			localCartons := clutterDecoration.Spec().LocalCartons
 
+			binDir := chamber.Burrow().GetBinDir()
 			if minimal {
 				return share.BuildMinimalBurrow(
 					burrowSourceDir,
-					chamber.Burrow().Env.Get(kernel.EnvMinimalExecutablePath),
+					filepath.Join(
+						binDir,
+						chamber.Burrow().Env.Get(
+							kernel.EnvMinimalExecutablePath,
+						),
+					),
 				)
 			} else {
 				return share.BuildBurrow(
 					burrowSourceDir,
 					cartonNames,
 					localCartons,
-					chamber.Burrow().Env.Get(kernel.EnvExecutablePath),
+					filepath.Join(
+						binDir,
+						chamber.Burrow().Env.Get(
+							kernel.EnvExecutablePath,
+						),
+					),
 				)
 			}
 		},

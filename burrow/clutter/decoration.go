@@ -32,6 +32,7 @@ func (d *ClutterDecoration) Assemble() error {
 	}
 
 	coreDecoration.AddCommand(command.BuildCommand(d.Chamber(), d))
+	coreDecoration.AddCommand(command.SelfUpdateCommand(d.Chamber(), d))
 
 	err = coreDecoration.InsertCommand(
 		[]string{"carton"},

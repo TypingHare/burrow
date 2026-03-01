@@ -23,9 +23,17 @@ func GenerateMagicGoModFile(
 	goModPath := filepath.Join(burrowSourceDir, "go.mod")
 	_, err := os.Stat(goModPath)
 	if os.IsNotExist(err) {
-		return fmt.Errorf("go.mod file does not exist at path: %s", goModPath)
+		return fmt.Errorf(
+			"file %q does not exist at path: %q",
+			"go.mod",
+			goModPath,
+		)
 	} else if err != nil {
-		return fmt.Errorf("failed to access go.mod file at path: %s", goModPath)
+		return fmt.Errorf(
+			"failed to access file %q at path: %q",
+			"go.mod",
+			goModPath,
+		)
 	}
 
 	// Build a temporary map that maps carton names to their local paths.
@@ -38,15 +46,34 @@ func GenerateMagicGoModFile(
 	magicGoModPath := filepath.Join(burrowSourceDir, fileName)
 	if _, err := os.Stat(magicGoModPath); err == nil {
 		if err := os.Remove(magicGoModPath); err != nil {
-			return fmt.Errorf("failed to remove existing %s: %w", fileName, err)
+			return fmt.Errorf("failed to remove existing %q: %w", fileName, err)
 		}
+	}
+
+	// Copy the original go.mod to magic.go.mod to preserve existing module
+	// settings.
+	originalGoModContent, err := os.ReadFile(goModPath)
+	if err != nil {
+		return fmt.Errorf("failed to read original %q: %w", "go.mod", err)
+	}
+	if err := os.WriteFile(
+		magicGoModPath,
+		originalGoModContent,
+		0o644,
+	); err != nil {
+		return fmt.Errorf(
+			"failed to create %q from original go.mod: %w",
+			fileName,
+			err,
+		)
 	}
 
 	majorVersion, _ := kernel.GetMajorVersion(kernel.Version)
 	majorMinorVersion, _ := kernel.GetMajorMinorVersion(kernel.Version)
 	for _, cartonName := range cartonNames {
+		modulePath := fmt.Sprintf("%s/v%s", cartonName, majorVersion)
 		cartonURL := fmt.Sprintf(
-			"%s/%s/@v%s",
+			"%s/v%s/@v%s",
 			cartonName,
 			majorVersion,
 			majorMinorVersion,
@@ -61,7 +88,7 @@ func GenerateMagicGoModFile(
 					"mod",
 					"edit",
 					"-modfile=magic.go.mod",
-					fmt.Sprintf("-replace=%s", cartonURL),
+					fmt.Sprintf("-replace=%s=%s", modulePath, localCartonPath),
 				},
 			)
 
@@ -80,7 +107,7 @@ func GenerateMagicGoModFile(
 					"mod",
 					"edit",
 					"-modfile=magic.go.mod",
-					fmt.Sprintf("-require=%s", localCartonPath),
+					fmt.Sprintf("-require=%s", cartonURL),
 				},
 			)
 
@@ -104,12 +131,33 @@ func GenerateMagicGoModFile(
 
 			if err != nil || exitCode != 0 {
 				return fmt.Errorf(
-					"failed to run 'go get' for carton '%s': %w",
+					"failed to run %q for carton %q: %w",
+					"go get",
 					cartonName,
 					err,
 				)
 			}
 		}
+	}
+
+	_, _, exitCode, err := share.RunExternalCommand(
+		burrowSourceDir,
+		[]string{
+			"go",
+			"mod",
+			"download",
+			"-modfile=magic.go.mod",
+			"all",
+		},
+	)
+
+	if err != nil || exitCode != 0 {
+		return fmt.Errorf(
+			"failed to run %q for %q: %w",
+			"go mod download",
+			"-modfile=magic.go.mod",
+			err,
+		)
 	}
 
 	return nil
@@ -127,7 +175,7 @@ func GenerateMagicGoFile(
 		lastSegment := filepath.Base(cartonName)
 		if !strings.HasSuffix(lastSegment, ".carton") {
 			return fmt.Errorf(
-				"carton name '%s' does not end with %q",
+				"carton name %q does not end with %q",
 				cartonName,
 				".carton",
 			)
@@ -188,9 +236,9 @@ func GenerateMagicGoFile(
 	content.WriteString("package main\n\n")
 	content.WriteString("import (\n")
 	for _, importPath := range importPaths {
-		content.WriteString("\t")
+		content.WriteString("\t\"")
 		content.WriteString(importPath)
-		content.WriteString("\n")
+		content.WriteString("\"\n")
 	}
 	content.WriteString(")\n\n")
 	content.WriteString("func registerCartons(warehouse *kernel.Warehouse) {\n")
