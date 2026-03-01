@@ -73,3 +73,60 @@ func BuildCoreDecoration(
 func (d *CoreDecoration) AddCommand(command *cobra.Command) {
 	d.RootCommand.AddCommand(command)
 }
+
+func (d *CoreDecoration) GetCommand(path []string) (*cobra.Command, error) {
+	if len(path) == 0 {
+		return d.RootCommand, nil
+	}
+
+	currentCommand := d.RootCommand
+	for _, next := range path {
+		found := false
+		for _, command := range currentCommand.Commands() {
+			if command.Name() == next {
+				currentCommand = command
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			return nil, fmt.Errorf(
+				"command %q not found in path %q",
+				next,
+				path,
+			)
+		}
+	}
+
+	return currentCommand, nil
+}
+
+// InsertCommand inserts a subcommand at the specified path in the command tree
+// of the core decoration. The path is a slice of command names that specifies
+// where to insert the command.
+func (d *CoreDecoration) InsertCommand(
+	path []string,
+	command *cobra.Command,
+) error {
+	targetCommand, err := d.GetCommand(path)
+	if err != nil {
+		return fmt.Errorf(
+			"failed to insert command at path %q: %w",
+			path,
+			err,
+		)
+	}
+
+	targetCommand.AddCommand(command)
+	return nil
+}
+
+func (d *CoreDecoration) MergeCommand(
+	path []string,
+	command *cobra.Command,
+) error {
+	// TODO: This would be hard. But after we implement this, we can get rid of
+	// InsertCommand and AddCommand.
+	return nil
+}

@@ -1,7 +1,10 @@
 package clutter
 
 import (
+	"github.com/TypingHare/burrow/v2026/burrow/clutter/command"
+	"github.com/TypingHare/burrow/v2026/burrow/clutter/command/carton"
 	"github.com/TypingHare/burrow/v2026/burrow/clutter/share"
+	"github.com/TypingHare/burrow/v2026/burrow/core"
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
@@ -22,7 +25,27 @@ func (d *ClutterDecoration) RawSpec() kernel.RawSpec {
 	}
 }
 
-func (d *ClutterDecoration) Assemble() error    { return nil }
+func (d *ClutterDecoration) Assemble() error {
+	coreDecoration, err := kernel.Use[*core.CoreDecoration](d.Chamber())
+	if err != nil {
+		return d.Chamber().Error("failed to use core decoration", err)
+	}
+
+	coreDecoration.AddCommand(command.BuildCommand(d.Chamber(), d))
+
+	coreDecoration.InsertCommand(
+		[]string{"carton"},
+		carton.InstallCommand(d.Chamber()),
+	)
+
+	coreDecoration.InsertCommand(
+		[]string{"carton"},
+		carton.UninstallCommand(d.Chamber()),
+	)
+
+	return nil
+}
+
 func (d *ClutterDecoration) Launch() error      { return nil }
 func (d *ClutterDecoration) Terminate() error   { return nil }
 func (d *ClutterDecoration) Disassemble() error { return nil }
