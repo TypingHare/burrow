@@ -8,7 +8,8 @@ import (
 
 func CartonCommand(chamber *kernel.Chamber) *cobra.Command {
 	command := &cobra.Command{
-		Use: "carton",
+		Use:   "carton",
+		Short: "Manage cartons in Burrow",
 	}
 
 	command.AddCommand(carton.ListCommand(chamber))

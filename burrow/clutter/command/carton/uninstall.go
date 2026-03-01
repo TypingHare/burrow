@@ -1,11 +1,15 @@
 package carton
 
 import (
+	"github.com/TypingHare/burrow/v2026/burrow/clutter/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
 
-func UninstallCommand(chamber *kernel.Chamber) *cobra.Command {
+func UninstallCommand(
+	chamber *kernel.Chamber,
+	clutterDecoration share.ClutterDecorationLike,
+) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "uninstall",
 		Short: "Uninstall a carton",

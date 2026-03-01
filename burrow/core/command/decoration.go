@@ -12,7 +12,8 @@ func DecorationCommand(
 	coreDecoration share.CoreDecorationLike,
 ) *cobra.Command {
 	command := &cobra.Command{
-		Use: "decoration",
+		Use:   "decoration",
+		Short: "Manage decorations in the chamber",
 	}
 
 	command.AddCommand(decoration.AddCommand(chamber))

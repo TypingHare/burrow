@@ -36,7 +36,7 @@ func (d *ClutterDecoration) Assemble() error {
 
 	err = coreDecoration.InsertCommand(
 		[]string{"carton"},
-		carton.InstallCommand(d.Chamber()),
+		carton.InstallCommand(d.Chamber(), d),
 	)
 	if err != nil {
 		return d.Chamber().Error("failed to insert carton install command", err)
@@ -44,7 +44,7 @@ func (d *ClutterDecoration) Assemble() error {
 
 	err = coreDecoration.InsertCommand(
 		[]string{"carton"},
-		carton.UninstallCommand(d.Chamber()),
+		carton.UninstallCommand(d.Chamber(), d),
 	)
 	if err != nil {
 		return d.Chamber().
