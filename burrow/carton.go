@@ -5,6 +5,7 @@ import (
 
 	"github.com/TypingHare/burrow/v2026/burrow/clutter"
 	"github.com/TypingHare/burrow/v2026/burrow/core"
+	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
@@ -19,7 +20,7 @@ func RegisterCartonTo(warehouse *kernel.Warehouse) error {
 	if err := kernel.AddTypedDecorationFactory(
 		carton,
 		"core",
-		core.ParseCoreSpec,
+		share.ParseCoreSpec,
 		core.BuildCoreDecoration,
 	); err != nil {
 		return fmt.Errorf("error adding core decoration factory: %w", err)

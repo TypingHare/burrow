@@ -2,19 +2,19 @@ package core
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/command"
+	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
 
 type CoreDecoration struct {
-	kernel.Decoration[CoreSpec]
-
+	kernel.Decoration[share.CoreSpec]
 	RootCommand *cobra.Command
 }
 
-func (d *CoreDecoration) SpecAny() any           { return d.Spec() }
 func (d *CoreDecoration) Dependencies() []string { return []string{} }
 
 func (d *CoreDecoration) Assemble() error {
@@ -25,8 +25,9 @@ func (d *CoreDecoration) Assemble() error {
 	// Set the chamber's handler to the root command.
 	d.Chamber().Handler = CoreHandler
 
-	d.AddCommand(command.CartonCommand)
-	d.AddCommand(command.DecorationCommand)
+	d.AddCommand(command.RedigCommand(d.Chamber()))
+	d.AddCommand(command.CartonCommand(d.Chamber()))
+	d.AddCommand(command.DecorationCommand(d.Chamber(), d))
 
 	return nil
 }
@@ -35,14 +36,18 @@ func (d *CoreDecoration) Launch() error      { return nil }
 func (d *CoreDecoration) Terminate() error   { return nil }
 func (d *CoreDecoration) Disassemble() error { return nil }
 
+func (d *CoreDecoration) Command() *cobra.Command {
+	return d.RootCommand
+}
+
 func BuildCoreDecoration(
 	chamber *kernel.Chamber,
-	spec CoreSpec,
+	spec share.CoreSpec,
 ) (kernel.DecorationInstance, error) {
 	return &CoreDecoration{
 		Decoration: *kernel.NewDecoration(chamber, spec),
 		RootCommand: &cobra.Command{
-			Use: chamber.Name(),
+			Use: os.Args[0] + " " + chamber.Name(),
 			RunE: func(cmd *cobra.Command, args []string) error {
 				if len(args) > 0 {
 					return fmt.Errorf(
@@ -58,11 +63,7 @@ func BuildCoreDecoration(
 	}, nil
 }
 
-// AddCommand adds a command to the root command of the core decoration. The
-// commandFactory is a function that takes a chamber and returns a Cobra
-// command.
-func (d *CoreDecoration) AddCommand(
-	commandFactory func(*kernel.Chamber) *cobra.Command,
-) {
-	d.RootCommand.AddCommand(commandFactory(d.Chamber()))
+// AddCommand adds a subcommand to the root command of the core decoration.
+func (d *CoreDecoration) AddCommand(command *cobra.Command) {
+	d.RootCommand.AddCommand(command)
 }

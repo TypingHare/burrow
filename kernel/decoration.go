@@ -3,7 +3,6 @@ package kernel
 // DecorationInstance represents an installed decoration and its lifecycle.
 type DecorationInstance interface {
 	Chamber() *Chamber
-	SpecAny() any
 	Dependencies() []string
 
 	Assemble() error

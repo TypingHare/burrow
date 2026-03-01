@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"slices"
 	"sort"
 
 	"gonum.org/v1/gonum/graph"
@@ -19,6 +20,9 @@ type Renovator struct {
 	// graph stores dependency edges from dependent to dependency.
 	graph *simple.DirectedGraph
 
+	// graphNodeIDsByDecorationID maps decoration IDs to graph node IDs.
+	graphNodeIDsByDecorationID map[string]int
+
 	// orderedDecorationIDs stores decoration IDs in initialization order.
 	orderedDecorationIDs []string
 
@@ -31,11 +35,9 @@ type Renovator struct {
 	// decorationsByType stores decorations by concrete type.
 	decorationsByType map[reflect.Type]DecorationInstance
 
-	// graphNodeIDsByDecorationID maps decoration IDs to graph node IDs.
-	graphNodeIDsByDecorationID map[string]int
-
-	// resolvingDecorationIDSet tracks decorations currently being resolved.
-	resolvingDecorationIDSet map[string]struct{}
+	// dependentMap maps a decoration ID to the IDs of decorations that depend
+	// on it.
+	dependentMap map[string][]string
 }
 
 // NewRenovator returns a Renovator for chamber.
@@ -43,12 +45,12 @@ func NewRenovator(chamber *Chamber) *Renovator {
 	return &Renovator{
 		chamber:                    chamber,
 		graph:                      simple.NewDirectedGraph(),
+		graphNodeIDsByDecorationID: make(map[string]int),
 		orderedDecorationIDs:       []string{},
 		orderedDecorations:         []DecorationInstance{},
 		decorationsByID:            make(map[string]DecorationInstance),
 		decorationsByType:          make(map[reflect.Type]DecorationInstance),
-		graphNodeIDsByDecorationID: make(map[string]int),
-		resolvingDecorationIDSet:   make(map[string]struct{}),
+		dependentMap:               make(map[string][]string),
 	}
 }
 
@@ -60,6 +62,12 @@ func (r *Renovator) Chamber() *Chamber {
 // Graph returns the dependency graph of the Chamber's decorations.
 func (r *Renovator) Graph() *simple.DirectedGraph {
 	return r.graph
+}
+
+// GraphNodeIDsByDecorationID returns the mapping of decoration IDs to graph
+// node IDs.
+func (r *Renovator) GraphNodeIDsByDecorationID() map[string]int {
+	return r.graphNodeIDsByDecorationID
 }
 
 // OrderedDecorationIDs returns decoration IDs in initialization order.
@@ -80,6 +88,12 @@ func (r *Renovator) DecorationsByID() map[string]DecorationInstance {
 // DecorationsByType returns a map of decorations by their concrete type.
 func (r *Renovator) DecorationsByType() map[reflect.Type]DecorationInstance {
 	return r.decorationsByType
+}
+
+// DependentMap returns a map of decoration IDs to the IDs of decorations that
+// depend on them.
+func (r *Renovator) DependentMap() map[string][]string {
+	return r.dependentMap
 }
 
 // GetDecoration returns the decoration for decorationID.
@@ -139,7 +153,7 @@ func (r *Renovator) CreateDecoration(
 func (r *Renovator) resolveRootDependencies(decorationIDs []string) error {
 	r.resetResolutionState()
 
-	err := r.resolveDependencies(decorationIDs, -1)
+	err := r.resolveDependencies(decorationIDs, -1, make(map[string]struct{}))
 	if err != nil {
 		return r.chamber.Error("failed to resolve root dependencies", err)
 	}
@@ -178,6 +192,7 @@ func (r *Renovator) resolveRootDependencies(decorationIDs []string) error {
 func (r *Renovator) resolveDependencies(
 	decorationIDs []string,
 	parentNodeID int,
+	resolvingSet map[string]struct{},
 ) error {
 	for _, decorationID := range decorationIDs {
 		nodeID, exists := r.graphNodeIDsByDecorationID[decorationID]
@@ -189,7 +204,7 @@ func (r *Renovator) resolveDependencies(
 				})
 			}
 
-			_, resolving := r.resolvingDecorationIDSet[decorationID]
+			_, resolving := resolvingSet[decorationID]
 			if resolving {
 				return fmt.Errorf(
 					"cyclic dependency detected involving %q",
@@ -233,15 +248,30 @@ func (r *Renovator) resolveDependencies(
 				T: simple.Node(nodeID),
 			})
 		}
-		r.resolvingDecorationIDSet[decorationID] = struct{}{}
+		resolvingSet[decorationID] = struct{}{}
 
+		dependencies := decoration.Dependencies()
 		if err := r.resolveDependencies(
-			decoration.Dependencies(),
+			dependencies,
 			nodeID,
+			resolvingSet,
 		); err != nil {
 			return err
 		}
-		delete(r.resolvingDecorationIDSet, decorationID)
+		delete(resolvingSet, decorationID)
+
+		for _, dependencyID := range dependencies {
+			if _, exists := r.dependentMap[dependencyID]; !exists {
+				r.dependentMap[dependencyID] = []string{}
+			}
+
+			if !slices.Contains(r.dependentMap[dependencyID], decorationID) {
+				r.dependentMap[dependencyID] = append(
+					r.dependentMap[dependencyID],
+					decorationID,
+				)
+			}
+		}
 
 		r.decorationsByID[decorationID] = decoration
 		r.decorationsByType[reflect.TypeOf(decoration)] = decoration
@@ -286,10 +316,10 @@ func (r *Renovator) getDependencyOrder() ([]int, error) {
 // resetResolutionState clears dependency resolution state before a fresh run.
 func (r *Renovator) resetResolutionState() {
 	r.graph = simple.NewDirectedGraph()
+	r.graphNodeIDsByDecorationID = make(map[string]int)
 	r.orderedDecorationIDs = []string{}
 	r.orderedDecorations = []DecorationInstance{}
 	r.decorationsByID = make(map[string]DecorationInstance)
 	r.decorationsByType = make(map[reflect.Type]DecorationInstance)
-	r.graphNodeIDsByDecorationID = make(map[string]int)
-	r.resolvingDecorationIDSet = make(map[string]struct{})
+	r.dependentMap = make(map[string][]string)
 }

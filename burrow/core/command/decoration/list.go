@@ -17,11 +17,7 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if all {
 				decorationIDs := maps.Keys(
-					chamber.Burrow().
-						Warehouse().
-						Burrow().
-						Warehouse().
-						DecorationFactoryMap(),
+					chamber.Burrow().Warehouse().DecorationFactoryMap(),
 				)
 				for _, cartonName := range slices.Sorted(decorationIDs) {
 					cmd.Println(cartonName)
@@ -40,7 +36,7 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 	}
 
 	command.Flags().BoolVarP(&all, "all", "a", false,
-		"Show all cartons in the warehouse",
+		"Show all decorations registered in the warehouse",
 	)
 
 	return command

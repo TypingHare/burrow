@@ -8,8 +8,6 @@ type ClutterDecoration struct {
 	kernel.Decoration[ClutterSpec]
 }
 
-func (d *ClutterDecoration) SpecAny() any { return d.Spec() }
-
 func (d *ClutterDecoration) Dependencies() []string {
 	return []string{
 		"core@github.com/TypingHare/burrow",
