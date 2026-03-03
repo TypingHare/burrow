@@ -34,11 +34,14 @@ const (
 	EnvChamberDir = "CHAMBER_DIR"
 	EnvSourceDir  = "SOURCE_DIR"
 
+	EnvAcceptProcessEnv = "ACCEPT_PROCESS_ENV"
+	EnvUseChamber       = "USE_CHAMBER"
+
 	EnvRootChamber       = "ROOT_CHAMBER"
 	EnvBlueprintFileName = "BLUEPRINT_FILE_NAME"
 	EnvDecorationIDSep   = "DECORATION_ID_SEP"
 
-	EnvVerbose = "VERBOSE"
+	EnvDebug = "DEBUG"
 
 	EnvExecutablePath        = "EXECUTABLE_PATH"
 	EnvMinimalExecutablePath = "MINIMAL_EXECUTABLE_PATH"
@@ -108,22 +111,26 @@ func (b *Burrow) Init(name string) error {
 	b.Env.Set(EnvBinDir, "bin")
 	b.Env.Set(EnvChamberDir, "chamber")
 	b.Env.Set(EnvSourceDir, "source")
+	b.Env.Set(EnvAcceptProcessEnv, "1")
+	b.Env.Set(EnvUseChamber, "")
 	b.Env.Set(EnvRootChamber, ".")
 	b.Env.Set(EnvBlueprintFileName, "blueprint.json")
 	b.Env.Set(EnvDecorationIDSep, "@")
-	b.Env.Set(EnvVerbose, "0")
+	b.Env.Set(EnvDebug, "0")
 	b.Env.Set(EnvExecutablePath, "burrow")
 	b.Env.Set(EnvMinimalExecutablePath, "burrow-min")
 
-	// Allow overrides from process environment variables prefixed with
-	// "BURROW_". For example, BURROW_NAME overrides NAME.
-	for _, envVar := range os.Environ() {
-		key, value, hasSep := strings.Cut(envVar, "=")
-		if !hasSep || !strings.HasPrefix(key, "BURROW_") {
-			continue
-		}
+	if b.Env.Get(EnvAcceptProcessEnv) == "1" {
+		// Allow overrides from process environment variables prefixed with
+		// "BURROW_". For example, BURROW_NAME overrides NAME.
+		for _, envVar := range os.Environ() {
+			key, value, hasSep := strings.Cut(envVar, "=")
+			if !hasSep || !strings.HasPrefix(key, "BURROW_") {
+				continue
+			}
 
-		b.Env.Set(strings.TrimPrefix(key, "BURROW_"), value)
+			b.Env.Set(strings.TrimPrefix(key, "BURROW_"), value)
+		}
 	}
 
 	return nil
@@ -131,11 +138,20 @@ func (b *Burrow) Init(name string) error {
 
 // Handle handles the execution of a command the Burrow receives.
 func (b *Burrow) Handle(args []string) (int, error) {
-	if len(args) == 0 {
+	useChamber := b.Env.Get(EnvUseChamber)
+	if len(args) == 0 && useChamber == "" {
 		return GeneralError, fmt.Errorf("no chamber specified")
 	}
-	chamberName := args[0]
-	chamberArgs := args[1:]
+
+	var chamberName string
+	var chamberArgs []string
+	if useChamber == "" {
+		chamberName = args[0]
+		chamberArgs = args[1:]
+	} else {
+		chamberName = useChamber
+		chamberArgs = args
+	}
 
 	chamber, err := b.architect.GetOrDig(chamberName)
 	if err != nil {

@@ -6,6 +6,7 @@
 - [ ] Carton/decoration directory structure (DDD)
 - [ ] `shell` decoration
 - [ ] `build` as `burrow build`
+- [ ] `magic.go` sets environment variables
 
 ## Comments improvement
 
