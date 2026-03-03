@@ -327,3 +327,27 @@ func Build(
 
 	return nil
 }
+
+// BuildBurrowStandard builds the Burrow executable with the specified cartons
+// using the standard source and output paths defined in the Burrow environment.
+func BuildBurrowStandard(
+	burrow *kernel.Burrow,
+	cartonNames []string,
+	localCartons []LocalCarton,
+) error {
+	burrowSourceDir := filepath.Join(
+		burrow.GetSourceDir(),
+		kernel.CartonName,
+	)
+	outputExecutablePath := filepath.Join(
+		burrow.GetBinDir(),
+		burrow.Env.Get(kernel.EnvExecutablePath),
+	)
+
+	return BuildBurrow(
+		burrowSourceDir,
+		cartonNames,
+		localCartons,
+		outputExecutablePath,
+	)
+}

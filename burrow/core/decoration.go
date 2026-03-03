@@ -34,6 +34,7 @@ func (d *CoreDecoration) Assemble() error {
 	d.AddCommand(command.RedigCommand(d.Chamber()))
 	d.AddCommand(command.CartonCommand(d.Chamber()))
 	d.AddCommand(command.DecorationCommand(d.Chamber(), d))
+	d.AddCommand(command.BlueprintCommand(d.Chamber()))
 
 	return nil
 }

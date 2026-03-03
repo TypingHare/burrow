@@ -21,8 +21,8 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 				decorationIDs := maps.Keys(
 					chamber.Burrow().Warehouse().DecorationFactoryMap(),
 				)
-				for _, cartonName := range slices.Sorted(decorationIDs) {
-					cmd.Println(cartonName)
+				for _, decorationID := range slices.Sorted(decorationIDs) {
+					cmd.Println(decorationID)
 				}
 
 				return nil
@@ -39,8 +39,7 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 				return nil
 			}
 
-			decorationIDs := chamber.Renovator().OrderedDecorationIDs()
-			for _, decorationID := range decorationIDs {
+			for _, decorationID := range share.GetSortedDecorationIDs(chamber) {
 				cmd.Println(decorationID)
 			}
 

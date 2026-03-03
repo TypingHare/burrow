@@ -81,6 +81,16 @@ func (c *Chamber) UpdateBlueprint() error {
 	return nil
 }
 
+// SaveBlueprint updates the Chamber's Blueprint with the current state of its
+// decorations and saves it to the Burrow's Architect.
+func (c *Chamber) SaveBlueprint() error {
+	if err := c.UpdateBlueprint(); err != nil {
+		return c.Error("failed to update blueprint before saving", err)
+	}
+
+	return c.burrow.architect.SaveBlueprint(c.name, c.blueprint)
+}
+
 // Use retrieves a decoration of the specified type from the Chamber's
 // Renovator.
 func Use[T DecorationInstance](chamber *Chamber) (T, error) {

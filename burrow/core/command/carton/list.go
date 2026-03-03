@@ -1,11 +1,8 @@
 package carton
 
 import (
-	"maps"
-	"slices"
-
+	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
-	"github.com/deckarep/golang-set/v2"
 	"github.com/spf13/cobra"
 )
 
@@ -17,31 +14,20 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 		Short: "Show cartons used in the chamber",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if all {
-				cartonNames := maps.Keys(
-					chamber.Burrow().Warehouse().CartonMap(),
+				allCartonNames := share.GetAllCartonNames(
+					chamber.Burrow().Warehouse(),
 				)
-				for _, cartonName := range slices.Sorted(cartonNames) {
+				for _, cartonName := range allCartonNames {
 					cmd.Println(cartonName)
 				}
 
 				return nil
 			}
 
-			cartonNameSet := mapset.NewSet[string]()
-			decorationIDs := chamber.Renovator().OrderedDecorationIDs()
-			for _, decorationID := range decorationIDs {
-				_, cartonName, err := chamber.Burrow().
-					Warehouse().
-					SplitDecorationID(decorationID)
-				if err != nil {
-					return err
-				}
-
-				cartonNameSet.Add(cartonName)
+			cartonNames, err := share.GetCartonNames(chamber)
+			if err != nil {
+				return err
 			}
-
-			cartonNames := cartonNameSet.ToSlice()
-			slices.Sort(cartonNames)
 			for _, cartonName := range cartonNames {
 				cmd.Println(cartonName)
 			}
