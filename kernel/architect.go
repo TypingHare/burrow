@@ -80,6 +80,7 @@ func (a *Architect) SaveBlueprint(
 			err,
 		)
 	}
+
 	return nil
 }
 
@@ -172,7 +173,6 @@ func (a *Architect) GetOrDig(chamberName string) (*Chamber, error) {
 	return chamber, nil
 }
 
-// If the root chamber's blueprint file does not exist,
 // GetDefaultRootChamberBlueprint returns a default blueprint with the core and
 // clutter specs.
 func GetDefaultRootChamberBlueprint() Blueprint {

@@ -13,6 +13,7 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 		Use:   "list",
 		Short: "Show cartons used in the chamber",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			// TODO: also print the versions
 			if all {
 				allCartonNames := share.GetAllCartonNames(
 					chamber.Burrow().Warehouse(),

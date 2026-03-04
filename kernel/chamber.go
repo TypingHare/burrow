@@ -6,25 +6,21 @@ import (
 	"reflect"
 )
 
-// Chamber is an independent CLI application within a Burrow.
+// Chamber represents an independent CLI application within a Burrow.
 type Chamber struct {
-	// burrow is the Burrow that contains the Chamber.
 	burrow *Burrow
 
-	// name is the Chamber name.
 	name string
 
-	// blueprint defines the Chamber configuration.
 	blueprint Blueprint
 
-	// renovator manages the Chamber's decorations.
 	renovator *Renovator
 
-	// Handler executes commands for the Chamber.
+	// Handler executes commands for the chamber.
 	Handler Handler
 }
 
-// NewChamber returns a Chamber for burrow, name, and blueprint.
+// NewChamber returns a new Chamber for burrow, name, and blueprint.
 func NewChamber(burrow *Burrow, name string, blueprint Blueprint) *Chamber {
 	chamber := &Chamber{
 		burrow:    burrow,
@@ -38,37 +34,37 @@ func NewChamber(burrow *Burrow, name string, blueprint Blueprint) *Chamber {
 	return chamber
 }
 
-// Burrow returns the Burrow that contains the Chamber.
+// Burrow returns the Burrow that contains c.
 func (c *Chamber) Burrow() *Burrow {
 	return c.burrow
 }
 
-// Name returns the Chamber name.
+// Name returns the chamber name.
 func (c *Chamber) Name() string {
 	return c.name
 }
 
-// Blueprint returns the Chamber's Blueprint.
+// Blueprint returns the chamber blueprint.
 func (c *Chamber) Blueprint() Blueprint {
 	return c.blueprint
 }
 
-// Renovator returns the Chamber's Renovator.
+// Renovator returns the chamber renovator.
 func (c *Chamber) Renovator() *Renovator {
 	return c.renovator
 }
 
-// IsRoot reports whether the Chamber is the Burrow's root Chamber.
+// IsRoot reports whether c is the Burrow's root chamber.
 func (c *Chamber) IsRoot() bool {
 	return c.name == c.burrow.Env.Get(EnvRootChamber)
 }
 
-// Error returns a ChamberError for the Chamber.
+// Error returns a ChamberError for c.
 func (c *Chamber) Error(msg string, err error) *ChamberError {
 	return NewChamberError(c.name, msg, err)
 }
 
-// UpdateBlueprint updates the Chamber's Blueprint with the current state of its
+// UpdateBlueprint updates the chamber blueprint with the current state of its
 // decorations.
 func (c *Chamber) UpdateBlueprint() error {
 	decorationsByID := c.renovator.decorationsByID
@@ -81,8 +77,8 @@ func (c *Chamber) UpdateBlueprint() error {
 	return nil
 }
 
-// SaveBlueprint updates the Chamber's Blueprint with the current state of its
-// decorations and saves it to the Burrow's Architect.
+// SaveBlueprint updates the chamber blueprint with the current state of its
+// decorations and saves it through the Burrow's Architect.
 func (c *Chamber) SaveBlueprint() error {
 	if err := c.UpdateBlueprint(); err != nil {
 		return c.Error("failed to update blueprint before saving", err)
@@ -91,8 +87,7 @@ func (c *Chamber) SaveBlueprint() error {
 	return c.burrow.architect.SaveBlueprint(c.name, c.blueprint)
 }
 
-// Use retrieves a decoration of the specified type from the Chamber's
-// Renovator.
+// Use returns the decoration of type T installed in chamber.
 func Use[T DecorationInstance](chamber *Chamber) (T, error) {
 	var zero T
 
@@ -120,10 +115,8 @@ func Use[T DecorationInstance](chamber *Chamber) (T, error) {
 	return typed, nil
 }
 
-// init resolves the Chamber's root decoration dependencies.
-//
-// init should be called before executing commands so required dependencies are
-// available.
+// init resolves the chamber's root decoration dependencies before command
+// execution.
 func (c *Chamber) init() error {
 	decorationIDs := c.blueprint.GetDecorationIDs()
 	if err := c.renovator.resolveRootDependencies(decorationIDs); err != nil {
@@ -133,12 +126,12 @@ func (c *Chamber) init() error {
 	return c.installDecorations()
 }
 
+// installDecorations assembles and launches decorations in dependency order.
 func (c *Chamber) installDecorations() error {
 	assembledDecorations := []DecorationInstance{}
 	for i, decoration := range c.renovator.orderedDecorations {
 		if err := decoration.Assemble(); err != nil {
-			// Disassemble any previously assembled decorations in reverse order
-			// to clean up.
+			// Clean up previously assembled decorations in reverse order.
 			for j := len(assembledDecorations) - 1; j >= 0; j-- {
 				err := assembledDecorations[j].Disassemble()
 				if err != nil {
@@ -167,8 +160,7 @@ func (c *Chamber) installDecorations() error {
 	launchedDecorations := []DecorationInstance{}
 	for i, decoration := range c.renovator.orderedDecorations {
 		if err := decoration.Launch(); err != nil {
-			// Terminate any previously launched decorations in reverse order to
-			// clean up.
+			// Clean up previously launched decorations in reverse order.
 			for j := len(launchedDecorations) - 1; j >= 0; j-- {
 				err := launchedDecorations[j].Terminate()
 				if err != nil {
@@ -210,11 +202,8 @@ func (c *Chamber) installDecorations() error {
 	return nil
 }
 
-// discardDecorations terminates and disassembles the Chamber's decorations in
+// discardDecorations terminates and disassembles the chamber's decorations in
 // reverse dependency order.
-//
-// discardDecorations should be called before burying the Chamber to ensure
-// decorations are properly cleaned up.
 func (c *Chamber) discardDecorations() error {
 	for i := len(c.renovator.orderedDecorations) - 1; i >= 0; i-- {
 		decoration := c.renovator.orderedDecorations[i]

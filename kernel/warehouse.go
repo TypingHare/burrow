@@ -120,7 +120,7 @@ func (w *Warehouse) RegisterCarton(carton *Carton) error {
 			)
 		}
 
-		if w.decorationFactoryMap[decorationName] != nil {
+		if w.decorationFactoryMap[decorationID] != nil {
 			return fmt.Errorf(
 				"decoration factory for %q already exists in warehouse",
 				decorationID,

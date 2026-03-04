@@ -43,10 +43,6 @@ func (d *CoreDecoration) Launch() error      { return nil }
 func (d *CoreDecoration) Terminate() error   { return nil }
 func (d *CoreDecoration) Disassemble() error { return nil }
 
-func (d *CoreDecoration) Command() *cobra.Command {
-	return d.RootCommand
-}
-
 func BuildCoreDecoration(
 	chamber *kernel.Chamber,
 	spec share.CoreSpec,

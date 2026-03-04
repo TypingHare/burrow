@@ -12,6 +12,17 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
+// TODO: refactor using "Builder" struct
+type Builder struct {
+	BurrowSourceDir string
+
+	CartonNames  []string
+	LocalCartons []LocalCarton
+	MagicEnv     kernel.Vars
+
+	OutputExecutablePath string
+}
+
 // GenerateMagicGoModFile generates a go.mod file that includes the specified
 // cartons as dependencies.
 func GenerateMagicGoModFile(

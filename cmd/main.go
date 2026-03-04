@@ -12,10 +12,15 @@ const DefaultName = "burrow"
 
 func main() {
 	burrow := kernel.NewBurrow()
-	if err := burrow.Init(DefaultName); err != nil {
-		fmt.Fprintf(os.Stderr, "failed to initialize burrow: %v\n", err)
+	if err := burrow.InitEnv(DefaultName); err != nil {
+		fmt.Fprintf(
+			os.Stderr,
+			"failed to initialize environment variables: %v\n",
+			err,
+		)
 		os.Exit(kernel.GeneralError)
 	}
+	burrow.LoadProcessEnv()
 
 	registerCartons(burrow.Warehouse())
 

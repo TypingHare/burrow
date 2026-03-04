@@ -78,9 +78,8 @@ func (b *Burrow) Architect() *Architect {
 	return b.architect
 }
 
-// Init initializes the Burrow with the given name and sets up the environment
-// variables.
-func (b *Burrow) Init(name string) error {
+// InitEnv initializes the environment variables for b.
+func (b *Burrow) InitEnv(name string) error {
 	b.Env.Set(EnvName, name)
 
 	home, err := os.UserHomeDir()
@@ -120,9 +119,13 @@ func (b *Burrow) Init(name string) error {
 	b.Env.Set(EnvExecutablePath, "burrow")
 	b.Env.Set(EnvMinimalExecutablePath, "burrow-min")
 
+	return nil
+}
+
+// LoadProcessEnv loads environment variables from the process environment if
+// allowed by the EnvAcceptProcessEnv variable.
+func (b *Burrow) LoadProcessEnv() {
 	if b.Env.Get(EnvAcceptProcessEnv) == "1" {
-		// Allow overrides from process environment variables prefixed with
-		// "BURROW_". For example, BURROW_NAME overrides NAME.
 		for _, envVar := range os.Environ() {
 			key, value, hasSep := strings.Cut(envVar, "=")
 			if !hasSep || !strings.HasPrefix(key, "BURROW_") {
@@ -132,8 +135,6 @@ func (b *Burrow) Init(name string) error {
 			b.Env.Set(strings.TrimPrefix(key, "BURROW_"), value)
 		}
 	}
-
-	return nil
 }
 
 // Handle handles the execution of a command the Burrow receives.
