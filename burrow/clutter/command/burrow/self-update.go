@@ -37,8 +37,8 @@ func SelfUpdateCommand(
 				localCartons,
 			)
 			if err != nil {
-				return chamber.Error(
-					"failed to update Burrow source and rebuild",
+				return fmt.Errorf(
+					"failed to update Burrow source and rebuild: %w",
 					err,
 				)
 			}
@@ -49,11 +49,9 @@ func SelfUpdateCommand(
 					[]string{"git", "checkout", originalCommit},
 				)
 				if err != nil || exitCode != 0 {
-					return chamber.Error(
-						fmt.Sprintf(
-							"failed to roll back to original commit %q",
-							originalCommit,
-						),
+					return fmt.Errorf(
+						"failed to roll back to original commit %q: %w",
+						originalCommit,
 						fmt.Errorf("%s", stderr),
 					)
 				}
@@ -69,18 +67,16 @@ func SelfUpdateCommand(
 				outputExecutablePath,
 			).Build(); err != nil {
 				if rollbackErr := rollback(); rollbackErr != nil {
-					return chamber.Error(
+					return fmt.Errorf(
 						"updated source and failed to rebuild Burrow; revert "+
-							"also failed",
-						fmt.Errorf("%w: %w", err, rollbackErr),
+							"also failed: %w",
+						fmt.Errorf("%s: %w", rollbackErr.Error(), err),
 					)
 				}
 
-				return chamber.Error(
-					fmt.Sprintf(
-						"failed to rebuild Burrow; reverted to %q",
-						originalCommit,
-					),
+				return fmt.Errorf(
+					"failed to rebuild Burrow; reverted to %q: %w",
+					originalCommit,
 					err,
 				)
 			}

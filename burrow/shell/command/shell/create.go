@@ -44,7 +44,10 @@ func CreateCommand(
 				spec.CreatedFileNames = append(spec.CreatedFileNames, fileName)
 			}
 			if err := chamber.UpdateAndSaveBlueprint(); err != nil {
-				return fmt.Errorf("failed to save shell decoration spec: %w", err)
+				return fmt.Errorf(
+					"failed to save shell decoration spec: %w",
+					err,
+				)
 			}
 
 			return nil

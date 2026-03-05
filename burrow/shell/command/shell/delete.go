@@ -31,12 +31,18 @@ func DeleteCommand(
 			newCreatedFileNames := make([]string, 0, len(spec.CreatedFileNames))
 			for _, createdFileName := range spec.CreatedFileNames {
 				if createdFileName != fileName {
-					newCreatedFileNames = append(newCreatedFileNames, createdFileName)
+					newCreatedFileNames = append(
+						newCreatedFileNames,
+						createdFileName,
+					)
 				}
 			}
 			spec.CreatedFileNames = newCreatedFileNames
 			if err := chamber.UpdateAndSaveBlueprint(); err != nil {
-				return fmt.Errorf("failed to save shell decoration spec: %w", err)
+				return fmt.Errorf(
+					"failed to save shell decoration spec: %w",
+					err,
+				)
 			}
 
 			return nil

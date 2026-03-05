@@ -23,6 +23,7 @@ func ShellCommand(
 	command.AddCommand(shell.ContentCommand(chamber, shellDecoration))
 	command.AddCommand(shell.CreateCommand(chamber, shellDecoration))
 	command.AddCommand(shell.DeleteCommand(chamber, shellDecoration))
+	command.AddCommand(shell.RestoreCommand(chamber, shellDecoration))
 
 	return command
 }

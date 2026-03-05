@@ -15,7 +15,7 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 
 	command := &cobra.Command{
 		Use:   "list",
-		Short: "Show decorations in the chamber",
+		Short: "Show all decorations in the chamber",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if all {
 				decorationIDs := maps.Keys(

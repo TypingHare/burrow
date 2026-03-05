@@ -22,13 +22,10 @@ func RemoveCommand(
 
 			directDependencies := coreDecoration.Spec().DirectDependencies
 			if !slices.Contains(directDependencies, decorationID) {
-				return chamber.Error(
-					fmt.Sprintf(
-						"Cannot remove decoration %q because it is not a "+
-							"direct dependency of the core decoration",
-						decorationID,
-					),
-					nil,
+				return fmt.Errorf(
+					"Cannot remove decoration %q because it is not a direct"+
+						"dependency of the core decoration",
+					decorationID,
 				)
 			}
 
