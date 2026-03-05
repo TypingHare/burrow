@@ -3,11 +3,11 @@ package blueprint
 import (
 	"encoding/json"
 
-	"github.com/TypingHare/burrow/v2026/kernel"
+	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/spf13/cobra"
 )
 
-func ShowCommand(chamber *kernel.Chamber) *cobra.Command {
+func ShowCommand(d share.CoreDecorationLike) *cobra.Command {
 	var showJson bool
 
 	command := &cobra.Command{
@@ -15,7 +15,11 @@ func ShowCommand(chamber *kernel.Chamber) *cobra.Command {
 		Short: "Display the blueprint",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if showJson {
-				data, err := json.MarshalIndent(chamber.Blueprint(), "", "  ")
+				data, err := json.MarshalIndent(
+					d.Chamber().Blueprint(),
+					"",
+					"  ",
+				)
 				if err != nil {
 					return err
 				}

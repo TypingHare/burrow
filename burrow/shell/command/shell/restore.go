@@ -6,26 +6,22 @@ import (
 	"os"
 
 	"github.com/TypingHare/burrow/v2026/burrow/shell/share"
-	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
 
-func RestoreCommand(
-	chamber *kernel.Chamber,
-	shellDecoration share.ShellDecorationLike,
-) *cobra.Command {
+func RestoreCommand(d share.ShellDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "restore",
 		Short: "Restore missing shell scripts from createdFileNames",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			content := share.GetShellFileContent(shellDecoration)
-			for _, fileName := range shellDecoration.Spec().CreatedFileNames {
+			content := share.GetShellFileContent(d)
+			for _, fileName := range d.Spec().CreatedFileNames {
 				if fileName == "" {
 					continue
 				}
 
 				shellFilePath := share.GetShellFilePath(
-					chamber.Burrow(),
+					d.Chamber().Burrow(),
 					fileName,
 				)
 				_, err := os.Stat(shellFilePath)

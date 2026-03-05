@@ -10,25 +10,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func SelfUpdateCommand(
-	chamber *kernel.Chamber,
-	clutterDecoration share.ClutterDecorationLike,
-) *cobra.Command {
+func SelfUpdateCommand(d share.ClutterDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "self-update",
 		Short: "Update Burrow to the latest version",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cartonNames := clutterDecoration.Spec().CartonNames
-			localCartons := clutterDecoration.Spec().LocalCartons
-			magicEnv := clutterDecoration.Spec().MagicEnv
+			burrow := d.Chamber().Burrow()
+			cartonNames := d.Spec().CartonNames
+			localCartons := d.Spec().LocalCartons
+			magicEnv := d.Spec().MagicEnv
 
 			burrowSourceDir := share.GetCartonSourceDir(
-				chamber.Burrow(),
+				burrow,
 				kernel.CartonName,
 			)
 			outputExecutablePath := filepath.Join(
-				chamber.Burrow().GetBinDir(),
-				chamber.Burrow().Env.Get(kernel.EnvExecutablePath),
+				burrow.GetBinDir(),
+				burrow.Env.Get(kernel.EnvExecutablePath),
 			)
 			originalCommit, err := share.BurrowSelfUpdate(
 				burrowSourceDir,

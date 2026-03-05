@@ -2,13 +2,18 @@ package share
 
 import "github.com/TypingHare/burrow/v2026/kernel"
 
+type ShellDecorationLike interface {
+	kernel.DecorationInstance
+	Spec() *ShellSpec
+}
+
 type ShellSpec struct {
 	Shebang          string
 	FileName         string
 	CreatedFileNames []string
 }
 
-func ParseCoreSpec(rawSpec kernel.RawSpec) (ShellSpec, error) {
+func ParseShellSpec(rawSpec kernel.RawSpec) (ShellSpec, error) {
 	shebang, err := kernel.GetRawSpecValueOrDefault(rawSpec, "shebang", "")
 	if err != nil {
 		return ShellSpec{}, err

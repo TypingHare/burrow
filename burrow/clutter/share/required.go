@@ -1,8 +1,11 @@
 package share
 
-import (
-	"github.com/TypingHare/burrow/v2026/kernel"
-)
+import "github.com/TypingHare/burrow/v2026/kernel"
+
+type ClutterDecorationLike interface {
+	kernel.DecorationInstance
+	Spec() *ClutterSpec
+}
 
 type LocalCarton struct {
 	Name string

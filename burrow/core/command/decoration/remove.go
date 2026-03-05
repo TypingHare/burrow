@@ -9,10 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func RemoveCommand(
-	chamber *kernel.Chamber,
-	coreDecoration share.CoreDecorationLike,
-) *cobra.Command {
+func RemoveCommand(d share.CoreDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "remove <decoration>",
 		Short: "Remove a decoration from the chamber",
@@ -20,7 +17,7 @@ func RemoveCommand(
 		RunE: func(cmd *cobra.Command, args []string) error {
 			decorationID := args[0]
 
-			directDependencies := coreDecoration.Spec().DirectDependencies
+			directDependencies := d.Spec().DirectDependencies
 			if !slices.Contains(directDependencies, decorationID) {
 				return fmt.Errorf(
 					"Cannot remove decoration %q because it is not a direct"+
@@ -30,7 +27,7 @@ func RemoveCommand(
 			}
 
 			return share.UpdateBlueprintAndRedig(
-				chamber,
+				d.Chamber(),
 				func(blueprint kernel.Blueprint) error {
 					delete(blueprint, decorationID)
 					return nil

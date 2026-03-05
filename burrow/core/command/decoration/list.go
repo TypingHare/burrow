@@ -5,11 +5,10 @@ import (
 	"slices"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/share"
-	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
 
-func ListCommand(chamber *kernel.Chamber) *cobra.Command {
+func ListCommand(d share.CoreDecorationLike) *cobra.Command {
 	var all bool
 	var root bool
 
@@ -19,7 +18,7 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if all {
 				decorationIDs := maps.Keys(
-					chamber.Burrow().Warehouse().DecorationFactoryMap(),
+					d.Chamber().Burrow().Warehouse().DecorationFactoryMap(),
 				)
 				for _, decorationID := range slices.Sorted(decorationIDs) {
 					cmd.Println(decorationID)
@@ -30,7 +29,7 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 
 			if root {
 				rootDecorationIDs := share.GetRootDecorationIDs(
-					chamber.Renovator(),
+					d.Chamber().Renovator(),
 				)
 				for _, rootDecorationID := range rootDecorationIDs {
 					cmd.Println(rootDecorationID)
@@ -39,7 +38,8 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 				return nil
 			}
 
-			for _, decorationID := range share.GetSortedDecorationIDs(chamber) {
+			deocrationIDs := share.GetSortedDecorationIDs(d.Chamber())
+			for _, decorationID := range deocrationIDs {
 				cmd.Println(decorationID)
 			}
 

@@ -7,6 +7,8 @@ import (
 	clutterShare "github.com/TypingHare/burrow/v2026/burrow/clutter/share"
 	"github.com/TypingHare/burrow/v2026/burrow/core"
 	coreShare "github.com/TypingHare/burrow/v2026/burrow/core/share"
+	"github.com/TypingHare/burrow/v2026/burrow/shell"
+	shellShare "github.com/TypingHare/burrow/v2026/burrow/shell/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
@@ -34,6 +36,15 @@ func RegisterCartonTo(warehouse *kernel.Warehouse) error {
 		clutter.BuildClutterDecoration,
 	); err != nil {
 		return fmt.Errorf("error adding clutter decoration factory: %w", err)
+	}
+
+	if err := kernel.AddTypedDecorationFactory(
+		carton,
+		"shell",
+		shellShare.ParseShellSpec,
+		shell.BuildShellDecoration,
+	); err != nil {
+		return fmt.Errorf("error adding shell decoration factory: %w", err)
 	}
 
 	return warehouse.RegisterCarton(carton)

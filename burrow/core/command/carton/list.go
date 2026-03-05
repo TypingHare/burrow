@@ -1,37 +1,36 @@
 package carton
 
 import (
+	"fmt"
+
 	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
 
-func ListCommand(chamber *kernel.Chamber) *cobra.Command {
+func ListCommand(d share.CoreDecorationLike) *cobra.Command {
 	var all bool
 
 	command := &cobra.Command{
 		Use:   "list",
 		Short: "Show cartons used in the chamber",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// TODO: also print the versions
+			warehouse := d.Chamber().Burrow().Warehouse()
+
 			if all {
-				allCartonNames := share.GetAllCartonNames(
-					chamber.Burrow().Warehouse(),
+				allCartonNames := share.GetAllCartonNames(warehouse)
+				return printCartonNamesAndVersions(
+					warehouse,
+					allCartonNames,
+					cmd,
 				)
-				for _, cartonName := range allCartonNames {
-					cmd.Println(cartonName)
-				}
-
-				return nil
 			}
 
-			cartonNames, err := share.GetCartonNames(chamber)
+			cartonNames, err := share.GetCartonNames(d.Chamber())
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to get carton names: %w", err)
 			}
-			for _, cartonName := range cartonNames {
-				cmd.Println(cartonName)
-			}
+			printCartonNamesAndVersions(warehouse, cartonNames, cmd)
 
 			return nil
 		},
@@ -42,4 +41,28 @@ func ListCommand(chamber *kernel.Chamber) *cobra.Command {
 	)
 
 	return command
+}
+
+func printCartonNamesAndVersions(
+	warehouse *kernel.Warehouse,
+	cartonNames []string,
+	formatter interface {
+		Printf(format string, args ...any)
+	},
+) error {
+	for _, cartonName := range cartonNames {
+		carton, err := warehouse.GetCarton(cartonName)
+		if err != nil {
+			return fmt.Errorf(
+				"failed to get carton %q: %w",
+				cartonName,
+				err,
+			)
+		}
+
+		version := carton.Metadata.Get(kernel.MetadataVersion)
+		formatter.Printf("%s  %s\n", cartonName, version)
+	}
+
+	return nil
 }

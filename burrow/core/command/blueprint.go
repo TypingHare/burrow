@@ -2,11 +2,11 @@ package command
 
 import (
 	"github.com/TypingHare/burrow/v2026/burrow/core/command/blueprint"
-	"github.com/TypingHare/burrow/v2026/kernel"
+	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/spf13/cobra"
 )
 
-func BlueprintCommand(chamber *kernel.Chamber) *cobra.Command {
+func BlueprintCommand(d share.CoreDecorationLike) *cobra.Command {
 	var showJson bool
 
 	command := &cobra.Command{
@@ -14,8 +14,8 @@ func BlueprintCommand(chamber *kernel.Chamber) *cobra.Command {
 		Short: "Manage blueprint of the chamber",
 	}
 
-	command.AddCommand(blueprint.ShowCommand(chamber))
-	command.AddCommand(blueprint.UpdateCommand(chamber))
+	command.AddCommand(blueprint.ShowCommand(d))
+	command.AddCommand(blueprint.UpdateCommand(d))
 
 	command.Flags().BoolVarP(
 		&showJson, "json", "j", false,

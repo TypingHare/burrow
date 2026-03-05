@@ -3,14 +3,10 @@ package command
 import (
 	"github.com/TypingHare/burrow/v2026/burrow/shell/command/shell"
 	"github.com/TypingHare/burrow/v2026/burrow/shell/share"
-	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
 
-func ShellCommand(
-	chamber *kernel.Chamber,
-	shellDecoration share.ShellDecorationLike,
-) *cobra.Command {
+func ShellCommand(d share.ShellDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "shell",
 		Short: "",
@@ -19,11 +15,11 @@ func ShellCommand(
 		},
 	}
 
-	command.AddCommand(shell.PathCommand(chamber, shellDecoration))
-	command.AddCommand(shell.ContentCommand(chamber, shellDecoration))
-	command.AddCommand(shell.CreateCommand(chamber, shellDecoration))
-	command.AddCommand(shell.DeleteCommand(chamber, shellDecoration))
-	command.AddCommand(shell.RestoreCommand(chamber, shellDecoration))
+	command.AddCommand(shell.PathCommand(d))
+	command.AddCommand(shell.ContentCommand(d))
+	command.AddCommand(shell.CreateCommand(d))
+	command.AddCommand(shell.DeleteCommand(d))
+	command.AddCommand(shell.RestoreCommand(d))
 
 	return command
 }

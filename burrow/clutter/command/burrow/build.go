@@ -8,17 +8,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func BuildCommand(
-	chamber *kernel.Chamber,
-	clutterDecoration share.ClutterDecorationLike,
-) *cobra.Command {
+func BuildCommand(d share.ClutterDecorationLike) *cobra.Command {
 	var minimal bool
 
 	command := &cobra.Command{
 		Use:   "build",
 		Short: "Build Burrow executables",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			err := share.EnsureSourceDir(chamber.Burrow(), kernel.CartonName)
+			err := share.EnsureSourceDir(
+				d.Chamber().Burrow(),
+				kernel.CartonName,
+			)
 			if err != nil {
 				return fmt.Errorf(
 					"Failed to ensure Burrow source directory: %w",
@@ -27,13 +27,13 @@ func BuildCommand(
 			}
 
 			if minimal {
-				return share.BuildMinimalBurrow(chamber.Burrow())
+				return share.BuildMinimalBurrow(d.Chamber().Burrow())
 			} else {
 				return share.BuildBurrow(
-					chamber.Burrow(),
-					clutterDecoration.Spec().CartonNames,
-					clutterDecoration.Spec().LocalCartons,
-					clutterDecoration.Spec().MagicEnv,
+					d.Chamber().Burrow(),
+					d.Spec().CartonNames,
+					d.Spec().LocalCartons,
+					d.Spec().MagicEnv,
 				)
 			}
 		},
