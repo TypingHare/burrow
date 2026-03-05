@@ -17,7 +17,7 @@ func ParseCoreSpec(rawSpec kernel.RawSpec) (CoreSpec, error) {
 	directDependencies, err := kernel.GetRawSpecValueOrDefault(
 		rawSpec,
 		"directDependencies",
-		[]string{},
+		[]string{"core@" + kernel.CartonName},
 	)
 	if err != nil {
 		return CoreSpec{}, err

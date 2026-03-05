@@ -20,19 +20,42 @@ func RemoveCommand(d share.CoreDecorationLike) *cobra.Command {
 			directDependencies := d.Spec().DirectDependencies
 			if !slices.Contains(directDependencies, decorationID) {
 				return fmt.Errorf(
-					"Cannot remove decoration %q because it is not a direct"+
+					"Cannot remove decoration %q because it is not a direct "+
 						"dependency of the core decoration",
 					decorationID,
 				)
 			}
 
-			return share.UpdateBlueprintAndRedig(
+			_, err := share.UpdateBlueprintAndRedig(
 				d.Chamber(),
 				func(blueprint kernel.Blueprint) error {
+					spec := d.Spec()
+					newDirectDependencies := make(
+						[]string,
+						0,
+						len(spec.DirectDependencies)-1,
+					)
+					for _, dep := range spec.DirectDependencies {
+						if dep != decorationID {
+							newDirectDependencies = append(
+								newDirectDependencies,
+								dep,
+							)
+						}
+					}
+					spec.DirectDependencies = newDirectDependencies
+
 					delete(blueprint, decorationID)
+					blueprint["core@"+kernel.CartonName] = d.RawSpec()
+
 					return nil
 				},
 			)
+			if err != nil {
+				return fmt.Errorf("failed to remove decoration: %w", err)
+			}
+
+			return nil
 		},
 	}
 

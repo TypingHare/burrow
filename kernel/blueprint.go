@@ -31,11 +31,21 @@ func (b Blueprint) LoadFromJSONFile(path string) error {
 	return nil
 }
 
-// SaveToJSONFile saves Blueprint data to a JSON file at path.
-func (b Blueprint) SaveToJSONFile(path string) error {
+// ToJSON returns the JSON encoding of Blueprint.
+func (b Blueprint) ToJSON() ([]byte, error) {
 	data, err := json.MarshalIndent(b, "", "  ")
 	if err != nil {
-		return fmt.Errorf("failed to marshal blueprint to JSON: %w", err)
+		return nil, fmt.Errorf("failed to marshal blueprint to JSON: %w", err)
+	}
+
+	return data, nil
+}
+
+// SaveToJSONFile saves Blueprint data to a JSON file at path.
+func (b Blueprint) SaveToJSONFile(path string) error {
+	data, err := b.ToJSON()
+	if err != nil {
+		return err
 	}
 
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {

@@ -8,7 +8,7 @@ import (
 func PathCommand(d share.ShellDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "path",
-		Short: "Display the path to the shell script file",
+		Short: "Show the path to the shell script file",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			fileName := d.Spec().FileName
 			if fileName == "" {

@@ -12,7 +12,7 @@ func ShowCommand(d share.CoreDecorationLike) *cobra.Command {
 
 	command := &cobra.Command{
 		Use:   "show",
-		Short: "Display the blueprint",
+		Short: "Show the blueprint",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if showJson {
 				data, err := json.MarshalIndent(

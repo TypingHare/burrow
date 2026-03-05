@@ -15,7 +15,8 @@ func RedigCommand(d share.CoreDecorationLike) *cobra.Command {
 Redig the chamber by first burying it and then digging it again.
         `),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return share.Redig(d.Chamber())
+			_, err := share.Redig(d.Chamber())
+			return err
 		},
 	}
 

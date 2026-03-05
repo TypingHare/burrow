@@ -171,6 +171,20 @@ func (b *Burrow) Handle(args []string) (int, error) {
 	return handler(chamber, chamberArgs)
 }
 
+func (b *Burrow) Bury() error {
+	for chamberName := range b.architect.chamberMap {
+		if err := b.architect.Bury(chamberName); err != nil {
+			return fmt.Errorf(
+				"failed to bury chamber %q: %w",
+				chamberName,
+				err,
+			)
+		}
+	}
+
+	return nil
+}
+
 func (b *Burrow) PrintErrorStack(err error) {
 	stack := []string{}
 

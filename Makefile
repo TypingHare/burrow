@@ -3,6 +3,7 @@ EXECUTABLE := burrow
 EXECUTABLE_MIN := burrow-min
 DEV_BURROW_DIR := $(HOME)/.local/share/burrow-dev
 DEV_BURROW_SOURCE_DIR := $(DEV_BURROW_DIR)/source/github.com/TypingHare/burrow
+DEV_BURROW_BIN_DIR := $(DEV_BURROW_DIR)/bin
 MAGIC_FILE := cmd/magic.go
 
 .PHONY: help fmt test build build-min clean install-dev magic
@@ -38,7 +39,10 @@ $(MAGIC_FILE):
 		'' \
 		'func registerCartons(warehouse *kernel.Warehouse) {' \
 		'	burrow.RegisterCartonTo(warehouse)' \
-		'}' > $@
+		'}' \
+		'' \
+		'func setEnv(burrow *kernel.Burrow) {' \
+		'}'  > $@
 
 # test runs Go tests using a cache directory that works in the local sandbox.
 test: $(MAGIC_FILE)
@@ -70,3 +74,5 @@ install-dev:
 		--exclude 'node_modules' \
 		--exclude 'build' \
 		./ $(DEV_BURROW_SOURCE_DIR)
+	cd $(DEV_BURROW_SOURCE_DIR) && make build
+	mv $(DEV_BURROW_SOURCE_DIR)/build/* $(DEV_BURROW_BIN_DIR)/

@@ -2,7 +2,7 @@ package dictator
 
 import (
 	"github.com/TypingHare/burrow/v2026/burrow/core"
-	"github.com/TypingHare/burrow/v2026/burrow/dictator/command/chamber"
+	"github.com/TypingHare/burrow/v2026/burrow/dictator/command"
 	"github.com/TypingHare/burrow/v2026/burrow/dictator/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
@@ -26,7 +26,12 @@ func (d *DictatorDecoration) Assemble() error {
 	if coreDecoration, err := core.UseDecoration(d); err != nil {
 		return err
 	} else {
-		coreDecoration.SetCommand([]string{"chamber"}, chamber.BuryCommand(d))
+		if err := coreDecoration.SetCommand(
+			nil,
+			command.ChamberCommand(d),
+		); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -36,7 +41,7 @@ func (d *DictatorDecoration) Launch() error      { return nil }
 func (d *DictatorDecoration) Terminate() error   { return nil }
 func (d *DictatorDecoration) Disassemble() error { return nil }
 
-func (d *DictatorDecoration) BuildDictatorDecoration(
+func BuildDictatorDecoration(
 	chamber *kernel.Chamber,
 	spec share.DictatorSpec,
 ) (kernel.DecorationInstance, error) {

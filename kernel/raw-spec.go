@@ -1,6 +1,9 @@
 package kernel
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 // RawSpec is an unstructured representation of a decoration specification.
 type RawSpec map[string]any
@@ -16,13 +19,27 @@ func NewRawSpec() RawSpec {
 // asserted to T, GetRawSpecValue returns an error.
 func GetRawSpecValue[T any](rawSpec RawSpec, key string) (T, bool, error) {
 	value, exists := rawSpec[key]
-	if !exists {
+	if !exists || value == nil {
 		var zeroValue T
 		return zeroValue, false, nil
 	}
 
 	typedValue, ok := value.(T)
 	if !ok {
+		// Raw specs are commonly loaded from JSON, which materializes arrays as
+		// []any and objects as map[string]any. Attempt a JSON-based conversion
+		// before returning a type mismatch.
+		rawBytes, marshalErr := json.Marshal(value)
+		if marshalErr == nil {
+			var convertedValue T
+			if unmarshalErr := json.Unmarshal(
+				rawBytes,
+				&convertedValue,
+			); unmarshalErr == nil {
+				return convertedValue, true, nil
+			}
+		}
+
 		var zeroValue T
 		return zeroValue, true, fmt.Errorf(
 			"raw spec value for key %q has type %T, not %T",

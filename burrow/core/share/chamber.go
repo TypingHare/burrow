@@ -9,18 +9,19 @@ import (
 
 // Redig performs a redig operation on the chamber, which involves burying and
 // then digging it again.
-func Redig(chamber *kernel.Chamber) error {
+func Redig(chamber *kernel.Chamber) (*kernel.Chamber, error) {
 	architect := chamber.Burrow().Architect()
 
 	if err := architect.Bury(chamber.Name()); err != nil {
-		return fmt.Errorf("failed to redig the chamber: %w", err)
+		return nil, fmt.Errorf("failed to redig the chamber: %w", err)
 	}
 
-	if _, err := architect.Dig(chamber.Name()); err != nil {
-		return fmt.Errorf("failed to redig the chamber: %w", err)
+	newChamber, err := architect.Dig(chamber.Name())
+	if err != nil {
+		return nil, fmt.Errorf("failed to redig the chamber: %w", err)
 	}
 
-	return nil
+	return newChamber, nil
 }
 
 // UpdateBlueprintAndRedig updates the chamber's blueprint using the provided
@@ -32,7 +33,7 @@ func Redig(chamber *kernel.Chamber) error {
 func UpdateBlueprintAndRedig(
 	chamber *kernel.Chamber,
 	updateFunc func(kernel.Blueprint) error,
-) error {
+) (*kernel.Chamber, error) {
 	architect := chamber.Burrow().Architect()
 	chamberName := chamber.Name()
 	blueprintPath := architect.GetBlueprintPath(chamberName)
@@ -40,30 +41,31 @@ func UpdateBlueprintAndRedig(
 
 	err := updateFunc(chamber.Blueprint())
 	if err != nil {
-		return fmt.Errorf("failed to update blueprint: %w", err)
+		return nil, fmt.Errorf("failed to update blueprint: %w", err)
 	}
 
-	if err := Redig(chamber); err != nil {
+	newChamber, err := Redig(chamber)
+	if err != nil {
 		// Revert the blueprint if redigging fails.
 		if err := originalBlueprint.SaveToJSONFile(blueprintPath); err != nil {
-			return fmt.Errorf(
+			return nil, fmt.Errorf(
 				"failed to revert blueprint after redig failure: %w",
 				err,
 			)
 		}
 
 		if _, err := architect.Dig(chamberName); err != nil {
-			return fmt.Errorf(
+			return nil, fmt.Errorf(
 				"failed to revert blueprint after redig failure: %w",
 				err,
 			)
 		}
 
-		return fmt.Errorf(
+		return nil, fmt.Errorf(
 			"failed to redig chamber after adding decoration: %w",
 			err,
 		)
 	}
 
-	return nil
+	return newChamber, nil
 }

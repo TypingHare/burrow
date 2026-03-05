@@ -9,7 +9,7 @@ import (
 func ShellCommand(d share.ShellDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "shell",
-		Short: "",
+		Short: "Manage chamber specific shell files.",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return nil
 		},

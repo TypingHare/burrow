@@ -122,20 +122,11 @@ func (a *Architect) Bury(chamberName string) error {
 		return NewChamberError(chamberName, "chamber does not exist", nil)
 	}
 
-	err := chamber.UpdateBlueprint()
+	err := chamber.UpdateAndSaveBlueprint()
 	if err != nil {
 		return NewChamberError(
 			chamberName,
-			"failed to update blueprint before burying chamber",
-			err,
-		)
-	}
-
-	err = a.SaveBlueprint(chamberName, chamber.Blueprint())
-	if err != nil {
-		return NewChamberError(
-			chamberName,
-			"failed to save blueprint before burying chamber",
+			"failed to update and save blueprint before burying chamber",
 			err,
 		)
 	}
@@ -173,11 +164,8 @@ func (a *Architect) GetOrDig(chamberName string) (*Chamber, error) {
 	return chamber, nil
 }
 
-// GetDefaultRootChamberBlueprint returns a default blueprint with the core and
-// clutter specs.
+// GetDefaultRootChamberBlueprint returns a default blueprint with the core
+// decoration.
 func GetDefaultRootChamberBlueprint() Blueprint {
-	return Blueprint{
-		"core@github.com/TypingHare/burrow":    NewRawSpec(),
-		"clutter@github.com/TypingHare/burrow": NewRawSpec(),
-	}
+	return Blueprint{"core@" + CartonName: NewRawSpec()}
 }

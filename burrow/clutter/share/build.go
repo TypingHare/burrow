@@ -305,13 +305,11 @@ func (b *Builder) GenerateMagicGoFile() error {
 	content.WriteString("}\n")
 
 	// Set the magic environment variables in the magic Go file.
-	if len(b.MagicEnv) > 0 {
-		content.WriteString("\nfunc setEnv(burrow *kernel.Burrow) {\n")
-		for key, value := range b.MagicEnv {
-			fmt.Fprintf(&content, "\tburrow.Env.Set(%q, %q)\n", key, value)
-		}
-		content.WriteString("}\n")
+	content.WriteString("\nfunc setEnv(burrow *kernel.Burrow) {\n")
+	for key, value := range b.MagicEnv {
+		fmt.Fprintf(&content, "\tburrow.Env.Set(%q, %q)\n", key, value)
 	}
+	content.WriteString("}\n")
 
 	formattedSource, err := format.Source([]byte(content.String()))
 	if err != nil {

@@ -120,7 +120,7 @@ func Use[T DecorationInstance](chamber *Chamber) (T, error) {
 func (c *Chamber) init() error {
 	decorationIDs := c.blueprint.GetDecorationIDs()
 	if err := c.renovator.resolveRootDependencies(decorationIDs); err != nil {
-		return c.Error("failed to resolve root dependencies", err)
+		return err
 	}
 
 	return c.installDecorations()

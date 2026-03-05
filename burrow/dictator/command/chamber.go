@@ -8,11 +8,14 @@ import (
 
 func ChamberCommand(d share.DictatorDecorationLike) *cobra.Command {
 	command := &cobra.Command{
-		Use:   "decoration",
-		Short: "Manage decorations in the chamber",
+		Use:   "chamber",
+		Short: "Manage chambers in Burrow",
 	}
 
 	command.AddCommand(chamber.BuryCommand(d))
+	command.AddCommand(chamber.DigCommand(d))
+	command.AddCommand(chamber.InfoCommand(d))
+	command.AddCommand(chamber.ListCommand(d))
 
 	return command
 }
