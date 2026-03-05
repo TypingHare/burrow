@@ -14,7 +14,7 @@ func RemoveCommand(
 	coreDecoration share.CoreDecorationLike,
 ) *cobra.Command {
 	command := &cobra.Command{
-		Use:   "remove <decoration-id>",
+		Use:   "remove <decoration>",
 		Short: "Remove a decoration from the chamber",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

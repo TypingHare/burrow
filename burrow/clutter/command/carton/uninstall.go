@@ -13,8 +13,9 @@ func UninstallCommand(
 	clutterDecoration share.ClutterDecorationLike,
 ) *cobra.Command {
 	command := &cobra.Command{
-		Use:   "uninstall",
+		Use:   "uninstall <carton>",
 		Short: "Uninstall a carton",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			err := share.UninstallCarton(
 				chamber,

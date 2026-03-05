@@ -15,7 +15,7 @@ func InstallCommand(
 	var path string
 
 	command := &cobra.Command{
-		Use:   "install <carton-name>",
+		Use:   "install <carton>",
 		Short: "Install a carton",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -35,8 +35,8 @@ func (d *Decoration[S]) Chamber() *Chamber {
 }
 
 // Spec returns the decoration's specification.
-func (d *Decoration[S]) Spec() S {
-	return d.spec
+func (d *Decoration[S]) Spec() *S {
+	return &d.spec
 }
 
 // SpecParser converts a RawSpec to a typed specification.

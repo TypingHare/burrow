@@ -20,9 +20,10 @@ func SelfUpdateCommand(
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cartonNames := clutterDecoration.Spec().CartonNames
 			localCartons := clutterDecoration.Spec().LocalCartons
+			magicEnv := clutterDecoration.Spec().MagicEnv
 
-			burrowSourceDir := filepath.Join(
-				chamber.Burrow().GetSourceDir(),
+			burrowSourceDir := share.GetCartonSourceDir(
+				chamber.Burrow(),
 				kernel.CartonName,
 			)
 			outputExecutablePath := filepath.Join(
@@ -64,7 +65,7 @@ func SelfUpdateCommand(
 				burrowSourceDir,
 				cartonNames,
 				localCartons,
-				kernel.NewVars(),
+				magicEnv,
 				outputExecutablePath,
 			).Build(); err != nil {
 				if rollbackErr := rollback(); rollbackErr != nil {

@@ -6,5 +6,5 @@ import (
 
 type CoreDecorationLike interface {
 	kernel.DecorationInstance
-	Spec() CoreSpec
+	Spec() *CoreSpec
 }

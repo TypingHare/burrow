@@ -2,7 +2,6 @@ package share
 
 import (
 	"fmt"
-	"path/filepath"
 	"slices"
 
 	"github.com/TypingHare/burrow/v2026/kernel"
@@ -12,7 +11,7 @@ import (
 // Burrow.
 func InstallCarton(
 	chamber *kernel.Chamber,
-	spec ClutterSpec,
+	spec *ClutterSpec,
 	cartonName string,
 	path string,
 ) error {
@@ -34,10 +33,7 @@ func InstallCarton(
 		})
 	} else {
 		// The carton is a remote repository.
-		sourceDir := filepath.Join(
-			chamber.Burrow().GetSourceDir(),
-			cartonName,
-		)
+		sourceDir := GetCartonSourceDir(chamber.Burrow(), cartonName)
 		if err := gitClone("https://"+cartonName, sourceDir); err != nil {
 			return fmt.Errorf("failed to clone carton repository: %w", err)
 		}
@@ -49,7 +45,7 @@ func InstallCarton(
 		chamber.Burrow(),
 		spec.CartonNames,
 		spec.LocalCartons,
-		kernel.NewVars(),
+		spec.MagicEnv,
 	)
 	if err != nil {
 		rollback()
@@ -57,7 +53,7 @@ func InstallCarton(
 	}
 
 	// Save the blueprint.
-	err = chamber.SaveBlueprint()
+	err = chamber.UpdateAndSaveBlueprint()
 	if err != nil {
 		return fmt.Errorf("failed to save blueprint after building "+
 			"Burrow executable: %w", err)
@@ -70,7 +66,7 @@ func InstallCarton(
 // Chamber's Burrow.
 func UninstallCarton(
 	chamber *kernel.Chamber,
-	spec ClutterSpec,
+	spec *ClutterSpec,
 	cartonName string,
 ) error {
 	originalCartonNames := slices.Clone(spec.CartonNames)
@@ -103,7 +99,7 @@ func UninstallCarton(
 		chamber.Burrow(),
 		spec.CartonNames,
 		spec.LocalCartons,
-		kernel.NewVars(),
+		spec.MagicEnv,
 	)
 	if err != nil {
 		rollback()
@@ -111,7 +107,7 @@ func UninstallCarton(
 	}
 
 	// Save the blueprint.
-	err = chamber.SaveBlueprint()
+	err = chamber.UpdateAndSaveBlueprint()
 	if err != nil {
 		return fmt.Errorf("failed to save blueprint after building "+
 			"Burrow executable: %w", err)

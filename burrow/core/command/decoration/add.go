@@ -10,7 +10,7 @@ import (
 
 func AddCommand(chamber *kernel.Chamber) *cobra.Command {
 	command := &cobra.Command{
-		Use:   "add <decoration-id>",
+		Use:   "add <decoration>",
 		Short: "Add a decoration to the chamber",
 		Long: strings.TrimSpace(`
 This command simplify adds.

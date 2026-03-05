@@ -77,9 +77,9 @@ func (c *Chamber) UpdateBlueprint() error {
 	return nil
 }
 
-// SaveBlueprint updates the chamber blueprint with the current state of its
-// decorations and saves it through the Burrow's Architect.
-func (c *Chamber) SaveBlueprint() error {
+// UpdateAndSaveBlueprint updates the chamber blueprint with the current state
+// of its decorations and saves it through the Burrow's Architect.
+func (c *Chamber) UpdateAndSaveBlueprint() error {
 	if err := c.UpdateBlueprint(); err != nil {
 		return c.Error("failed to update blueprint before saving", err)
 	}

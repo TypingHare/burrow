@@ -2,11 +2,17 @@ package share
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 )
 
 func gitClone(URL string, dir string) error {
+	// Ensure the parent directory exists before cloning.
+	parentDir := filepath.Dir(dir)
+	os.MkdirAll(parentDir, 0o755)
+
 	_, stderr, exitCode, err := share.RunExternalCommand(
 		"",
 		[]string{"git", "clone", URL, dir},

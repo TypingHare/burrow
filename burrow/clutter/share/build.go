@@ -113,7 +113,7 @@ func (b *Builder) GenerateMagicGoModFile() error {
 	// dependency.
 	for _, cartonName := range b.CartonNames {
 		cartonURL := fmt.Sprintf(
-			"%s/v%s/@v%s",
+			"%s/v%s@v%s",
 			cartonName,
 			majorVersion,
 			majorMinorVersion,
@@ -121,15 +121,21 @@ func (b *Builder) GenerateMagicGoModFile() error {
 
 		localCartonPath, isLocalCarton := localPathsByCartonNames[cartonName]
 		if !isLocalCarton || localCartonPath == "" {
-			b.RunGoGetCommand(cartonName, cartonURL)
+			err := b.RunGoGetCommand(cartonName, cartonURL)
+			if err != nil {
+				return err
+			}
 		} else {
 			modulePath := fmt.Sprintf("%s/v%s", cartonName, majorVersion)
-			b.RunGoModEditCommand(
+			err := b.RunGoModEditCommand(
 				cartonName,
 				modulePath,
 				localCartonPath,
 				cartonURL,
 			)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
@@ -359,7 +365,7 @@ func (b *Builder) Build() error {
 		return fmt.Errorf("failed to generate magic Go file: %w", err)
 	}
 
-	return b.BuildWithModFile(GoModFileName)
+	return b.BuildWithModFile(MagicGoModFilePath)
 }
 
 // BuildBurrow builds the Burrow executable with the specified cartons
@@ -407,5 +413,5 @@ func BuildMinimalBurrow(burrow *kernel.Burrow) error {
 		[]LocalCarton{},
 		kernel.NewVars(),
 		outputExecutablePath,
-	).Build()
+	).BuildMinimalBurrow()
 }
