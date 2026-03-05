@@ -21,12 +21,11 @@ func RemoveCommand(
 			decorationID := args[0]
 
 			directDependencies := coreDecoration.Spec().DirectDependencies
-			exists := slices.Contains(directDependencies, decorationID)
-			if exists {
+			if !slices.Contains(directDependencies, decorationID) {
 				return chamber.Error(
 					fmt.Sprintf(
-						"Cannot remove decoration %q because it is a direct "+
-							"dependency of the core decoration",
+						"Cannot remove decoration %q because it is not a "+
+							"direct dependency of the core decoration",
 						decorationID,
 					),
 					nil,
@@ -36,7 +35,7 @@ func RemoveCommand(
 			return share.UpdateBlueprintAndRedig(
 				chamber,
 				func(blueprint kernel.Blueprint) error {
-					delete(chamber.Blueprint(), decorationID)
+					delete(blueprint, decorationID)
 					return nil
 				},
 			)

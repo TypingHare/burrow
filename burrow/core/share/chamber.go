@@ -1,6 +1,7 @@
 package share
 
 import (
+	"fmt"
 	"maps"
 
 	"github.com/TypingHare/burrow/v2026/kernel"
@@ -12,11 +13,11 @@ func Redig(chamber *kernel.Chamber) error {
 	architect := chamber.Burrow().Architect()
 
 	if err := architect.Bury(chamber.Name()); err != nil {
-		return chamber.Error("failed to redig the chamber: %v", err)
+		return fmt.Errorf("failed to redig the chamber: %w", err)
 	}
 
 	if _, err := architect.Dig(chamber.Name()); err != nil {
-		return chamber.Error("failed to redig the chamber: %v", err)
+		return fmt.Errorf("failed to redig the chamber: %w", err)
 	}
 
 	return nil
@@ -39,21 +40,27 @@ func UpdateBlueprintAndRedig(
 
 	err := updateFunc(chamber.Blueprint())
 	if err != nil {
-		return chamber.Error("failed to update blueprint: %v", err)
+		return fmt.Errorf("failed to update blueprint: %w", err)
 	}
 
 	if err := Redig(chamber); err != nil {
 		// Revert the blueprint if redigging fails.
-		originalBlueprint.SaveToJSONFile(blueprintPath)
-		if _, err := architect.Dig(chamberName); err != nil {
-			return chamber.Error(
-				"failed to revert blueprint after redig failure: %v",
+		if err := originalBlueprint.SaveToJSONFile(blueprintPath); err != nil {
+			return fmt.Errorf(
+				"failed to revert blueprint after redig failure: %w",
 				err,
 			)
 		}
 
-		return chamber.Error(
-			"failed to redig chamber after adding decoration: %v",
+		if _, err := architect.Dig(chamberName); err != nil {
+			return fmt.Errorf(
+				"failed to revert blueprint after redig failure: %w",
+				err,
+			)
+		}
+
+		return fmt.Errorf(
+			"failed to redig chamber after adding decoration: %w",
 			err,
 		)
 	}

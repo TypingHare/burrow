@@ -19,7 +19,7 @@ func (d *CoreDecoration) Dependencies() []string { return []string{} }
 
 func (d *CoreDecoration) RawSpec() kernel.RawSpec {
 	return kernel.RawSpec{
-		"DirectDependencies": d.Spec().DirectDependencies,
+		"directDependencies": d.Spec().DirectDependencies,
 	}
 }
 

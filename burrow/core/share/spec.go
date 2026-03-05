@@ -7,7 +7,16 @@ type CoreSpec struct {
 }
 
 func ParseCoreSpec(rawSpec kernel.RawSpec) (CoreSpec, error) {
+	directDependencies, err := kernel.GetRawSpecValueOrDefault(
+		rawSpec,
+		"directDependencies",
+		[]string{},
+	)
+	if err != nil {
+		return CoreSpec{}, err
+	}
+
 	return CoreSpec{
-		DirectDependencies: []string{},
+		DirectDependencies: directDependencies,
 	}, nil
 }

@@ -15,13 +15,15 @@ type ShellDecoration struct {
 
 func (d *ShellDecoration) Dependencies() []string {
 	return []string{
-		"github.com/TypingHare/burrow",
+		"core@github.com/TypingHare/burrow",
 	}
 }
 
 func (d *ShellDecoration) RawSpec() kernel.RawSpec {
 	return kernel.RawSpec{
-		"shebang": d.Spec().Shebang,
+		"shebang":          d.Spec().Shebang,
+		"fileName":         d.Spec().FileName,
+		"createdFileNames": d.Spec().CreatedFileNames,
 	}
 }
 

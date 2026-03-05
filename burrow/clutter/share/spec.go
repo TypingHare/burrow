@@ -1,8 +1,6 @@
 package share
 
 import (
-	"fmt"
-
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
@@ -24,7 +22,7 @@ func ParseClutterSpec(rawSpec kernel.RawSpec) (ClutterSpec, error) {
 		[]string{},
 	)
 	if err != nil {
-		return ClutterSpec{}, fmt.Errorf("error parsing cartonNames: %w", err)
+		return ClutterSpec{}, err
 	}
 
 	localCartons, err := kernel.GetRawSpecValueOrDefault(
@@ -33,10 +31,7 @@ func ParseClutterSpec(rawSpec kernel.RawSpec) (ClutterSpec, error) {
 		[]LocalCarton{},
 	)
 	if err != nil {
-		return ClutterSpec{}, fmt.Errorf(
-			"error parsing localCartons: %w",
-			err,
-		)
+		return ClutterSpec{}, err
 	}
 
 	maigcEnv, err := kernel.GetRawSpecValueOrDefault(
@@ -45,10 +40,7 @@ func ParseClutterSpec(rawSpec kernel.RawSpec) (ClutterSpec, error) {
 		map[string]string{},
 	)
 	if err != nil {
-		return ClutterSpec{}, fmt.Errorf(
-			"error parsing magicEnv: %w",
-			err,
-		)
+		return ClutterSpec{}, err
 	}
 
 	return ClutterSpec{

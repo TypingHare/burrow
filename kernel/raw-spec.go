@@ -47,7 +47,11 @@ func GetRawSpecValueOrDefault[T any](
 ) (T, error) {
 	value, exists, err := GetRawSpecValue[T](rawSpec, key)
 	if err != nil {
-		return defaultValue, err
+		return defaultValue, fmt.Errorf(
+			"error getting raw spec value for key %q: %w",
+			key,
+			err,
+		)
 	}
 	if !exists {
 		return defaultValue, nil

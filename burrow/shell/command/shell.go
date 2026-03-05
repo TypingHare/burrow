@@ -19,10 +19,10 @@ func ShellCommand(
 		},
 	}
 
-	command.AddCommand(shell.PathCommand(chamber))
+	command.AddCommand(shell.PathCommand(chamber, shellDecoration))
 	command.AddCommand(shell.ContentCommand(chamber, shellDecoration))
 	command.AddCommand(shell.CreateCommand(chamber, shellDecoration))
-	command.AddCommand(shell.DeleteCommand(chamber))
+	command.AddCommand(shell.DeleteCommand(chamber, shellDecoration))
 
 	return command
 }
