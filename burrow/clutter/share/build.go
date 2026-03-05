@@ -12,77 +12,106 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
-// TODO: refactor using "Builder" struct
+const (
+	GoModFileName      = "go.mod"
+	MagicGoModFilePath = "magic.go.mod"
+	MagicGoFilePath    = "cmd/magic.go"
+)
+
 type Builder struct {
+	// BurrowSourceDir is the directory that stores Burrow source code.
 	BurrowSourceDir string
 
-	CartonNames  []string
-	LocalCartons []LocalCarton
-	MagicEnv     kernel.Vars
+	// CartonNames is a slice of carton names to build the executable.
+	CartonNames []string
 
+	// LocalCartons is a slice of LocalCarton instances.
+	LocalCartons []LocalCarton
+
+	// MagicEnv is environment variables to set in the magic file.
+	MagicEnv kernel.Vars
+
+	// OutputExecutablePath is the output path of the executable.
 	OutputExecutablePath string
 }
 
-// GenerateMagicGoModFile generates a go.mod file that includes the specified
-// cartons as dependencies.
-func GenerateMagicGoModFile(
+// NewBuilder creates a new Builder instance with the specified parameters.
+func NewBuilder(
 	burrowSourceDir string,
 	cartonNames []string,
 	localCartons []LocalCarton,
-	fileName string,
-) error {
-	goModPath := filepath.Join(burrowSourceDir, "go.mod")
-	_, err := os.Stat(goModPath)
+	magicEnv kernel.Vars,
+	outputExecutablePath string,
+) *Builder {
+	return &Builder{
+		BurrowSourceDir:      burrowSourceDir,
+		CartonNames:          cartonNames,
+		LocalCartons:         localCartons,
+		MagicEnv:             magicEnv,
+		OutputExecutablePath: outputExecutablePath,
+	}
+}
+
+func (b *Builder) GenerateMagicGoModFile() error {
+	goModFilePath := filepath.Join(b.BurrowSourceDir, GoModFileName)
+	_, err := os.Stat(goModFilePath)
 	if os.IsNotExist(err) {
 		return fmt.Errorf(
-			"file %q does not exist at path: %q",
-			"go.mod",
-			goModPath,
+			"Go mod file %q does not exist",
+			goModFilePath,
 		)
 	} else if err != nil {
 		return fmt.Errorf(
-			"failed to access file %q at path: %q",
-			"go.mod",
-			goModPath,
+			"failed to access Go mod file %q: %w",
+			goModFilePath,
+			err,
+		)
+	}
+
+	// Remove magic Go mod file if it already exists to ensure a clean state.
+	magicGoModFilePath := filepath.Join(b.BurrowSourceDir, MagicGoModFilePath)
+	if _, err := os.Stat(magicGoModFilePath); err == nil {
+		if err := os.Remove(magicGoModFilePath); err != nil {
+			return fmt.Errorf(
+				"failed to remove existing magic go mod file %q: %w",
+				magicGoModFilePath,
+				err,
+			)
+		}
+	}
+
+	// Copy the Go mod file to the magic Go mod file to preserve existing module
+	// settings.
+	originalGoModContent, err := os.ReadFile(goModFilePath)
+	if err != nil {
+		return fmt.Errorf("failed to read original %q: %w", goModFilePath, err)
+	}
+	if err := os.WriteFile(
+		magicGoModFilePath,
+		originalGoModContent,
+		0o644,
+	); err != nil {
+		return fmt.Errorf(
+			"failed to copy magic Go mod file %q from Go mod file: %w",
+			magicGoModFilePath,
+			err,
 		)
 	}
 
 	// Build a temporary map that maps carton names to their local paths.
 	localPathsByCartonNames := make(map[string]string)
-	for _, localCarton := range localCartons {
+	for _, localCarton := range b.LocalCartons {
 		localPathsByCartonNames[localCarton.Name] = localCarton.Path
 	}
 
-	// Remove magic.go.mod if it already exists to ensure a clean state.
-	magicGoModPath := filepath.Join(burrowSourceDir, fileName)
-	if _, err := os.Stat(magicGoModPath); err == nil {
-		if err := os.Remove(magicGoModPath); err != nil {
-			return fmt.Errorf("failed to remove existing %q: %w", fileName, err)
-		}
-	}
+	majorVersion := kernel.GetBurrowMajorFunction()
+	majorMinorVersion := kernel.GetBurrowMajorMinorFunction()
 
-	// Copy the original go.mod to magic.go.mod to preserve existing module
-	// settings.
-	originalGoModContent, err := os.ReadFile(goModPath)
-	if err != nil {
-		return fmt.Errorf("failed to read original %q: %w", "go.mod", err)
-	}
-	if err := os.WriteFile(
-		magicGoModPath,
-		originalGoModContent,
-		0o644,
-	); err != nil {
-		return fmt.Errorf(
-			"failed to create %q from original go.mod: %w",
-			fileName,
-			err,
-		)
-	}
-
-	majorVersion, _ := kernel.GetMajorVersion(kernel.Version)
-	majorMinorVersion, _ := kernel.GetMajorMinorVersion(kernel.Version)
-	for _, cartonName := range cartonNames {
-		modulePath := fmt.Sprintf("%s/v%s", cartonName, majorVersion)
+	// For each carton, run "go get" to add it as a dependency in the magic Go
+	// mod file if it is a remote carton; otherwise, run "go mod edit -replace"
+	// to point to the local path and "go mod edit -require" to add it as a
+	// dependency.
+	for _, cartonName := range b.CartonNames {
 		cartonURL := fmt.Sprintf(
 			"%s/v%s/@v%s",
 			cartonName,
@@ -91,82 +120,96 @@ func GenerateMagicGoModFile(
 		)
 
 		localCartonPath, isLocalCarton := localPathsByCartonNames[cartonName]
-		if isLocalCarton && localCartonPath != "" {
-			_, stderr, exitCode, err := share.RunExternalCommand(
-				burrowSourceDir,
-				[]string{
-					"go",
-					"mod",
-					"edit",
-					"-modfile=magic.go.mod",
-					fmt.Sprintf("-replace=%s=%s", modulePath, localCartonPath),
-				},
-			)
-
-			if err != nil || exitCode != 0 {
-				return fmt.Errorf(
-					"failed to run 'go get' for local carton %q: %w",
-					cartonName,
-					fmt.Errorf("%s", stderr),
-				)
-			}
-
-			_, stderr, exitCode, err = share.RunExternalCommand(
-				burrowSourceDir,
-				[]string{
-					"go",
-					"mod",
-					"edit",
-					"-modfile=magic.go.mod",
-					fmt.Sprintf("-require=%s", cartonURL),
-				},
-			)
-
-			if err != nil || exitCode != 0 {
-				return fmt.Errorf(
-					"failed to run 'go get' for local carton %q: %w",
-					cartonName,
-					fmt.Errorf("%s", stderr),
-				)
-			}
+		if !isLocalCarton || localCartonPath == "" {
+			b.RunGoGetCommand(cartonName, cartonURL)
 		} else {
-			_, stderr, exitCode, err := share.RunExternalCommand(
-				burrowSourceDir,
-				[]string{
-					"go",
-					"get",
-					"-modfile=magic.go.mod",
-					cartonURL,
-				},
+			modulePath := fmt.Sprintf("%s/v%s", cartonName, majorVersion)
+			b.RunGoModEditCommand(
+				cartonName,
+				modulePath,
+				localCartonPath,
+				cartonURL,
 			)
-
-			if err != nil || exitCode != 0 {
-				return fmt.Errorf(
-					"failed to run %q for carton %q: %w",
-					"go get",
-					cartonName,
-					fmt.Errorf("%s", stderr),
-				)
-			}
 		}
 	}
 
 	_, stderr, exitCode, err := share.RunExternalCommand(
-		burrowSourceDir,
+		b.BurrowSourceDir,
 		[]string{
-			"go",
-			"mod",
-			"download",
-			"-modfile=magic.go.mod",
+			"go", "mod", "download", "-modfile=" + MagicGoModFilePath,
 			"all",
+		},
+	)
+	if err != nil || exitCode != 0 {
+		return fmt.Errorf(
+			"failed to run %q: %w",
+			"go mod download",
+			fmt.Errorf("%s", stderr),
+		)
+	}
+
+	return nil
+}
+
+// RunGoGetCommand runs the "go get" command to add the specified carton as a
+// dependency in the magic Go mod file.
+func (b *Builder) RunGoGetCommand(cartonName string, cartonURL string) error {
+	_, stderr, exitCode, err := share.RunExternalCommand(
+		b.BurrowSourceDir,
+		[]string{"go", "get", "-modfile=" + MagicGoModFilePath, cartonURL},
+	)
+
+	if err != nil || exitCode != 0 {
+		return fmt.Errorf(
+			"failed to run the %q command for carton %q: %w",
+			"go get",
+			cartonName,
+			fmt.Errorf("%s", stderr),
+		)
+	}
+
+	return nil
+}
+
+// RunGoModEditCommand runs the "go mod edit" command to add the specified local
+// carton as a replace directive and a require directive in the magic Go mod
+// file.
+func (b *Builder) RunGoModEditCommand(
+	cartonName string,
+	modulePath string,
+	localCartonPath string,
+	cartonURL string,
+) error {
+	_, stderr, exitCode, err := share.RunExternalCommand(
+		b.BurrowSourceDir,
+		[]string{
+			"go", "mod", "edit", "-modfile=" + MagicGoModFilePath,
+			fmt.Sprintf("-replace=%s=%s", modulePath, localCartonPath),
 		},
 	)
 
 	if err != nil || exitCode != 0 {
 		return fmt.Errorf(
-			"failed to run %q for %q: %w",
-			"go mod download",
-			"-modfile=magic.go.mod",
+			"failed to run the %q command for local carton %q: %w",
+			"go mod edit",
+			cartonName,
+			fmt.Errorf("%s", stderr),
+		)
+	}
+
+	_, stderr, exitCode, err = share.RunExternalCommand(
+		b.BurrowSourceDir,
+		[]string{
+			"go", "mod", "edit", "-modfile=" + MagicGoModFilePath,
+			fmt.Sprintf("-require=%s", cartonURL),
+		},
+	)
+
+	if err != nil || exitCode != 0 {
+		return fmt.Errorf(
+			"failed to run the %q command for local carton %q: %w",
+			"go mod edit",
+			cartonName,
 			fmt.Errorf("%s", stderr),
 		)
 	}
@@ -176,13 +219,12 @@ func GenerateMagicGoModFile(
 
 // Generate a cmd/magic.go file that imports all cartons in the Burrow source
 // directory.
-func GenerateMagicGoFile(
-	burrowSourceDir string,
-	cartonNames []string,
-) error {
+func (b *Builder) GenerateMagicGoFile() error {
+	majorVersion := kernel.GetBurrowMajorFunction()
+
 	// Resolve package names for the cartons.
-	packageNames := make([]string, 0, len(cartonNames))
-	for _, cartonName := range cartonNames {
+	packageNames := make([]string, 0, len(b.CartonNames))
+	for _, cartonName := range b.CartonNames {
 		lastSegment := filepath.Base(cartonName)
 		if !strings.HasSuffix(lastSegment, ".carton") {
 			return fmt.Errorf(
@@ -201,18 +243,14 @@ func GenerateMagicGoFile(
 		packageNames = append(packageNames, packageName)
 	}
 
-	// Collect import paths for the go.mod file.
-	majorVersion, err := kernel.GetMajorVersion(kernel.Version)
-	if err != nil {
-		return err
-	}
+	// Collect import paths for the Go mod file.
 	generateImportPath := func(cartonName string, packageName string) string {
 		return strings.TrimSpace(
 			fmt.Sprintf("%s/v%s/%s", cartonName, majorVersion, packageName),
 		)
 	}
 
-	importPaths := make([]string, 0, len(cartonNames)+2)
+	importPaths := make([]string, 0, len(b.CartonNames)+2)
 	importPaths = append(
 		importPaths,
 		generateImportPath(kernel.CartonName, "kernel"),
@@ -222,14 +260,14 @@ func GenerateMagicGoFile(
 		generateImportPath(kernel.CartonName, "burrow"),
 	)
 
-	for idx, cartonName := range cartonNames {
+	for idx, cartonName := range b.CartonNames {
 		importPaths = append(
 			importPaths,
 			generateImportPath(cartonName, packageNames[idx]),
 		)
 	}
 
-	// Collect register call statements for the magic.go file.
+	// Collect register call statements for the magic Go file.
 	generateRegisterCallStmt := func(packageName string) string {
 		return fmt.Sprintf("%s.RegisterCartonTo(warehouse)", packageName)
 	}
@@ -242,7 +280,7 @@ func GenerateMagicGoFile(
 		)
 	}
 
-	// Build the magic.go file content.
+	// Build the magic Go file content.
 	var content strings.Builder
 	content.WriteString("package main\n\n")
 	content.WriteString("import (\n")
@@ -260,73 +298,36 @@ func GenerateMagicGoFile(
 	}
 	content.WriteString("}\n")
 
-	formattedSource, err := format.Source([]byte(content.String()))
-	if err != nil {
-		return fmt.Errorf("failed to format magic.go: %w", err)
+	// Set the magic environment variables in the magic Go file.
+	if len(b.MagicEnv) > 0 {
+		content.WriteString("\nfunc setEnv(burrow *kernel.Burrow) {\n")
+		for key, value := range b.MagicEnv {
+			fmt.Fprintf(&content, "\tburrow.Env.Set(%q, %q)\n", key, value)
+		}
+		content.WriteString("}\n")
 	}
 
-	filePath := filepath.Join(burrowSourceDir, "cmd/magic.go")
+	formattedSource, err := format.Source([]byte(content.String()))
+	if err != nil {
+		return fmt.Errorf("failed to format the magic Go file: %w", err)
+	}
+
+	filePath := filepath.Join(b.BurrowSourceDir, "cmd/magic.go")
 	if err := os.WriteFile(filePath, formattedSource, 0o644); err != nil {
-		return fmt.Errorf("failed to write magic.go: %w", err)
+		return fmt.Errorf("failed to write the magic Go file: %w", err)
 	}
 
 	return nil
 }
 
-// BuildMinimalBurrow builds the minimal Burrow executable.
-func BuildMinimalBurrow(
-	burrowSourceDir string,
-	outputExecutablePath string,
-) error {
-	if err := GenerateMagicGoFile(burrowSourceDir, []string{}); err != nil {
-		return err
-	}
-
-	return Build(burrowSourceDir, "go.mod", outputExecutablePath)
-}
-
-// BuildBurrow builds the Burrow executable with the specified cartons.
-func BuildBurrow(
-	burrowSourceDir string,
-	cartonNames []string,
-	localCartons []LocalCarton,
-	outputExecutablePath string,
-) error {
-	GoModFileName := "magic.go.mod"
-	if err := GenerateMagicGoModFile(
-		burrowSourceDir,
-		cartonNames,
-		localCartons,
-		GoModFileName,
-	); err != nil {
-		return fmt.Errorf("failed to generate magic.go.mod file: %w", err)
-	}
-
-	if err := GenerateMagicGoFile(
-		burrowSourceDir,
-		cartonNames,
-	); err != nil {
-		return fmt.Errorf("failed to generate magic.go file: %w", err)
-	}
-
-	return Build(burrowSourceDir, GoModFileName, outputExecutablePath)
-}
-
-// Build builds the Burrow executable using the specified go.mod file.
-func Build(
-	burrowSourceDir string,
-	modFile string,
-	outputExecutablePath string,
-) error {
+// BuildWithModFile builds the Burrow executable using the specified Go mod
+// file.
+func (b *Builder) BuildWithModFile(modFile string) error {
 	_, stderr, exitCode, err := share.RunExternalCommand(
-		burrowSourceDir,
+		b.BurrowSourceDir,
 		[]string{
-			"go",
-			"build",
-			"-o",
-			outputExecutablePath,
-			"-modfile=" + modFile,
-			"./cmd",
+			"go", "build", "-o", b.OutputExecutablePath,
+			"-modfile=" + modFile, "./cmd",
 		},
 	)
 	if err != nil || exitCode != 0 {
@@ -339,12 +340,35 @@ func Build(
 	return nil
 }
 
-// BuildBurrowStandard builds the Burrow executable with the specified cartons
+// BuildMinimalBurrow builds the minimal Burrow executable.
+func (b *Builder) BuildMinimalBurrow() error {
+	if err := b.GenerateMagicGoFile(); err != nil {
+		return err
+	}
+
+	return b.BuildWithModFile(GoModFileName)
+}
+
+// Build builds the Burrow executable with the specified cartons.
+func (b *Builder) Build() error {
+	if err := b.GenerateMagicGoModFile(); err != nil {
+		return fmt.Errorf("failed to generate magic Go mod file: %w", err)
+	}
+
+	if err := b.GenerateMagicGoFile(); err != nil {
+		return fmt.Errorf("failed to generate magic Go file: %w", err)
+	}
+
+	return b.BuildWithModFile(GoModFileName)
+}
+
+// BuildBurrow builds the Burrow executable with the specified cartons
 // using the standard source and output paths defined in the Burrow environment.
-func BuildBurrowStandard(
+func BuildBurrow(
 	burrow *kernel.Burrow,
 	cartonNames []string,
 	localCartons []LocalCarton,
+	magicEnv kernel.Vars,
 ) error {
 	burrowSourceDir := filepath.Join(
 		burrow.GetSourceDir(),
@@ -355,10 +379,33 @@ func BuildBurrowStandard(
 		burrow.Env.Get(kernel.EnvExecutablePath),
 	)
 
-	return BuildBurrow(
+	return NewBuilder(
 		burrowSourceDir,
 		cartonNames,
 		localCartons,
+		magicEnv,
 		outputExecutablePath,
+	).Build()
+}
+
+// BuildMinimalBurrow builds the minimal Burrow executable that does not include
+// any cartons other than the kernel carton using the standard source and output
+// paths defined in the Burrow environment.
+func BuildMinimalBurrow(burrow *kernel.Burrow) error {
+	burrowSourceDir := filepath.Join(
+		burrow.GetSourceDir(),
+		kernel.CartonName,
 	)
+	outputExecutablePath := filepath.Join(
+		burrow.GetBinDir(),
+		burrow.Env.Get(kernel.EnvMinimalExecutablePath),
+	)
+
+	return NewBuilder(
+		burrowSourceDir,
+		[]string{},
+		[]LocalCarton{},
+		kernel.NewVars(),
+		outputExecutablePath,
+	).Build()
 }

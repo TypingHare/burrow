@@ -1,4 +1,4 @@
-package command
+package burrow
 
 import (
 	"fmt"
@@ -60,12 +60,13 @@ func SelfUpdateCommand(
 				return nil
 			}
 
-			if err := share.BuildBurrow(
+			if err := share.NewBuilder(
 				burrowSourceDir,
 				cartonNames,
 				localCartons,
+				kernel.NewVars(),
 				outputExecutablePath,
-			); err != nil {
+			).Build(); err != nil {
 				if rollbackErr := rollback(); rollbackErr != nil {
 					return chamber.Error(
 						"updated source and failed to rebuild Burrow; revert "+

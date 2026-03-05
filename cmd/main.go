@@ -21,7 +21,7 @@ func main() {
 		os.Exit(kernel.GeneralError)
 	}
 	burrow.LoadProcessEnv()
-
+	setEnv(burrow)
 	registerCartons(burrow.Warehouse())
 
 	exitCode, err := burrow.Handle(os.Args[1:])

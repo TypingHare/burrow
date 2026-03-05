@@ -22,6 +22,7 @@ func (d *ClutterDecoration) RawSpec() kernel.RawSpec {
 	return kernel.RawSpec{
 		"cartonNames":  d.Spec().CartonNames,
 		"localCartons": d.Spec().LocalCartons,
+		"magicEnv":     d.Spec().MagicEnv,
 	}
 }
 
@@ -31,8 +32,7 @@ func (d *ClutterDecoration) Assemble() error {
 		return d.Chamber().Error("failed to use core decoration", err)
 	}
 
-	coreDecoration.AddCommand(command.BuildCommand(d.Chamber(), d))
-	coreDecoration.AddCommand(command.SelfUpdateCommand(d.Chamber(), d))
+	coreDecoration.AddCommand(command.BurrowCommand(d.Chamber(), d))
 
 	err = coreDecoration.InsertCommand(
 		[]string{"carton"},

@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 	"slices"
 
-	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
@@ -19,6 +18,11 @@ func InstallCarton(
 ) error {
 	originalCartonNames := slices.Clone(spec.CartonNames)
 	originalLocalCartons := slices.Clone(spec.LocalCartons)
+
+	rollback := func() {
+		spec.CartonNames = originalCartonNames
+		spec.LocalCartons = originalLocalCartons
+	}
 
 	spec.CartonNames = append(spec.CartonNames, cartonName)
 
@@ -34,33 +38,21 @@ func InstallCarton(
 			chamber.Burrow().GetSourceDir(),
 			cartonName,
 		)
-		remoteRepositoryURL := "https://" + cartonName
-		_, stderr, exitCode, err := share.RunExternalCommand(
-			"",
-			[]string{
-				"git", "clone", remoteRepositoryURL, sourceDir,
-			},
-		)
-		if err != nil || exitCode != 0 {
-			return fmt.Errorf(
-				"failed to clone carton repository: %q: %w",
-				cartonName,
-				fmt.Errorf("%s", stderr),
-			)
+		if err := gitClone("https://"+cartonName, sourceDir); err != nil {
+			return fmt.Errorf("failed to clone carton repository: %w", err)
 		}
 	}
 
 	// Attempt to build the Burrow executable with the new carton.
-	err := BuildBurrowStandard(
+	// err := NewBuilder()
+	err := BuildBurrow(
 		chamber.Burrow(),
 		spec.CartonNames,
 		spec.LocalCartons,
+		kernel.NewVars(),
 	)
 	if err != nil {
-		// Roll back the changes to spec.
-		spec.CartonNames = originalCartonNames
-		spec.LocalCartons = originalLocalCartons
-
+		rollback()
 		return fmt.Errorf("failed to build burrow: %w", err)
 	}
 
@@ -81,5 +73,49 @@ func UninstallCarton(
 	spec ClutterSpec,
 	cartonName string,
 ) error {
+	originalCartonNames := slices.Clone(spec.CartonNames)
+	originalLocalCartons := slices.Clone(spec.LocalCartons)
+
+	rollback := func() {
+		spec.CartonNames = originalCartonNames
+		spec.LocalCartons = originalLocalCartons
+	}
+
+	newCartonNames := []string{}
+	for _, name := range spec.CartonNames {
+		if name != cartonName {
+			newCartonNames = append(newCartonNames, name)
+		}
+	}
+	spec.CartonNames = newCartonNames
+
+	newLocalCartons := []LocalCarton{}
+	for _, localCaton := range spec.LocalCartons {
+		if localCaton.Name != cartonName {
+			newLocalCartons = append(newLocalCartons, localCaton)
+		}
+	}
+	spec.LocalCartons = newLocalCartons
+
+	// Attempt to build the Burrow executable with the new carton.
+	// err := NewBuilder()
+	err := BuildBurrow(
+		chamber.Burrow(),
+		spec.CartonNames,
+		spec.LocalCartons,
+		kernel.NewVars(),
+	)
+	if err != nil {
+		rollback()
+		return fmt.Errorf("failed to build burrow: %w", err)
+	}
+
+	// Save the blueprint.
+	err = chamber.SaveBlueprint()
+	if err != nil {
+		return fmt.Errorf("failed to save blueprint after building "+
+			"Burrow executable: %w", err)
+	}
+
 	return nil
 }

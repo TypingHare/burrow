@@ -28,7 +28,10 @@ func CoreHandler(chamber *kernel.Chamber, args []string) (int, error) {
 
 	rootCommand.SetArgs(args)
 	if err := rootCommand.Execute(); err != nil {
-		return kernel.GeneralError, err
+		return kernel.GeneralError, chamber.Error(
+			"error executing the command",
+			err,
+		)
 	}
 
 	return kernel.Success, nil

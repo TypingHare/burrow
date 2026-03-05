@@ -14,6 +14,7 @@ type LocalCarton struct {
 type ClutterSpec struct {
 	CartonNames  []string
 	LocalCartons []LocalCarton
+	MagicEnv     kernel.Vars
 }
 
 func ParseClutterSpec(rawSpec kernel.RawSpec) (ClutterSpec, error) {
@@ -38,8 +39,21 @@ func ParseClutterSpec(rawSpec kernel.RawSpec) (ClutterSpec, error) {
 		)
 	}
 
+	maigcEnv, err := kernel.GetRawSpecValueOrDefault(
+		rawSpec,
+		"magicEnv",
+		map[string]string{},
+	)
+	if err != nil {
+		return ClutterSpec{}, fmt.Errorf(
+			"error parsing magicEnv: %w",
+			err,
+		)
+	}
+
 	return ClutterSpec{
 		CartonNames:  cartonNames,
 		LocalCartons: localCartons,
+		MagicEnv:     maigcEnv,
 	}, nil
 }
