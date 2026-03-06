@@ -77,3 +77,9 @@ func BuildShellDecoration(
 
 	return decoration, nil
 }
+
+func UseDecoration(
+	d kernel.DecorationInstance,
+) (*ShellDecoration, error) {
+	return kernel.Use[*ShellDecoration](d.Chamber())
+}

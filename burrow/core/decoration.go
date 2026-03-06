@@ -67,28 +67,6 @@ func (d *CoreDecoration) Terminate() error { return nil }
 // disassembly step.
 func (d *CoreDecoration) Disassemble() error { return nil }
 
-// BuildCoreDecoration constructs the core decoration instance and initializes
-// the root Cobra command for a chamber.
-func BuildCoreDecoration(
-	chamber *kernel.Chamber,
-	spec share.CoreSpec,
-) (kernel.DecorationInstance, error) {
-	return &CoreDecoration{
-		Decoration: *kernel.NewDecoration(chamber, spec),
-		RootCommand: share.GetRootCommand(
-			chamber.Name(),
-			kernel.GetBurrowMajorMinorVersion(),
-		),
-	}, nil
-}
-
-// UseDecoration resolves the core decoration from the same chamber as d.
-// It returns an error when the chamber does not contain a compatible core
-// decoration instance.
-func UseDecoration(d kernel.DecorationInstance) (*CoreDecoration, error) {
-	return kernel.Use[*CoreDecoration](d.Chamber())
-}
-
 // GetCommand resolves a command by path from RootCommand.
 // An empty path returns RootCommand itself.
 func (d *CoreDecoration) GetCommand(path []string) (*cobra.Command, error) {
@@ -222,4 +200,26 @@ func (d *CoreDecoration) SetCommand(
 	}
 
 	return nil
+}
+
+// BuildCoreDecoration constructs the core decoration instance and initializes
+// the root Cobra command for a chamber.
+func BuildCoreDecoration(
+	chamber *kernel.Chamber,
+	spec share.CoreSpec,
+) (kernel.DecorationInstance, error) {
+	return &CoreDecoration{
+		Decoration: *kernel.NewDecoration(chamber, spec),
+		RootCommand: share.GetDefaultRootCommand(
+			chamber.Name(),
+			kernel.GetBurrowMajorMinorVersion(),
+		),
+	}, nil
+}
+
+// UseDecoration resolves the core decoration from the same chamber as d.
+// It returns an error when the chamber does not contain a compatible core
+// decoration instance.
+func UseDecoration(d kernel.DecorationInstance) (*CoreDecoration, error) {
+	return kernel.Use[*CoreDecoration](d.Chamber())
 }

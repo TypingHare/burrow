@@ -46,11 +46,11 @@ func (d *DictatorDecoration) Assemble() error {
 }
 
 // Launch starts runtime behavior after assembly. Dictator has no launch step.
-func (d *DictatorDecoration) Launch() error      { return nil }
+func (d *DictatorDecoration) Launch() error { return nil }
 
 // Terminate stops runtime behavior before disassembly. Dictator has no
 // terminate step.
-func (d *DictatorDecoration) Terminate() error   { return nil }
+func (d *DictatorDecoration) Terminate() error { return nil }
 
 // Disassemble releases resources created during assembly. Dictator has no
 // disassembly step.
@@ -65,4 +65,10 @@ func BuildDictatorDecoration(
 	return &DictatorDecoration{
 		Decoration: *kernel.NewDecoration(chamber, spec),
 	}, nil
+}
+
+func UseDecoration(
+	d kernel.DecorationInstance,
+) (*DictatorDecoration, error) {
+	return kernel.Use[*DictatorDecoration](d.Chamber())
 }

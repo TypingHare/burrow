@@ -39,11 +39,8 @@ func BuildLarderDecoration(
 	}, nil
 }
 
-func UseLarderDecoration(chamber *kernel.Chamber) (*LarderDecoration, error) {
-	d, err := kernel.Use[*LarderDecoration](chamber)
-	if err != nil {
-		return nil, err
-	}
-
-	return d, nil
+func UseDecoration(
+	d kernel.DecorationInstance,
+) (*LarderDecoration, error) {
+	return kernel.Use[*LarderDecoration](d.Chamber())
 }

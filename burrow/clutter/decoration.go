@@ -78,3 +78,9 @@ func BuildClutterDecoration(
 		Decoration: *kernel.NewDecoration(chamber, spec),
 	}, nil
 }
+
+func UseDecoration(
+	d kernel.DecorationInstance,
+) (*ClutterDecoration, error) {
+	return kernel.Use[*ClutterDecoration](d.Chamber())
+}
