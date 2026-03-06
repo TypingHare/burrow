@@ -8,9 +8,9 @@ func NewVars() Vars {
 	return make(Vars)
 }
 
-// Set sets the value of the environment variable with the given key. If the key
-// is empty, it does nothing. If the value is empty, it deletes the key from the
-// Vars.
+// Set stores value for key.
+//
+// If key is empty, Set is a no-op. If value is empty, Set deletes key.
 func (v Vars) Set(key string, value string) {
 	if key == "" {
 		return
@@ -23,8 +23,7 @@ func (v Vars) Set(key string, value string) {
 	}
 }
 
-// Get returns the value associated with the given key. If the key does not
-// exist, it returns an empty string.
+// Get returns the value for key, or an empty string when key is not present.
 func (v Vars) Get(key string) string {
 	return v[key]
 }

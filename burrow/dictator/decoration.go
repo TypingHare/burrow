@@ -12,9 +12,8 @@ type DictatorDecoration struct {
 }
 
 func (d *DictatorDecoration) Dependencies() []string {
-	warehouse := d.Chamber().Burrow().Warehouse()
 	return []string{
-		warehouse.GetDecorationID("core", kernel.CartonName),
+		kernel.GetDecorationID("core", kernel.CartonName),
 	}
 }
 

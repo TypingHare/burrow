@@ -24,7 +24,7 @@ func NewArchitect(burrow *Burrow) *Architect {
 	}
 }
 
-// Burrow returns the Burrow managed by a.
+// Burrow returns the Burrow managed by this Architect.
 func (a *Architect) Burrow() *Burrow {
 	return a.burrow
 }
@@ -43,7 +43,7 @@ func (a *Architect) GetBlueprintPath(chamberName string) string {
 	)
 }
 
-// GetBlueprint loads the blueprint for chamberName from disk.
+// GetBlueprint loads the blueprint file for chamberName from disk.
 func (a *Architect) GetBlueprint(chamberName string) (Blueprint, error) {
 	blueprint := NewBlueprint()
 
@@ -68,7 +68,7 @@ func (a *Architect) GetBlueprint(chamberName string) (Blueprint, error) {
 	return blueprint, nil
 }
 
-// SaveBlueprint saves blueprint for chamberName to disk.
+// SaveBlueprint writes blueprint for chamberName to disk.
 func (a *Architect) SaveBlueprint(
 	chamberName string,
 	blueprint Blueprint,
@@ -86,6 +86,9 @@ func (a *Architect) SaveBlueprint(
 
 // Dig loads the blueprint for chamberName, initializes the chamber, and stores
 // it in the Architect.
+//
+// For the root chamber, Dig falls back to GetDefaultRootChamberBlueprint when
+// no blueprint file exists yet.
 func (a *Architect) Dig(chamberName string) (*Chamber, error) {
 	isRootChamber := chamberName == a.burrow.Env.Get(EnvRootChamber)
 	blueprint, err := a.GetBlueprint(chamberName)
@@ -115,7 +118,7 @@ func (a *Architect) Dig(chamberName string) (*Chamber, error) {
 	return chamber, nil
 }
 
-// Bury removes chamberName from the Architect.
+// Bury persists and tears down chamberName, then removes it from the Architect.
 func (a *Architect) Bury(chamberName string) error {
 	chamber, exists := a.chamberMap[chamberName]
 	if !exists {
@@ -164,8 +167,8 @@ func (a *Architect) GetOrDig(chamberName string) (*Chamber, error) {
 	return chamber, nil
 }
 
-// GetDefaultRootChamberBlueprint returns a default blueprint with the core
-// decoration.
+// GetDefaultRootChamberBlueprint returns the initial root blueprint containing
+// only the core decoration.
 func GetDefaultRootChamberBlueprint() Blueprint {
 	return Blueprint{"core@" + CartonName: NewRawSpec()}
 }

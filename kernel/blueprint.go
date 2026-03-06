@@ -9,7 +9,7 @@ import (
 	"slices"
 )
 
-// Blueprint holds a Chamber's configuration.
+// Blueprint maps decoration IDs to their raw specs for a chamber.
 type Blueprint map[string]RawSpec
 
 // NewBlueprint returns an empty Blueprint.
@@ -59,7 +59,7 @@ func (b Blueprint) SaveToJSONFile(path string) error {
 	return nil
 }
 
-// GetDecorationIDs returns all decoration IDs defined in the Blueprint.
+// GetDecorationIDs returns all decoration IDs defined in the blueprint.
 func (b Blueprint) GetDecorationIDs() []string {
 	return slices.Collect(maps.Keys(b))
 }

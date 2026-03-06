@@ -19,9 +19,12 @@ const Version = "2026.0.0"
 
 // CartonName is the carton name of Burrow itself.
 //
-// It is equalavent to burrow repository path. When the repository is moved,
+// It is equivalent to the Burrow repository path. When the repository is moved,
 // this should be updated accordingly.
 const CartonName = "github.com/TypingHare/burrow"
+
+// DecorationIDSep joins decoration and carton names in a decoration ID.
+const DecorationIDSep = "@"
 
 // Environment variable names used by Burrow.
 const (
@@ -39,7 +42,6 @@ const (
 
 	EnvRootChamber       = "ROOT_CHAMBER"
 	EnvBlueprintFileName = "BLUEPRINT_FILE_NAME"
-	EnvDecorationIDSep   = "DECORATION_ID_SEP"
 
 	EnvDebug = "DEBUG"
 
@@ -114,7 +116,6 @@ func (b *Burrow) InitEnv(name string) error {
 	b.Env.Set(EnvUseChamber, "")
 	b.Env.Set(EnvRootChamber, ".")
 	b.Env.Set(EnvBlueprintFileName, "blueprint.json")
-	b.Env.Set(EnvDecorationIDSep, "@")
 	b.Env.Set(EnvDebug, "0")
 	b.Env.Set(EnvExecutablePath, "burrow")
 	b.Env.Set(EnvMinimalExecutablePath, "burrow-min")
@@ -171,6 +172,7 @@ func (b *Burrow) Handle(args []string) (int, error) {
 	return handler(chamber, chamberArgs)
 }
 
+// Bury shuts down all currently dug chambers and persists their blueprints.
 func (b *Burrow) Bury() error {
 	for chamberName := range b.architect.chamberMap {
 		if err := b.architect.Bury(chamberName); err != nil {
@@ -185,6 +187,8 @@ func (b *Burrow) Bury() error {
 	return nil
 }
 
+// PrintErrorStack prints an error and its unwrap chain to stderr from outermost
+// to innermost with stable numeric indices.
 func (b *Burrow) PrintErrorStack(err error) {
 	stack := []string{}
 

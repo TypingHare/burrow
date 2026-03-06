@@ -18,9 +18,8 @@ type ClutterDecoration struct {
 // Dependencies declares required decorations for clutter features.
 // Clutter extends the command tree exposed by the core decoration.
 func (d *ClutterDecoration) Dependencies() []string {
-	warehouse := d.Chamber().Burrow().Warehouse()
 	return []string{
-		warehouse.GetDecorationID("core", kernel.CartonName),
+		kernel.GetDecorationID("core", kernel.CartonName),
 	}
 }
 

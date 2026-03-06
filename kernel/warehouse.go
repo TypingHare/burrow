@@ -51,21 +51,22 @@ func (w *Warehouse) GetCarton(name string) (*Carton, error) {
 	return carton, nil
 }
 
-// GetDecorationID returns the decoration ID for decorationName in cartonName.
-func (w *Warehouse) GetDecorationID(
+// GetDecorationID builds the fully qualified decoration ID from decorationName
+// and cartonName.
+func GetDecorationID(
 	decorationName string,
 	cartonName string,
 ) string {
-	decorationIDSep := w.burrow.Env.Get(EnvDecorationIDSep)
-	return decorationName + decorationIDSep + cartonName
+	return decorationName + DecorationIDSep + cartonName
 }
 
-// SplitDecorationID splits decorationID into its decoration and carton names.
+// SplitDecorationID splits decorationID into decorationName and cartonName.
+// It returns an error when decorationID does not contain exactly one
+// DecorationIDSep.
 func (w *Warehouse) SplitDecorationID(
 	decorationID string,
 ) (string, string, error) {
-	decorationIDSep := w.burrow.Env.Get(EnvDecorationIDSep)
-	parts := strings.Split(decorationID, decorationIDSep)
+	parts := strings.Split(decorationID, DecorationIDSep)
 	if len(parts) != 2 {
 		return "", "", fmt.Errorf("invalid decoration ID: %q", decorationID)
 	}
@@ -112,7 +113,7 @@ func (w *Warehouse) RegisterCarton(carton *Carton) error {
 	}
 
 	for decorationName, decorationFactory := range carton.decorationFactoryMap {
-		decorationID := w.GetDecorationID(decorationName, cartonName)
+		decorationID := GetDecorationID(decorationName, cartonName)
 		if decorationFactory == nil {
 			return fmt.Errorf(
 				"decoration factory for decoration %q is nil",
@@ -130,7 +131,7 @@ func (w *Warehouse) RegisterCarton(carton *Carton) error {
 	}
 
 	for decorationName, decorationFactory := range carton.decorationFactoryMap {
-		decorationID := w.GetDecorationID(decorationName, cartonName)
+		decorationID := GetDecorationID(decorationName, cartonName)
 		w.decorationFactoryMap[decorationID] = decorationFactory
 	}
 
@@ -139,7 +140,7 @@ func (w *Warehouse) RegisterCarton(carton *Carton) error {
 	return nil
 }
 
-// GetDecorationFactory returns the factory for decorationID.
+// GetDecorationFactory returns the registered factory for decorationID.
 func (w *Warehouse) GetDecorationFactory(
 	decorationID string,
 ) (DecorationFactory, error) {

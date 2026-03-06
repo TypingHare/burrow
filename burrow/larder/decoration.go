@@ -10,9 +10,8 @@ type LarderDecoration struct {
 }
 
 func (d *LarderDecoration) Dependencies() []string {
-	warehouse := d.Chamber().Burrow().Warehouse()
 	return []string{
-		warehouse.GetDecorationID("core", kernel.CartonName),
+		kernel.GetDecorationID("core", kernel.CartonName),
 	}
 }
 

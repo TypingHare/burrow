@@ -33,7 +33,10 @@ func (c *ChamberError) Msg() string {
 	return c.msg
 }
 
-// Error returns the formatted error string.
+// Error returns a chamber-scoped error string.
+//
+// When no wrapped error exists, it returns "chamber: message". Otherwise it
+// includes the wrapped error as "[chamber] message: cause".
 func (e *ChamberError) Error() string {
 	if e.err == nil {
 		return e.chamberName + ": " + e.msg
