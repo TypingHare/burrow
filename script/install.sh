@@ -3,12 +3,10 @@
 ################################################################################
 # Copyright 2026 James Chen                                                    #
 #                                                                              #
-# This script installs latest Burrow to the current environment. It exists on  #
+# This script installs Burrow v2026.1 to the current environment. It exists on #
 # any errors encountered during installation.                                  #
 #                                                                              #
-#                                                                              #
-#                                                                              #
-#                                                                              #
+# Required commands: git, go, make                                             #
 #                                                                              #
 ################################################################################
 
@@ -22,12 +20,12 @@ BURROW_NAME="${BURROW_NAME:-burrow}"
 
 # Print installer progress messages to stdout.
 log() {
-    printf '[burrow-install] %s\n' "$*"
+    printf '\033[36m[burrow-install] %s\033[0m\n' "$*"
 }
 
 # Print an error message and stop immediately.
 fail() {
-    printf '[burrow-install] error: %s\n' "$*" >&2
+    printf '\033[31m[burrow-install] error: %s\033[0m\n' "$*" >&2
     exit 1
 }
 
@@ -71,12 +69,33 @@ if [[ -e "$burrow_data_dir" ]]; then
     fail "data directory already exists: $burrow_data_dir"
 fi
 
+# If any step of the installation fails, remove any directories that were
+# created during the installation process to avoid leaving a broken installation
+# behind.
+cleanup_install_dirs() {
+    exit_code=$?
+    if [[ $exit_code -ne 0 ]]; then
+        rm -rf "$burrow_config_dir" "$burrow_data_dir"
+    fi
+}
+trap cleanup_install_dirs EXIT
+
 # Ensure that the Burrow bin directory can be created and is writable.
 log "creating directories under $burrow_data_dir"
 mkdir -p "$burrow_bin_dir"
 
 # Clone the repository into a temporary location under the home directory.
 temp_burrow_dir="$HOME/.burrow.iZFxHCUWpME="
+
+# If any step of the installation fails, remove the temporary directory to avoid
+# leaving behind a clone of the repository.
+cleanup_temp_dir() {
+    if [[ -n "${temp_burrow_dir:-}" && -d "$temp_burrow_dir" ]]; then
+        rm -rf "$temp_burrow_dir"
+    fi
+}
+trap 'cleanup_install_dirs; cleanup_temp_dir' EXIT
+
 log "cloning $REPOSITORY_URL into $temp_burrow_dir"
 git clone "$REPOSITORY_URL" "$temp_burrow_dir"
 
@@ -88,14 +107,13 @@ cp "$temp_burrow_dir/build/burrow" "$binary_path"
 chmod 755 "$binary_path"
 
 # Add essential decorations to the root chamber.
-log 'adding essential decorations to root chamber'
 carton_name="github.com/TypingHare/burrow"
+log 'adding clutter decoration to root chamber'
 "$binary_path" . decoration add "clutter@$carton_name"
-log 'added clutter decoration to root chamber'
+log 'adding dictator decoration to root chamber'
 "$binary_path" . decoration add "dictator@$carton_name"
-log 'added dictator decoration to root chamber'
+log 'adding shell decoration to root chamber'
 "$binary_path" . decoration add "shell@$carton_name"
-log 'added shell decoration to root chamber'
 
 # Rebuild Burrow executable (burrow).
 log 'building Burrow executable'
@@ -105,6 +123,20 @@ log 'building Burrow executable'
 log 'building minimal Burrow executable'
 "$binary_path" . burrow build --minimal
 
-# Clean up the temporary directory.
-log "removing temporary directory $temp_burrow_dir"
-rm -rf "$temp_burrow_dir"
+# Create broot (an alias for "burrow .").
+log 'creating broot'
+"$binary_path" . shell create
+
+# Show the user where the binary was installed.
+log "Burrow installed successfully to $binary_path"
+
+# If the bin directory is not already on the PATH, print a message to the user
+# about how to add it.
+if ! echo "$PATH" | tr ':' '\n' | grep -qx "$burrow_bin_dir"; then
+    printf "\033[38;5;208m[burrow-install] LAST STEP: Please add %s to your \
+PATH.\033[0m\n" "$burrow_bin_dir"
+fi
+
+# Finally, print a message about how to verify the installation.
+printf "\033[38;5;208m[burrow-install] After restarting your shell, run \
+\"broot --version\" to verify the installation.\033[0m\n"

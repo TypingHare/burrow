@@ -5,10 +5,7 @@
 Burrow can be installed on macOS and Linux. Please ensure that `Go 1.25+` and `Make 3.81+` is in your environment. Please also ensure that directory `~/.burrow` does not exist.
 
 ```bash
-git clone https://github.com/TypingHare/burrow.git ~/.burrow
-cd ~/burrow && make build
-~/.local/share/burrow/bin/burrow . burrow build
-rm -rf ~/.burrow
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/TypingHare/burrow/refs/heads/main/script/install.sh)"
 ```
 
 ## Overview
