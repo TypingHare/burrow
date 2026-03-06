@@ -2,7 +2,6 @@ package core
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/command"
 	"github.com/TypingHare/burrow/v2026/burrow/core/share"
@@ -75,20 +74,10 @@ func BuildCoreDecoration(
 ) (kernel.DecorationInstance, error) {
 	return &CoreDecoration{
 		Decoration: *kernel.NewDecoration(chamber, spec),
-		RootCommand: &cobra.Command{
-			Use: os.Args[0] + " " + chamber.Name(),
-			RunE: func(cmd *cobra.Command, args []string) error {
-				if len(args) > 0 {
-					return fmt.Errorf(
-						"unknown command %q for %q",
-						args[0],
-						cmd.CommandPath(),
-					)
-				}
-
-				return nil
-			},
-		},
+		RootCommand: share.GetRootCommand(
+			chamber.Name(),
+			kernel.GetBurrowMajorMinorVersion(),
+		),
 	}, nil
 }
 

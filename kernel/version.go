@@ -60,21 +60,23 @@ func GetPatchVersion(version string) (string, error) {
 	return parts[2], nil
 }
 
-// GetBurrowMajorFunction returns the major version component of the Burrow
+// GetBurrowMajorVersion returns the major version component of the Burrow
 // version.
-func GetBurrowMajorFunction() string {
+func GetBurrowMajorVersion() string {
 	marjorFunction, _ := GetMajorVersion(Version)
 	return marjorFunction
 }
 
-// GetBurrowMinorFunction returns the minor version component of the Burrow
+// GetBurrowMinorVersion returns the minor version component of the Burrow
 // version.
-func GetBurrowMinorFunction() string {
+func GetBurrowMinorVersion() string {
 	minorFunction, _ := GetMinorVersion(Version)
 	return minorFunction
 }
 
-func GetBurrowMajorMinorFunction() string {
+// GetBurrowMajorMinorVersion returns the major.minor version components of the
+// Burrow version.
+func GetBurrowMajorMinorVersion() string {
 	majorMinorFunction, _ := GetMajorMinorVersion(Version)
 	return majorMinorFunction
 }

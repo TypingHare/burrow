@@ -104,8 +104,8 @@ func (b *Builder) GenerateMagicGoModFile() error {
 		localPathsByCartonNames[localCarton.Name] = localCarton.Path
 	}
 
-	majorVersion := kernel.GetBurrowMajorFunction()
-	majorMinorVersion := kernel.GetBurrowMajorMinorFunction()
+	majorVersion := kernel.GetBurrowMajorVersion()
+	majorMinorVersion := kernel.GetBurrowMajorMinorVersion()
 
 	// For each carton, run "go get" to add it as a dependency in the magic Go
 	// mod file if it is a remote carton; otherwise, run "go mod edit -replace"
@@ -226,7 +226,7 @@ func (b *Builder) RunGoModEditCommand(
 // Generate a cmd/magic.go file that imports all cartons in the Burrow source
 // directory.
 func (b *Builder) GenerateMagicGoFile() error {
-	majorVersion := kernel.GetBurrowMajorFunction()
+	majorVersion := kernel.GetBurrowMajorVersion()
 
 	// Resolve package names for the cartons.
 	packageNames := make([]string, 0, len(b.CartonNames))
