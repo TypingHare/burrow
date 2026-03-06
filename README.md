@@ -41,7 +41,7 @@ where $D^S$ represents a decoration with spec $S$.
 A carton $A$ is a sequence of decoration factories:
 
 $$
-A = \{ f_{d_i}  \}_{i = 1}^n
+A = \{ f_{d_i} \}_{i = 1}^n
 $$
 
 We write $f_d \in A$ to indicate that the decoration factory $f_d$ belongs to the carton $A$. Let $A_a$ denote a carton named $a$. The **ID** of a decoration instance created by $f_d \in A_a$ is defined as
