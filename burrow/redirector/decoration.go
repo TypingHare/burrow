@@ -6,12 +6,11 @@ import (
 	"github.com/TypingHare/burrow/v2026/burrow/core"
 	"github.com/TypingHare/burrow/v2026/burrow/redirector/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
-	"github.com/spf13/cobra"
 )
 
 type RedirectorDecoration struct {
 	kernel.Decoration[share.RedirectorSpec]
-	RedirectionHandler share.RedirectionHandler
+	Redirector share.Redirector
 }
 
 func (d *RedirectorDecoration) Dependencies() []string {
@@ -21,7 +20,13 @@ func (d *RedirectorDecoration) Dependencies() []string {
 }
 
 func (d *RedirectorDecoration) RawSpec() kernel.RawSpec {
-	return kernel.RawSpec{}
+	return kernel.RawSpec{
+		"silentlyRedirect": false,
+	}
+}
+
+func (d *RedirectorDecoration) GetRedirector() share.Redirector {
+	return d.Redirector
 }
 
 func (d *RedirectorDecoration) Assemble() error { return nil }
@@ -31,13 +36,8 @@ func (d *RedirectorDecoration) Launch() error {
 		return fmt.Errorf("failed to use core decoration: %w", err)
 	}
 
-	if d.RedirectionHandler != nil {
-		coreDirection.RootCommand.RunE = func(
-			cmd *cobra.Command,
-			args []string,
-		) error {
-			return d.RedirectionHandler(cmd, args)
-		}
+	if d.Redirector != nil {
+		d.Chamber().Handler = share.GetRedirectorHandler(d, coreDirection)
 	}
 
 	return nil
