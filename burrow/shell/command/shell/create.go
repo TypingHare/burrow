@@ -2,7 +2,6 @@ package shell
 
 import (
 	"fmt"
-	"os"
 	"slices"
 
 	"github.com/TypingHare/burrow/v2026/burrow/shell/share"
@@ -28,25 +27,26 @@ func CreateCommand(d share.ShellDecorationLike) *cobra.Command {
 				fileName = d.Chamber().Name()
 			}
 
-			shellFilePath := share.GetShellFilePath(
-				d.Chamber().Burrow(),
-				fileName,
-			)
-			content := share.GetShellFileContent(d)
-			err := os.WriteFile(shellFilePath, []byte(content), 0o644)
+			fileRelPath, err := share.CreateShellFile(d, fileName)
 			if err != nil {
 				return fmt.Errorf("failed to create shell file: %w", err)
 			}
 
+			// Update the shell decoration spec to include the created file name
+			// if it's not already present.
 			spec := d.Spec()
-			if !slices.Contains(spec.CreatedFileNames, fileName) {
-				spec.CreatedFileNames = append(spec.CreatedFileNames, fileName)
-			}
-			if err := d.Chamber().UpdateAndSaveBlueprint(); err != nil {
-				return fmt.Errorf(
-					"failed to save shell decoration spec: %w",
-					err,
+			if !slices.Contains(spec.CreatedFileNames, fileRelPath) {
+				spec.CreatedFileNames = append(
+					spec.CreatedFileNames,
+					fileRelPath,
 				)
+
+				if err := d.Chamber().UpdateAndSaveBlueprint(); err != nil {
+					return fmt.Errorf(
+						"failed to save shell decoration spec: %w",
+						err,
+					)
+				}
 			}
 
 			return nil

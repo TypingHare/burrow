@@ -43,15 +43,23 @@ func (d *ShellDecoration) Assemble() error {
 
 	coreDecoration.SetCommand(nil, command.ShellCommand(d))
 
+	if d.Spec().Shebang == "" {
+		d.Spec().Shebang = "/usr/bin/env bash"
+	}
+
+	if d.Spec().FileName == "" {
+		d.Spec().FileName = d.Chamber().Name()
+	}
+
 	return nil
 }
 
 // Launch starts runtime behavior after assembly. Shell has no launch step.
-func (d *ShellDecoration) Launch() error      { return nil }
+func (d *ShellDecoration) Launch() error { return nil }
 
 // Terminate stops runtime behavior before disassembly. Shell has no terminate
 // step.
-func (d *ShellDecoration) Terminate() error   { return nil }
+func (d *ShellDecoration) Terminate() error { return nil }
 
 // Disassemble releases resources created during assembly. Shell has no
 // disassembly step.

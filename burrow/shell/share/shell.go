@@ -11,6 +11,10 @@ import (
 // GetShellFilePath constructs the file path for the shell file based on the
 // provided burrow instance and file name.
 func GetShellFilePath(burrow *kernel.Burrow, fileName string) string {
+	if fileName == "." {
+		fileName = "broot"
+	}
+
 	return filepath.Join(burrow.GetBinDir(), fileName)
 }
 
@@ -26,17 +30,28 @@ func GetShellFileContent(shellDecoration ShellDecorationLike) string {
 // CreateShellFile creates a shell file with the specified name and content
 // based on the provided burrow instance and shell decoration.
 func CreateShellFile(
-	burrow *kernel.Burrow,
-	shellDecoration ShellDecorationLike,
+	d ShellDecorationLike,
 	fileName string,
-) error {
-	filePath := GetShellFilePath(burrow, fileName)
-	content := GetShellFileContent(shellDecoration)
-
-	err := os.WriteFile(filePath, []byte(content), 0o644)
-	if err != nil {
-		return fmt.Errorf("failed to create shell file: %w", err)
+) (string, error) {
+	if d.Spec().Shebang == "" {
+		return "", fmt.Errorf(
+			"shebang is not specified in the shell decoration spec",
+		)
 	}
 
-	return nil
+	burrow := d.Chamber().Burrow()
+	shellFilePath := GetShellFilePath(burrow, fileName)
+	fileRelPath, err := filepath.Rel(burrow.GetBinDir(), shellFilePath)
+	if err != nil {
+		return "", fmt.Errorf("failed to get relative file name: %w", err)
+	}
+
+	content := GetShellFileContent(d)
+
+	err = os.WriteFile(shellFilePath, []byte(content), 0o755)
+	if err != nil {
+		return "", fmt.Errorf("failed to create shell file: %w", err)
+	}
+
+	return fileRelPath, nil
 }

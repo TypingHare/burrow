@@ -1,7 +1,7 @@
 package blueprint
 
 import (
-	"encoding/json"
+	"fmt"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/spf13/cobra"
@@ -15,21 +15,28 @@ func ShowCommand(d share.CoreDecorationLike) *cobra.Command {
 		Short: "Show the blueprint",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if showJson {
-				data, err := json.MarshalIndent(
-					d.Chamber().Blueprint(),
-					"",
-					"  ",
-				)
+				data, err := d.Chamber().Blueprint().ToJSON()
 				if err != nil {
-					return err
+					return fmt.Errorf(
+						"failed to convert blueprint to JSON: %w",
+						err,
+					)
 				}
 
 				cmd.Println(string(data))
 				return nil
 			}
 
-			cmd.Println("Not implemented yet")
+			// TODO: Implement a human-readable format for the blueprint.
+			data, err := d.Chamber().Blueprint().ToJSON()
+			if err != nil {
+				return fmt.Errorf(
+					"failed to convert blueprint to JSON: %w",
+					err,
+				)
+			}
 
+			cmd.Println(string(data))
 			return nil
 		},
 	}

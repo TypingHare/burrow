@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"slices"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
@@ -11,6 +13,11 @@ import (
 // CreateChamber creates a new chamber blueprint when the target chamber does
 // not already exist. The initial blueprint contains only the core decoration.
 func CreateChamber(chamber *kernel.Chamber, chamberName string) error {
+	chamberName = strings.TrimSpace(chamberName)
+	if chamberName == "" || chamberName == "." || chamberName == ".." {
+		return fmt.Errorf("invalid chamber name: %q", chamberName)
+	}
+
 	architect := chamber.Burrow().Architect()
 	blueprintPath := architect.GetBlueprintPath(chamberName)
 
@@ -80,4 +87,42 @@ func DestroyChamber(chamber *kernel.Chamber, chamberName string) error {
 	}
 
 	return nil
+}
+
+// GetDugChamberNames returns the names of all currently dug chambers.
+func GetDugChamberNames(burrow *kernel.Burrow) []string {
+	chamberMap := burrow.Architect().ChamberMap()
+	chamberNames := make([]string, 0, len(chamberMap))
+	for chamberName := range chamberMap {
+		chamberNames = append(chamberNames, chamberName)
+	}
+
+	return chamberNames
+}
+
+// GetAllChamberNames returns the names of all chambers, each corresponding to a
+// folder in the Burrow config directory.
+func GetAllChamberNames(burrow *kernel.Burrow) ([]string, error) {
+	configDir := burrow.GetConfigDir()
+	entries, err := os.ReadDir(configDir)
+	if errors.Is(err, os.ErrNotExist) {
+		return []string{}, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf(
+			"failed to read config directory %q: %w",
+			configDir,
+			err,
+		)
+	}
+
+	chamberNames := make([]string, 0, len(entries))
+	for _, entry := range entries {
+		if entry.IsDir() {
+			chamberNames = append(chamberNames, entry.Name())
+		}
+	}
+	slices.Sort(chamberNames)
+
+	return chamberNames, nil
 }

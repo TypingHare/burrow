@@ -131,7 +131,7 @@ func (b *Builder) GenerateMagicGoModFile() error {
 				cartonName,
 				modulePath,
 				localCartonPath,
-				cartonURL,
+				cartonURL+".0",
 			)
 			if err != nil {
 				return err
