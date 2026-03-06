@@ -1,12 +1,7 @@
 # TODO
 
-- [ ] Modify the documentation
-- [ ] Environment variables `BURROW_DEBUG`; logging system (`zerolog`).
-- [ ] Core decoration needs more commands: `decoration add`, `decoration remove`
-- [ ] Carton/decoration directory structure (DDD)
-- [ ] `shell` decoration
-- [ ] `build` as `burrow build`
-- [ ] `magic.go` sets environment variables
+- [ ] Write documentation.
+- [ ] Environment variables `DebugLevel`; logging system (`zerolog`).
 
 ## Comments improvement
 

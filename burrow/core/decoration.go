@@ -32,6 +32,12 @@ func (d *CoreDecoration) RawSpec() kernel.RawSpec {
 	}
 }
 
+// GetRootCommand returns the root Cobra command of the core decoration, which
+// serves as the entry point for all command execution in the chamber.
+func (d *CoreDecoration) GetRootCommand() *cobra.Command {
+	return d.RootCommand
+}
+
 // Assemble installs the core command surface into the chamber by setting the
 // chamber handler and registering built-in top-level commands.
 func (d *CoreDecoration) Assemble() error {
@@ -40,7 +46,7 @@ func (d *CoreDecoration) Assemble() error {
 	d.RootCommand.SilenceErrors = true
 
 	// Set the chamber's handler to the root command.
-	d.Chamber().Handler = CoreHandler
+	d.Chamber().Handler = share.GetCoreHandler(d)
 
 	d.SetCommand(nil, command.RedigCommand(d))
 	d.SetCommand(nil, command.CartonCommand(d))

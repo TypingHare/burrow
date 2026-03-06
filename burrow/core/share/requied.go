@@ -2,11 +2,13 @@ package share
 
 import (
 	"github.com/TypingHare/burrow/v2026/kernel"
+	"github.com/spf13/cobra"
 )
 
 type CoreDecorationLike interface {
 	kernel.DecorationInstance
 	Spec() *CoreSpec
+	GetRootCommand() *cobra.Command
 }
 
 type CoreSpec struct {

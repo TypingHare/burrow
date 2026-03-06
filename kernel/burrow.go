@@ -43,7 +43,7 @@ const (
 	EnvRootChamber       = "ROOT_CHAMBER"
 	EnvBlueprintFileName = "BLUEPRINT_FILE_NAME"
 
-	EnvDebug = "DEBUG"
+	EnvDebugLevel = "DEBUG_LEVEL"
 
 	EnvExecutablePath        = "EXECUTABLE_PATH"
 	EnvMinimalExecutablePath = "MINIMAL_EXECUTABLE_PATH"
@@ -116,7 +116,7 @@ func (b *Burrow) InitEnv(name string) error {
 	b.Env.Set(EnvUseChamber, "")
 	b.Env.Set(EnvRootChamber, ".")
 	b.Env.Set(EnvBlueprintFileName, "blueprint.json")
-	b.Env.Set(EnvDebug, "0")
+	b.Env.Set(EnvDebugLevel, "0")
 	b.Env.Set(EnvExecutablePath, "burrow")
 	b.Env.Set(EnvMinimalExecutablePath, "burrow-min")
 
@@ -126,15 +126,17 @@ func (b *Burrow) InitEnv(name string) error {
 // LoadProcessEnv loads environment variables from the process environment if
 // allowed by the EnvAcceptProcessEnv variable.
 func (b *Burrow) LoadProcessEnv() {
-	if b.Env.Get(EnvAcceptProcessEnv) == "1" {
-		for _, envVar := range os.Environ() {
-			key, value, hasSep := strings.Cut(envVar, "=")
-			if !hasSep || !strings.HasPrefix(key, "BURROW_") {
-				continue
-			}
+	if b.Env.Get(EnvAcceptProcessEnv) != "1" {
+		return
+	}
 
-			b.Env.Set(strings.TrimPrefix(key, "BURROW_"), value)
+	for _, envVar := range os.Environ() {
+		key, value, hasSep := strings.Cut(envVar, "=")
+		if !hasSep || !strings.HasPrefix(key, "BURROW_") {
+			continue
 		}
+
+		b.Env.Set(strings.TrimPrefix(key, "BURROW_"), value)
 	}
 }
 
