@@ -12,6 +12,8 @@ func ChamberCommand(d share.DictatorDecorationLike) *cobra.Command {
 		Short: "Manage chambers in Burrow",
 	}
 
+	command.AddCommand(chamber.CreateCommand(d))
+	command.AddCommand(chamber.DestroyCommand(d))
 	command.AddCommand(chamber.BuryCommand(d))
 	command.AddCommand(chamber.DigCommand(d))
 	command.AddCommand(chamber.InfoCommand(d))

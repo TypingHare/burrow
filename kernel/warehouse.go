@@ -51,15 +51,6 @@ func (w *Warehouse) GetCarton(name string) (*Carton, error) {
 	return carton, nil
 }
 
-// GetDecorationID builds the fully qualified decoration ID from decorationName
-// and cartonName.
-func GetDecorationID(
-	decorationName string,
-	cartonName string,
-) string {
-	return decorationName + DecorationIDSep + cartonName
-}
-
 // SplitDecorationID splits decorationID into decorationName and cartonName.
 // It returns an error when decorationID does not contain exactly one
 // DecorationIDSep.
@@ -152,4 +143,13 @@ func (w *Warehouse) GetDecorationFactory(
 		)
 	}
 	return decorationFactory, nil
+}
+
+// GetDecorationID builds the fully qualified decoration ID from decorationName
+// and cartonName.
+func GetDecorationID(
+	decorationName string,
+	cartonName string,
+) string {
+	return decorationName + DecorationIDSep + cartonName
 }
