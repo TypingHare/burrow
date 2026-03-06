@@ -7,6 +7,7 @@ import (
 
 type LarderDecoration struct {
 	kernel.Decoration[share.LarderSpec]
+	cabinetMap map[string]any
 }
 
 func (d *LarderDecoration) Dependencies() []string {
@@ -19,10 +20,11 @@ func (d *LarderDecoration) RawSpec() kernel.RawSpec {
 	return kernel.RawSpec{}
 }
 
-func (d *LarderDecoration) Assemble() error {
-	return nil
+func (d *LarderDecoration) CabinetMap() map[string]any {
+	return d.cabinetMap
 }
 
+func (d *LarderDecoration) Assemble() error    { return nil }
 func (d *LarderDecoration) Launch() error      { return nil }
 func (d *LarderDecoration) Terminate() error   { return nil }
 func (d *LarderDecoration) Disassemble() error { return nil }
@@ -33,5 +35,15 @@ func BuildLarderDecoration(
 ) (kernel.DecorationInstance, error) {
 	return &LarderDecoration{
 		Decoration: *kernel.NewDecoration(chamber, spec),
+		cabinetMap: make(map[string]any),
 	}, nil
+}
+
+func UseLarderDecoration(chamber *kernel.Chamber) (*LarderDecoration, error) {
+	d, err := kernel.Use[*LarderDecoration](chamber)
+	if err != nil {
+		return nil, err
+	}
+
+	return d, nil
 }

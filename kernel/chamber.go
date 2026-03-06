@@ -3,6 +3,7 @@ package kernel
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"reflect"
 )
 
@@ -85,6 +86,12 @@ func (c *Chamber) UpdateAndSaveBlueprint() error {
 	}
 
 	return c.burrow.architect.SaveBlueprint(c.name, c.blueprint)
+}
+
+// GetDataDir returns the path to the chamber's data directory, which is a
+// subdirectory of the Burrow's data directory named after the chamber.
+func (c *Chamber) GetDataDir() string {
+	return filepath.Join(c.Burrow().GetDataDir(), c.Name())
 }
 
 // Use returns the decoration of type T installed in chamber.

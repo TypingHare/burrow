@@ -9,6 +9,8 @@ import (
 	coreShare "github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/TypingHare/burrow/v2026/burrow/dictator"
 	dictatorShare "github.com/TypingHare/burrow/v2026/burrow/dictator/share"
+	"github.com/TypingHare/burrow/v2026/burrow/larder"
+	larderShare "github.com/TypingHare/burrow/v2026/burrow/larder/share"
 	"github.com/TypingHare/burrow/v2026/burrow/shell"
 	shellShare "github.com/TypingHare/burrow/v2026/burrow/shell/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
@@ -56,6 +58,15 @@ func RegisterCartonTo(warehouse *kernel.Warehouse) error {
 		dictator.BuildDictatorDecoration,
 	); err != nil {
 		return fmt.Errorf("error adding dictator decoration factory: %w", err)
+	}
+
+	if err := kernel.AddTypedDecorationFactory(
+		carton,
+		"larder",
+		larderShare.ParseLarderSpec,
+		larder.BuildLarderDecoration,
+	); err != nil {
+		return fmt.Errorf("error adding larder decoration factory: %w", err)
 	}
 
 	return warehouse.RegisterCarton(carton)

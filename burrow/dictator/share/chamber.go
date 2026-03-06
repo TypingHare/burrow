@@ -4,11 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
+// CreateChamber creates a new chamber blueprint when the target chamber does
+// not already exist. The initial blueprint contains only the core decoration.
 func CreateChamber(chamber *kernel.Chamber, chamberName string) error {
 	architect := chamber.Burrow().Architect()
 	blueprintPath := architect.GetBlueprintPath(chamberName)
@@ -36,10 +37,13 @@ func CreateChamber(chamber *kernel.Chamber, chamberName string) error {
 	return nil
 }
 
+// DestroyChamber removes a chamber from disk. If the chamber is currently dug,
+// it is buried first to persist state and stop running decorations.
 func DestroyChamber(chamber *kernel.Chamber, chamberName string) error {
 	architect := chamber.Burrow().Architect()
 
-	if _, exists := architect.ChamberMap()[chamberName]; exists {
+	chamberToDelete, exists := architect.ChamberMap()[chamberName]
+	if exists {
 		if err := architect.Bury(chamberName); err != nil {
 			return fmt.Errorf("failed to bury chamber before destroy: %w", err)
 		}
@@ -66,11 +70,8 @@ func DestroyChamber(chamber *kernel.Chamber, chamberName string) error {
 		)
 	}
 
-	chamberDirPath := filepath.Join(
-		chamber.Burrow().GetChamberDir(),
-		chamberName,
-	)
-	if err := os.RemoveAll(chamberDirPath); err != nil {
+	chamberDataDir := chamberToDelete.GetDataDir()
+	if err := os.RemoveAll(chamberDataDir); err != nil {
 		return fmt.Errorf(
 			"failed to remove chamber %q directory: %w",
 			chamberName,

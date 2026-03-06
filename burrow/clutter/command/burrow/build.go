@@ -15,10 +15,8 @@ func BuildCommand(d share.ClutterDecorationLike) *cobra.Command {
 		Use:   "build",
 		Short: "Build Burrow executables",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			err := share.EnsureSourceDir(
-				d.Chamber().Burrow(),
-				kernel.CartonName,
-			)
+			burrow := d.Chamber().Burrow()
+			err := share.EnsureSourceDir(burrow, kernel.CartonName)
 			if err != nil {
 				return fmt.Errorf(
 					"Failed to ensure Burrow source directory: %w",
@@ -27,10 +25,10 @@ func BuildCommand(d share.ClutterDecorationLike) *cobra.Command {
 			}
 
 			if minimal {
-				return share.BuildMinimalBurrow(d.Chamber().Burrow())
+				return share.BuildMinimalBurrow(burrow)
 			} else {
 				return share.BuildBurrow(
-					d.Chamber().Burrow(),
+					burrow,
 					d.Spec().CartonNames,
 					d.Spec().LocalCartons,
 					d.Spec().MagicEnv,
