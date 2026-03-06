@@ -4,17 +4,33 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
+	"regexp"
 	"slices"
 	"strings"
 
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
+// chamberNamePattern keeps chamber names flat within the Burrow config and
+// data directories by allowing only alphanumerics, underscores, and dots.
+var chamberNamePattern = regexp.MustCompile(`^[A-Za-z0-9_.]*[A-Za-z0-9_.]$`)
+
+// isValidChamberName reports whether chamberName uses only supported chamber
+// name characters and is not one of Burrow's reserved dot names.
+func isValidChamberName(chamberName string) bool {
+	if chamberName == "" || chamberName == "." || chamberName == ".." {
+		return false
+	}
+
+	return chamberNamePattern.MatchString(chamberName)
+}
+
 // CreateChamber creates a new chamber blueprint when the target chamber does
 // not already exist. The initial blueprint contains only the core decoration.
 func CreateChamber(chamber *kernel.Chamber, chamberName string) error {
 	chamberName = strings.TrimSpace(chamberName)
-	if chamberName == "" || chamberName == "." || chamberName == ".." {
+	if !isValidChamberName(chamberName) {
 		return fmt.Errorf("invalid chamber name: %q", chamberName)
 	}
 
@@ -46,10 +62,16 @@ func CreateChamber(chamber *kernel.Chamber, chamberName string) error {
 
 // DestroyChamber removes a chamber from disk. If the chamber is currently dug,
 // it is buried first to persist state and stop running decorations.
+//
+// The chamber data directory is derived from the chamber name instead of any
+// in-memory chamber instance so destroy also works for chambers that exist only
+// on disk.
 func DestroyChamber(chamber *kernel.Chamber, chamberName string) error {
 	architect := chamber.Burrow().Architect()
 
-	chamberToDelete, exists := architect.ChamberMap()[chamberName]
+	// Bury the chamber if it is currently dug to persist state and stop running
+	// decorations.
+	_, exists := architect.ChamberMap()[chamberName]
 	if exists {
 		if err := architect.Bury(chamberName); err != nil {
 			return fmt.Errorf("failed to bury chamber before destroy: %w", err)
@@ -71,17 +93,22 @@ func DestroyChamber(chamber *kernel.Chamber, chamberName string) error {
 
 	if err := os.Remove(blueprintPath); err != nil {
 		return fmt.Errorf(
-			"failed to remove chamber %q blueprint: %w",
+			"failed to remove chamber %q blueprint at %q: %w",
 			chamberName,
+			blueprintPath,
 			err,
 		)
 	}
 
-	chamberDataDir := chamberToDelete.GetDataDir()
+	chamberDataDir := filepath.Join(
+		chamber.Burrow().GetChamberDir(),
+		chamberName,
+	)
 	if err := os.RemoveAll(chamberDataDir); err != nil {
 		return fmt.Errorf(
-			"failed to remove chamber %q directory: %w",
+			"failed to remove chamber %q data directory %q: %w",
 			chamberName,
+			chamberDataDir,
 			err,
 		)
 	}

@@ -67,6 +67,7 @@ func BuildDictatorDecoration(
 	}, nil
 }
 
+// UseDecoration resolves the dictator decoration from the same chamber as d.
 func UseDecoration(
 	d kernel.DecorationInstance,
 ) (*DictatorDecoration, error) {

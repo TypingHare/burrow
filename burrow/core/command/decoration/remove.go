@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// RemoveCommand builds the `decoration remove` command.
 func RemoveCommand(d share.CoreDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "remove <decoration>",

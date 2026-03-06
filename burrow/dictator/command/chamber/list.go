@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ListCommand builds the `chamber list` command.
 func ListCommand(d share.DictatorDecorationLike) *cobra.Command {
 	var all bool
 
@@ -28,6 +29,8 @@ func ListCommand(d share.DictatorDecorationLike) *cobra.Command {
 				for _, chamberName := range allChamberNames {
 					cmd.Println(chamberName)
 				}
+
+				return nil
 			}
 
 			for _, chamberName := range share.GetDugChamberNames(burrow) {

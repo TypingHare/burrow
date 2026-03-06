@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ShellCommand builds the `shell` command group for chamber launcher scripts.
 func ShellCommand(d share.ShellDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "shell",

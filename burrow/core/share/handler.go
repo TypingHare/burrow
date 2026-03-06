@@ -6,8 +6,8 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
-// CoreHandler is the main handler for the core chamber. It executes the root
-// command with the provided arguments.
+// GetCoreHandler returns the chamber handler backed by the core decoration's
+// root Cobra command.
 func GetCoreHandler(
 	d CoreDecorationLike,
 ) func(*kernel.Chamber, []string) (int, error) {

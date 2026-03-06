@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// InstallCommand builds the `carton install` command.
 func InstallCommand(d share.ClutterDecorationLike) *cobra.Command {
 	var path string
 

@@ -4,9 +4,14 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
+
+// shellFileNamePattern intentionally matches the chamber-name policy so shell
+// launcher files stay as flat entries in the Burrow bin directory.
+var shellFileNamePattern = regexp.MustCompile(`^[A-Za-z0-9_.]*[A-Za-z0-9_.]$`)
 
 // GetShellFilePath constructs the file path for the shell file based on the
 // provided burrow instance and file name.
@@ -18,17 +23,21 @@ func GetShellFilePath(burrow *kernel.Burrow, fileName string) string {
 	return filepath.Join(burrow.GetBinDir(), fileName)
 }
 
-// GetShellFileContent generates the content of the shell file based on the
-// provided shell decoration.
+// GetShellFileContent generates the wrapper script for the shell decoration.
+// `"$@"` preserves the caller's original argument boundaries when forwarding
+// them to Burrow.
 func GetShellFileContent(shellDecoration ShellDecorationLike) string {
 	shebang := shellDecoration.Spec().Shebang
 	chamberName := shellDecoration.Chamber().Name()
 
-	return "#!" + shebang + "\n\nburrow " + chamberName + " $@\n"
+	return "#!" + shebang + "\n\nburrow " + chamberName + " \"$@\"\n"
 }
 
 // CreateShellFile creates a shell file with the specified name and content
 // based on the provided burrow instance and shell decoration.
+//
+// fileName must satisfy shellFileNamePattern so callers cannot create nested
+// paths under the Burrow bin directory.
 func CreateShellFile(
 	d ShellDecorationLike,
 	fileName string,
@@ -37,6 +46,9 @@ func CreateShellFile(
 		return "", fmt.Errorf(
 			"shebang is not specified in the shell decoration spec",
 		)
+	}
+	if !shellFileNamePattern.MatchString(fileName) {
+		return "", fmt.Errorf("invalid shell file name: %q", fileName)
 	}
 
 	burrow := d.Chamber().Burrow()

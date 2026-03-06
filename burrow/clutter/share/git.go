@@ -8,6 +8,7 @@ import (
 	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 )
 
+// gitClone clones URL into dir, creating the parent directory first.
 func gitClone(URL string, dir string) error {
 	// Ensure the parent directory exists before cloning.
 	parentDir := filepath.Dir(dir)

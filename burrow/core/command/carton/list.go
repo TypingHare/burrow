@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ListCommand builds the `carton list` command.
 func ListCommand(d share.CoreDecorationLike) *cobra.Command {
 	var all bool
 

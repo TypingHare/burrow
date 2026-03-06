@@ -6,6 +6,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ChamberCommand builds the `chamber` command group for chamber lifecycle
+// management.
 func ChamberCommand(d share.DictatorDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "chamber",

@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+// Cabinet stores a typed collection serialized as CSV rows on disk.
 type Cabinet[T any] struct {
 	path         string
 	serializer   func(T) []string
@@ -18,6 +19,7 @@ type Cabinet[T any] struct {
 	Objects      []T
 }
 
+// NewCabinet returns an empty Cabinet backed by path.
 func NewCabinet[T any](
 	path string,
 	serializer func(T) []string,
@@ -36,6 +38,7 @@ func (c *Cabinet[T]) Path() string {
 	return c.path
 }
 
+// Deserialize parses one CSV record from str into a typed object.
 func (c *Cabinet[T]) Deserialize(str string) (T, error) {
 	reader := csv.NewReader(strings.NewReader(str))
 	items, err := reader.Read()
@@ -47,6 +50,7 @@ func (c *Cabinet[T]) Deserialize(str string) (T, error) {
 	return c.deserializer(items)
 }
 
+// Serialize converts object into a single CSV record string.
 func (c *Cabinet[T]) Serialize(object T) string {
 	items := c.serializer(object)
 	var buf bytes.Buffer
@@ -58,10 +62,13 @@ func (c *Cabinet[T]) Serialize(object T) string {
 	return strings.TrimSuffix(buf.String(), "\n")
 }
 
+// Clear removes all loaded objects from the cabinet in memory.
 func (c *Cabinet[T]) Clear() {
 	c.Objects = c.Objects[:0]
 }
 
+// Load reads cabinet contents from disk, replacing the in-memory object slice
+// only if the full file parses successfully.
 func (c *Cabinet[T]) Load() error {
 	data, err := os.ReadFile(c.path)
 	if err != nil {
@@ -110,6 +117,7 @@ func (c *Cabinet[T]) Load() error {
 	return nil
 }
 
+// Save writes the in-memory cabinet contents to disk as CSV.
 func (c *Cabinet[T]) Save() error {
 	lines := make([]string, 0, len(c.Objects))
 	for _, object := range c.Objects {
@@ -124,6 +132,8 @@ func (c *Cabinet[T]) Save() error {
 	return os.WriteFile(c.path, []byte(strings.Join(lines, "\n")), 0o644)
 }
 
+// GetCabinet looks up a named cabinet from d and type-asserts it to
+// *Cabinet[T].
 func GetCabinet[T any](
 	d LarderDecorationLike,
 	name string,
@@ -145,6 +155,7 @@ func GetCabinet[T any](
 	return typedCabinet, nil
 }
 
+// AddCabinet registers a new named cabinet on d and returns it.
 func AddCabinet[T any](
 	d LarderDecorationLike,
 	name string,

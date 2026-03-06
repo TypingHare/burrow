@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// BuildCommand builds the `burrow build` command.
 func BuildCommand(d share.ClutterDecorationLike) *cobra.Command {
 	var minimal bool
 

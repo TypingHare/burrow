@@ -6,6 +6,8 @@ import (
 	"os/exec"
 )
 
+// RunExternalCommand executes args in dir, capturing stdout, stderr, and the
+// process exit code.
 func RunExternalCommand(
 	dir string,
 	args []string,

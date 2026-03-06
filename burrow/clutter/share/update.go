@@ -10,6 +10,8 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
+// BurrowSelfUpdate fast-forwards the Burrow source checkout, selects the
+// latest release tag for the current major.minor line, and checks it out.
 func BurrowSelfUpdate(
 	burrowSourceDir string,
 	binDir string,

@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// PathCommand builds the `shell path` command.
 func PathCommand(d share.ShellDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "path",

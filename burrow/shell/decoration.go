@@ -78,6 +78,7 @@ func BuildShellDecoration(
 	return decoration, nil
 }
 
+// UseDecoration resolves the shell decoration from the same chamber as d.
 func UseDecoration(
 	d kernel.DecorationInstance,
 ) (*ShellDecoration, error) {

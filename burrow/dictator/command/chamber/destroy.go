@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// DestroyCommand builds the `chamber destroy` command.
 func DestroyCommand(d share.DictatorDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "destroy <chamber>",

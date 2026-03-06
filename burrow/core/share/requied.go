@@ -5,16 +5,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// CoreDecorationLike describes the core-decoration surface required by helpers
+// and command builders in this package.
 type CoreDecorationLike interface {
 	kernel.DecorationInstance
 	Spec() *CoreSpec
 	GetRootCommand() *cobra.Command
 }
 
+// CoreSpec stores configuration for the core decoration, including the list of
+// root decorations explicitly managed by core.
 type CoreSpec struct {
 	DirectDependencies []string
 }
 
+// ParseCoreSpec parses raw blueprint data into a CoreSpec.
 func ParseCoreSpec(rawSpec kernel.RawSpec) (CoreSpec, error) {
 	directDependencies, err := kernel.GetRawSpecValueOrDefault(
 		rawSpec,

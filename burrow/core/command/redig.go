@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// RedigCommand builds the `redig` command that rebuilds the current chamber in
+// place by burying and digging it again.
 func RedigCommand(d share.CoreDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "redig",

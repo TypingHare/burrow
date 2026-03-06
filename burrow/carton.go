@@ -11,6 +11,8 @@ import (
 	dictatorShare "github.com/TypingHare/burrow/v2026/burrow/dictator/share"
 	"github.com/TypingHare/burrow/v2026/burrow/larder"
 	larderShare "github.com/TypingHare/burrow/v2026/burrow/larder/share"
+	"github.com/TypingHare/burrow/v2026/burrow/nostalgia"
+	nostalgiaShare "github.com/TypingHare/burrow/v2026/burrow/nostalgia/share"
 	"github.com/TypingHare/burrow/v2026/burrow/redirector"
 	redirectorShare "github.com/TypingHare/burrow/v2026/burrow/redirector/share"
 	"github.com/TypingHare/burrow/v2026/burrow/shell"
@@ -18,6 +20,8 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
+// RegisterCartonTo registers Burrow's built-in decorations in warehouse as a
+// single carton.
 func RegisterCartonTo(warehouse *kernel.Warehouse) error {
 	carton := kernel.NewCarton()
 
@@ -78,6 +82,15 @@ func RegisterCartonTo(warehouse *kernel.Warehouse) error {
 		redirector.BuildRedirectorDecoration,
 	); err != nil {
 		return fmt.Errorf("error adding redirector decoration factory: %w", err)
+	}
+
+	if err := kernel.AddTypedDecorationFactory(
+		carton,
+		"nostalgia",
+		nostalgiaShare.ParseNostalgiaSpec,
+		nostalgia.BuildNostalgiaDecoration,
+	); err != nil {
+		return fmt.Errorf("error adding nostalgia decoration factory: %w", err)
 	}
 
 	return warehouse.RegisterCarton(carton)

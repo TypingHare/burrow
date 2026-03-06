@@ -7,8 +7,8 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
-// InstallCarton installs a carton with the given name and path to the Chamber's
-// Burrow.
+// InstallCarton adds cartonName to the clutter spec, optionally records a
+// local override path, rebuilds Burrow, and persists the updated blueprint.
 func InstallCarton(
 	chamber *kernel.Chamber,
 	spec *ClutterSpec,
@@ -62,8 +62,8 @@ func InstallCarton(
 	return nil
 }
 
-// UninstallCarton uninstalls a carton with the given name and path from the
-// Chamber's Burrow.
+// UninstallCarton removes cartonName from the clutter spec, rebuilds Burrow,
+// and persists the updated blueprint.
 func UninstallCarton(
 	chamber *kernel.Chamber,
 	spec *ClutterSpec,

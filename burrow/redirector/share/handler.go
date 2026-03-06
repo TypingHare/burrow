@@ -7,6 +7,8 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
+// GetRedirectorHandler returns a chamber handler that retries failed command
+// execution with redirected arguments.
 func GetRedirectorHandler(
 	d RedirectorDecorationLike,
 	coreDecoration coreShare.CoreDecorationLike,

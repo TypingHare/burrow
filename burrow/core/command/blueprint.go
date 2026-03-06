@@ -6,6 +6,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// BlueprintCommand builds the `blueprint` command group for chamber blueprint
+// inspection and maintenance.
 func BlueprintCommand(d share.CoreDecorationLike) *cobra.Command {
 	var showJson bool
 
@@ -14,6 +16,7 @@ func BlueprintCommand(d share.CoreDecorationLike) *cobra.Command {
 		Short: "Manage blueprint of the chamber",
 	}
 
+	command.AddCommand(blueprint.SaveCommand(d))
 	command.AddCommand(blueprint.ShowCommand(d))
 	command.AddCommand(blueprint.UpdateCommand(d))
 

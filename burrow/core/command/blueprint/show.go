@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ShowCommand builds the `blueprint show` command.
 func ShowCommand(d share.CoreDecorationLike) *cobra.Command {
 	var showJson bool
 

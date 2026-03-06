@@ -7,8 +7,8 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
-// Redig performs a redig operation on the chamber, which involves burying and
-// then digging it again.
+// Redig rebuilds chamber in place by burying its current instance and digging
+// a fresh one from the persisted blueprint.
 func Redig(chamber *kernel.Chamber) (*kernel.Chamber, error) {
 	architect := chamber.Burrow().Architect()
 
@@ -28,8 +28,8 @@ func Redig(chamber *kernel.Chamber) (*kernel.Chamber, error) {
 // update function and then attempts to redig the chamber. If redigging fails,
 // it reverts the blueprint to its original state and tries to dig again.
 //
-// Since this function only shallow copies the blueprint, it assumes that the
-// update function does not any RawSpec objects in the blueprin.
+// Since this function only shallow-copies the blueprint map, updateFunc must
+// replace raw specs rather than mutating nested values in place.
 func UpdateBlueprintAndRedig(
 	chamber *kernel.Chamber,
 	updateFunc func(kernel.Blueprint) error,

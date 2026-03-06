@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// UninstallCommand builds the `carton uninstall` command.
 func UninstallCommand(d share.ClutterDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "uninstall <carton>",

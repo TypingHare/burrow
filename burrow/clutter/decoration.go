@@ -79,6 +79,7 @@ func BuildClutterDecoration(
 	}, nil
 }
 
+// UseDecoration resolves the clutter decoration from the same chamber as d.
 func UseDecoration(
 	d kernel.DecorationInstance,
 ) (*ClutterDecoration, error) {

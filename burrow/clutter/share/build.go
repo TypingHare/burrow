@@ -18,6 +18,8 @@ const (
 	MagicGoFilePath    = "cmd/magic.go"
 )
 
+// Builder assembles the generated source files and module metadata needed to
+// build a Burrow executable with a chosen carton set.
 type Builder struct {
 	// BurrowSourceDir is the directory that stores Burrow source code.
 	BurrowSourceDir string
@@ -35,7 +37,7 @@ type Builder struct {
 	OutputExecutablePath string
 }
 
-// NewBuilder creates a new Builder instance with the specified parameters.
+// NewBuilder returns a Builder configured for a single Burrow build target.
 func NewBuilder(
 	burrowSourceDir string,
 	cartonNames []string,
@@ -52,6 +54,8 @@ func NewBuilder(
 	}
 }
 
+// GenerateMagicGoModFile writes a temporary module file that requires the
+// cartons selected for the build.
 func (b *Builder) GenerateMagicGoModFile() error {
 	goModFilePath := filepath.Join(b.BurrowSourceDir, GoModFileName)
 	_, err := os.Stat(goModFilePath)
@@ -223,8 +227,8 @@ func (b *Builder) RunGoModEditCommand(
 	return nil
 }
 
-// Generate a cmd/magic.go file that imports all cartons in the Burrow source
-// directory.
+// GenerateMagicGoFile writes cmd/magic.go, which registers the selected
+// cartons and sets build-time Burrow environment values.
 func (b *Builder) GenerateMagicGoFile() error {
 	majorVersion := kernel.GetBurrowMajorVersion()
 
@@ -344,7 +348,8 @@ func (b *Builder) BuildWithModFile(modFile string) error {
 	return nil
 }
 
-// BuildMinimalBurrow builds the minimal Burrow executable.
+// BuildMinimalBurrow builds Burrow using the main module file and the generated
+// magic source, without adding extra cartons.
 func (b *Builder) BuildMinimalBurrow() error {
 	if err := b.GenerateMagicGoFile(); err != nil {
 		return err
@@ -353,7 +358,7 @@ func (b *Builder) BuildMinimalBurrow() error {
 	return b.BuildWithModFile(GoModFileName)
 }
 
-// Build builds the Burrow executable with the specified cartons.
+// Build builds Burrow using the generated module file and magic source.
 func (b *Builder) Build() error {
 	if err := b.GenerateMagicGoModFile(); err != nil {
 		return fmt.Errorf("failed to generate magic Go mod file: %w", err)

@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// SelfUpdateCommand builds the `burrow self-update` command.
 func SelfUpdateCommand(d share.ClutterDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "self-update",

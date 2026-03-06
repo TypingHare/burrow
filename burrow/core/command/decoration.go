@@ -6,6 +6,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// DecorationCommand builds the `decoration` command group for managing the
+// chamber's installed decorations.
 func DecorationCommand(d share.CoreDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "decoration",

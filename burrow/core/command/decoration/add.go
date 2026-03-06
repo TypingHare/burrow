@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// AddCommand builds the `decoration add` command.
 func AddCommand(d share.CoreDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "add <decoration>",

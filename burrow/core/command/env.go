@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// EnvCommand builds the `env` command that prints the Burrow environment seen
+// by the current chamber.
 func EnvCommand(d share.CoreDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "env",

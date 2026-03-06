@@ -9,10 +9,14 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
+// GetCartonSourceDir returns the expected checkout directory for cartonName in
+// burrow's source tree.
 func GetCartonSourceDir(burrow *kernel.Burrow, cartonName string) string {
 	return filepath.Join(burrow.GetSourceDir(), cartonName)
 }
 
+// EnsureSourceDir verifies that the checkout directory for cartonName already
+// exists.
 func EnsureSourceDir(burrow *kernel.Burrow, cartonName string) error {
 	sourceDir := GetCartonSourceDir(burrow, cartonName)
 	_, err := os.Stat(sourceDir)
