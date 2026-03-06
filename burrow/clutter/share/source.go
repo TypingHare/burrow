@@ -21,11 +21,9 @@ func EnsureSourceDir(burrow *kernel.Burrow, cartonName string) error {
 	sourceDir := GetCartonSourceDir(burrow, cartonName)
 	_, err := os.Stat(sourceDir)
 	if errors.Is(err, os.ErrNotExist) {
-		return fmt.Errorf(
-			"Source directory for carton %q does not exist: %s",
-			cartonName,
-			sourceDir,
-		)
+		if err := GitClone("https://"+cartonName, sourceDir); err != nil {
+			return fmt.Errorf("failed to clone carton repository: %w", err)
+		}
 	} else if err != nil {
 		return fmt.Errorf(
 			"Failed to access source directory for carton %q: %s",

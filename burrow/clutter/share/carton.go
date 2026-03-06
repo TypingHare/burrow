@@ -34,7 +34,7 @@ func InstallCarton(
 	} else {
 		// The carton is a remote repository.
 		sourceDir := GetCartonSourceDir(chamber.Burrow(), cartonName)
-		if err := gitClone("https://"+cartonName, sourceDir); err != nil {
+		if err := GitClone("https://"+cartonName, sourceDir); err != nil {
 			return fmt.Errorf("failed to clone carton repository: %w", err)
 		}
 	}
