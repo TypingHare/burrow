@@ -65,6 +65,12 @@ func (c *Chamber) Error(msg string, err error) *ChamberError {
 	return NewChamberError(c.name, msg, err)
 }
 
+// GetBlueprintPath returns the path to the chamber's blueprint file as
+// determined by the Burrow's Architect.
+func (c *Chamber) GetBlueprintPath() string {
+	return c.burrow.architect.GetBlueprintPath(c.name)
+}
+
 // UpdateBlueprint updates the chamber blueprint with the current state of its
 // decorations.
 func (c *Chamber) UpdateBlueprint() error {
@@ -86,6 +92,12 @@ func (c *Chamber) UpdateAndSaveBlueprint() error {
 	}
 
 	return c.burrow.architect.SaveBlueprint(c.name, c.blueprint)
+}
+
+// GetConfigDir returns the path to the chamber's config directory, which is a
+// subdirectory of the Burrow's config directory named after the chamber.
+func (c *Chamber) GetConfigDir() string {
+	return filepath.Join(c.Burrow().GetConfigDir(), c.Name())
 }
 
 // GetDataDir returns the path to the chamber's data directory, which is a

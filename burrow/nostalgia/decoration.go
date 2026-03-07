@@ -1,6 +1,9 @@
 package nostalgia
 
 import (
+	"fmt"
+
+	"github.com/TypingHare/burrow/v2026/burrow/core"
 	"github.com/TypingHare/burrow/v2026/burrow/nostalgia/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
@@ -19,7 +22,20 @@ func (d *NostalgiaDecoration) RawSpec() kernel.RawSpec {
 	return kernel.RawSpec{}
 }
 
-func (d *NostalgiaDecoration) Assemble() error    { return nil }
+func (d *NostalgiaDecoration) Assemble() error {
+	coreDecoration, err := core.UseDecoration(d)
+	if err != nil {
+		return fmt.Errorf("failed to use core decoration: %w", err)
+	}
+
+	err = coreDecoration.SetCommand(nil)
+	if err != nil {
+		return fmt.Errorf("failed to set commands: %w", err)
+	}
+
+	return nil
+}
+
 func (d *NostalgiaDecoration) Launch() error      { return nil }
 func (d *NostalgiaDecoration) Terminate() error   { return nil }
 func (d *NostalgiaDecoration) Disassemble() error { return nil }

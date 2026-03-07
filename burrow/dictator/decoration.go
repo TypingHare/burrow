@@ -1,6 +1,8 @@
 package dictator
 
 import (
+	"fmt"
+
 	"github.com/TypingHare/burrow/v2026/burrow/core"
 	"github.com/TypingHare/burrow/v2026/burrow/dictator/command"
 	"github.com/TypingHare/burrow/v2026/burrow/dictator/share"
@@ -31,15 +33,14 @@ func (d *DictatorDecoration) RawSpec() kernel.RawSpec {
 // Assemble mounts dictator chamber-management commands into the chamber command
 // tree via the core decoration.
 func (d *DictatorDecoration) Assemble() error {
-	if coreDecoration, err := core.UseDecoration(d); err != nil {
-		return err
-	} else {
-		if err := coreDecoration.SetCommand(
-			nil,
-			command.ChamberCommand(d),
-		); err != nil {
-			return err
-		}
+	coreDecoration, err := core.UseDecoration(d)
+	if err != nil {
+		return fmt.Errorf("failed to use core decoration: %w", err)
+	}
+
+	err = coreDecoration.SetCommand(nil, command.ChamberCommand(d))
+	if err != nil {
+		return fmt.Errorf("failed to set commands: %w", err)
 	}
 
 	return nil

@@ -31,13 +31,7 @@ func BurrowSelfUpdate(
 		)
 	}
 
-	majorMinorVersion, err := kernel.GetMajorMinorVersion(
-		kernel.Version,
-	)
-	if err != nil {
-		return "", fmt.Errorf("failed to parse Burrow version")
-	}
-
+	majorMinorVersion := kernel.GetBurrowMajorMinorVersion()
 	tagPattern := fmt.Sprintf("v%s.*", majorMinorVersion)
 
 	stdout, stderr, exitCode, err := coreShare.RunExternalCommand(

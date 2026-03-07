@@ -2,7 +2,7 @@
 
 - [ ] Write documentation.
 - [ ] Environment variables `DebugLevel`; logging system (`zerolog`).
-- [ ] Nostalgia decoration
 - [ ] Server decoration
+- [ ] Command files: Long description; no commands on them
+- [ ] Service layer: Between share and command layer
 - [ ] AI-native SDK carton (`sdk.carton`)
-- [ ] In `clutter`, `carton` should have `set-local` and `unset-local` commands
