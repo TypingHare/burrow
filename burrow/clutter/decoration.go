@@ -9,7 +9,7 @@ import (
 )
 
 // ClutterDecoration provides carton-management capabilities, including Burrow
-// build flows and carton install/uninstall commands.
+// build flows and carton install/uninstall/set-local/unset-local commands.
 type ClutterDecoration struct {
 	// Decoration carries the typed clutter spec and chamber reference.
 	kernel.Decoration[share.ClutterSpec]
@@ -49,6 +49,8 @@ func (d *ClutterDecoration) Assemble() error {
 			[]string{"carton"},
 			carton.InstallCommand(d),
 			carton.UninstallCommand(d),
+			carton.SetLocalCommand(d),
+			carton.UnsetLocalCommand(d),
 		); err != nil {
 			return err
 		}

@@ -62,6 +62,106 @@ func InstallCarton(
 	return nil
 }
 
+// SetLocalCartonPath sets or updates a local override path for cartonName,
+// rebuilds Burrow, and persists the updated blueprint.
+func SetLocalCartonPath(
+	chamber *kernel.Chamber,
+	spec *ClutterSpec,
+	cartonName string,
+	path string,
+) error {
+	originalLocalCartons := slices.Clone(spec.LocalCartons)
+
+	rollback := func() {
+		spec.LocalCartons = originalLocalCartons
+	}
+
+	if !slices.Contains(spec.CartonNames, cartonName) {
+		return fmt.Errorf("carton %q is not installed", cartonName)
+	}
+
+	localCartonIndex := -1
+	for i, localCarton := range spec.LocalCartons {
+		if localCarton.Name == cartonName {
+			localCartonIndex = i
+			break
+		}
+	}
+
+	if localCartonIndex == -1 {
+		spec.LocalCartons = append(spec.LocalCartons, LocalCarton{
+			Name: cartonName,
+			Path: path,
+		})
+	} else {
+		spec.LocalCartons[localCartonIndex].Path = path
+	}
+
+	err := BuildBurrow(
+		chamber.Burrow(),
+		spec.CartonNames,
+		spec.LocalCartons,
+		spec.MagicEnv,
+	)
+	if err != nil {
+		rollback()
+		return fmt.Errorf("failed to build burrow: %w", err)
+	}
+
+	err = chamber.UpdateAndSaveBlueprint()
+	if err != nil {
+		return fmt.Errorf("failed to save blueprint after building "+
+			"Burrow executable: %w", err)
+	}
+
+	return nil
+}
+
+// UnsetLocalCartonPath removes the local override path for cartonName,
+// rebuilds Burrow, and persists the updated blueprint.
+func UnsetLocalCartonPath(
+	chamber *kernel.Chamber,
+	spec *ClutterSpec,
+	cartonName string,
+) error {
+	originalLocalCartons := slices.Clone(spec.LocalCartons)
+
+	rollback := func() {
+		spec.LocalCartons = originalLocalCartons
+	}
+
+	if !slices.Contains(spec.CartonNames, cartonName) {
+		return fmt.Errorf("carton %q is not installed", cartonName)
+	}
+
+	newLocalCartons := []LocalCarton{}
+	for _, localCarton := range spec.LocalCartons {
+		if localCarton.Name != cartonName {
+			newLocalCartons = append(newLocalCartons, localCarton)
+		}
+	}
+	spec.LocalCartons = newLocalCartons
+
+	err := BuildBurrow(
+		chamber.Burrow(),
+		spec.CartonNames,
+		spec.LocalCartons,
+		spec.MagicEnv,
+	)
+	if err != nil {
+		rollback()
+		return fmt.Errorf("failed to build burrow: %w", err)
+	}
+
+	err = chamber.UpdateAndSaveBlueprint()
+	if err != nil {
+		return fmt.Errorf("failed to save blueprint after building "+
+			"Burrow executable: %w", err)
+	}
+
+	return nil
+}
+
 // UninstallCarton removes cartonName from the clutter spec, rebuilds Burrow,
 // and persists the updated blueprint.
 func UninstallCarton(
