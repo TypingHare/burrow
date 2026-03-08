@@ -6,6 +6,8 @@ import (
 	"github.com/TypingHare/burrow/v2026/burrow/clutter/share"
 )
 
+// InstallCarton adds cartonName to the clutter spec and optionally records a
+// local checkout path for it.
 func InstallCarton(
 	d share.ClutterDecorationLike,
 	cartonName string,
@@ -19,6 +21,8 @@ func InstallCarton(
 	return nil
 }
 
+// UninstallCarton removes cartonName from the clutter spec and clears any
+// associated local checkout path.
 func UninstallCarton(
 	d share.ClutterDecorationLike,
 	cartonName string,
@@ -31,6 +35,8 @@ func UninstallCarton(
 	return nil
 }
 
+// SetLocal associates cartonName with a local checkout path in the clutter
+// spec.
 func SetLocal(
 	d share.ClutterDecorationLike,
 	cartonName string,
@@ -49,6 +55,7 @@ func SetLocal(
 	return nil
 }
 
+// UnsetLocal removes any local checkout path associated with cartonName.
 func UnsetLocal(
 	d share.ClutterDecorationLike,
 	cartonName string,

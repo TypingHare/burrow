@@ -9,6 +9,8 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
+// BuildBurrow ensures the Burrow source is available and builds either the
+// full or minimal executable for the current clutter decoration.
 func BuildBurrow(d share.ClutterDecorationLike, minimal bool) error {
 	burrow := d.Chamber().Burrow()
 	err := share.EnsureSourceDir(burrow, kernel.CartonName)
@@ -31,6 +33,8 @@ func BuildBurrow(d share.ClutterDecorationLike, minimal bool) error {
 	}
 }
 
+// BurrowSelfUpdate updates the Burrow source checkout, rebuilds the executable,
+// and rolls the source tree back if the rebuild fails.
 func BurrowSelfUpdate(d share.ClutterDecorationLike) error {
 	burrow := d.Chamber().Burrow()
 	cartonNames := d.Spec().CartonNames
