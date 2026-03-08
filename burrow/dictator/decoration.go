@@ -61,7 +61,7 @@ func (d *DictatorDecoration) Disassemble() error { return nil }
 // chamber and parsed dictator spec.
 func BuildDictatorDecoration(
 	chamber *kernel.Chamber,
-	spec share.DictatorSpec,
+	spec *share.DictatorSpec,
 ) (kernel.DecorationInstance, error) {
 	return &DictatorDecoration{
 		Decoration: *kernel.NewDecoration(chamber, spec),

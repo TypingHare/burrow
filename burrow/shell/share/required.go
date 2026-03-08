@@ -18,15 +18,15 @@ type ShellSpec struct {
 }
 
 // ParseShellSpec parses raw blueprint data into a ShellSpec.
-func ParseShellSpec(rawSpec kernel.RawSpec) (ShellSpec, error) {
+func ParseShellSpec(rawSpec kernel.RawSpec) (*ShellSpec, error) {
 	shebang, err := kernel.GetRawSpecValueOrDefault(rawSpec, "shebang", "")
 	if err != nil {
-		return ShellSpec{}, err
+		return nil, err
 	}
 
 	fileName, err := kernel.GetRawSpecValueOrDefault(rawSpec, "fileName", "")
 	if err != nil {
-		return ShellSpec{}, err
+		return nil, err
 	}
 
 	createdFileNames, err := kernel.GetRawSpecValueOrDefault(
@@ -35,10 +35,10 @@ func ParseShellSpec(rawSpec kernel.RawSpec) (ShellSpec, error) {
 		[]string{},
 	)
 	if err != nil {
-		return ShellSpec{}, err
+		return nil, err
 	}
 
-	return ShellSpec{
+	return &ShellSpec{
 		Shebang:          shebang,
 		FileName:         fileName,
 		CreatedFileNames: createdFileNames,

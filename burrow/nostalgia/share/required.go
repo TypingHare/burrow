@@ -9,6 +9,6 @@ type NostalgiaDecorationLike interface {
 
 type NostalgiaSpec struct{}
 
-func ParseNostalgiaSpec(rawSpec kernel.RawSpec) (NostalgiaSpec, error) {
-	return NostalgiaSpec{}, nil
+func ParseNostalgiaSpec(rawSpec kernel.RawSpec) (*NostalgiaSpec, error) {
+	return &NostalgiaSpec{}, nil
 }

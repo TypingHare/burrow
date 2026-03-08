@@ -13,6 +13,6 @@ type DictatorDecorationLike interface {
 type DictatorSpec struct{}
 
 // ParseDictatorSpec parses raw spec data into a DictatorSpec.
-func ParseDictatorSpec(rawSpec kernel.RawSpec) (DictatorSpec, error) {
-	return DictatorSpec{}, nil
+func ParseDictatorSpec(rawSpec kernel.RawSpec) (*DictatorSpec, error) {
+	return &DictatorSpec{}, nil
 }

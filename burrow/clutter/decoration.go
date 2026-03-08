@@ -74,7 +74,7 @@ func (d *ClutterDecoration) Disassemble() error { return nil }
 // and parsed clutter spec.
 func BuildClutterDecoration(
 	chamber *kernel.Chamber,
-	spec share.ClutterSpec,
+	spec *share.ClutterSpec,
 ) (kernel.DecorationInstance, error) {
 	return &ClutterDecoration{
 		Decoration: *kernel.NewDecoration(chamber, spec),

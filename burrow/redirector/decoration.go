@@ -68,7 +68,7 @@ func (d *RedirectorDecoration) Disassemble() error { return nil }
 // chamber and parsed redirector spec.
 func BuildRedirectorDecoration(
 	chamber *kernel.Chamber,
-	spec share.RedirectorSpec,
+	spec *share.RedirectorSpec,
 ) (kernel.DecorationInstance, error) {
 	return &RedirectorDecoration{
 		Decoration: *kernel.NewDecoration(chamber, spec),

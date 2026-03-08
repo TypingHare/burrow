@@ -20,17 +20,17 @@ type CoreSpec struct {
 }
 
 // ParseCoreSpec parses raw blueprint data into a CoreSpec.
-func ParseCoreSpec(rawSpec kernel.RawSpec) (CoreSpec, error) {
+func ParseCoreSpec(rawSpec kernel.RawSpec) (*CoreSpec, error) {
 	directDependencies, err := kernel.GetRawSpecValueOrDefault(
 		rawSpec,
 		"directDependencies",
 		[]string{"core@" + kernel.CartonName},
 	)
 	if err != nil {
-		return CoreSpec{}, err
+		return nil, err
 	}
 
-	return CoreSpec{
+	return &CoreSpec{
 		DirectDependencies: directDependencies,
 	}, nil
 }

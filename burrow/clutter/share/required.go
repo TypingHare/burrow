@@ -23,14 +23,14 @@ type ClutterSpec struct {
 }
 
 // ParseClutterSpec parses raw blueprint data into a ClutterSpec.
-func ParseClutterSpec(rawSpec kernel.RawSpec) (ClutterSpec, error) {
+func ParseClutterSpec(rawSpec kernel.RawSpec) (*ClutterSpec, error) {
 	cartonNames, err := kernel.GetRawSpecValueOrDefault(
 		rawSpec,
 		"cartonNames",
 		[]string{},
 	)
 	if err != nil {
-		return ClutterSpec{}, err
+		return nil, err
 	}
 
 	localCartons, err := kernel.GetRawSpecValueOrDefault(
@@ -39,7 +39,7 @@ func ParseClutterSpec(rawSpec kernel.RawSpec) (ClutterSpec, error) {
 		[]LocalCarton{},
 	)
 	if err != nil {
-		return ClutterSpec{}, err
+		return nil, err
 	}
 
 	maigcEnv, err := kernel.GetRawSpecValueOrDefault(
@@ -48,10 +48,10 @@ func ParseClutterSpec(rawSpec kernel.RawSpec) (ClutterSpec, error) {
 		map[string]string{},
 	)
 	if err != nil {
-		return ClutterSpec{}, err
+		return nil, err
 	}
 
-	return ClutterSpec{
+	return &ClutterSpec{
 		CartonNames:  cartonNames,
 		LocalCartons: localCartons,
 		MagicEnv:     maigcEnv,

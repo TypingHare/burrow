@@ -18,11 +18,11 @@ type Decoration[S any] struct {
 	chamber *Chamber
 
 	// spec configures the decoration.
-	spec S
+	spec *S
 }
 
 // NewDecoration returns a Decoration for chamber and spec.
-func NewDecoration[S any](chamber *Chamber, spec S) *Decoration[S] {
+func NewDecoration[S any](chamber *Chamber, spec *S) *Decoration[S] {
 	return &Decoration[S]{
 		chamber: chamber,
 		spec:    spec,
@@ -36,14 +36,14 @@ func (d *Decoration[S]) Chamber() *Chamber {
 
 // Spec returns the decoration's specification.
 func (d *Decoration[S]) Spec() *S {
-	return &d.spec
+	return d.spec
 }
 
 // SpecParser converts a RawSpec to a typed specification.
-type SpecParser[S any] func(rawSpec RawSpec) (S, error)
+type SpecParser[S any] func(rawSpec RawSpec) (*S, error)
 
 // DecorationBuilder builds a DecorationInstance from a Chamber and typed spec.
-type DecorationBuilder[S any] func(*Chamber, S) (DecorationInstance, error)
+type DecorationBuilder[S any] func(*Chamber, *S) (DecorationInstance, error)
 
 // DecorationFactory builds a DecorationInstance from a Chamber and RawSpec.
 type DecorationFactory func(

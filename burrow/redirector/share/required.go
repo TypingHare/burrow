@@ -16,17 +16,17 @@ type RedirectorSpec struct {
 }
 
 // ParseRedirectorSpec parses raw blueprint data into a RedirectorSpec.
-func ParseRedirectorSpec(rawSpec kernel.RawSpec) (RedirectorSpec, error) {
+func ParseRedirectorSpec(rawSpec kernel.RawSpec) (*RedirectorSpec, error) {
 	silentlyRedirect, err := kernel.GetRawSpecValueOrDefault(
 		rawSpec,
 		"silentlyRedirect",
 		false,
 	)
 	if err != nil {
-		return RedirectorSpec{}, err
+		return nil, err
 	}
 
-	return RedirectorSpec{
+	return &RedirectorSpec{
 		SilentlyRedirect: silentlyRedirect,
 	}, nil
 }

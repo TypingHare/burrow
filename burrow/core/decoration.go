@@ -206,7 +206,7 @@ func (d *CoreDecoration) SetCommand(
 // the root Cobra command for a chamber.
 func BuildCoreDecoration(
 	chamber *kernel.Chamber,
-	spec share.CoreSpec,
+	spec *share.CoreSpec,
 ) (kernel.DecorationInstance, error) {
 	return &CoreDecoration{
 		Decoration: *kernel.NewDecoration(chamber, spec),

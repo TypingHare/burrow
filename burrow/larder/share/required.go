@@ -14,6 +14,6 @@ type LarderDecorationLike interface {
 type LarderSpec struct{}
 
 // ParseLarderSpec parses raw blueprint data into a LarderSpec.
-func ParseLarderSpec(rawSpec kernel.RawSpec) (LarderSpec, error) {
-	return LarderSpec{}, nil
+func ParseLarderSpec(rawSpec kernel.RawSpec) (*LarderSpec, error) {
+	return &LarderSpec{}, nil
 }

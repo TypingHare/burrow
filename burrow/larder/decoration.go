@@ -50,7 +50,7 @@ func (d *LarderDecoration) Disassemble() error { return nil }
 // and parsed larder spec.
 func BuildLarderDecoration(
 	chamber *kernel.Chamber,
-	spec share.LarderSpec,
+	spec *share.LarderSpec,
 ) (kernel.DecorationInstance, error) {
 	return &LarderDecoration{
 		Decoration: *kernel.NewDecoration(chamber, spec),

@@ -69,7 +69,7 @@ func (d *ShellDecoration) Disassemble() error { return nil }
 // parsed shell spec.
 func BuildShellDecoration(
 	chamber *kernel.Chamber,
-	spec share.ShellSpec,
+	spec *share.ShellSpec,
 ) (kernel.DecorationInstance, error) {
 	decoration := &ShellDecoration{
 		Decoration: *kernel.NewDecoration(chamber, spec),

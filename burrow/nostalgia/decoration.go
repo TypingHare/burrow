@@ -42,7 +42,7 @@ func (d *NostalgiaDecoration) Disassemble() error { return nil }
 
 func BuildNostalgiaDecoration(
 	chamber *kernel.Chamber,
-	spec share.NostalgiaSpec,
+	spec *share.NostalgiaSpec,
 ) (kernel.DecorationInstance, error) {
 	return &NostalgiaDecoration{
 		Decoration: *kernel.NewDecoration(chamber, spec),
