@@ -6,8 +6,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// BurrowCommand builds the `burrow` command group for managing the Burrow
-// executable and its source tree.
 func BurrowCommand(d share.ClutterDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "burrow",

@@ -15,6 +15,8 @@ import (
 	nostalgiaShare "github.com/TypingHare/burrow/v2026/burrow/nostalgia/share"
 	"github.com/TypingHare/burrow/v2026/burrow/redirector"
 	redirectorShare "github.com/TypingHare/burrow/v2026/burrow/redirector/share"
+	"github.com/TypingHare/burrow/v2026/burrow/server"
+	serverShare "github.com/TypingHare/burrow/v2026/burrow/server/share"
 	"github.com/TypingHare/burrow/v2026/burrow/shell"
 	shellShare "github.com/TypingHare/burrow/v2026/burrow/shell/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
@@ -91,6 +93,15 @@ func RegisterCartonTo(warehouse *kernel.Warehouse) error {
 		nostalgia.BuildNostalgiaDecoration,
 	); err != nil {
 		return fmt.Errorf("error adding nostalgia decoration factory: %w", err)
+	}
+
+	if err := kernel.AddTypedDecorationFactory(
+		carton,
+		"server",
+		serverShare.ParseServerSpec,
+		server.BuildServerDecoration,
+	); err != nil {
+		return fmt.Errorf("error adding server decoration factory: %w", err)
 	}
 
 	return warehouse.RegisterCarton(carton)

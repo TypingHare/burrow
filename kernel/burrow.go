@@ -3,6 +3,7 @@ package kernel
 import (
 	"errors"
 	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
 	"strings"
@@ -248,4 +249,16 @@ func (b *Burrow) GetChamberDir() string {
 // GetSourceDir returns the source directory of the burrow.
 func (b *Burrow) GetSourceDir() string {
 	return filepath.Join(b.GetDataDir(), b.Env.Get(EnvSourceDir))
+}
+
+// Clone creates a deep copy of the Burrow, including its environment variables.
+func (b *Burrow) Clone() *Burrow {
+	burrow := &Burrow{
+		Env:       maps.Clone(b.Env),
+		warehouse: b.warehouse,
+	}
+
+	burrow.architect = NewArchitect(burrow)
+
+	return burrow
 }
