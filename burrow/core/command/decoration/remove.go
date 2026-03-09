@@ -3,6 +3,7 @@ package decoration
 import (
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
@@ -14,7 +15,14 @@ func RemoveCommand(d share.CoreDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "remove <decoration>",
 		Short: "Remove a decoration from the chamber",
-		Args:  cobra.ExactArgs(1),
+		Long: strings.TrimSpace(`
+This command removes a decoration from the current chamber.
+
+It only removes decorations that are direct dependencies of the core
+decoration. After removal, Burrow updates the chamber blueprint and redigs
+the chamber so the running chamber state matches the new configuration.
+		`),
+		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			decorationID := args[0]
 

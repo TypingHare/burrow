@@ -3,6 +3,7 @@ package decoration
 import (
 	"maps"
 	"slices"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/spf13/cobra"
@@ -16,6 +17,14 @@ func ListCommand(d share.CoreDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "list",
 		Short: "Show all decorations in the chamber",
+		Long: strings.TrimSpace(`
+This command lists decoration IDs.
+
+By default, it shows the decorations installed in the current chamber.
+Use "--root" to show only the root decorations declared directly for the
+chamber. Use "--all" to show every decoration factory registered in the
+warehouse, including decorations not installed in this chamber.
+		`),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if all {
 				decorationIDs := maps.Keys(

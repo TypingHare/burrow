@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/shell/share"
 	"github.com/spf13/cobra"
@@ -14,6 +15,14 @@ func RestoreCommand(d share.ShellDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "restore",
 		Short: "Restore missing shell scripts from createdFileNames",
+		Long: strings.TrimSpace(`
+This command recreates missing shell script files recorded in the shell
+decoration spec.
+
+It checks every file name stored in "createdFileNames". If a file is
+missing, Burrow writes it again using the current generated shell
+content.
+		`),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			content := share.GetShellFileContent(d)
 			for _, fileName := range d.Spec().CreatedFileNames {

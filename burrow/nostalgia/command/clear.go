@@ -3,6 +3,7 @@ package command
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/nostalgia/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
@@ -14,7 +15,14 @@ func ClearCommand(d share.NostalgiaDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "clear [datetime]",
 		Short: "Remove one backup or all backups for the current chamber",
-		Args:  cobra.MaximumNArgs(1),
+		Long: strings.TrimSpace(`
+This command deletes chamber backups.
+
+If you provide a timestamp, it removes only that backup. If you do not
+provide a timestamp, it removes every backup found for the current
+chamber.
+		`),
+		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {
 				return clearBackup(d.Chamber(), args[0])

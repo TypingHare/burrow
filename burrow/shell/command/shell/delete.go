@@ -3,6 +3,7 @@ package shell
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/shell/share"
 	"github.com/spf13/cobra"
@@ -13,6 +14,12 @@ func DeleteCommand(d share.ShellDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a shell script",
+		Long: strings.TrimSpace(`
+This command deletes the chamber's shell script file from disk.
+
+It also removes that file name from the shell decoration spec so Burrow
+no longer treats it as a created shell file.
+		`),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			fileName := d.Spec().FileName
 			if fileName == "" {

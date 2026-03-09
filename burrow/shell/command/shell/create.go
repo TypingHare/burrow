@@ -3,6 +3,7 @@ package shell
 import (
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/shell/share"
 	"github.com/spf13/cobra"
@@ -15,7 +16,17 @@ func CreateCommand(d share.ShellDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "create",
 		Short: "Create a shell script",
-		Args:  cobra.MaximumNArgs(1),
+		Long: strings.TrimSpace(`
+This command creates a shell script file for the current chamber.
+
+If you pass a file name argument or "--filename", Burrow uses that name.
+Otherwise it uses the file name stored in the shell decoration spec, and
+if that is empty it falls back to the chamber name.
+
+After the file is created, the shell decoration spec remembers it in
+"createdFileNames" so it can be restored later if needed.
+		`),
+		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			fileName := flagFileName
 			if len(args) > 0 {

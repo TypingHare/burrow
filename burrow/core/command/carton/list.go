@@ -2,6 +2,7 @@ package carton
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
@@ -15,6 +16,13 @@ func ListCommand(d share.CoreDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "list",
 		Short: "Show cartons used in the chamber",
+		Long: strings.TrimSpace(`
+This command lists carton names together with their versions.
+
+By default, it shows the cartons used by the current chamber. If you pass
+"--all", it instead shows every carton currently registered in Burrow's
+warehouse.
+		`),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			warehouse := d.Chamber().Burrow().Warehouse()
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"slices"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/nostalgia/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
@@ -15,6 +16,14 @@ func NostalgiaCommand(d share.NostalgiaDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "nostalgia",
 		Short: "Manage backups for the chamber",
+		Long: strings.TrimSpace(`
+This command group manages chamber backups created by the nostalgia
+decoration.
+
+Use these commands to create timestamped backups, list the backups that
+exist, restore one backup into the current chamber, or delete old
+backups.
+		`),
 	}
 
 	command.AddCommand(BackupCommand(d))

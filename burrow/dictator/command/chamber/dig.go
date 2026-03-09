@@ -2,6 +2,7 @@ package chamber
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/dictator/share"
 	"github.com/spf13/cobra"
@@ -12,7 +13,14 @@ func DigCommand(d share.DictatorDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "dig <chamber>",
 		Short: "Dig a chamber",
-		Args:  cobra.ExactArgs(1),
+		Long: strings.TrimSpace(`
+This command digs a chamber into memory.
+
+Digging loads the chamber blueprint, resolves its decoration
+dependencies, assembles those decorations, and launches them so the
+chamber is ready to handle commands in the current process.
+		`),
+		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			chamberName := args[0]
 			_, err := d.Chamber().Burrow().Architect().Dig(chamberName)

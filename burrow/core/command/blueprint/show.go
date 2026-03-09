@@ -2,6 +2,7 @@ package blueprint
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/spf13/cobra"
@@ -14,6 +15,14 @@ func ShowCommand(d share.CoreDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "show",
 		Short: "Show the blueprint",
+		Long: strings.TrimSpace(`
+This command prints the current chamber blueprint.
+
+The blueprint is the configuration that Burrow uses to describe the
+decorations installed in the chamber and the raw spec stored for each
+one. Right now the command prints JSON output, including the default
+output mode.
+		`),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if showJson {
 				data, err := d.Chamber().Blueprint().ToJSON()

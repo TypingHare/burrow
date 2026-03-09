@@ -2,6 +2,7 @@ package chamber
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/dictator/share"
 	"github.com/spf13/cobra"
@@ -14,6 +15,13 @@ func ListCommand(d share.DictatorDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "list",
 		Short: "List dug chambers",
+		Long: strings.TrimSpace(`
+This command lists chamber names.
+
+By default, it shows only chambers that are currently dug in memory. If
+"--all" is provided, it also shows chambers that exist on disk but are not
+dug right now.
+		`),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			burrow := d.Chamber().Burrow()
 
