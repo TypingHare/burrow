@@ -8,8 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// SaveCommand builds the `blueprint save` command, which persists the current
-// in-memory blueprint without refreshing it from installed decorations.
 func SaveCommand(d share.CoreDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "save",

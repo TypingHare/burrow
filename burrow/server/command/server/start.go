@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// StartCommand builds the `server start` command.
 func StartCommand(d share.ServerDecorationLike) *cobra.Command {
 	return &cobra.Command{
 		Use:   "start",

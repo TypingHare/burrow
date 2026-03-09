@@ -10,7 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// RestoreCommand builds the `shell restore` command.
 func RestoreCommand(d share.ShellDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "restore",

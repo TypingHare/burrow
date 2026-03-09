@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ListCommand builds the `nostalgia list` command.
 func ListCommand(d share.NostalgiaDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "list",

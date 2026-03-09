@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// BackupCommand builds the `nostalgia backup` command.
 func BackupCommand(d share.NostalgiaDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "backup",

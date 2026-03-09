@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// InfoCommand builds the placeholder `chamber info` command.
 func InfoCommand(d share.DictatorDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "info <chamber>",

@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ListCommand builds the `chamber list` command.
 func ListCommand(d share.DictatorDecorationLike) *cobra.Command {
 	var all bool
 

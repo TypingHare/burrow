@@ -8,8 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ChamberCommand builds the `chamber` command group for chamber lifecycle
-// management.
 func ChamberCommand(d share.DictatorDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "chamber",
@@ -19,7 +17,7 @@ This command group manages chambers in the current Burrow workspace.
 
 Use these commands to create blueprints, dig chambers into memory, bury
 running chambers, destroy chamber blueprints, or inspect the chambers that
-Burrow knows about.
+Burrow knows about. You can also redig a chamber to rebuild it in place.
 		`),
 	}
 
@@ -27,6 +25,7 @@ Burrow knows about.
 	command.AddCommand(chamber.DestroyCommand(d))
 	command.AddCommand(chamber.BuryCommand(d))
 	command.AddCommand(chamber.DigCommand(d))
+	command.AddCommand(chamber.RedigCommand(d))
 	command.AddCommand(chamber.InfoCommand(d))
 	command.AddCommand(chamber.ListCommand(d))
 

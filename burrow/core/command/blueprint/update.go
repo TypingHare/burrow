@@ -8,8 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// UpdateCommand builds the `blueprint update` command, which refreshes the
-// in-memory blueprint from the currently installed decorations.
 func UpdateCommand(d share.CoreDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "update",

@@ -9,7 +9,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CreateCommand builds the `shell create` command.
 func CreateCommand(d share.ShellDecorationLike) *cobra.Command {
 	var flagFileName string
 

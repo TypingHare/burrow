@@ -11,7 +11,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// NostalgiaCommand builds the `nostalgia` command group for chamber backups.
 func NostalgiaCommand(d share.NostalgiaDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "nostalgia",

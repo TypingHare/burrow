@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ContentCommand builds the `shell content` command.
 func ContentCommand(d share.ShellDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "content",

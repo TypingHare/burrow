@@ -48,7 +48,6 @@ func (d *CoreDecoration) Assemble() error {
 	d.Chamber().Handler = share.GetCoreHandler(d)
 
 	d.SetCommand(nil, command.EnvCommand(d))
-	d.SetCommand(nil, command.RedigCommand(d))
 	d.SetCommand(nil, command.CartonCommand(d))
 	d.SetCommand(nil, command.DecorationCommand(d))
 	d.SetCommand(nil, command.BlueprintCommand(d))

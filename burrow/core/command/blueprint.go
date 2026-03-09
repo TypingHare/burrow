@@ -8,8 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// BlueprintCommand builds the `blueprint` command group for chamber blueprint
-// inspection and maintenance.
 func BlueprintCommand(d share.CoreDecorationLike) *cobra.Command {
 	var showJson bool
 

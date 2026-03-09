@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// RestoreCommand builds the `nostalgia restore` command.
 func RestoreCommand(d share.NostalgiaDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "restore <datetime>",

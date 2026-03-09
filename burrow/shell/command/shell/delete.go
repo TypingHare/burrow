@@ -9,7 +9,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// DeleteCommand builds the `shell delete` command.
 func DeleteCommand(d share.ShellDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "delete",

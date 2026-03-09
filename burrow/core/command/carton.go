@@ -8,8 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CartonCommand builds the `carton` command group for inspecting cartons known
-// to the current chamber or warehouse.
 func CartonCommand(d share.CoreDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "carton",

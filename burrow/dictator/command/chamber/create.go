@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CreateCommand builds the `chamber create` command.
 func CreateCommand(d share.DictatorDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "create <chamber>",

@@ -10,7 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ClearCommand builds the `nostalgia clear` command.
 func ClearCommand(d share.NostalgiaDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "clear [datetime]",

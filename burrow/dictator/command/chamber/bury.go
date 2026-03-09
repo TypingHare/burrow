@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// BuryCommand builds the `chamber bury` command.
 func BuryCommand(d share.DictatorDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "bury <chamber>",

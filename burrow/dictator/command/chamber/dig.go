@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// DigCommand builds the `chamber dig` command.
 func DigCommand(d share.DictatorDecorationLike) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "dig <chamber>",
