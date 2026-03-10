@@ -60,7 +60,7 @@ func AddTypedDecorDef[S any](
 	parse func(RawSpec) (*S, error),
 	build func(*Chamber, *S) (Decor, error),
 ) error {
-	typedDecorDef := NewTypedDecorDef[S](decorName, parse, build)
+	typedDecorDef := NewTypedDecorDef(decorName, parse, build)
 	c.DecorDefsByNames[decorName] = typedDecorDef
 
 	return nil

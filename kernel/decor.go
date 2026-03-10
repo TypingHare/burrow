@@ -3,7 +3,7 @@ package kernel
 type Decor interface {
 	Chamber() *Chamber
 	RawSpec() RawSpec
-	Deps() []string
+	Dependencies() []string
 
 	Assemble() error
 	Launch() error
@@ -12,14 +12,17 @@ type Decor interface {
 }
 
 type TypedDecor[S any] struct {
-	// Chamber is the Chamber this decoration is installed in.
-	Chamber *Chamber
+	// chamber is the Chamber this decoration is installed in.
+	chamber *Chamber
 
 	// Spec configures this decoration.
 	Spec *S
 
 	// Deps is the dependencies of this decor.
 	Deps []string
+
+	// BuildRawSpec builds the RawSpec for this decor.
+	BuildRawSpec func() (RawSpec, error)
 
 	OnAssemble    func() error
 	OnLaunch      func() error
@@ -28,7 +31,32 @@ type TypedDecor[S any] struct {
 }
 
 func NewDecor[S any](chamber *Chamber, spec *S, deps []string) *TypedDecor[S] {
-	return &TypedDecor[S]{Chamber: chamber, Spec: spec, Deps: deps}
+	return &TypedDecor[S]{
+		chamber: chamber, Spec: spec, Deps: deps,
+		BuildRawSpec: func() (RawSpec, error) {
+			return RawSpec{}, nil
+		},
+	}
+}
+
+func (d *TypedDecor[S]) Chamber() *Chamber {
+	return d.chamber
+}
+
+func (d *TypedDecor[S]) RawSpec() RawSpec {
+	if d.BuildRawSpec != nil {
+		raw, err := d.BuildRawSpec()
+		if err != nil {
+			return RawSpec{}
+		}
+		return raw
+	}
+
+	return RawSpec{}
+}
+
+func (d *TypedDecor[S]) Dependencies() []string {
+	return d.Deps
 }
 
 func (d *TypedDecor[S]) Assemble() error {

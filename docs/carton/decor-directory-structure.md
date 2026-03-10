@@ -1,87 +1,135 @@
 ### Decor Directory Structure
 
-The directory structure of a decor is organized to promote separation of concerns and maintainability. Below is a recommended structure for a decor named "demo":
+There is no single required layout for a decor, but a consistent structure makes the code easier to grow and easier to share with other decors. A good default is to keep the decor type at the package root, put reusable types in `share`, and keep command or API code in their own directories when the decor needs them.
+
+For a decor named `demo`, the directory usually looks like this:
 
 ```bash
-demo                    # Root directory of the decor
-├── api                 # API layer of the decor
-├── command             # Command layer of the decor
-│   └── list.go         # An example command factory file
-├── share               # Shared entities and utilities
-│   ├── spec.go         # Decoration specification definitions
-│   ├── contract.go     # Contract definitions for the decor
-│   └── demo            # An example shared module
-└── decor.go            # Main entry point for the decor
+demo
+├── api
+├── command
+│   └── list.go
+├── share
+│   ├── contract.go
+│   ├── spec.go
+│   └── demo
+└── decor.go
 ```
 
-The `decor.go` file serves as the main entry point for the decor, where the typed decor is defined. It should contain a decor embedding the `kernel.TypedDecor` with a specific specification type defined in the `share/spec.go` file:
+The important part is the separation of responsibilities:
+
+- `decor.go` defines the decor type and its lifecycle hooks.
+- `share/spec.go` defines the typed spec and the parser that converts `kernel.RawSpec` into that spec.
+- `share/contract.go` defines interfaces that other packages can depend on without importing the concrete decor type.
+- `api` contains API-facing types or helpers when the decor exposes an API to other decors.
+- `command` contains command wiring when the decor adds CLI behavior.
+
+The `api` and `command` directories are optional. Many decors only need `decor.go` and `share`.
+
+#### `decor.go`
+
+The root package should define the concrete decor type. In Burrow, that usually means embedding `kernel.TypedDecor[S]` with the decor's typed spec.
 
 ```go
-// decor.go
-type DemoTypedDecor struct {
-	kernel.TypedDecor[share.DemoSpec]
-}
+package demo
 
-function Foo() string {
-    return "foo"
-}
-```
+import (
+	"github.com/TypingHare/burrow/v2026/kernel"
 
-It should also include the definition of the typed decor using `kernel.NewTypedDecorDef`, which specifies the name of the decor, a function to create a new specification, and a function to create a new decor instance:
-
-```go
-// decor.go
-var DemoTypedDecorDef = kernel.NewTypedDecorDef[share.DemoSpec](
-    "demo",
-    share.NewDemoSpec,
-    func(c *kernel.Chamber, r *share.DemoSpec) (*kernel.DemoTypedDecor, error) {
-        return &share.DemoTypedDecor{}, nil
-    },
+	"github.com/TypingHare/burrow/demo/share"
 )
-```
 
-In the `share/spec.go` file, you should define both the `DemoSpec` struct and a `NewDemoSpec` function that returns a new instance of `DemoSpec`:
-
-```go
-// share/spec.go
-type DemoSpec struct {
-    // Define fields for the specification here
+type Decor struct {
+	*kernel.TypedDecor[share.Spec]
 }
 
-func NewDemoSpec(r kernel.RawSpec) (*kernel.DemoSpec, error) {
-    return &share.DemoSpec{}, nil
-},
-```
+func NewDecor(chamber *kernel.Chamber, spec *share.Spec) (kernel.Decor, error) {
+	decor := &Decor{
+		TypedDecor: kernel.NewDecor(chamber, spec, nil),
+	}
 
-In the `decor.go` file, you should also define a `UseDecor` function that allows the decor to be used within a chamber and a function that registers the decor itself to a carton:
+	decor.OnAssemble = func() error {
+		return nil
+	}
 
-```go
-// decor.go
-func UseTypedDecor(c *kernel.Chamber) (*DemoTypedDecor, error) {
-    return kernel.UseTypedDecor[DemoTypedDecor](c)
-}
-
-func RegisterToCarton(c *kernel.Carton) {
-    c.RegisterDecor(DemoTypedDecorDef)
+	return decor, nil
 }
 ```
 
-The `share/contract.go` should contain contract definitions (interfaces) that the decor will implement. It must contain a `DemoDecor` interface that defines the methods the decor will provide:
+Keep `decor.go` focused on the decor itself: construction, dependencies, lifecycle, and carton registration. If the decor starts collecting unrelated helpers, move them into `share`, `api`, or `command`.
+
+#### `share/spec.go`
+
+The spec parser belongs in `share/spec.go`. This file defines the typed configuration and the function that parses the raw spec.
 
 ```go
-// share/contract.go
+package share
+
+import "github.com/TypingHare/burrow/v2026/kernel"
+
+type Spec struct {
+	Name string `json:"name"`
+}
+
+func NewSpec(raw kernel.RawSpec) (*Spec, error) {
+	spec := &Spec{
+		Name: "",
+	}
+
+	if name, ok := raw["name"].(string); ok {
+		spec.Name = name
+	}
+
+	return spec, nil
+}
+```
+
+The exact fields depend on the decor, but the pattern stays the same: define a typed struct, parse from `kernel.RawSpec`, and keep parsing logic close to the type it produces.
+
+#### `share/contract.go`
+
+`share/contract.go` is useful when other packages need to interact with the decor without importing its concrete implementation. That keeps package boundaries cleaner and helps avoid circular imports.
+
+```go
+package share
+
+import "github.com/TypingHare/burrow/v2026/kernel"
+
 type DemoDecor interface {
-    kernel.Decor
-    Foo() string
+	kernel.Decor
+	Foo() string
 }
 ```
 
-This interface is used around the API layer, the command layer, and the share modules to address the circular import issue, because in the `decor.go` file, the lifecycle functions may need to call command factory functions in the command layer.
+This contract is commonly used by the `api` and `command` packages, and by any shared subpackages under `share`.
 
-The **share modules** refer to the directories in the `share` directory, which contain shared entities and utilities for the decor. They can be used by the API layer, the command layer, and other share modules. For instance, `share/demo` is a share module in the decor. It is recommended to have a share module named after the decor itself, which contains entities and utilities that may be used by other decors.
+#### `api` and `command`
 
-The **API layer** refers to the `api` directory, which contains the API definitions for the decor. They are usually used by the command layer, but can also be used by other decors.
+Use `api` when the decor exposes reusable API-level helpers or types. Use `command` when the decor contributes commands to the chamber. Keeping those packages separate prevents `decor.go` from turning into a large grab bag of CLI code, shared types, and lifecycle logic.
 
-The **command layer** refers to the `command` directory, which contains command factory functions for the decor. The commands are evaluated by these functions and added to the root command in the `OnAssemble` function of the decor.
+The `command` package usually contains command factory functions. The decor can then call those functions from a lifecycle hook such as `OnAssemble` when it is time to register commands.
 
-Note that the API layer and the command layer are optional. Some decors may not register any commands, and they don't need to have these two layers.
+#### Exposing carton registration
+
+The decor package should expose a small registration function so cartons can register it without knowing the details of its typed spec or builder.
+
+```go
+func RegisterToCarton(carton *kernel.Carton) error {
+	return kernel.AddTypedDecorDef(
+		carton,
+		"demo",
+		share.NewSpec,
+		NewDecor,
+	)
+}
+```
+
+With that pattern, carton code stays simple:
+
+```go
+if err := demo.RegisterToCarton(carton); err != nil {
+	return err
+}
+```
+
+That separation is still useful when you organize the package: the decor owns its implementation and exposes the registration entry point, while the carton decides which decors to include.
