@@ -9,7 +9,8 @@ import (
 	"slices"
 )
 
-// Blueprint maps decoration IDs to their raw specs for a chamber.
+type RawSpec map[string]any
+
 type Blueprint map[string]RawSpec
 
 // NewBlueprint returns an empty Blueprint.
@@ -59,17 +60,17 @@ func (b Blueprint) SaveToJSONFile(path string) error {
 	return nil
 }
 
-// GetDecorationIDs returns all decoration IDs defined in the blueprint.
-func (b Blueprint) GetDecorationIDs() []string {
+// GetDecorIDs returns all decor IDs defined in the blueprint.
+func (b Blueprint) GetDecorIDs() []string {
 	return slices.Collect(maps.Keys(b))
 }
 
-// GetRawSpec returns the RawSpec for decorationID.
+// GetRawSpec returns the RawSpec for decorID.
 //
 // If decorationID is not present, GetRawSpec returns an empty RawSpec and no
 // error.
-func (b Blueprint) GetRawSpec(decorationID string) (RawSpec, error) {
-	rawSpec, exists := b[decorationID]
+func (b Blueprint) GetRawSpec(decorID string) (RawSpec, error) {
+	rawSpec, exists := b[decorID]
 	if !exists {
 		return make(RawSpec), nil
 	}

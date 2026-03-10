@@ -24,8 +24,8 @@ const Version = "2026.0.0"
 // this should be updated accordingly.
 const CartonName = "github.com/TypingHare/burrow"
 
-// DecorationIDSep joins decoration and carton names in a decoration ID.
-const DecorationIDSep = "@"
+// DecorIDSep joins decoration and carton names in a decoration ID.
+const DecorIDSep = "@"
 
 // Environment variable names used by Burrow.
 const (

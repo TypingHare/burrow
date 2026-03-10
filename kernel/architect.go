@@ -9,44 +9,33 @@ import (
 
 // Architect manages chambers for a Burrow.
 type Architect struct {
-	// burrow is the Burrow managed by the Architect.
-	burrow *Burrow
+	// Burrow is the Burrow managed by the Architect.
+	Burrow *Burrow
 
-	// chamberMap stores chambers by name.
-	chamberMap map[string]*Chamber
+	// ChambersByNames stores chambers by name.
+	ChambersByNames map[string]*Chamber
 }
 
 // NewArchitect returns an Architect for the provided Burrow.
 func NewArchitect(burrow *Burrow) *Architect {
 	return &Architect{
-		burrow:     burrow,
-		chamberMap: make(map[string]*Chamber),
+		Burrow:          burrow,
+		ChambersByNames: make(map[string]*Chamber),
 	}
-}
-
-// Burrow returns the Burrow managed by this Architect.
-func (a *Architect) Burrow() *Burrow {
-	return a.burrow
-}
-
-// ChamberMap returns the Architect's chambers keyed by name.
-func (a *Architect) ChamberMap() map[string]*Chamber {
-	return a.chamberMap
 }
 
 // GetBlueprintPath returns the blueprint file path for chamberName.
 func (a *Architect) GetBlueprintPath(chamberName string) string {
 	return filepath.Join(
-		a.burrow.GetConfigDir(),
+		a.Burrow.GetConfigDir(),
 		chamberName,
-		a.burrow.Env.Get(EnvBlueprintFileName),
+		a.Burrow.Env.Get(EnvBlueprintFileName),
 	)
 }
 
 // GetBlueprint loads the blueprint file for chamberName from disk.
 func (a *Architect) GetBlueprint(chamberName string) (Blueprint, error) {
 	blueprint := NewBlueprint()
-
 	blueprintFilePath := a.GetBlueprintPath(chamberName)
 	if _, err := os.Stat(blueprintFilePath); err != nil {
 		if os.IsNotExist(err) {
@@ -90,7 +79,7 @@ func (a *Architect) SaveBlueprint(
 // For the root chamber, Dig falls back to GetDefaultRootChamberBlueprint when
 // no blueprint file exists yet.
 func (a *Architect) Dig(chamberName string) (*Chamber, error) {
-	isRootChamber := chamberName == a.burrow.Env.Get(EnvRootChamber)
+	isRootChamber := chamberName == a.Burrow.Env.Get(EnvRootChamber)
 	blueprint, err := a.GetBlueprint(chamberName)
 	if err != nil {
 		if isRootChamber && errors.Is(err, os.ErrNotExist) {
@@ -104,7 +93,7 @@ func (a *Architect) Dig(chamberName string) (*Chamber, error) {
 		}
 	}
 
-	chamber := NewChamber(a.burrow, chamberName, blueprint)
+	chamber := NewChamber(a.Burrow, chamberName, blueprint)
 	if err = chamber.init(); err != nil {
 		return nil, NewChamberError(
 			chamberName,
@@ -113,62 +102,11 @@ func (a *Architect) Dig(chamberName string) (*Chamber, error) {
 		)
 	}
 
-	a.chamberMap[chamberName] = chamber
+	a.ChambersByNames[chamberName] = chamber
 
 	return chamber, nil
 }
 
-// Bury persists and tears down chamberName, then removes it from the Architect.
-func (a *Architect) Bury(chamberName string) error {
-	chamber, exists := a.chamberMap[chamberName]
-	if !exists {
-		return NewChamberError(chamberName, "chamber does not exist", nil)
-	}
-
-	err := chamber.UpdateAndSaveBlueprint()
-	if err != nil {
-		return NewChamberError(
-			chamberName,
-			"failed to update and save blueprint before burying chamber",
-			err,
-		)
-	}
-
-	if err := chamber.discardDecorations(); err != nil {
-		return NewChamberError(
-			chamberName,
-			"failed to terminate chamber",
-			err,
-		)
-	}
-
-	delete(a.chamberMap, chamberName)
-
-	return nil
-}
-
-// Get returns the chamber named chamberName.
-func (a *Architect) Get(chamberName string) (*Chamber, error) {
-	chamber, exists := a.chamberMap[chamberName]
-	if !exists {
-		return nil, NewChamberError(chamberName, "chamber does not exist", nil)
-	}
-
-	return chamber, nil
-}
-
-// GetOrDig returns the chamber named chamberName, creating it if necessary.
-func (a *Architect) GetOrDig(chamberName string) (*Chamber, error) {
-	chamber, err := a.Get(chamberName)
-	if err != nil {
-		return a.Dig(chamberName)
-	}
-
-	return chamber, nil
-}
-
-// GetDefaultRootChamberBlueprint returns the initial root blueprint containing
-// only the core decoration.
 func GetDefaultRootChamberBlueprint() Blueprint {
-	return Blueprint{"core@" + CartonName: NewRawSpec()}
+	return Blueprint{}
 }

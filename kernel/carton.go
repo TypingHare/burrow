@@ -15,81 +15,55 @@ type Carton struct {
 	// Metadata stores carton metadata.
 	Metadata Vars
 
-	// decorationFactoryMap stores decoration factories by name.
-	decorationFactoryMap map[string]DecorationFactory
+	// DecorDefsByNames stores decoration factories by name.
+	DecorDefsByNames map[string]DecorDef
 }
 
 // NewCarton returns an empty Carton.
 func NewCarton() *Carton {
 	return &Carton{
-		Metadata:             NewVars(),
-		decorationFactoryMap: make(map[string]DecorationFactory),
+		Metadata:         NewVars(),
+		DecorDefsByNames: make(map[string]DecorDef),
 	}
 }
 
-// AddDecorationFactory registers factory under name.
-func (c *Carton) AddDecorationFactory(
-	name string,
-	factory DecorationFactory,
-) error {
+func (c *Carton) AddDecorDef(name string, decorDef DecorDef) error {
 	if name == "" {
-		return fmt.Errorf("decoration name cannot be empty")
+		return fmt.Errorf("decor name cannot be empty")
 	}
 
-	if factory == nil {
-		return fmt.Errorf("decoration factory cannot be nil")
+	if decorDef == nil {
+		return fmt.Errorf("decor definition cannot be nil")
 	}
 
-	if _, exists := c.decorationFactoryMap[name]; exists {
+	if _, exists := c.DecorDefsByNames[name]; exists {
 		return fmt.Errorf(
-			"decoration factory with name '%q' already exists",
+			"decor definition with name '%q' already exists",
 			name,
 		)
 	}
 
-	c.decorationFactoryMap[name] = factory
+	c.DecorDefsByNames[name] = decorDef
 
 	return nil
 }
 
-// AddTypedDecorationFactory registers a typed decoration factory.
-//
-// It parses rawSpec with parse, builds the decoration with build, and exposes
-// the result through Carton's untyped factory interface.
-func AddTypedDecorationFactory[S any](
+func (c *Carton) Name() string {
+	return c.Metadata.Get(MetadataName)
+}
+
+func (c *Carton) Version() string {
+	return c.Metadata.Get(MetadataVersion)
+}
+
+func AddTypedDecorDef[S any](
 	c *Carton,
-	decorationName string,
-	parse SpecParser[S],
-	build DecorationBuilder[S],
+	decorName string,
+	parse func(RawSpec) (*S, error),
+	build func(*Chamber, *S) (DecorInstance, error),
 ) error {
-	return c.AddDecorationFactory(
-		decorationName,
-		func(chamber *Chamber, rawSpec RawSpec) (DecorationInstance, error) {
-			spec, err := parse(rawSpec)
-			if err != nil {
-				return nil, fmt.Errorf(
-					"invalid raw spec for decoration %q: %w",
-					decorationName,
-					err,
-				)
-			}
+	typedDecorDef := NewTypedDecorDef[S](decorName, parse, build)
+	c.DecorDefsByNames[decorName] = typedDecorDef
 
-			decoration, err := build(chamber, spec)
-			if err != nil {
-				return nil, fmt.Errorf(
-					"failed to build decoration %q: %w",
-					decorationName,
-					err,
-				)
-			}
-			if decoration == nil {
-				return nil, fmt.Errorf(
-					"failed to build decoration %q: decoration is nil",
-					decorationName,
-				)
-			}
-
-			return decoration, nil
-		},
-	)
+	return nil
 }
