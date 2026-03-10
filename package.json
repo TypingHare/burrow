@@ -1,0 +1,15 @@
+{
+  "devDependencies": {
+    "@commitlint/config-conventional": "^20.4.3",
+    "commitlint": "^20.4.3",
+    "eslint": "^10.0.3",
+    "husky": "^9.1.7",
+    "prettier": "^3.8.1"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 80
+  }
+}

@@ -1,0 +1,82 @@
+package kernel
+
+import (
+	"fmt"
+	"strings"
+)
+
+// SplitVersion splits version into major, minor, and patch components.
+//
+// version must be in major.minor.patch form.
+func SplitVersion(version string) ([3]string, error) {
+	parts := strings.Split(version, ".")
+	if len(parts) != 3 {
+		return [3]string{}, fmt.Errorf(
+			"invalid version %q: expected major.minor.patch",
+			version,
+		)
+	}
+
+	return [3]string{parts[0], parts[1], parts[2]}, nil
+}
+
+// GetMajorVersion returns the major version component.
+func GetMajorVersion(version string) (string, error) {
+	parts, err := SplitVersion(version)
+	if err != nil {
+		return "", err
+	}
+
+	return parts[0], nil
+}
+
+// GetMinorVersion returns the minor version component.
+func GetMinorVersion(version string) (string, error) {
+	parts, err := SplitVersion(version)
+	if err != nil {
+		return "", err
+	}
+
+	return parts[1], nil
+}
+
+// GetMajorMinorVersion returns the major.minor version components.
+func GetMajorMinorVersion(version string) (string, error) {
+	parts, err := SplitVersion(version)
+	if err != nil {
+		return "", err
+	}
+
+	return parts[0] + "." + parts[1], nil
+}
+
+// GetPatchVersion returns the patch version component.
+func GetPatchVersion(version string) (string, error) {
+	parts, err := SplitVersion(version)
+	if err != nil {
+		return "", err
+	}
+
+	return parts[2], nil
+}
+
+// GetBurrowMajorVersion returns the major version component of the Burrow
+// version.
+func GetBurrowMajorVersion() string {
+	marjorFunction, _ := GetMajorVersion(Version)
+	return marjorFunction
+}
+
+// GetBurrowMinorVersion returns the minor version component of the Burrow
+// version.
+func GetBurrowMinorVersion() string {
+	minorFunction, _ := GetMinorVersion(Version)
+	return minorFunction
+}
+
+// GetBurrowMajorMinorVersion returns the major.minor version components of the
+// Burrow version.
+func GetBurrowMajorMinorVersion() string {
+	majorMinorFunction, _ := GetMajorMinorVersion(Version)
+	return majorMinorFunction
+}
