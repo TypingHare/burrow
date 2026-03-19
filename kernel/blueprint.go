@@ -51,8 +51,8 @@ func (b Blueprint) SaveToJSONFile(path string) error {
 	return nil
 }
 
-func (b Blueprint) GetRawSpec(decorationID string) (RawSpec, error) {
-	rawSpec, exists := b[decorationID]
+func (b Blueprint) GetRawSpec(decorID string) (RawSpec, error) {
+	rawSpec, exists := b[decorID]
 	if !exists {
 		return RawSpec{}, nil
 	}

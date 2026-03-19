@@ -23,10 +23,16 @@ func NewChamber(burrow *Burrow, name string, blueprint Blueprint) *Chamber {
 	return chamber
 }
 
-func (c *Chamber) InstallDecors() error {
-	return nil
+func (c *Chamber) Error(message string, cause error) *ChamberError {
+	return NewChamberError(c.Name, message, cause)
 }
 
-func (c *Chamber) UninstallDecors() error {
-	return nil
-}
+// TODO: move them to architect
+//
+// func (c *Chamber) InstallDecors() error {
+// 	return nil
+// }
+//
+// func (c *Chamber) UninstallDecors() error {
+// 	return nil
+// }

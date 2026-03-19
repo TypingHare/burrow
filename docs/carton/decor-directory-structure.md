@@ -21,14 +21,14 @@ The important part is the separation of responsibilities:
 - `decor.go` defines the decor type and its lifecycle hooks.
 - `share/spec.go` defines the typed spec and the parser that converts `kernel.RawSpec` into that spec.
 - `share/contract.go` defines interfaces that other packages can depend on without importing the concrete decor type.
-- `api` contains API-facing types or helpers when the decor exposes an API to other decors.
+- `api` contains functions that are used in the `command` package and subpackages under it.
 - `command` contains command wiring when the decor adds CLI behavior.
 
-The `api` and `command` directories are optional. Many decors only need `decor.go` and `share`.
+The `api` and `command` directories are optional, since some decors don't provide any commands.
 
 #### `decor.go`
 
-The root package should define the concrete decor type. In Burrow, that usually means embedding `kernel.TypedDecor[S]` with the decor's typed spec.
+The root package should define the concrete decor type. In Burrow, that usually means embedding `kernel.TypedDecor[S]` with the decor's spec.
 
 ```go
 package demo
@@ -39,12 +39,12 @@ import (
 	"github.com/TypingHare/burrow/demo/share"
 )
 
-type Decor struct {
+type TypedDecor struct {
 	*kernel.TypedDecor[share.Spec]
 }
 
 func NewDecor(chamber *kernel.Chamber, spec *share.Spec) (kernel.Decor, error) {
-	decor := &Decor{
+	decor := &TypedDecor{
 		TypedDecor: kernel.NewDecor(chamber, spec, nil),
 	}
 
@@ -95,7 +95,7 @@ package share
 
 import "github.com/TypingHare/burrow/v2026/kernel"
 
-type DemoDecor interface {
+type Decor interface {
 	kernel.Decor
 	Foo() string
 }
@@ -107,20 +107,15 @@ This contract is commonly used by the `api` and `command` packages, and by any s
 
 Use `api` when the decor exposes reusable API-level helpers or types. Use `command` when the decor contributes commands to the chamber. Keeping those packages separate prevents `decor.go` from turning into a large grab bag of CLI code, shared types, and lifecycle logic.
 
-The `command` package usually contains command factory functions. The decor can then call those functions from a lifecycle hook such as `OnAssemble` when it is time to register commands.
+The `command` package usually contains **command factory functions** (that is, functions that return a Cobra command). The decor can then call those functions from a lifecycle hook (usually `OnAssemble`) when it is time to register commands.
 
 #### Exposing carton registration
 
-The decor package should expose a small registration function so cartons can register it without knowing the details of its typed spec or builder.
+The decor package should expose a small registration function, so cartons can register it without knowing the details of its typed spec or builder.
 
 ```go
 func RegisterToCarton(carton *kernel.Carton) error {
-	return kernel.AddTypedDecorDef(
-		carton,
-		"demo",
-		share.NewSpec,
-		NewDecor,
-	)
+	return kernel.AddTypedDecorDef(carton, "demo", share.NewSpec, NewDecor)
 }
 ```
 

@@ -17,33 +17,17 @@ type Carton struct {
 	DecorDefsByNames map[string]DecorDef
 }
 
-// NewCarton returns an empty Carton.
-func NewCarton() *Carton {
-	return &Carton{
+// NewCarton creates a new carton with the given name and version.
+func NewCarton(name string, version string) *Carton {
+	carton := &Carton{
 		Metadata:         NewVars(),
 		DecorDefsByNames: make(map[string]DecorDef),
 	}
-}
 
-func (c *Carton) AddDecorDef(name string, decorDef DecorDef) error {
-	if name == "" {
-		return fmt.Errorf("decor name cannot be empty")
-	}
+	carton.Metadata.Set(MetadataName, name)
+	carton.Metadata.Set(MetadataVersion, version)
 
-	if decorDef == nil {
-		return fmt.Errorf("decor definition cannot be nil")
-	}
-
-	if _, exists := c.DecorDefsByNames[name]; exists {
-		return fmt.Errorf(
-			"decor definition with name '%q' already exists",
-			name,
-		)
-	}
-
-	c.DecorDefsByNames[name] = decorDef
-
-	return nil
+	return carton
 }
 
 func (c *Carton) Name() string {
@@ -54,6 +38,27 @@ func (c *Carton) Version() string {
 	return c.Metadata.Get(MetadataVersion)
 }
 
+func (c *Carton) AddDecorDef(decorName string, decorDef DecorDef) error {
+	if decorName == "" {
+		return fmt.Errorf("decor name cannot be empty")
+	}
+
+	if decorDef == nil {
+		return fmt.Errorf("decor definition cannot be nil")
+	}
+
+	if _, exists := c.DecorDefsByNames[decorName]; exists {
+		return fmt.Errorf(
+			"decor definition with name '%q' already exists",
+			decorName,
+		)
+	}
+
+	c.DecorDefsByNames[decorName] = decorDef
+
+	return nil
+}
+
 func AddTypedDecorDef[S any](
 	c *Carton,
 	decorName string,
@@ -61,7 +66,7 @@ func AddTypedDecorDef[S any](
 	build func(*Chamber, *S) (Decor, error),
 ) error {
 	typedDecorDef := NewTypedDecorDef(decorName, parse, build)
-	c.DecorDefsByNames[decorName] = typedDecorDef
+	c.AddDecorDef(decorName, typedDecorDef)
 
 	return nil
 }

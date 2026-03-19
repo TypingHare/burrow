@@ -77,13 +77,13 @@ In every decor package, there must be a `TypedDecorDef` variable that defines th
 
 ```go
 var MyDecorDef = TypedDecorDef[MySpec]{
-    DecorName: "my",
+    DecorName: "my-decor",
     ParseSpec: func(raw RawSpec) (*MySpec, error) {
-        // Parse raw spec into MySpec
+        // Parse raw spec into MySpec.
         return nil, nil
     },
     BuildDecor: func(chamber *Chamber, spec *MySpec) (Decor, error) {
-        // Build MyDecor from chamber and MySpec
+        // Build MyDecor from chamber and MySpec.
         return nil, nil
      },
 }
