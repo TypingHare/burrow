@@ -132,7 +132,7 @@ func (a *Architect) Delete(chamberName string) error {
 	chamber.UninstallDecors(orderedDecorIDs)
 
 	// Save the blueprint.
-	chamber.Blueprint.saveToTomlFile(a.GetBlueprintPath(chamberName))
+	chamber.Blueprint.SaveToTomlFile(a.GetBlueprintPath(chamberName))
 
 	// Remove the chamber from the map.
 	delete(a.ChambersByNames, chamberName)

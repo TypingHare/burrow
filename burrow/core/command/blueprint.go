@@ -1,0 +1,31 @@
+package command
+
+import (
+	"strings"
+
+	"github.com/TypingHare/burrow/v2026/burrow/core/command/blueprint"
+	"github.com/TypingHare/burrow/v2026/kernel"
+	"github.com/spf13/cobra"
+)
+
+func BlueprintCommand(d kernel.IDecor) *cobra.Command {
+	command := &cobra.Command{
+		Use:   "blueprint",
+		Short: "Manage blueprint of the chamber",
+		Long: strings.TrimSpace(`
+This command group works with the current chamber's blueprint.
+
+A Blueprint is a collection of decor specs that Burrow uses to determine how to
+set up a chamber. It maps decor IDs to their corresponding specs, each of which 
+is a set of string key-value pairs that describe the properties of the decor.
+
+Use these commands to inspect the blueprint of the current chamber or save it
+to disk.
+		`),
+	}
+
+	command.AddCommand(blueprint.SaveCommand(d))
+	command.AddCommand(blueprint.ShowCommand(d))
+
+	return command
+}

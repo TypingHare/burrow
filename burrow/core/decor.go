@@ -18,6 +18,11 @@ type Decor struct {
 	RootCommand *cobra.Command
 }
 
+// GetRootCommand returns the root command of the decor.
+func (d *Decor) GetRootCommand() *cobra.Command {
+	return d.RootCommand
+}
+
 // RegisterToCarton registers the core decor definition with carton.
 func RegisterToCarton(carton *kernel.Carton) error {
 	return CreateAndAddDecorDefToCarton(
@@ -38,6 +43,7 @@ func RegisterToCarton(carton *kernel.Carton) error {
 
 				// Register commands.
 				decor.SetCommand(nil, command.EnvCommand(decor))
+				decor.SetCommand(nil, command.BlueprintCommand(decor))
 
 				return nil
 			}

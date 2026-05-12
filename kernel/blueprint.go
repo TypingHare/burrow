@@ -33,7 +33,7 @@ func (b Blueprint) LoadFromTomlFile(path string) error {
 }
 
 // saveToTomlFile saves the Blueprint to the TOML file at path.
-func (b Blueprint) saveToTomlFile(path string) error {
+func (b Blueprint) SaveToTomlFile(path string) error {
 	file, err := os.Create(path)
 	if err != nil {
 		return fmt.Errorf("failed to create blueprint file: %w", err)
