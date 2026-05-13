@@ -5,11 +5,11 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/TypingHare/burrow/v2026/kernel"
+	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/spf13/cobra"
 )
 
-func EnvCommand(d kernel.IDecor) *cobra.Command {
+func EnvCommand(decor share.IDecor) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "env",
 		Short: "Display environment variables",
@@ -17,7 +17,7 @@ func EnvCommand(d kernel.IDecor) *cobra.Command {
 Display Burrow environment variables.
         `),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			env := d.Chamber().Burrow.Env
+			env := decor.Chamber().Burrow.Env
 			for _, key := range slices.Sorted(maps.Keys(env)) {
 				cmd.Println(key + "=" + env[key])
 			}

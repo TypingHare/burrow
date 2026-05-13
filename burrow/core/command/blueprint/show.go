@@ -4,11 +4,11 @@ import (
 	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/api"
-	"github.com/TypingHare/burrow/v2026/kernel"
+	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/spf13/cobra"
 )
 
-func ShowCommand(d kernel.IDecor) *cobra.Command {
+func ShowCommand(decor share.IDecor) *cobra.Command {
 	var outputJson bool
 
 	command := &cobra.Command{
@@ -21,7 +21,7 @@ By default, this command prints the blueprint in TOML format. To output the
 blueprint in JSON format, use the --json flag.
 		`),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			blueprint := d.Chamber().Blueprint
+			blueprint := decor.Chamber().Blueprint
 
 			if outputJson {
 				jsonString, err := api.BlueprintToJSON(blueprint)

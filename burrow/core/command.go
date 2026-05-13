@@ -35,10 +35,10 @@ func GetDefaultRootCommand(chamberName string, version string) *cobra.Command {
 // An empty path returns RootCommand itself.
 func (d *Decor) GetCommand(path []string) (*cobra.Command, error) {
 	if len(path) == 0 {
-		return d.RootCommand, nil
+		return d.rootCommand, nil
 	}
 
-	currentCommand := d.RootCommand
+	currentCommand := d.rootCommand
 	for _, next := range path {
 		found := false
 		for _, command := range currentCommand.Commands() {

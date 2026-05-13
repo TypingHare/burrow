@@ -4,23 +4,44 @@ package core
 import (
 	"fmt"
 	"reflect"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/command"
 	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
 
+const (
+	SpecKeyDirectDependencies = "direct_dependencies"
+)
+
 // Decor provides the core command tree for a chamber.
 type Decor struct {
 	*kernel.Decor
 
-	// RootCommand is the root of the chamber command tree.
-	RootCommand *cobra.Command
+	// rootCommand is the root of the chamber command tree.
+	rootCommand *cobra.Command
+
+	// directDependencies lists the IDs of decors that are directly installed by
+	// users.
+	directDependencies []string
 }
 
-// GetRootCommand returns the root command of the decor.
-func (d *Decor) GetRootCommand() *cobra.Command {
-	return d.RootCommand
+// RootCommand returns the root command of the decor.
+func (d *Decor) RootCommand() *cobra.Command {
+	return d.rootCommand
+}
+
+// DirectDependencies returns the IDs of decors that are directly installed by
+// users.
+func (d *Decor) DirectDependencies() []string {
+	return d.directDependencies
+}
+
+// UpdateDirectDependencies updates the list of direct dependencies for the
+// decor.
+func (d *Decor) UpdateDirectDependencies(directDependencies []string) {
+	d.directDependencies = directDependencies
 }
 
 // RegisterToCarton registers the core decor definition with carton.
@@ -29,12 +50,21 @@ func RegisterToCarton(carton *kernel.Carton) error {
 		carton,
 		"core",
 		func(chamber *kernel.Chamber, spec kernel.Vars) (*Decor, error) {
+			directDependenciesString := spec.Get(SpecKeyDirectDependencies)
+			directDependencies := strings.Split(directDependenciesString, ":")
+			if directDependenciesString == "" {
+				directDependencies = []string{
+					kernel.GetDecorID("core", kernel.CartonName),
+				}
+			}
+
 			return &Decor{
 				Decor: kernel.NewDecor(chamber, spec),
-				RootCommand: GetDefaultRootCommand(
+				rootCommand: GetDefaultRootCommand(
 					chamber.Name,
 					kernel.Version,
 				),
+				directDependencies: directDependencies,
 			}, nil
 		},
 		func(chamber *kernel.Chamber, decor *Decor) error {
@@ -44,6 +74,8 @@ func RegisterToCarton(carton *kernel.Carton) error {
 				// Register commands.
 				decor.SetCommand(nil, command.EnvCommand(decor))
 				decor.SetCommand(nil, command.BlueprintCommand(decor))
+				decor.SetCommand(nil, command.CartonCommand(decor))
+				decor.SetCommand(nil, command.DecorCommand(decor))
 
 				return nil
 			}
@@ -62,7 +94,7 @@ func GetCoreCommandHandler(
 			return kernel.ErrorNullPointer, fmt.Errorf("chamber is nil")
 		}
 
-		rootCommand := d.RootCommand
+		rootCommand := d.rootCommand
 		if rootCommand == nil {
 			return kernel.ErrorNullPointer, fmt.Errorf("root command is nil")
 		}

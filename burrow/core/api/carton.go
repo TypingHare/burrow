@@ -8,7 +8,7 @@ import (
 )
 
 // GetCartonNames retrieves the names of cartons in the specified chamber. If
-// 'all' is true, it retrieves names of all cartons in the warehouse.
+// all is true, it retrieves names of all cartons in the warehouse.
 func GetCartonNames(chamber *kernel.Chamber, all bool) ([]string, error) {
 	if all {
 		return share.GetAllCartonNames(chamber.Burrow.Warehouse), nil

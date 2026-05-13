@@ -74,6 +74,22 @@ func (a *Architect) LoadBlueprint(chamberName string) (Blueprint, error) {
 	return blueprint, nil
 }
 
+// UpdateBlueprint updates the Blueprint of chamber based on the current state
+// of its decors.
+func UpdateBlueprint(chamber *Chamber) error {
+	for decorID, decor := range chamber.Renovator.DecorsByIDs {
+		if err := decor.UpdateSpec(); err != nil {
+			return fmt.Errorf(
+				"failed to update spec for decor %q: %w",
+				decorID,
+				err,
+			)
+		}
+	}
+
+	return nil
+}
+
 // Create loads and installs a Chamber named chamberName.
 func (a *Architect) Create(chamberName string) (*Chamber, error) {
 	// Load the blueprint for the chamber.
@@ -125,6 +141,9 @@ func (a *Architect) Delete(chamberName string) error {
 			nil,
 		)
 	}
+
+	// Update the chamber blueprint.
+	UpdateBlueprint(chamber)
 
 	// Uninstall decors.
 	orderedDecorIDs := slices.Clone(chamber.Renovator.Plan.DependencyOrder)

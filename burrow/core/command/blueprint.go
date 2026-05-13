@@ -4,11 +4,11 @@ import (
 	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/command/blueprint"
-	"github.com/TypingHare/burrow/v2026/kernel"
+	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/spf13/cobra"
 )
 
-func BlueprintCommand(d kernel.IDecor) *cobra.Command {
+func BlueprintCommand(decor share.IDecor) *cobra.Command {
 	command := &cobra.Command{
 		Use:   "blueprint",
 		Short: "Manage blueprint of the chamber",
@@ -24,8 +24,8 @@ to disk.
 		`),
 	}
 
-	command.AddCommand(blueprint.SaveCommand(d))
-	command.AddCommand(blueprint.ShowCommand(d))
+	command.AddCommand(blueprint.SaveCommand(decor))
+	command.AddCommand(blueprint.ShowCommand(decor))
 
 	return command
 }

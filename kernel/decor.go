@@ -9,6 +9,7 @@ type IDecor interface {
 	Launch() error
 	Terminate() error
 	Disassemble() error
+	UpdateSpec() error
 }
 
 // Decor is a chamber extension with optional lifecycle hooks.
@@ -98,5 +99,10 @@ func (d *Decor) Disassemble() error {
 		return d.DisassembleFunc()
 	}
 
+	return nil
+}
+
+// UpdateSpec updates the decor's spec.
+func (d *Decor) UpdateSpec() error {
 	return nil
 }

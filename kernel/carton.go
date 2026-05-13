@@ -10,12 +10,12 @@ const (
 	MetadataVersion = "VERSION"
 )
 
-// Carton contains metadata and the decoration factories it exposes.
+// Carton contains metadata and the decor definitions it exposes.
 type Carton struct {
 	// Metadata stores carton metadata.
 	Metadata Vars
 
-	// DecorDefsByNames stores decoration factories by name.
+	// DecorDefsByNames stores decor definitions by name.
 	DecorDefsByNames map[string]*DecorDef
 }
 

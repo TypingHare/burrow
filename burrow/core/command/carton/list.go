@@ -5,11 +5,12 @@ import (
 	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/api"
+	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
 
-func ListCommand(d kernel.IDecor) *cobra.Command {
+func ListCommand(decor share.IDecor) *cobra.Command {
 	var all bool
 
 	command := &cobra.Command{
@@ -22,7 +23,7 @@ By default, it only displays the cartons used by the current chamber. If you
 pass "--all", it instead displays all cartons registered in Burrow's warehouse.
 		`),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			chamber := d.Chamber()
+			chamber := decor.Chamber()
 			cartonNames, err := api.GetCartonNames(chamber, all)
 			if err != nil {
 				return fmt.Errorf("failed to get carton names: %w", err)
