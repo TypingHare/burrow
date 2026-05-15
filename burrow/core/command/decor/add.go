@@ -27,7 +27,7 @@ This command adds a decor to the chamber.
 			_, err := share.UpdateBlueprintAndReCreate(
 				decor.Chamber(),
 				func(blueprint kernel.Blueprint) error {
-					decor.UpdateDirectDependencies(
+					decor.SetDirectDependencies(
 						append(decor.DirectDependencies(), decorID),
 					)
 

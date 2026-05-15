@@ -13,7 +13,7 @@ type IDecor interface {
 	kernel.IDecor
 	RootCommand() *cobra.Command
 	DirectDependencies() []string
-	UpdateDirectDependencies([]string)
+	SetDirectDependencies([]string)
 }
 
 // GetChamberDecorIDs returns the IDs of all decors installed in the given

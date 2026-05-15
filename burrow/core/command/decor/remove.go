@@ -58,7 +58,7 @@ re-creates the chamber so the running chamber state matches the new blueprint.
 						}
 					}
 
-					decor.UpdateDirectDependencies(newDirectDependencies)
+					decor.SetDirectDependencies(newDirectDependencies)
 					decor.UpdateSpec()
 					delete(blueprint, decorID)
 

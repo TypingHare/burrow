@@ -29,11 +29,20 @@ pass "--all", it instead displays all cartons registered in Burrow's warehouse.
 				return fmt.Errorf("failed to get carton names: %w", err)
 			}
 
-			printCartonNamesAndVersions(
-				chamber.Burrow.Warehouse,
-				cartonNames,
-				cmd,
-			)
+			// Print the names and versions of the cartons.
+			warehouse := chamber.Burrow.Warehouse
+			for _, cartonName := range cartonNames {
+				carton, exists := warehouse.CartonsByNames[cartonName]
+				if !exists {
+					return fmt.Errorf(
+						"Carton %q does not exist",
+						cartonName,
+					)
+				}
+
+				version := carton.Metadata.Get(kernel.MetadataVersion)
+				cmd.Printf("%s  %s\n", cartonName, version)
+			}
 
 			return nil
 		},
@@ -44,29 +53,4 @@ pass "--all", it instead displays all cartons registered in Burrow's warehouse.
 	)
 
 	return command
-}
-
-// printCartonNamesAndVersions prints the names and versions of the specified
-// cartons.
-func printCartonNamesAndVersions(
-	warehouse *kernel.Warehouse,
-	cartonNames []string,
-	formatter interface {
-		Printf(format string, args ...any)
-	},
-) error {
-	for _, cartonName := range cartonNames {
-		carton, exists := warehouse.CartonsByNames[cartonName]
-		if !exists {
-			return fmt.Errorf(
-				"Carton %q does not exist",
-				cartonName,
-			)
-		}
-
-		version := carton.Metadata.Get(kernel.MetadataVersion)
-		formatter.Printf("%s  %s\n", cartonName, version)
-	}
-
-	return nil
 }

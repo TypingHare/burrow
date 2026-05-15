@@ -11,11 +11,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const DirectDependenciesSeparator = ":"
+
 const (
 	SpecKeyDirectDependencies = "direct_dependencies"
 )
 
-// Decor provides the core command tree for a chamber.
 type Decor struct {
 	*kernel.Decor
 
@@ -25,6 +26,14 @@ type Decor struct {
 	// directDependencies lists the IDs of decors that are directly installed by
 	// users.
 	directDependencies []string
+}
+
+func (d *Decor) UpdateSpec() error {
+	d.Spec().Set(
+		SpecKeyDirectDependencies,
+		strings.Join(d.directDependencies, DirectDependenciesSeparator),
+	)
+	return nil
 }
 
 // RootCommand returns the root command of the decor.
@@ -38,9 +47,9 @@ func (d *Decor) DirectDependencies() []string {
 	return d.directDependencies
 }
 
-// UpdateDirectDependencies updates the list of direct dependencies for the
+// SetDirectDependencies updates the list of direct dependencies for the
 // decor.
-func (d *Decor) UpdateDirectDependencies(directDependencies []string) {
+func (d *Decor) SetDirectDependencies(directDependencies []string) {
 	d.directDependencies = directDependencies
 }
 
@@ -85,7 +94,7 @@ func RegisterToCarton(carton *kernel.Carton) error {
 	)
 }
 
-// GetCoreCommandHandler returns a CommandHandler backed by d's root command.
+// GetCoreCommandHandler returns a CommandHandler based on the rootCommand of d.
 func GetCoreCommandHandler(
 	d *Decor,
 ) func(*kernel.Chamber, []string) (int, error) {

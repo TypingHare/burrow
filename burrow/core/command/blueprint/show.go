@@ -31,13 +31,13 @@ blueprint in JSON format, use the --json flag.
 
 				cmd.Println(jsonString)
 				return nil
+			} else {
+				tomlString, err := api.BlueprintToTOML(blueprint)
+				if err != nil {
+					return err
+				}
+				cmd.Print(tomlString)
 			}
-
-			tomlString, err := api.BlueprintToTOML(blueprint)
-			if err != nil {
-				return err
-			}
-			cmd.Print(tomlString)
 
 			return nil
 		},
