@@ -121,6 +121,11 @@ func GetCoreCommandHandler(
 }
 
 // UseDecor returns the core Decor installed in chamber.
-func UseDecor(chamber *kernel.Chamber) (kernel.IDecor, error) {
-	return chamber.Renovator.GetDecorByType(reflect.TypeFor[*Decor]())
+func UseDecor(chamber *kernel.Chamber) (*Decor, error) {
+	decor, err := chamber.Renovator.GetDecorByType(reflect.TypeFor[*Decor]())
+	if err != nil {
+		return nil, fmt.Errorf("failed to get core decor: %w", err)
+	}
+
+	return decor.(*Decor), nil
 }
