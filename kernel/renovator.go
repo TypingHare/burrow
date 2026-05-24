@@ -47,7 +47,7 @@ func (r *Renovator) ResolveDependencies(decorIDs []string) error {
 	for _, decorID := range plan.DependencyOrder {
 		decor := plan.PlanNodesByDecorIDs[decorID].Decor
 		r.DecorsByIDs[decorID] = decor
-		r.DecorsByTypes[reflect.TypeFor[*Decor]()] = decor
+		r.DecorsByTypes[reflect.TypeOf(decor)] = decor
 	}
 
 	return nil

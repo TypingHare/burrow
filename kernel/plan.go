@@ -90,13 +90,26 @@ func (p *Plan) CreatePlan(renovator *Renovator, decorIDs []string) error {
 	return nil
 }
 
-// ResolveDependency adds decorID and its dependencies to the Plan.
+// ResolveDependency adds decorID and its dependencies to the Plan if not
+// already present, and connects it to parentNode if provided.
 func (p *Plan) ResolveDependency(
 	renovator *Renovator,
 	decorID string,
 	parentNode *PlanNode,
 ) error {
-	if _, exists := p.PlanNodesByDecorIDs[decorID]; exists {
+	// If the decor is already in the plan, just connect it to the parent
+	// (dependent) node if provided.
+	if existingNode, exists := p.PlanNodesByDecorIDs[decorID]; exists {
+		if parentNode != nil {
+			existingNode.Dependents = append(
+				existingNode.Dependents,
+				parentNode.DecorID,
+			)
+			p.DependencyGraph.SetEdge(simple.Edge{
+				F: simple.Node(parentNode.GraphNodeID),
+				T: simple.Node(existingNode.GraphNodeID),
+			})
+		}
 		return nil
 	}
 

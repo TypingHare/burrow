@@ -123,7 +123,14 @@ func (a *Architect) Create(chamberName string) (*Chamber, error) {
 		return nil, err
 	}
 	orderedDecorIDs := chamber.Renovator.Plan.DependencyOrder
-	chamber.InstallDecors(orderedDecorIDs)
+	err = chamber.InstallDecors(orderedDecorIDs)
+	if err != nil {
+		return nil, NewChamberError(
+			chamberName,
+			"failed to install decors",
+			err,
+		)
+	}
 
 	// Store the chamber in the map.
 	a.ChambersByNames[chamberName] = chamber
@@ -148,7 +155,10 @@ func (a *Architect) Delete(chamberName string) error {
 	// Uninstall decors.
 	orderedDecorIDs := slices.Clone(chamber.Renovator.Plan.DependencyOrder)
 	slices.Reverse(orderedDecorIDs)
-	chamber.UninstallDecors(orderedDecorIDs)
+	err := chamber.UninstallDecors(orderedDecorIDs)
+	if err != nil {
+		return NewChamberError(chamberName, "failed to uninstall decors", err)
+	}
 
 	// Save the blueprint.
 	chamber.Blueprint.SaveToTomlFile(a.GetBlueprintPath(chamberName))
