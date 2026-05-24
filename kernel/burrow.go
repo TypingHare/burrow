@@ -58,6 +58,10 @@ const (
 
 	// EnvUseChamber specifies the chamber to use for the current command.
 	EnvUseChamber = "USE_CHAMBER"
+
+	// EnvRootChamberName is the name of the root chamber, which is a special
+	// chamber that manages all other chambers and provides shared resources.
+	EnvRootChamberName = "ROOT_CHAMBER_NAME"
 )
 
 // Burrow manages a collection of in-memory CLI applications called chambers.
@@ -116,6 +120,7 @@ func (b *Burrow) InitEnv(name string) error {
 	b.Env.Set(EnvBlueprintFileName, "blueprint.toml")
 	b.Env.Set(EnvAcceptProcessEnv, "1")
 	b.Env.Set(EnvUseChamber, "")
+	b.Env.Set(EnvRootChamberName, ".")
 
 	return nil
 }
