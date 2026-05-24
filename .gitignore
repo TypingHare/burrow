@@ -1,3 +1,6 @@
+# Developer local files
+/.local/
+
 # macOS system files
 .DS_Store
 

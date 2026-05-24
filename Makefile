@@ -13,7 +13,7 @@ EXECUTABLE_MIN := burrow-min
 DEV_BURROW_DIR := $(HOME)/.local/share/burrow-dev
 
 # The source directory of Burrow in the `burrow-dev` Burrow application. It
-# contains the entire sources code of Burrow.
+# contains the entire source code of Burrow.
 DEV_BURROW_SOURCE_DIR := $(DEV_BURROW_DIR)/source/github.com/TypingHare/burrow
 
 # The binary directory in the `burrow-dev` Burrow application.
@@ -22,11 +22,15 @@ DEV_BURROW_BIN_DIR := $(DEV_BURROW_DIR)/bin
 # The path to the Burrow magic file.
 MAGIC_FILE := cmd/magic.go
 
+# The path to the Burrow magic file template.
+MAGIC_FILE_TEMPLATE := cmd/magic.go.template
+
 # Phony targets.
 PHONY: clean install-dev
 
-$(MAGIC_FILE):
-	pas
+# Generate the Burrow magic file from the template.
+$(MAGIC_FILE): $(MAGIC_FILE_TEMPLATE)
+	cp $< $@
 
 # Build the Burrow executable.
 $(BUILD_DIR)/$(EXECUTABLE): $(MAGIC_FILE)
@@ -47,7 +51,7 @@ format:
 clean:
 	rm -rf $(BUILD_DIR) .cache $(MAGIC_FILE)
 
-# install-dev syncs this repository into the local burrow-dev source tree.
+# Sync this repository into the burrow-dev source directory.
 install-dev:
 	mkdir -p $(DEV_BURROW_SOURCE_DIR)
 	rm -rf $(DEV_BURROW_SOURCE_DIR)

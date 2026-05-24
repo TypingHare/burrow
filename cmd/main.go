@@ -23,7 +23,7 @@ func main() {
 
 	burrow.LoadProcessEnv()
 
-	setEnv(burrow)
+	setEnv(burrow.Env)
 
 	registerCartons(burrow.Warehouse)
 
