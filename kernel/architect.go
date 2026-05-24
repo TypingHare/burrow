@@ -149,18 +149,18 @@ func (a *Architect) Delete(chamberName string) error {
 		)
 	}
 
-	// Update the chamber blueprint.
-	UpdateBlueprint(chamber)
-
 	// Uninstall decors.
 	orderedDecorIDs := slices.Clone(chamber.Renovator.Plan.DependencyOrder)
 	slices.Reverse(orderedDecorIDs)
-	err := chamber.UninstallDecors(orderedDecorIDs)
-	if err != nil {
+
+	if err := chamber.UninstallDecors(orderedDecorIDs); err != nil {
 		return NewChamberError(chamberName, "failed to uninstall decors", err)
 	}
 
-	// Save the blueprint.
+	// Update and save the chamber blueprint.
+	if err := UpdateBlueprint(chamber); err != nil {
+		return NewChamberError(chamberName, "failed to update blueprint", err)
+	}
 	chamber.Blueprint.SaveToTomlFile(a.GetBlueprintPath(chamberName))
 
 	// Remove the chamber from the map.

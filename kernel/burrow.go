@@ -218,7 +218,17 @@ func (b *Burrow) Handle(args []string) (int, error) {
 	return exitCode, nil
 }
 
-// Destroy releases resources owned by the Burrow.
+// Destroy deletes all chambers in the Burrow and cleans up their resources.
 func (b *Burrow) Destroy() error {
+	for chamberName := range b.Architect.ChambersByNames {
+		if err := b.Architect.Delete(chamberName); err != nil {
+			return fmt.Errorf(
+				"failed to delete chamber %q: %w",
+				chamberName,
+				err,
+			)
+		}
+	}
+
 	return nil
 }
