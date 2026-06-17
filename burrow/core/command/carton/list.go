@@ -15,7 +15,7 @@ func ListCommand(decor share.IDecor) *cobra.Command {
 
 	command := &cobra.Command{
 		Use:   "list",
-		Short: "Show cartons used by the chamber",
+		Short: "Display a list of cartons used by the chamber",
 		Long: strings.TrimSpace(`
 This command lists names of carton used by the chamber.
 

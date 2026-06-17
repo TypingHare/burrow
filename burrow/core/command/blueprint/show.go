@@ -13,7 +13,7 @@ func ShowCommand(decor share.IDecor) *cobra.Command {
 
 	command := &cobra.Command{
 		Use:   "show",
-		Short: "Show the blueprint",
+		Short: "Display the blueprint",
 		Long: strings.TrimSpace(`
 This command displays the current chamber blueprint.
 

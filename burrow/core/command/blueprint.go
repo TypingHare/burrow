@@ -26,6 +26,7 @@ to disk.
 
 	command.AddCommand(blueprint.SaveCommand(decor))
 	command.AddCommand(blueprint.ShowCommand(decor))
+	command.AddCommand(blueprint.PathCommand(decor))
 
 	return command
 }

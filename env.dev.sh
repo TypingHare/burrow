@@ -10,4 +10,4 @@ DEV_BIN="$HOME/.local/share/$BURROW_NAME/bin"
 case ":$PATH:" in *":$DEV_BIN:"*) ;; *) export PATH="$DEV_BIN:$PATH" ;; esac
 
 # Define project-wise alias.
-alias broot="burrow ."
+alias br="burrow ."
