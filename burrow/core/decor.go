@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/command"
-	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
@@ -67,13 +66,6 @@ func RegisterToCarton(carton *kernel.Carton) error {
 			if directDependenciesString == "" {
 				directDependencies = []string{
 					kernel.GetDecorID("core", kernel.CartonName),
-				}
-
-				if share.IsRoot(chamber) {
-					directDependencies = append(
-						directDependencies,
-						kernel.GetDecorID("clutter", kernel.CartonName),
-					)
 				}
 			}
 
