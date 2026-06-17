@@ -24,16 +24,18 @@ func main() {
 	burrow.LoadProcessEnv()
 
 	setEnv(burrow.Env)
-
 	registerCartons(burrow.Warehouse)
 
+	// Burrow handles the command-line arguments.
 	exitCode, err := burrow.Handle(os.Args[1:])
 	if err != nil {
 		kernel.PrintErrorStack(err)
 	}
 
+	// Destroy the Burrow and exit with the appropriate exit code.
 	if err := burrow.Destroy(); err != nil {
 		kernel.PrintErrorStack(err)
+		os.Exit(kernel.GeneralError)
 	}
 
 	os.Exit(exitCode)
