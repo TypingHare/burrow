@@ -63,3 +63,8 @@ func UpdateBlueprintAndReCreate(
 
 	return newChamber, nil
 }
+
+// IsRoot checks if the given chamber is the root chamber of the burrow.
+func IsRoot(chamber *kernel.Chamber) bool {
+	return chamber.Name == chamber.Burrow.Env.Get(kernel.EnvRootChamberName)
+}
