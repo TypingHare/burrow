@@ -27,10 +27,10 @@ This command adds a decor to the chamber.
 			_, err := share.UpdateBlueprintAndReCreate(
 				decor.Chamber(),
 				func(blueprint kernel.Blueprint) error {
+					blueprint[decorID] = kernel.NewVars()
 					decor.SetDirectDependencies(
 						append(decor.DirectDependencies(), decorID),
 					)
-
 					decor.UpdateSpec()
 
 					return nil
