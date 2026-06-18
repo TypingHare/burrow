@@ -51,10 +51,16 @@ func BuildBurrowForChamber(
 		)
 	}
 
+	// Filter the carton definitions to include only those specified in
+	// cartonNames.
 	filteredCartonDefs := []*share.CartonDef{}
-	for _, cartonDef := range decor.CartonDefs() {
-		if slices.Contains(cartonNames, cartonDef.Name) {
-			filteredCartonDefs = append(filteredCartonDefs, cartonDef)
+	if cartonNames == nil {
+		filteredCartonDefs = slices.Clone(decor.CartonDefs())
+	} else {
+		for _, cartonDef := range decor.CartonDefs() {
+			if slices.Contains(cartonNames, cartonDef.Name) {
+				filteredCartonDefs = append(filteredCartonDefs, cartonDef)
+			}
 		}
 	}
 
