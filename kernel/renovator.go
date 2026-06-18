@@ -140,7 +140,7 @@ func (r *Renovator) AssmbleDecors(decors []IDecor) error {
 			return r.Chamber.Error(
 				fmt.Sprintf(
 					"failed to assemble decor of type %q",
-					reflect.TypeFor[*Decor](),
+					reflect.TypeOf(decor),
 				),
 				err,
 			)
@@ -157,7 +157,7 @@ func (r *Renovator) LaunchDecors(decors []IDecor) error {
 			return r.Chamber.Error(
 				fmt.Sprintf(
 					"failed to launch decor of type %q",
-					reflect.TypeFor[*Decor](),
+					reflect.TypeOf(decor),
 				),
 				err,
 			)
@@ -170,11 +170,11 @@ func (r *Renovator) LaunchDecors(decors []IDecor) error {
 // TerminateDecors terminates decors in order.
 func (r *Renovator) TerminateDecors(decors []IDecor) error {
 	for _, decor := range decors {
-		if err := decor.Launch(); err != nil {
+		if err := decor.Terminate(); err != nil {
 			return r.Chamber.Error(
 				fmt.Sprintf(
 					"failed to terminate decor of type %q",
-					reflect.TypeFor[*Decor](),
+					reflect.TypeOf(decor),
 				),
 				err,
 			)
@@ -187,11 +187,11 @@ func (r *Renovator) TerminateDecors(decors []IDecor) error {
 // DisassembleDecors disassembles decors in order.
 func (r *Renovator) DisassembleDecors(decors []IDecor) error {
 	for _, decor := range decors {
-		if err := decor.Launch(); err != nil {
+		if err := decor.Disassemble(); err != nil {
 			return r.Chamber.Error(
 				fmt.Sprintf(
 					"failed to disassemble decor of type %q",
-					reflect.TypeFor[*Decor](),
+					reflect.TypeOf(decor),
 				),
 				err,
 			)
@@ -211,8 +211,12 @@ func (r *Renovator) InstallDecors() error {
 		)
 	}
 
-	r.AssmbleDecors(decorDependencyOrder)
-	r.LaunchDecors(decorDependencyOrder)
+	if err := r.AssmbleDecors(decorDependencyOrder); err != nil {
+		return err
+	}
+	if err := r.LaunchDecors(decorDependencyOrder); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -227,8 +231,12 @@ func (r *Renovator) UninstallDecors() error {
 		)
 	}
 
-	r.TerminateDecors(decorDependencyOrder)
-	r.DisassembleDecors(decorDependencyOrder)
+	if err := r.TerminateDecors(decorDependencyOrder); err != nil {
+		return err
+	}
+	if err := r.DisassembleDecors(decorDependencyOrder); err != nil {
+		return err
+	}
 
 	return nil
 }

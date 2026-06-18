@@ -113,23 +113,25 @@ func (c *Chamber) UninstallDecors(decorIDs []string) error {
 	}
 
 	// Terminate dependents before their dependencies.
+	orderedDecorIDs := slices.Clone(decorIDs)
 	slices.Reverse(orderedDecors)
+	slices.Reverse(orderedDecorIDs)
 
-	for i := range len(orderedDecors) {
+	for i := range orderedDecors {
 		decor := orderedDecors[i]
-		if err := decor.Assemble(); err != nil {
+		if err := decor.Terminate(); err != nil {
 			return c.Error(
-				"failed to terminate decor with ID: "+decorIDs[i],
+				"failed to terminate decor with ID: "+orderedDecorIDs[i],
 				err,
 			)
 		}
 	}
 
-	for i := len(orderedDecors) - 1; i >= 0; i-- {
+	for i := range orderedDecors {
 		decor := orderedDecors[i]
-		if err := decor.Launch(); err != nil {
+		if err := decor.Disassemble(); err != nil {
 			return c.Error(
-				"failed to disassemble decor with ID: "+decorIDs[i],
+				"failed to disassemble decor with ID: "+orderedDecorIDs[i],
 				err,
 			)
 		}
