@@ -11,6 +11,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const DecorName = "core"
+
 // DirectDependenciesSeparator is the string used to separate different
 // dependencies in the `direct_dependencies` value.
 const DirectDependenciesSeparator = ":"
@@ -59,13 +61,13 @@ func (d *Decor) SetDirectDependencies(directDependencies []string) {
 func RegisterToCarton(carton *kernel.Carton) error {
 	return CreateAndAddDecorDefToCarton(
 		carton,
-		"core",
+		DecorName,
 		func(chamber *kernel.Chamber, spec kernel.Vars) (*Decor, error) {
 			directDependenciesString := spec.Get(SpecKeyDirectDependencies)
 			directDependencies := strings.Split(directDependenciesString, ":")
 			if directDependenciesString == "" {
 				directDependencies = []string{
-					kernel.GetDecorID("core", kernel.CartonName),
+					kernel.GetDecorID(DecorName, kernel.CartonName),
 				}
 			}
 
@@ -126,7 +128,7 @@ func GetCoreCommandHandler(
 func UseDecor(chamber *kernel.Chamber) (*Decor, error) {
 	decor, err := chamber.Renovator.GetDecorByType(reflect.TypeFor[*Decor]())
 	if err != nil {
-		return nil, fmt.Errorf("failed to get core decor: %w", err)
+		return nil, fmt.Errorf("failed to get the %q decor: %w", DecorName, err)
 	}
 
 	return decor.(*Decor), nil

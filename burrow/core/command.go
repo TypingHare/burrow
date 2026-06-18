@@ -12,8 +12,10 @@ import (
 // errors.
 func GetDefaultRootCommand(chamberName string, version string) *cobra.Command {
 	command := &cobra.Command{
-		Use:     os.Args[0] + " " + chamberName,
-		Version: version,
+		Use:           os.Args[0] + " " + chamberName,
+		Version:       version,
+		SilenceErrors: true,
+		SilenceUsage:  true,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
 				return fmt.Errorf(

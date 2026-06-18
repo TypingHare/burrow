@@ -9,10 +9,9 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
-// RedirectorDecoration retries failed command execution by rewriting args
-// through a redirector function and then re-running the core command tree.
+const DecorName = "redirector"
+
 type Decor struct {
-	// Decoration carries the typed redirector spec and chamber reference.
 	*kernel.Decor
 
 	// redirector rewrites command arguments after an initial execution failure.
@@ -24,11 +23,17 @@ type Decor struct {
 
 func (d *Decor) Dependencies() []string {
 	return []string{
-		kernel.GetDecorID("core", kernel.CartonName),
+		kernel.GetDecorID(core.DecorName, kernel.CartonName),
 	}
 }
 
 func (d *Decor) UpdateSpec() error {
+	silentlyRedirect := "0"
+	if d.silentlyRedirect {
+		silentlyRedirect = "1"
+	}
+	d.Spec().Set("silentlyRedirect", silentlyRedirect)
+
 	return nil
 }
 
@@ -43,7 +48,7 @@ func (d *Decor) SilentlyRedirect() bool {
 func RegisterToCarton(carton *kernel.Carton) error {
 	return core.CreateAndAddDecorDefToCarton(
 		carton,
-		"redirector",
+		DecorName,
 		func(chamber *kernel.Chamber, spec kernel.Vars) (*Decor, error) {
 			return &Decor{
 				Decor:            kernel.NewDecor(chamber, spec),
@@ -70,7 +75,11 @@ func RegisterToCarton(carton *kernel.Carton) error {
 func UseDecor(chamber *kernel.Chamber) (*Decor, error) {
 	decor, err := chamber.Renovator.GetDecorByType(reflect.TypeFor[*Decor]())
 	if err != nil {
-		return nil, fmt.Errorf("failed to get core decor: %w", err)
+		return nil, fmt.Errorf(
+			"failed to get the %q decor: %w",
+			DecorName,
+			err,
+		)
 	}
 
 	return decor.(*Decor), nil

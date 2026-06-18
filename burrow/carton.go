@@ -4,6 +4,7 @@ package burrow
 import (
 	"github.com/TypingHare/burrow/v2026/burrow/clutter"
 	"github.com/TypingHare/burrow/v2026/burrow/core"
+	"github.com/TypingHare/burrow/v2026/burrow/larder"
 	"github.com/TypingHare/burrow/v2026/burrow/redirector"
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
@@ -21,6 +22,10 @@ func RegisterCartonToWarehouse(warehouse *kernel.Warehouse) error {
 	}
 
 	if err := redirector.RegisterToCarton(carton); err != nil {
+		return err
+	}
+
+	if err := larder.RegisterToCarton(carton); err != nil {
 		return err
 	}
 

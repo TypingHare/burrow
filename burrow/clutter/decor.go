@@ -13,6 +13,7 @@ import (
 )
 
 const (
+	DecorName               = "clutter"
 	CartonNamePathSeparator = "="
 	CartonStringsSeparator  = ":"
 )
@@ -28,7 +29,7 @@ type Decor struct {
 
 func (d *Decor) Dependencies() []string {
 	return []string{
-		kernel.GetDecorID("core", kernel.CartonName),
+		kernel.GetDecorID(core.DecorName, kernel.CartonName),
 	}
 }
 
@@ -62,7 +63,7 @@ func (d *Decor) SetCartonDefs(cartons []*share.CartonDef) {
 func RegisterToCarton(carton *kernel.Carton) error {
 	return core.CreateAndAddDecorDefToCarton(
 		carton,
-		"clutter",
+		DecorName,
 		func(chamber *kernel.Chamber, spec kernel.Vars) (*Decor, error) {
 			cartonStrings := strings.Split(
 				spec.Get(SpecKeyCartons),
@@ -110,7 +111,7 @@ func RegisterToCarton(carton *kernel.Carton) error {
 func UseDecor(chamber *kernel.Chamber) (*Decor, error) {
 	decor, err := chamber.Renovator.GetDecorByType(reflect.TypeFor[*Decor]())
 	if err != nil {
-		return nil, fmt.Errorf("failed to get clutter decor: %w", err)
+		return nil, fmt.Errorf("failed to get the %q decor: %w", DecorName, err)
 	}
 
 	return decor.(*Decor), nil
