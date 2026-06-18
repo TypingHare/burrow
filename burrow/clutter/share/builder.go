@@ -395,7 +395,6 @@ func BuildBurrow(
 		burrow.GetBinDir(),
 		burrow.Env.Get(kernel.EnvExecutableName),
 	)
-	print(outputExecutablePath)
 
 	return NewBuilder(
 		burrowSourceDir,

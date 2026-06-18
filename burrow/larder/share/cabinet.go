@@ -126,7 +126,7 @@ func (c *Cabinet[T]) Save() error {
 
 	dir := filepath.Dir(c.path)
 	if err := os.MkdirAll(dir, 0o755); err != nil {
-		return fmt.Errorf("failed to create directory %s: %w", dir, err)
+		return fmt.Errorf("failed to create directory %q: %w", dir, err)
 	}
 
 	return os.WriteFile(c.path, []byte(strings.Join(lines, "\n")), 0o644)
@@ -140,13 +140,13 @@ func GetCabinet[T any](
 ) (*Cabinet[T], error) {
 	cabinet, exists := decor.CabinetsByNames()[name]
 	if !exists || cabinet == nil {
-		return nil, fmt.Errorf("cabinet with name %s does not exist", name)
+		return nil, fmt.Errorf("cabinet with name %q does not exist", name)
 	}
 
 	typedCabinet, ok := cabinet.(*Cabinet[T])
 	if !ok {
 		return typedCabinet, fmt.Errorf(
-			"cabinet with name %s is not of expected type, got %T",
+			"cabinet with name %q is not of expected type, got %T",
 			name,
 			cabinet,
 		)
@@ -163,7 +163,7 @@ func AddCabinet[T any](
 	deserializer func([]string) (T, error),
 ) (*Cabinet[T], error) {
 	if _, exists := decor.CabinetsByNames()[name]; exists {
-		return nil, fmt.Errorf("cabinet with name %s already exists", name)
+		return nil, fmt.Errorf("cabinet with name %q already exists", name)
 	}
 
 	cabinetFilePath := GetCabinetFilePath(decor.Chamber(), name)
