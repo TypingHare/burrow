@@ -62,6 +62,12 @@ const (
 	// EnvRootChamberName is the name of the root chamber, which is a special
 	// chamber that manages all other chambers and provides shared resources.
 	EnvRootChamberName = "ROOT_CHAMBER_NAME"
+
+	// EnvExecutablePath is the path to the currently executing Burrow binary.
+	EnvExecutablePath = "EXECUTABLE_PATH"
+
+	// EnvMinimalExecutablePath is the path to the minimal Burrow executable.
+	EnvMinimalExecutablePath = "MINIMAL_EXECUTABLE_PATH"
 )
 
 // Burrow manages a collection of in-memory CLI applications called chambers.
