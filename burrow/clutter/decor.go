@@ -124,7 +124,7 @@ func getCartonDefsByCartonStrings(
 	cartonStrings []string,
 ) ([]*share.CartonDef, error) {
 	if len(cartonStrings) == 1 && cartonStrings[0] == "" {
-		return []*share.CartonDef{{Name: kernel.CartonName}}, nil
+		return []*share.CartonDef{}, nil
 	}
 
 	cartonDefs := make([]*share.CartonDef, len(cartonStrings))

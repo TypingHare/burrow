@@ -282,7 +282,10 @@ func (b *Builder) GenerateMagicGoFile() error {
 
 	// Collect register call statements for the magic Go file.
 	generateRegisterCallStmt := func(packageName string) string {
-		return fmt.Sprintf("%s.RegisterCartonTo(warehouse)", packageName)
+		return fmt.Sprintf(
+			"%s.RegisterCartonToWarehouse(warehouse)",
+			packageName,
+		)
 	}
 
 	registerCallStmts := []string{generateRegisterCallStmt("burrow")}
@@ -312,9 +315,9 @@ func (b *Builder) GenerateMagicGoFile() error {
 	content.WriteString("}\n")
 
 	// Set the magic environment variables in the magic Go file.
-	content.WriteString("\nfunc setEnv(burrow *kernel.Burrow) {\n")
+	content.WriteString("\nfunc setEnv(env kernel.Vars) {\n")
 	for key, value := range b.MagicEnv {
-		fmt.Fprintf(&content, "\tburrow.Env.Set(%q, %q)\n", key, value)
+		fmt.Fprintf(&content, "\tenv.Set(%q, %q)\n", key, value)
 	}
 	content.WriteString("}\n")
 
