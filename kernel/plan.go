@@ -116,10 +116,7 @@ func (p *Plan) ResolveDependency(
 	chamber := renovator.Chamber
 	spec, _ := chamber.Blueprint[decorID]
 	if spec == nil {
-		return chamber.Error(
-			fmt.Sprintf("failed to get spec for decor %q", decorID),
-			nil,
-		)
+		spec = NewVars()
 	}
 
 	decor, decorDef, err := chamber.Renovator.CreateDecor(decorID, spec)
