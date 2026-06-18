@@ -16,7 +16,7 @@ import (
 //
 // Burrow expects API and behavioral compatibility within the same major and
 // minor version, and only links cartons that match both.
-const Version = "2026.1.4"
+const Version = "2026.1.5"
 
 // CartonName is the carton name of Burrow itself.
 //

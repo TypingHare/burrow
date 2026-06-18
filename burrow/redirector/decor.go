@@ -41,8 +41,16 @@ func (d *Decor) Redirector() share.Redirector {
 	return d.redirector
 }
 
+func (d *Decor) SetRedirector(redirector share.Redirector) {
+	d.redirector = redirector
+}
+
 func (d *Decor) SilentlyRedirect() bool {
 	return d.silentlyRedirect
+}
+
+func (d *Decor) SetSilentlyRedirect(silentlyRedirect bool) {
+	d.silentlyRedirect = silentlyRedirect
 }
 
 func RegisterToCarton(carton *kernel.Carton) error {
