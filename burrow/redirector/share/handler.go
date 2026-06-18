@@ -2,13 +2,46 @@ package share
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/core/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
+	"github.com/spf13/cobra"
 )
 
-// GetRedirectorHandler returns a chamber handler that retries failed command
-// execution with redirected arguments.
+// shouldRedirect reports whether args should be handed to the redirector.
+//
+// Cobra does not expose a typed "command not found" error, so resolving via
+// Find is the reliable way to distinguish an unknown command from a real
+// command that failed. Redirection happens only when the args contain a
+// positional argument that does not resolve to a subcommand (e.g. a record
+// name or URL). Flag-only invocations such as "--help" or "--version" resolve
+// to the root command and must be executed normally, not redirected.
+func shouldRedirect(root *cobra.Command, args []string) bool {
+	cmd, remaining, err := root.Find(args)
+	if err != nil {
+		return true
+	}
+
+	// Resolved to an actual subcommand: let it execute.
+	if cmd != root {
+		return false
+	}
+
+	// Only the root matched. Redirect when there is an unresolved positional
+	// argument; otherwise (no args, or flags only) let the root command run.
+	for _, arg := range remaining {
+		if !strings.HasPrefix(arg, "-") {
+			return true
+		}
+	}
+
+	return false
+}
+
+// GetRedirectorHandler returns a chamber handler that redirects unknown
+// commands through the configured redirector, while letting real commands
+// execute and surface their own errors.
 func GetRedirectorHandler(
 	decor IDecor,
 	coreDecor share.IDecor,
@@ -23,18 +56,21 @@ func GetRedirectorHandler(
 			return kernel.ErrorNullPointer, fmt.Errorf("root command is nil")
 		}
 
-		rootCommand.SetArgs(args)
-		err := rootCommand.Execute()
-		if err == nil {
-			return kernel.Success, nil
-		}
-
 		redirectorFunc := decor.Redirector()
-		if redirectorFunc == nil {
-			return kernel.GeneralError, chamber.Error(
-				"error executing the command",
-				err,
-			)
+
+		// Execute directly unless the args are an unknown command that we can
+		// redirect. This ensures real commands surface their own errors instead
+		// of being masked by the redirector.
+		if redirectorFunc == nil || !shouldRedirect(rootCommand, args) {
+			rootCommand.SetArgs(args)
+			if err := rootCommand.Execute(); err != nil {
+				return kernel.GeneralError, chamber.Error(
+					"error executing the command",
+					err,
+				)
+			}
+
+			return kernel.Success, nil
 		}
 
 		newArgs, err := redirectorFunc(args)
@@ -45,22 +81,30 @@ func GetRedirectorHandler(
 			)
 		}
 
-		// If not silently redirecting, print a message to indicate
-		// redirection is happening.
+		// If the redirector returns an empty argument list, there is nothing to
+		// execute.
+		if len(newArgs) == 0 {
+			return kernel.GeneralError, chamber.Error(
+				"redirector produced no arguments",
+				nil,
+			)
+		}
+
+		// If not silently redirecting, print a message to indicate redirection
+		// is happening.
 		if !decor.SilentlyRedirect() {
 			fmt.Println("Redirecting command execution...")
 		}
 
 		// Set the new arguments and retry execution.
 		rootCommand.SetArgs(newArgs)
-		err = rootCommand.Execute()
-		if err != nil {
+		if err := rootCommand.Execute(); err != nil {
 			return kernel.GeneralError, fmt.Errorf(
 				"failed to execute redirected command: %w",
 				err,
 			)
-		} else {
-			return kernel.Success, nil
 		}
+
+		return kernel.Success, nil
 	}
 }

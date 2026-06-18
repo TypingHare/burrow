@@ -62,16 +62,19 @@ func RegisterToCarton(carton *kernel.Carton) error {
 			}, nil
 		},
 		func(chamber *kernel.Chamber, decor *Decor) error {
-			coreDecor, err := core.UseDecor(chamber)
-			if err != nil {
-				return fmt.Errorf("failed to use core decor: %w", err)
-			}
+			decor.AssembleFunc = func() error {
+				coreDecor, err := core.UseDecor(chamber)
+				if err != nil {
+					return fmt.Errorf("failed to use core decor: %w", err)
+				}
 
-			// Replace the command handler with a redirector handler.
-			decor.Chamber().CommandHandler = share.GetRedirectorHandler(
-				decor,
-				coreDecor,
-			)
+				// Replace the command handler with a redirector handler.
+				decor.Chamber().CommandHandler = share.GetRedirectorHandler(
+					decor,
+					coreDecor,
+				)
+				return nil
+			}
 
 			return nil
 		},
