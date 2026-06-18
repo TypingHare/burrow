@@ -9,7 +9,10 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
-const DecorName = "redirector"
+const (
+	DecorName               = "redirector"
+	SpecKeySilentlyRedirect = "silently_redirect"
+)
 
 type Decor struct {
 	*kernel.Decor
@@ -28,12 +31,7 @@ func (d *Decor) Dependencies() []string {
 }
 
 func (d *Decor) UpdateSpec() error {
-	silentlyRedirect := "0"
-	if d.silentlyRedirect {
-		silentlyRedirect = "1"
-	}
-	d.Spec().Set("silentlyRedirect", silentlyRedirect)
-
+	d.Spec().SetBool(SpecKeySilentlyRedirect, d.silentlyRedirect)
 	return nil
 }
 
@@ -60,7 +58,7 @@ func RegisterToCarton(carton *kernel.Carton) error {
 		func(chamber *kernel.Chamber, spec kernel.Vars) (*Decor, error) {
 			return &Decor{
 				Decor:            kernel.NewDecor(chamber, spec),
-				silentlyRedirect: spec.Get("silentlyRedirect") == "1",
+				silentlyRedirect: spec.GetBool(SpecKeySilentlyRedirect),
 			}, nil
 		},
 		func(chamber *kernel.Chamber, decor *Decor) error {

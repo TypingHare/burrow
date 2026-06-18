@@ -84,7 +84,7 @@ func RegisterToCarton(carton *kernel.Carton) error {
 				// Register commands.
 				coreDecor, err := core.UseDecor(chamber)
 				if err != nil {
-					return fmt.Errorf("failed to use core decor: %w", err)
+					return err
 				}
 
 				err = coreDecor.SetCommand([]string{"carton"},
