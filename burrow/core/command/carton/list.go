@@ -22,6 +22,7 @@ This command lists names of carton used by the chamber.
 By default, it only displays the cartons used by the current chamber. If you
 pass "--all", it instead displays all cartons registered in Burrow's warehouse.
 		`),
+		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			chamber := decor.Chamber()
 			cartonNames, err := api.GetCartonNames(chamber, all)

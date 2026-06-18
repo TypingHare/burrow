@@ -19,6 +19,7 @@ on a single chamber feature.
 Use these commands when you want to build a Burrow executable or update
 the Burrow source checkout and rebuild the executable from newer source.
 		`),
+		Args: cobra.NoArgs,
 	}
 
 	command.AddCommand(burrow.BuildCommand(decor))

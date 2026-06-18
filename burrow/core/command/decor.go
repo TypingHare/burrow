@@ -19,6 +19,7 @@ Decors are the chamber features that Burrow installs from cartons. Use these
 commands to add decors, list what is installed, or remove direct decor 
 dependencies from the chamber.
 		`),
+		Args: cobra.NoArgs,
 	}
 
 	command.AddCommand(decorCommands.AddCommand(decor))

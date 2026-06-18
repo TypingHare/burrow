@@ -15,6 +15,7 @@ func SaveCommand(decor share.IDecor) *cobra.Command {
 		Long: strings.TrimSpace(`
 This command writes the current in-memory blueprint to disk.
 		`),
+		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return api.SaveChamberBlueprint(decor.Chamber())
 		},

@@ -20,6 +20,7 @@ This command displays the current chamber blueprint.
 By default, this command prints the blueprint in TOML format. To output the
 blueprint in JSON format, use the --json flag.
 		`),
+		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			blueprint := decor.Chamber().Blueprint
 

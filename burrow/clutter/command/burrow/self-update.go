@@ -39,7 +39,7 @@ command.
 		`),
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// TODO: Support "magic env"
+			// TODO: support "magic env"
 			return api.SelfUpdateBurrow(decor, kernel.NewVars())
 		},
 	}

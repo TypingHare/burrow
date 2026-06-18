@@ -14,6 +14,7 @@ func PathCommand(decor share.IDecor) *cobra.Command {
 		Long: strings.TrimSpace(`
 This command displays the path to the blueprint file.
 		`),
+		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			chamber := decor.Chamber()
 			blueprintPath := chamber.Burrow.Architect.GetBlueprintPath(

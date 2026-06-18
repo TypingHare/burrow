@@ -19,6 +19,7 @@ A carton is a bundle of decor definitions. Use these commands to see
 which cartons the current chamber depends on or which cartons are
 registered in the warehouse.
 		`),
+		Args: cobra.NoArgs,
 	}
 
 	command.AddCommand(carton.ListCommand(decor))

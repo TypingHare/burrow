@@ -26,6 +26,7 @@ Pass "--all" to display all decor definitions registered in the warehouse.
 
 Decor IDs are displayed in alphabetical order.
 		`),
+		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var decorIDs []string
 			if all {

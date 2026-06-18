@@ -22,6 +22,7 @@ is a set of string key-value pairs that describe the properties of the decor.
 Use these commands to inspect the blueprint of the current chamber or save it
 to disk.
 		`),
+		Args: cobra.NoArgs,
 	}
 
 	command.AddCommand(blueprint.SaveCommand(decor))

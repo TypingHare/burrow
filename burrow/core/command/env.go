@@ -16,6 +16,7 @@ func EnvCommand(decor share.IDecor) *cobra.Command {
 		Long: strings.TrimSpace(`
 Display Burrow environment variables.
         `),
+		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			env := decor.Chamber().Burrow.Env
 			for _, key := range slices.Sorted(maps.Keys(env)) {
