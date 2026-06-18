@@ -1,15 +1,20 @@
 package burrow
 
 import (
+	"fmt"
+	"maps"
+	"slices"
 	"strings"
 
 	"github.com/TypingHare/burrow/v2026/burrow/clutter/api"
 	"github.com/TypingHare/burrow/v2026/burrow/clutter/share"
+	"github.com/TypingHare/burrow/v2026/kernel"
 	"github.com/spf13/cobra"
 )
 
 func BuildCommand(decor share.IDecor) *cobra.Command {
 	var minimal bool
+	var chamber string
 
 	command := &cobra.Command{
 		Use:   "build",
@@ -41,12 +46,43 @@ exist only to guide the build process.
         `),
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return api.BuildBurrow(decor, minimal)
+			chamberName := chamber
+			if chamberName == "" {
+				return api.BuildBurrow(decor, minimal, kernel.NewVars())
+			} else {
+				// Collect all cartons used by the specified chamber
+				architect := decor.Chamber().Burrow.Architect
+				blueprint, err := architect.LoadBlueprint(chamberName)
+				if err != nil {
+					return fmt.Errorf(
+						"failed to load blueprint for chamber %q: %w",
+						chamberName,
+						err,
+					)
+				}
+
+				cartonNames := slices.Collect(maps.Keys(blueprint))
+
+				// Build the executable with the collected cartons
+				env := kernel.NewVars()
+				env.Set(kernel.EnvUseChamber, chamberName)
+				err = api.BuildBurrowForChamber(
+					decor,
+					chamberName,
+					cartonNames,
+					env,
+				)
+			}
+
+			return nil
 		},
 	}
 
 	command.Flags().BoolVarP(&minimal, "minimal", "m", false,
 		"Build a minimal version of Burrow without cartons",
+	)
+	command.Flags().StringVarP(&chamber, "chamber", "c", "",
+		"Specific chamber to build",
 	)
 
 	return command

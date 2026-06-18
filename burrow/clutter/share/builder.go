@@ -377,6 +377,15 @@ func (b *Builder) BuildBurrow() error {
 	return b.BuildWithModFile(MagicGoModFilePath)
 }
 
+// GetBurrowSourceDir returns the source directory path for building Burrow with
+// cartons.
+func GetBurrowSourceDir(burrow *kernel.Burrow) string {
+	return filepath.Join(
+		burrow.GetSourceDir(),
+		kernel.CartonName,
+	)
+}
+
 // BuildBurrow builds the Burrow executable with the specified cartons
 // using the standard source and output paths defined in the Burrow environment.
 func BuildBurrow(
@@ -384,10 +393,7 @@ func BuildBurrow(
 	cartonDefs []*CartonDef,
 	magicEnv kernel.Vars,
 ) error {
-	burrowSourceDir := filepath.Join(
-		burrow.GetSourceDir(),
-		kernel.CartonName,
-	)
+	burrowSourceDir := GetBurrowSourceDir(burrow)
 	outputExecutablePath := filepath.Join(
 		burrow.GetBinDir(),
 		burrow.Env.Get(kernel.EnvExecutablePath),

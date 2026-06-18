@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"path/filepath"
+	"slices"
 
 	"github.com/TypingHare/burrow/v2026/burrow/clutter/share"
 	"github.com/TypingHare/burrow/v2026/kernel"
@@ -10,7 +11,11 @@ import (
 
 // BuildBurrow ensures the Burrow source is available and builds either the
 // full or minimal executable for the current clutter decoration.
-func BuildBurrow(decor share.IDecor, isMinimal bool) error {
+func BuildBurrow(
+	decor share.IDecor,
+	isMinimal bool,
+	magicEnv kernel.Vars,
+) error {
 	burrow := decor.Chamber().Burrow
 	err := share.EnsureSourceDir(burrow, kernel.CartonName)
 	if err != nil {
@@ -26,9 +31,45 @@ func BuildBurrow(decor share.IDecor, isMinimal bool) error {
 		return share.BuildBurrow(
 			burrow,
 			decor.CartonDefs(),
-			kernel.NewVars(),
+			magicEnv,
 		)
 	}
+}
+
+func BuildBurrowForChamber(
+	decor share.IDecor,
+	chamberName string,
+	cartonNames []string,
+	magicEnv kernel.Vars,
+) error {
+	burrow := decor.Chamber().Burrow
+	err := share.EnsureSourceDir(burrow, kernel.CartonName)
+	if err != nil {
+		return fmt.Errorf(
+			"Failed to ensure Burrow source directory: %w",
+			err,
+		)
+	}
+
+	filteredCartonDefs := []*share.CartonDef{}
+	for _, cartonDef := range decor.CartonDefs() {
+		if slices.Contains(cartonNames, cartonDef.Name) {
+			filteredCartonDefs = append(filteredCartonDefs, cartonDef)
+		}
+	}
+
+	burrowSourceDir := share.GetBurrowSourceDir(burrow)
+	outputExecutablePath := filepath.Join(
+		burrow.GetBinDir(),
+		chamberName,
+	)
+
+	return share.NewBuilder(
+		burrowSourceDir,
+		filteredCartonDefs,
+		magicEnv,
+		outputExecutablePath,
+	).BuildBurrow()
 }
 
 // BurrowSelfUpdate updates the Burrow source checkout, rebuilds the executable,
