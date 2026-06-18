@@ -23,5 +23,6 @@ func DefaultErrorHandler(
 	exitCode int,
 	err error,
 ) int {
+	PrintErrorStack(err)
 	return GeneralError
 }

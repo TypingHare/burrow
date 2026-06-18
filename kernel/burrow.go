@@ -218,16 +218,16 @@ func (b *Burrow) Handle(args []string) (int, error) {
 		)
 	}
 
+	errorHandler := chamber.ErrorHandler
+	if errorHandler == nil {
+		return GeneralError, fmt.Errorf(
+			"error handler in chamber %q is nil",
+			chamberName,
+		)
+	}
+
 	exitCode, err := commandHandler(chamber, chamberArgs)
 	if err != nil {
-		errorHandler := chamber.ErrorHandler
-		if errorHandler == nil {
-			return GeneralError, fmt.Errorf(
-				"error handler in chamber %q is nil",
-				chamberName,
-			)
-		}
-
 		return errorHandler(chamber, chamberArgs, exitCode, err), nil
 	}
 
