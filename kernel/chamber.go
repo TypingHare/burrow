@@ -75,12 +75,10 @@ func (c *Chamber) InstallDecors(decorIDs []string) error {
 		orderedDecors[i] = decor
 	}
 
-	// Assemble dependencies before the decors that require them.
-	slices.Reverse(orderedDecors)
-
-	for i := range len(orderedDecors) {
-		decor := orderedDecors[i]
-		if err := decor.Assemble(); err != nil {
+	// decorIDs already arrives dependency-first, so assemble and launch each
+	// dependency before the decors that require it.
+	for i := range orderedDecors {
+		if err := orderedDecors[i].Assemble(); err != nil {
 			return c.Error(
 				"failed to assemble decor with ID: "+decorIDs[i],
 				err,
@@ -88,9 +86,8 @@ func (c *Chamber) InstallDecors(decorIDs []string) error {
 		}
 	}
 
-	for i := len(orderedDecors) - 1; i >= 0; i-- {
-		decor := orderedDecors[i]
-		if err := decor.Launch(); err != nil {
+	for i := range orderedDecors {
+		if err := orderedDecors[i].Launch(); err != nil {
 			return c.Error(
 				"failed to launch decor with ID: "+decorIDs[i],
 				err,
