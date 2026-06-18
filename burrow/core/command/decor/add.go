@@ -19,7 +19,26 @@ This command adds a decor to the chamber.
         `),
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			decorID := args[0]
+			decorNameOrID := args[0]
+			decorID := decorNameOrID
+			if !strings.Contains(decorNameOrID, kernel.DecorIDSep) {
+				_, candidateDecorIDs := share.GetDecorIDByDecorName(
+					decor,
+					decorNameOrID,
+				)
+				if len(candidateDecorIDs) == 0 {
+					return fmt.Errorf("no decor with name %q found", decorID)
+				} else if len(candidateDecorIDs) == 1 {
+					decorID = candidateDecorIDs[0]
+				} else {
+					return fmt.Errorf(
+						"multiple decors with name %q found: %v",
+						decorNameOrID,
+						candidateDecorIDs,
+					)
+				}
+			}
+
 			if slices.Contains(decor.DirectDependencies(), decorID) {
 				return fmt.Errorf("decor %q already exists", decorID)
 			}
