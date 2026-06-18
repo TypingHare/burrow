@@ -29,6 +29,7 @@ func GetDefaultRootCommand(chamberName string, version string) *cobra.Command {
 		},
 	}
 
+	command.SetOut(os.Stdout)
 	command.SetVersionTemplate("{{.Version}}\n")
 	return command
 }
