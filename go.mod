@@ -8,12 +8,11 @@ require (
 )
 
 require (
+	github.com/BurntSushi/toml v1.6.0
 	github.com/deckarep/golang-set/v2 v2.8.0
-	golang.org/x/mod v0.33.0
 )
 
 require (
-	github.com/BurntSushi/toml v1.6.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
 )

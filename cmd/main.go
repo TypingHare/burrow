@@ -24,7 +24,15 @@ func main() {
 	burrow.LoadProcessEnv()
 
 	setEnv(burrow.Env)
-	registerCartons(burrow.Warehouse)
+
+	if err := registerCartons(burrow.Warehouse); err != nil {
+		fmt.Fprintf(
+			os.Stderr,
+			"failed to register cartons: %v",
+			err,
+		)
+		os.Exit(kernel.GeneralError)
+	}
 
 	// Burrow handles the command-line arguments.
 	exitCode, err := burrow.Handle(os.Args[1:])

@@ -84,7 +84,7 @@ func SelfUpdateBurrow(decor share.IDecor, magicEnv kernel.Vars) error {
 	)
 	outputExecutablePath := filepath.Join(
 		burrow.GetBinDir(),
-		burrow.Env.Get(kernel.EnvExecutablePath),
+		burrow.Env.Get(kernel.EnvExecutableName),
 	)
 	originalCommit, err := share.BurrowSelfUpdate(
 		burrowSourceDir,

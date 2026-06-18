@@ -239,19 +239,12 @@ func (b *Builder) GenerateMagicGoFile() error {
 	packageNames := make([]string, 0, len(cartonNames))
 	for _, cartonName := range cartonNames {
 		lastSegment := filepath.Base(cartonName)
-		if !strings.HasSuffix(lastSegment, ".carton") {
-			return fmt.Errorf(
-				"carton name %q does not end with %q",
-				cartonName,
-				".carton",
-			)
-		}
 		packageName := strings.Map(func(r rune) rune {
 			if unicode.IsLetter(r) {
 				return r
 			}
 			return -1
-		}, lastSegment[:len(lastSegment)-len(".carton")])
+		}, lastSegment)
 
 		packageNames = append(packageNames, packageName)
 	}
@@ -283,7 +276,8 @@ func (b *Builder) GenerateMagicGoFile() error {
 	// Collect register call statements for the magic Go file.
 	generateRegisterCallStmt := func(packageName string) string {
 		return fmt.Sprintf(
-			"%s.RegisterCartonToWarehouse(warehouse)",
+			"if err := %s.RegisterCartonToWarehouse(warehouse);"+
+				" err != nil {\n    return err;\n}",
 			packageName,
 		)
 	}
@@ -306,12 +300,15 @@ func (b *Builder) GenerateMagicGoFile() error {
 		content.WriteString("\"\n")
 	}
 	content.WriteString(")\n\n")
-	content.WriteString("func registerCartons(warehouse *kernel.Warehouse) {\n")
+	content.WriteString(
+		"func registerCartons(warehouse *kernel.Warehouse) error {\n",
+	)
 	for _, registerCall := range registerCallStmts {
 		content.WriteString("\t")
 		content.WriteString(registerCall)
 		content.WriteString("\n")
 	}
+	content.WriteString("\n    return nil\n")
 	content.WriteString("}\n")
 
 	// Set the magic environment variables in the magic Go file.
@@ -396,8 +393,9 @@ func BuildBurrow(
 	burrowSourceDir := GetBurrowSourceDir(burrow)
 	outputExecutablePath := filepath.Join(
 		burrow.GetBinDir(),
-		burrow.Env.Get(kernel.EnvExecutablePath),
+		burrow.Env.Get(kernel.EnvExecutableName),
 	)
+	print(outputExecutablePath)
 
 	return NewBuilder(
 		burrowSourceDir,
@@ -417,7 +415,7 @@ func BuildMinimalBurrow(burrow *kernel.Burrow) error {
 	)
 	outputExecutablePath := filepath.Join(
 		burrow.GetBinDir(),
-		burrow.Env.Get(kernel.EnvMinimalExecutablePath),
+		burrow.Env.Get(kernel.EnvMinimalExecutableName),
 	)
 
 	return NewBuilder(

@@ -16,7 +16,7 @@ import (
 //
 // Burrow expects API and behavioral compatibility within the same major and
 // minor version, and only links cartons that match both.
-const Version = "2026.1.0"
+const Version = "2026.1.4"
 
 // CartonName is the carton name of Burrow itself.
 //
@@ -63,11 +63,11 @@ const (
 	// chamber that manages all other chambers and provides shared resources.
 	EnvRootChamberName = "ROOT_CHAMBER_NAME"
 
-	// EnvExecutablePath is the path to the currently executing Burrow binary.
-	EnvExecutablePath = "EXECUTABLE_PATH"
+	// EnvExecutableName is the path to the currently executing Burrow binary.
+	EnvExecutableName = "EXECUTABLE_NAME"
 
-	// EnvMinimalExecutablePath is the path to the minimal Burrow executable.
-	EnvMinimalExecutablePath = "MINIMAL_EXECUTABLE_PATH"
+	// EnvMinimalExecutableName is the path to the minimal Burrow executable.
+	EnvMinimalExecutableName = "MINIMAL_EXECUTABLE_NAME"
 )
 
 // Burrow manages a collection of in-memory CLI applications called chambers.
@@ -127,6 +127,11 @@ func (b *Burrow) InitEnv(name string) error {
 	b.Env.Set(EnvAcceptProcessEnv, "1")
 	b.Env.Set(EnvUseChamber, "")
 	b.Env.Set(EnvRootChamberName, ".")
+	b.Env.Set(EnvExecutableName, "burrow")
+	b.Env.Set(
+		EnvMinimalExecutableName,
+		"burrow-minimal",
+	)
 
 	return nil
 }
