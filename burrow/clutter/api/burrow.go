@@ -10,7 +10,7 @@ import (
 )
 
 // BuildBurrow ensures the Burrow source is available and builds either the
-// full or minimal executable for the current clutter decoration.
+// full or minimal executable for the current clutter decor.
 func BuildBurrow(
 	decor share.IDecor,
 	isMinimal bool,

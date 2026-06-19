@@ -13,7 +13,7 @@ const DecorName = "larder"
 type Decor struct {
 	*kernel.Decor
 
-	// cabinetsByNames stores named cabinets registered by other decorations.
+	// cabinetsByNames stores named cabinets registered by other decors.
 	cabinetsByNames map[string]any
 }
 

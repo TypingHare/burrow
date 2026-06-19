@@ -12,7 +12,7 @@ func UninstallCommand(decor share.IDecor) *cobra.Command {
 		Use:   "uninstall <carton>",
 		Short: "Uninstall a carton",
 		Long: strings.TrimSpace(`
-This command removes a carton from the clutter decoration spec.
+This command removes a carton from the clutter decor spec.
 
 After a carton is uninstalled, Burrow no longer includes it when building
 the full Burrow executable from this chamber's clutter configuration.

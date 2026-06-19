@@ -20,7 +20,7 @@ executable.
 It works on the local Burrow source checkout stored in Burrow's source
 directory. First, it updates that checkout to a newer upstream revision.
 After that, it rebuilds the executable using the cartons currently listed
-in the clutter decoration spec.
+in the clutter decor spec.
 
 In other words, this command does two things:
 

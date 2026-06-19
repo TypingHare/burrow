@@ -24,7 +24,7 @@ func BuildCommand(decor share.IDecor) *cobra.Command {
 This command builds a Burrow executable from source code.
 
 By default, it builds the full executable. The full executable includes
-Burrow and every carton listed in the current clutter decoration spec.
+Burrow and every carton listed in the current clutter decor spec.
 Those cartons are linked into the binary at build time.
 
 If you are not sure which cartons will be included, run:
