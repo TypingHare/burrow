@@ -36,12 +36,20 @@ func GetAllChamberNames(burrow *kernel.Burrow) ([]string, error) {
 		)
 	}
 
-	chamberNames := make([]string, 0, len(entries))
+	chamberNames := []string{}
 	for _, entry := range entries {
 		if entry.IsDir() {
 			chamberNames = append(chamberNames, entry.Name())
 		}
 	}
+
+	// Add root chamber name if it doesn't exist in chamberNames.
+	rootChamberName := burrow.Env.Get(kernel.EnvRootChamberName)
+	if !slices.Contains(chamberNames, rootChamberName) {
+		chamberNames = append(chamberNames, rootChamberName)
+	}
+
+	// Sort chamber names alphabetically.
 	slices.Sort(chamberNames)
 
 	return chamberNames, nil
