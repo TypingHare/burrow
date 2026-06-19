@@ -6,9 +6,9 @@ import (
 	"github.com/TypingHare/burrow/v2026/kernel"
 )
 
-// ReCreateChamber attempts to re-create the chamber. It returns the new chamber
+// RecreateChamber attempts to re-create the chamber. It returns the new chamber
 // if successful, or an error if re-creation fails.
-func ReCreateChamber(chamber *kernel.Chamber) (*kernel.Chamber, error) {
+func RecreateChamber(chamber *kernel.Chamber) (*kernel.Chamber, error) {
 	chamber.Burrow.Architect.Delete(chamber.Name)
 	newChamber, err := chamber.Burrow.Architect.Create(chamber.Name)
 	if err != nil {
@@ -37,7 +37,7 @@ func UpdateBlueprintAndReCreate(
 		return nil, fmt.Errorf("failed to update blueprint: %w", err)
 	}
 
-	newChamber, err := ReCreateChamber(chamber)
+	newChamber, err := RecreateChamber(chamber)
 	if err != nil {
 		// Revert the blueprint if re-creation fails.
 		if err := clonedBlueprint.SaveToTomlFile(blueprintPath); err != nil {
