@@ -50,7 +50,16 @@ func CreateChamberBlueprint(chamber *kernel.Chamber, chamberName string) error {
 		)
 	}
 
-	// If the blueprint doesn't exist, create a new one with the core docor.
+	// If the blueprint doesn't exist, create a new one with the core decor.
+	blueprintDir := filepath.Dir(blueprintPath)
+	if err := os.MkdirAll(blueprintDir, 0o755); err != nil {
+		return fmt.Errorf(
+			"failed to create chamber directory %q: %w",
+			blueprintDir,
+			err,
+		)
+	}
+
 	blueprint := kernel.Blueprint{
 		kernel.GetDecorID("core", kernel.CartonName): kernel.NewVars(),
 	}
@@ -105,15 +114,43 @@ func DeleteChamberBlueprint(chamber *kernel.Chamber, chamberName string) error {
 	}
 
 	// Remove the chamber configuration directory.
-	chamberDataDir := filepath.Join(
+	chamberConfigDir := filepath.Join(
 		chamber.Burrow.GetConfigDir(),
+		chamberName,
+	)
+	if err := os.RemoveAll(chamberConfigDir); err != nil {
+		return fmt.Errorf(
+			"failed to remove chamber %q configuration directory %q: %w",
+			chamberName,
+			chamberConfigDir,
+			err,
+		)
+	}
+
+	// Remove the chamber data directory.
+	chamberDataDir := filepath.Join(
+		chamber.Burrow.GetDataDir(),
 		chamberName,
 	)
 	if err := os.RemoveAll(chamberDataDir); err != nil {
 		return fmt.Errorf(
-			"failed to remove chamber %q configuration directory %q: %w",
+			"failed to remove chamber %q data directory %q: %w",
 			chamberName,
 			chamberDataDir,
+			err,
+		)
+	}
+
+	// Remove the chamber state directory.
+	chamberStateDir := filepath.Join(
+		chamber.Burrow.GetStateDir(),
+		chamberName,
+	)
+	if err := os.RemoveAll(chamberStateDir); err != nil {
+		return fmt.Errorf(
+			"failed to remove chamber %q state directory %q: %w",
+			chamberName,
+			chamberStateDir,
 			err,
 		)
 	}
